@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_width="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/close_dialog"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_close"
+            android:layout_marginRight="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#EFF3F6"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="23dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_600"
+                android:text="Required Sections"
+                android:textColor="#444B53"
+                android:textSize="22dp" />
+
+            <TextView
+                android:id="@+id/text_personal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/btn_strock_primary"
+                android:fontFamily="@font/sf_600"
+                android:gravity="center"
+                android:text="Personal Details*"
+                android:textColor="#8A4999"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/text_hourly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/btn_strock_primary"
+                android:fontFamily="@font/sf_600"
+                android:gravity="center"
+                android:text="Hourly Rate &amp; Availability*"
+                android:textColor="#8A4999"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/text_work"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/btn_strock_primary"
+                android:fontFamily="@font/sf_600"
+                android:gravity="center"
+                android:text="Work History &amp; Certifications"
+                android:textColor="#8A4999"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/text_role"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="42dp"
+                android:background="@drawable/btn_strock_primary"
+                android:fontFamily="@font/sf_600"
+                android:gravity="center"
+                android:text="Role Interest"
+                android:textColor="#8A4999"
+                android:textSize="21dp" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@android:id/background"
+        android:drawable="@drawable/bk_seekbar"
+        android:height="5dp"
+        android:top="4dp"/>
+    <item android:id="@android:id/progress"
+        android:height="5dp"
+        android:top="4dp">
+        <clip android:drawable="@drawable/bk_seekbar_progress" />
+    </item>
+
+</layer-list>
