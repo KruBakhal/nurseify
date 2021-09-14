@@ -8,7 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/primary_gradient">
-
     <LinearLayout
         android:id="@+id/logo"
         android:layout_width="match_parent"
@@ -19,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <TextView
-            android:id="@+id/facility"
+            android:id="@+id/nurse"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@drawable/btn_strock_secondary"
@@ -31,7 +30,7 @@
             android:gravity="center"
             android:textColor="@color/white"/>
         <TextView
-            android:id="@+id/clinical"
+            android:id="@+id/facility"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@drawable/btn_strock_secondary"

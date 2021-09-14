@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.weboconnect.nursify">
+    package="com.weboconnect.nurseify">
 
     <application
         android:allowBackup="true"
@@ -8,8 +8,16 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Nursify">
-        <activity android:name=".screen.facility.RegistrationFActivity"></activity>
+        android:theme="@style/Theme.nurseify">
+        <activity android:name=".screen.facility.NurseDetailsActivity"></activity>
+        <activity android:name=".screen.facility.FacilityDetails4Activity" />
+        <activity android:name=".screen.facility.FacilityDetails3Activity" />
+        <activity android:name=".screen.facility.FacilityDetails2Activity" />
+        <activity android:name=".screen.facility.FacilityDetails1Activity" />
+        <activity android:name=".screen.facility.AddJob2Activity" />
+        <activity android:name=".screen.facility.AddJobActivity1" />
+        <activity android:name=".screen.facility.AppliedNursesActivity" />
+        <activity android:name=".screen.facility.RegistrationFActivity" />
         <activity android:name=".screen.facility.HomeFActivity" />
         <activity android:name=".screen.facility.LoginFacilityActivity" />
         <activity android:name=".screen.nurse.OfferedJobsActivityActivity" />
