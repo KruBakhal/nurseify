@@ -46,11 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utils.isNetworkAvailable(context)) {
-                    peformLoginProcess();
-                } else {
-                    Utils.displayToast(context, getResources().getString(R.string.no_internet));
-                }
+                peformLoginProcess();
                 Utils.onClickEvent(v);
             }
         });
@@ -78,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             if (!Utils.isNetworkAvailable(context)) {
 
                 Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                return;
             }
             Utils.displayToast(context, null); // to cancel toast if showing on screen
 

@@ -235,8 +235,8 @@ public class SignupDetailsActivity extends AppCompatActivity {
         Utils.displayToast(context, null); // to cancel toast if showing on screen
 
         if (!Utils.isNetworkAvailable(context)) {
-
             Utils.displayToast(context, getResources().getString(R.string.no_internet));
+            return;
         }
         Utils.displayToast(context, null); // to cancel toast if showing on screen
         progressDialog.show();
