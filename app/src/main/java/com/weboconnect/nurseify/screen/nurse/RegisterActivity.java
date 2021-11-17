@@ -259,6 +259,7 @@ public class RegisterActivity extends AppCompatActivity {
             text_role.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.btn_fill_secondary));
             text_role.setTextColor(Color.parseColor("#FFFFFF"));
         }
+
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,6 +272,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         text_personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,6 +280,7 @@ public class RegisterActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
         text_hourly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,6 +292,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         text_work.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -312,6 +316,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     private void personalDialog() {
