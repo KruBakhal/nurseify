@@ -300,6 +300,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         text_role.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
