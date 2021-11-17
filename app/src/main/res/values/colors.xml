@@ -10,4 +10,6 @@
     <color name="grad1">#595094</color>
     <color name="grad2">#8A4999</color>
     <color name="page_bk">#F4F3F9</color>
+    <color name="gray">#818A93</color>
+    <color name="hint">#A4ADBB</color>
 </resources>

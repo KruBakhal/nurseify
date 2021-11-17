@@ -40,7 +40,7 @@ public class BrowseFFragment extends Fragment {
         binding.filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final View loc = getLayoutInflater().from(getContext()).inflate(R.layout.dialog_filter, null);
+                final View loc = getLayoutInflater().from(getContext()).inflate(R.layout.dialog_filter_f, null);
                 final Dialog dialog = new Dialog(getContext(),R.style.AlertDialog);
                 dialog.setContentView(loc);
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);

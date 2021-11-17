@@ -36,7 +36,7 @@ public class PastAdapter extends RecyclerView.Adapter<PastAdapter.ViewHolder> {
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.startActivity(new Intent(activity, ActiveJobDetailsActivity.class));
+                    //activity.startActivity(new Intent(activity, ActiveJobDetailsActivity.class));
                 }
             });
         }catch (Exception e){

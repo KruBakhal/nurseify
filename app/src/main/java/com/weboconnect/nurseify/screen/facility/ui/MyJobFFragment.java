@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.ActiveAdapter;
+import com.weboconnect.nurseify.adapter.ActiveFAdapter;
 import com.weboconnect.nurseify.adapter.CompletedAdapter;
 import com.weboconnect.nurseify.adapter.JobAdapter;
 import com.weboconnect.nurseify.adapter.OfferedAdapter;
@@ -31,7 +32,7 @@ public class MyJobFFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding  = DataBindingUtil.inflate(inflater, R.layout.fragment_my_jobs_f, null, false);
-        binding.recyclerViewJobs.setAdapter(new JobAdapter(getActivity()));
+        binding.recyclerViewJobs.setAdapter(new PostedAdapter(getActivity()));
         binding.textOffered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +54,7 @@ public class MyJobFFragment extends Fragment {
                 binding.textActive.setTextColor(Color.parseColor("#8A4999"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
                 binding.textCompleted.setTextColor(Color.parseColor("#000000"));
-                binding.recyclerViewJobs.setAdapter(new ActiveAdapter(getActivity()));
+                binding.recyclerViewJobs.setAdapter(new ActiveFAdapter(getActivity()));
             }
         });
         binding.textCompleted.setOnClickListener(new View.OnClickListener() {

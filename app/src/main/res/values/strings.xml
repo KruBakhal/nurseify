@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">nurseify</string>
+    <string name="something_when_wrong">Something When Wrong, please retry !</string>
+    <string name="no_internet">No internet connectivity found, please retry again !</string>
 </resources>

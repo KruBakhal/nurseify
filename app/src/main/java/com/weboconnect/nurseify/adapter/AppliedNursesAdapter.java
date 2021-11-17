@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.screen.facility.NurseDetailsActivity;
 import com.weboconnect.nurseify.screen.nurse.ActiveJobDetailsActivity;
 
 public class AppliedNursesAdapter extends RecyclerView.Adapter<AppliedNursesAdapter.ViewHolder> {
@@ -35,7 +36,7 @@ public class AppliedNursesAdapter extends RecyclerView.Adapter<AppliedNursesAdap
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.startActivity(new Intent(activity, ActiveJobDetailsActivity.class));
+                    activity.startActivity(new Intent(activity, NurseDetailsActivity.class));
                 }
             });
         }catch (Exception e){
