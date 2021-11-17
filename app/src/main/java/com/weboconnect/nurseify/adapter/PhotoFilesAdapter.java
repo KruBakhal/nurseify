@@ -42,7 +42,7 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
         if (type == 1) {
             Glide.with(holder.itemView.getContext())
                     .load(list.get(position)).into(holder.img);
-
+            holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
         } else {
             holder.img.setImageResource(R.drawable.pdf_icon);
         }

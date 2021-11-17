@@ -39,7 +39,7 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("register")
-    Call<SignupModel> call_Signup(
+    Call<UserProfile> call_Signup(
             @Part("first_name") RequestBody first_name,
             @Part("last_name") RequestBody last_name,
             @Part("mobile") RequestBody mobile,

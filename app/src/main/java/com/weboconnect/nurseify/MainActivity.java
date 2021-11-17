@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (!TextUtils.isEmpty(type) && type.equals(CONST_NURSE_TYPE)) {
                     if (sessionManager.isUserLoginedIn()) {
-                    /*    if (sessionManager.get_User() != null && (sessionManager.get_User().getProfileDetailFlag().equals("0")
+                        if (sessionManager.get_User() != null && (sessionManager.get_User().getProfileDetailFlag().equals("0")
                                 || sessionManager.get_User().getHourlyRateAndAvailFlag().equals("0"))) {
                             startActivity(new Intent(getApplicationContext(), RegisterActivity.class)
                                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -43,10 +43,9 @@ public class MainActivity extends AppCompatActivity {
                         } else
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class)
                                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                    */
-                        startActivity(new Intent(getApplicationContext(), RegisterActivity.class)
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(sessionManager.get_User())));
+//                        startActivity(new Intent(getApplicationContext(), RegisterActivity.class)
+//                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                                .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(sessionManager.get_User())));
 //
                         return;
                     }

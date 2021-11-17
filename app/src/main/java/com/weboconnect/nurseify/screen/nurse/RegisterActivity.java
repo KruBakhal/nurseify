@@ -281,22 +281,34 @@ public class RegisterActivity extends AppCompatActivity {
         text_hourly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hourlyRate();
-                dialog.dismiss();
+                if (Utils.isNetworkAvailable(context)) {
+                    hourlyRate();
+                    dialog.dismiss();
+                } else {
+                    Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                }
             }
         });
         text_work.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                workDialog();
-                dialog.dismiss();
+                if (Utils.isNetworkAvailable(context)) {
+                    dialog.dismiss();
+                    workDialog();
+                } else {
+                    Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                }
             }
         });
         text_role.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                roleDialog();
-                dialog.dismiss();
+                if (Utils.isNetworkAvailable(context)) {
+                    dialog.dismiss();
+                    roleDialog();
+                } else {
+                    Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                }
             }
         });
     }
@@ -338,12 +350,13 @@ public class RegisterActivity extends AppCompatActivity {
 //                    model.setNursingLicenseNumber(edLicenseNos);
                     if (Utils.isNetworkAvailable(context)) {
                         personalDialog2(edLicenseState, edLicenseNos, edFirstName, edLastName, email, mobile);
+                        dialog.dismiss();
                     } else {
                         Utils.displayToast(context, getResources().getString(R.string.no_internet));
                     }
 
                 }
-                dialog.dismiss();
+
             }
 
             private boolean checkValidation() {
@@ -601,8 +614,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        TextView next = dialog.findViewById(R.id.next);
-        next.setOnClickListener(new View.OnClickListener() {
+        binding_personalDetail_2.next.setOnClickListener(new View.OnClickListener() {
             String address, city, country, postal_code, nos = "", state = "";
 
             @Override
@@ -657,7 +669,7 @@ public class RegisterActivity extends AppCompatActivity {
                         postal_code);
                 RequestBody request_spec1111 = RequestBody.create(MediaType.parse("multipart/form-data"),
                         country);
-
+                binding_personalDetail_2.layProgress.setVisibility(View.VISIBLE);
 
                 backendApi.call_PersonalDetail(request_id, request_firstName, request_lastName,
                         request_lastName1, request_lastName11, request_state, request_nos,
@@ -667,6 +679,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                         assert response.body() != null;
                         if (!response.body().getApiStatus().equals("1")) {
+                            binding_personalDetail_2.layProgress.setVisibility(View.GONE);
 //                            progressDialog.dismiss();
                             Utils.displayToast(context, "" + response.body().getMessage());
                             return;
@@ -674,6 +687,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         if (response.isSuccessful()) {
 //                            progressDialog.dismiss();
+                            binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                             UserProfile userProfile = response.body();
                             new SessionManager(context).save_user(userProfile.getData());
                             model = userProfile.getData();
@@ -691,8 +705,9 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
 
 //                            progressDialog.dismiss();
+                            binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                         }
-
+                        binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                     /*    if (progressDialog.isShowing())
                             progressDialog.dismiss();*/
                     }
@@ -700,6 +715,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<UserProfile> call, Throwable t) {
 //                        progressDialog.dismiss();
+                        binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                         Log.d("TAG", "call_sendData_For_PersonalDetail() onFailure: " + t.getMessage());
                     }
                 });
@@ -1671,7 +1687,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             fetch_WorkHistory_2_Field_Data(apiResponseCallback);
 
-        } else {
+        }
+        else {
 
         }
         history2Binding.layCredential.setOnClickListener(new View.OnClickListener() {
@@ -1852,9 +1869,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     Utils.displayToast(context, response.message());
                                     history2Binding.layProgress.setVisibility(View.GONE);
                                     Utils.displayToast(context, "" + response.body().getMessage());
-                                    return;
-                                }
-                                if (response.isSuccessful()) {
                                     history2Binding.layProgress.setVisibility(View.GONE);
                                     dialog.dismiss();
                                     chooseOption();
@@ -2128,14 +2142,9 @@ public class RegisterActivity extends AppCompatActivity {
                                     Utils.displayToast(context, response.message());
                                     roleInterestBinding.layProgress.setVisibility(View.GONE);
                                     Utils.displayToast(context, "" + response.body().getMessage());
+                                    roleInterestBinding.layProgress.setVisibility(View.GONE);
                                     dialog.dismiss();
                                     roleDialog2();
-                                    return;
-                                }
-                                if (response.isSuccessful()) {
-                                    roleInterestBinding.layProgress.setVisibility(View.GONE);
-                                    workDialog2();
-                                    dialog.dismiss();
                                 } else {
                                     Utils.displayToast(context, "Data has not been updated");
                                     roleInterestBinding.layProgress.setVisibility(View.GONE);
@@ -2326,18 +2335,12 @@ public class RegisterActivity extends AppCompatActivity {
                                     roleInterest2Binding.layProgress.setVisibility(View.GONE);
                                     Utils.displayToast(context, "" + response.body().getMessage());
                                     roleInterest = true;
+                                    dialog.dismiss();
                                     if (state == 0) {
                                         chooseOption();
                                     } else {
                                         finish();
                                     }
-                                    dialog.dismiss();
-                                    return;
-                                }
-                                if (response.isSuccessful()) {
-                                    roleInterest2Binding.layProgress.setVisibility(View.GONE);
-                                    workDialog2();
-                                    dialog.dismiss();
                                 } else {
                                     Utils.displayToast(context, "Data has not been updated");
                                     roleInterest2Binding.layProgress.setVisibility(View.GONE);

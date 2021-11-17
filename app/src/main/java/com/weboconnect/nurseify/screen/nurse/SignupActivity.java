@@ -89,6 +89,7 @@ public class SignupActivity extends AppCompatActivity {
             return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Utils.displayToast(context, "Enter Proper Email Id");
             return false;
         }
 

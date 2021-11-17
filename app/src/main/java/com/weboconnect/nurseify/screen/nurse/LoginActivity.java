@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         context = this;
         progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(false);
+        progressDialog.setMessage("Please Wait");
         sessionManger = new SessionManager(context);
         binding.login.setOnClickListener(new View.OnClickListener() {
             @Override

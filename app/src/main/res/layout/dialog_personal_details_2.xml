@@ -302,6 +302,7 @@
                     android:maxLines="1"
                     android:paddingLeft="17dp"
                     android:singleLine="true"
+                    android:inputType="number"
                     android:textColor="@color/black"
                     android:textColorHint="#A4ADBB"
                     android:textSize="16dp" />

@@ -42,29 +42,96 @@ public class SignupModel {
         this.data = data;
     }
 
-    public class Role {
+
+    public class Data {
 
         @SerializedName("id")
         @Expose
         private String id;
-        @SerializedName("name")
+        @SerializedName("nurse_id")
         @Expose
-        private String name;
-        @SerializedName("guard_name")
+        private String nurseId;
+        @SerializedName("role")
         @Expose
-        private String guardName;
-        @SerializedName("created_at")
+        private String role;
+        @SerializedName("fcm_token")
         @Expose
-        private String createdAt;
-        @SerializedName("updated_at")
+        private String fcmToken;
+        @SerializedName("fullName")
         @Expose
-        private String updatedAt;
-        @SerializedName("deleted_at")
+        private String fullName;
+        @SerializedName("date_of_birth")
         @Expose
-        private Object deletedAt;
-        @SerializedName("pivot")
+        private String dateOfBirth;
+        @SerializedName("email_notification")
         @Expose
-        private Pivot pivot;
+        private Integer emailNotification;
+        @SerializedName("sms_notification")
+        @Expose
+        private Integer smsNotification;
+        @SerializedName("first_name")
+        @Expose
+        private String firstName;
+        @SerializedName("last_name")
+        @Expose
+        private String lastName;
+        @SerializedName("email")
+        @Expose
+        private String email;
+        @SerializedName("mobile")
+        @Expose
+        private String mobile;
+        @SerializedName("nursing_license_state")
+        @Expose
+        private String nursingLicenseState;
+        @SerializedName("nursing_license_number")
+        @Expose
+        private String nursingLicenseNumber;
+        @SerializedName("specialty")
+        @Expose
+        private List<String> specialty = null;
+        @SerializedName("work_location")
+        @Expose
+        private Integer workLocation;
+        @SerializedName("address")
+        @Expose
+        private String address;
+        @SerializedName("city")
+        @Expose
+        private String city;
+        @SerializedName("state")
+        @Expose
+        private String state;
+        @SerializedName("postcode")
+        @Expose
+        private String postcode;
+        @SerializedName("country")
+        @Expose
+        private String country;
+        @SerializedName("hourly_pay_rate")
+        @Expose
+        private String hourlyPayRate;
+        @SerializedName("shift_duration")
+        @Expose
+        private String shiftDuration;
+        @SerializedName("assignment_duration")
+        @Expose
+        private String assignmentDuration;
+        @SerializedName("preferred_shift")
+        @Expose
+        private String preferredShift;
+        @SerializedName("days_of_the_week")
+        @Expose
+        private List<Object> daysOfTheWeek = null;
+        @SerializedName("earliest_start_date")
+        @Expose
+        private String earliestStartDate;
+        @SerializedName("profile_detail_flag")
+        @Expose
+        private String profileDetailFlag;
+        @SerializedName("hourly_rate_and_avail_flag")
+        @Expose
+        private String hourlyRateAndAvailFlag;
 
         public String getId() {
             return id;
@@ -74,133 +141,12 @@ public class SignupModel {
             this.id = id;
         }
 
-        public String getName() {
-            return name;
+        public String getNurseId() {
+            return nurseId;
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getGuardName() {
-            return guardName;
-        }
-
-        public void setGuardName(String guardName) {
-            this.guardName = guardName;
-        }
-
-        public String getCreatedAt() {
-            return createdAt;
-        }
-
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
-        }
-
-        public String getUpdatedAt() {
-            return updatedAt;
-        }
-
-        public void setUpdatedAt(String updatedAt) {
-            this.updatedAt = updatedAt;
-        }
-
-        public Object getDeletedAt() {
-            return deletedAt;
-        }
-
-        public void setDeletedAt(Object deletedAt) {
-            this.deletedAt = deletedAt;
-        }
-
-        public Pivot getPivot() {
-            return pivot;
-        }
-
-        public void setPivot(Pivot pivot) {
-            this.pivot = pivot;
-        }
-
-    }
-
-    public class Data {
-
-        @SerializedName("first_name")
-        @Expose
-        private String firstName;
-        @SerializedName("last_name")
-        @Expose
-        private String lastName;
-        @SerializedName("mobile")
-        @Expose
-        private String mobile;
-        @SerializedName("email")
-        @Expose
-        private String email;
-        @SerializedName("user_name")
-        @Expose
-        private String userName;
-        @SerializedName("role")
-        @Expose
-        private String role;
-        @SerializedName("fcm_token")
-        @Expose
-        private String fcmToken;
-        @SerializedName("id")
-        @Expose
-        private String id;
-        @SerializedName("updated_at")
-        @Expose
-        private String updatedAt;
-        @SerializedName("created_at")
-        @Expose
-        private String createdAt;
-        @SerializedName("fullName")
-        @Expose
-        private String fullName;
-        @SerializedName("roles")
-        @Expose
-        private List<Role> roles = null;
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getMobile() {
-            return mobile;
-        }
-
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getUserName() {
-            return userName;
-        }
-
-        public void setUserName(String userName) {
-            this.userName = userName;
+        public void setNurseId(String nurseId) {
+            this.nurseId = nurseId;
         }
 
         public String getRole() {
@@ -219,30 +165,6 @@ public class SignupModel {
             this.fcmToken = fcmToken;
         }
 
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getUpdatedAt() {
-            return updatedAt;
-        }
-
-        public void setUpdatedAt(String updatedAt) {
-            this.updatedAt = updatedAt;
-        }
-
-        public String getCreatedAt() {
-            return createdAt;
-        }
-
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
-        }
-
         public String getFullName() {
             return fullName;
         }
@@ -251,51 +173,198 @@ public class SignupModel {
             this.fullName = fullName;
         }
 
-        public List<Role> getRoles() {
-            return roles;
+        public String getDateOfBirth() {
+            return dateOfBirth;
         }
 
-        public void setRoles(List<Role> roles) {
-            this.roles = roles;
+        public void setDateOfBirth(String dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+        }
+
+        public Integer getEmailNotification() {
+            return emailNotification;
+        }
+
+        public void setEmailNotification(Integer emailNotification) {
+            this.emailNotification = emailNotification;
+        }
+
+        public Integer getSmsNotification() {
+            return smsNotification;
+        }
+
+        public void setSmsNotification(Integer smsNotification) {
+            this.smsNotification = smsNotification;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
+
+        public String getNursingLicenseState() {
+            return nursingLicenseState;
+        }
+
+        public void setNursingLicenseState(String nursingLicenseState) {
+            this.nursingLicenseState = nursingLicenseState;
+        }
+
+        public String getNursingLicenseNumber() {
+            return nursingLicenseNumber;
+        }
+
+        public void setNursingLicenseNumber(String nursingLicenseNumber) {
+            this.nursingLicenseNumber = nursingLicenseNumber;
+        }
+
+        public List<String> getSpecialty() {
+            return specialty;
+        }
+
+        public void setSpecialty(List<String> specialty) {
+            this.specialty = specialty;
+        }
+
+        public Integer getWorkLocation() {
+            return workLocation;
+        }
+
+        public void setWorkLocation(Integer workLocation) {
+            this.workLocation = workLocation;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public String getPostcode() {
+            return postcode;
+        }
+
+        public void setPostcode(String postcode) {
+            this.postcode = postcode;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public String getHourlyPayRate() {
+            return hourlyPayRate;
+        }
+
+        public void setHourlyPayRate(String hourlyPayRate) {
+            this.hourlyPayRate = hourlyPayRate;
+        }
+
+        public String getShiftDuration() {
+            return shiftDuration;
+        }
+
+        public void setShiftDuration(String shiftDuration) {
+            this.shiftDuration = shiftDuration;
+        }
+
+        public String getAssignmentDuration() {
+            return assignmentDuration;
+        }
+
+        public void setAssignmentDuration(String assignmentDuration) {
+            this.assignmentDuration = assignmentDuration;
+        }
+
+        public String getPreferredShift() {
+            return preferredShift;
+        }
+
+        public void setPreferredShift(String preferredShift) {
+            this.preferredShift = preferredShift;
+        }
+
+        public List<Object> getDaysOfTheWeek() {
+            return daysOfTheWeek;
+        }
+
+        public void setDaysOfTheWeek(List<Object> daysOfTheWeek) {
+            this.daysOfTheWeek = daysOfTheWeek;
+        }
+
+        public String getEarliestStartDate() {
+            return earliestStartDate;
+        }
+
+        public void setEarliestStartDate(String earliestStartDate) {
+            this.earliestStartDate = earliestStartDate;
+        }
+
+        public String getProfileDetailFlag() {
+            return profileDetailFlag;
+        }
+
+        public void setProfileDetailFlag(String profileDetailFlag) {
+            this.profileDetailFlag = profileDetailFlag;
+        }
+
+        public String getHourlyRateAndAvailFlag() {
+            return hourlyRateAndAvailFlag;
+        }
+
+        public void setHourlyRateAndAvailFlag(String hourlyRateAndAvailFlag) {
+            this.hourlyRateAndAvailFlag = hourlyRateAndAvailFlag;
         }
 
     }
 
-    public class Pivot {
-
-        @SerializedName("model_uuid")
-        @Expose
-        private String modelUuid;
-        @SerializedName("role_id")
-        @Expose
-        private String roleId;
-        @SerializedName("model_type")
-        @Expose
-        private String modelType;
-
-        public String getModelUuid() {
-            return modelUuid;
-        }
-
-        public void setModelUuid(String modelUuid) {
-            this.modelUuid = modelUuid;
-        }
-
-        public String getRoleId() {
-            return roleId;
-        }
-
-        public void setRoleId(String roleId) {
-            this.roleId = roleId;
-        }
-
-        public String getModelType() {
-            return modelType;
-        }
-
-        public void setModelType(String modelType) {
-            this.modelType = modelType;
-        }
-
-    }
 }

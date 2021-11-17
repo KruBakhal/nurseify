@@ -17,14 +17,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
+import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.SpecialtyAdapter;
 import com.weboconnect.nurseify.adapter.PersonalDetailWindowAdapter;
 import com.weboconnect.nurseify.databinding.ActivitySignupDetailsBinding;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_PersonalDetail_DataModel;
-import com.weboconnect.nurseify.screen.nurse.model.SignupModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel.SpecialtyDatum;
+import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationDatum;
 import com.weboconnect.nurseify.utils.Constant;
@@ -80,6 +81,7 @@ public class SignupDetailsActivity extends AppCompatActivity {
     private void fetchData() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(false);
+        progressDialog.setMessage("Please Wait");
         RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
 
         List<Observable> list = new ArrayList<Observable>();
@@ -257,13 +259,13 @@ public class SignupDetailsActivity extends AppCompatActivity {
         RequestBody requestBody310 = RequestBody.create(MediaType.parse("multipart/form-data"), sessionManger.get_API_KEY());
 
 
-        Call<SignupModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
                 .call_Signup(requestBody3, requestBody32, requestBody33, requestBody34,
                         requestBody35, requestBody36, requestBody37, requestBody38, requestBody39, requestBody310);
 
-        call.enqueue(new Callback<SignupModel>() {
+        call.enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<SignupModel> call, Response<SignupModel> response) {
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                 assert response.body() != null;
                 if (!response.body().getApiStatus().equals("1")) {
                     Utils.displayToast(context, "" + response.body().getMessage());
@@ -272,16 +274,17 @@ public class SignupDetailsActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
-                    SignupModel SignupModel = response.body();
+                    UserProfile UserProfile = response.body();
                     sessionManger.set_TYPE(Constant.CONST_NURSE_TYPE);
-                    sessionManger.save_user_register_id(SignupModel.getData().getId());
-//                    sessionManger.setSession_IN(SignupModel.getData().getId(), SignupModel.getData());
+//                    sessionManger.save_user_register_id(UserProfile.getData().getId());
+                    sessionManger.setSession_IN(UserProfile.getData().getId(), UserProfile.getData());
                     Utils.displayToast(context, "SignUp Successfully Completed");
 
                     Intent i = new Intent(SignupDetailsActivity.this, RegisterActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(UserProfile.getData()));
                     startActivity(i);
                     context.finish();
                 } else {
@@ -294,7 +297,7 @@ public class SignupDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<SignupModel> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
                 progressDialog.dismiss();
                 Utils.displayToast(context, "Something when wrong, please retry again ");
 
