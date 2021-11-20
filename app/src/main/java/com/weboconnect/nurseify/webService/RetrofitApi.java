@@ -1,12 +1,14 @@
 package com.weboconnect.nurseify.webService;
 
 
+import com.weboconnect.nurseify.adapter.LikeModel;
 import com.weboconnect.nurseify.screen.nurse.model.AddCredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.CernersModel;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
+import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageModel;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesModel;
 import com.weboconnect.nurseify.screen.nurse.model.RoleModel;
@@ -26,6 +28,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public interface RetrofitApi {
 
@@ -203,4 +206,23 @@ public interface RetrofitApi {
             @Part MultipartBody.Part[] leadership_roles,
             @Part MultipartBody.Part[] linical_educator);
 
+    @Multipart
+    @POST("browse-jobs")
+    Call<JobModel> call_browser_filter_job(@Query("page") String page,
+                                           @Part("search_location") RequestBody search_location,
+                                           @Part("open_assignment_type") RequestBody open_assignment_type,
+                                           @Part("facility_type") RequestBody facility_type,
+                                           @Part("electronic_medical_records") RequestBody electronic_medical_records,
+                                           @Part("user_id") RequestBody user_id
+
+    );
+
+    @Multipart
+    @POST("browse-jobs")
+    Call<JobModel> call_browser_filter_job(@Query("page") String page);
+
+    @Multipart
+    @POST("job-like")
+    Call<LikeModel> call_like_job(@Part("user_id") RequestBody user_id, @Part("job_id") RequestBody job_id,
+                                  @Part("like") RequestBody like);
 }

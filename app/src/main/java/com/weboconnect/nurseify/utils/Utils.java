@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 
 import com.google.gson.reflect.TypeToken;
+import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.QuestionModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 
@@ -23,6 +24,8 @@ import java.util.List;
 public class Utils {
     private static Toast toast;
     public static Type typeUserProfileData = new TypeToken<UserProfileData>() {
+    }.getType();
+    public static Type typeJob = new TypeToken<JobModel.JobDatum>() {
     }.getType();
 
     public static boolean isNetworkAvailable(Context mContext) {

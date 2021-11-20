@@ -3,9 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/drawable/btn_back.xml" value="0.16905537459283387" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/drawable/effect_cursor_color.xml" value="0.1707236842105263" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/drawable/spinner_bg_new.xml" value="0.1707236842105263" />
-        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/activity_job_details.xml" value="0.16052631578947368" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/activity_job_details.xml" value="0.176" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/activity_login.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/activity_login_facility.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/activity_personal_details.xml" value="0.16052631578947368" />
@@ -13,18 +14,23 @@
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/activity_signup.xml" value="0.2" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/activity_signup_details.xml" value="0.176" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_choose_option.xml" value="0.16052631578947368" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_filter.xml" value="0.6" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_horly_rate.xml" value="0.176" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_personal_details.xml" value="0.136" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_personal_details_2.xml" value="0.176" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_role_interest.xml" value="0.144" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_role_interest_2.xml" value="0.136" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_tearms.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_work_history.xml" value="0.152" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/dialog_work_history_2.xml" value="0.16052631578947368" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/fragment_browse.xml" value="0.16052631578947368" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/fragment_my_jobs.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_jobs.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_message.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_nurses.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_photos_files.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_popup_dropdown.xml" value="0.16052631578947368" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_posted_f.xml" value="0.176" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_questions.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/item_specialty.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nursify27-10/Nursify/app/src/main/res/layout/popup_dropdown.xml" value="0.16052631578947368" />
