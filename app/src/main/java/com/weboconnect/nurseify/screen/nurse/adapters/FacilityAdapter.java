@@ -1,4 +1,4 @@
-package com.weboconnect.nurseify.adapter;
+package com.weboconnect.nurseify.screen.nurse.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -19,6 +19,7 @@ import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.intermediate.FacilityListCallback;
 import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;

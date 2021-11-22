@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,11 @@ import com.weboconnect.nurseify.adapter.JobAdapter;
 import com.weboconnect.nurseify.adapter.LikeModel;
 import com.weboconnect.nurseify.databinding.DialogFilterBinding;
 import com.weboconnect.nurseify.databinding.FragmentBrowseBinding;
+import com.weboconnect.nurseify.intermediate.FacilityListCallback;
 import com.weboconnect.nurseify.screen.nurse.JobDetailsActivity;
 import com.weboconnect.nurseify.screen.nurse.adapters.BrowserJobsAdapter;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
+import com.weboconnect.nurseify.screen.nurse.model.FollowFacilityModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
@@ -53,8 +57,23 @@ public class BrowseFragment extends Fragment {
     private String user_id = " ";
     boolean isJobType = true;
     private List<JobModel.JobDatum> list_jobs = new ArrayList<>();
+    private List<FacilityModel.Facility> list_facility = new ArrayList<>();
     private BrowserJobsAdapter browserJobsAdapter;
+    private FacilityAdapter facilityAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    FacilityListCallback facilityListCallback = new FacilityListCallback() {
+        @Override
+        public void onFollow(String facilityId, String type) {
+            Log.e("facilityId", facilityId);
+            Log.e("type", type);
+//            followFacility(facilityId,type);
+        }
+
+        @Override
+        public void onLike(String facilityId, String like) {
+            likeFacility(facilityId, like);
+        }
+    };
 
     public BrowseFragment() {
     }
@@ -68,9 +87,13 @@ public class BrowseFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_browse, null, false);
         binding.recyclerViewJobs.setAdapter(new JobAdapter(getActivity()));
+        list_facility = new ArrayList<>();
+        facilityAdapter = new FacilityAdapter(getActivity(), list_facility, facilityListCallback);
+
         click();
         layoutManager = binding.recyclerViewJobs.getLayoutManager();
         binding.recyclerViewJobs.addOnScrollListener(recyclerViewOnScrollListener);
+        fecthBrowseFacility();
         return view = binding.getRoot();
     }
 
@@ -267,6 +290,171 @@ public class BrowseFragment extends Fragment {
 
     }
 
+
+    private void fecthBrowseFacility() {
+
+        Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
+
+        if (!Utils.isNetworkAvailable(getContext())) {
+            Utils.displayToast(getContext(), getResources().getString(R.string.no_internet));
+            return;
+        }
+        Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
+        showProgress();
+        String page = "" + selected_page;
+        user_id = new SessionManager(getContext()).get_user_register_Id();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+
+
+        Call<FacilityModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                .call_browser_facility(page, user_id1);
+
+        call.enqueue(new Callback<FacilityModel>() {
+            @Override
+            public void onResponse(Call<FacilityModel> call, Response<FacilityModel> response) {
+                try {
+                    assert response.body() != null;
+                    if (!response.body().getApiStatus().equals("1")) {
+                        errorProgress(true);
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        dismissProgress();
+                        FacilityModel facilityModel = response.body();
+                        if (list_facility == null) {
+                            list_facility = new ArrayList<>();
+                        }
+                        if (list_facility.size() > 0) {
+                            list_facility.addAll(facilityModel.getData());
+                            if (browserJobsAdapter != null) {
+                                facilityAdapter.notifyDataSetChanged();
+                            } else
+                                setAdapter();
+                        } else {
+                            list_facility.addAll(facilityModel.getData());
+                            setAdapter();
+                        }
+
+                    } else {
+                        errorProgress(true);
+                    }
+                } catch (Exception e) {
+                    errorProgress(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FacilityModel> call, Throwable t) {
+                errorProgress(true);
+
+            }
+        });
+
+
+    }
+
+    private void followFacility(String facilityId, String type) {
+
+        Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
+
+        if (!Utils.isNetworkAvailable(getContext())) {
+            Utils.displayToast(getContext(), getResources().getString(R.string.no_internet));
+            return;
+        }
+        Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
+        showProgress();
+        user_id = new SessionManager(getContext()).get_user_register_Id();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+        RequestBody facility_id = RequestBody.create(MediaType.parse("multipart/form-data"), facilityId);
+        RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), type);
+
+
+        Call<FollowFacilityModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                .call_follow_facility(user_id1, facility_id, type_);
+
+        call.enqueue(new Callback<FollowFacilityModel>() {
+            @Override
+            public void onResponse(Call<FollowFacilityModel> call, Response<FollowFacilityModel> response) {
+                try {
+                    assert response.body() != null;
+                    if (!response.body().getApiStatus().equals("1")) {
+                        errorProgress(true);
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        dismissProgress();
+                        Log.e("follow", "Success");
+                        fecthBrowseFacility();
+
+                    } else {
+                        errorProgress(true);
+                    }
+                } catch (Exception e) {
+                    errorProgress(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FollowFacilityModel> call, Throwable t) {
+                errorProgress(true);
+
+            }
+        });
+
+
+    }
+
+    private void likeFacility(String facilityId, String like) {
+
+        Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
+
+        if (!Utils.isNetworkAvailable(getContext())) {
+            Utils.displayToast(getContext(), getResources().getString(R.string.no_internet));
+            return;
+        }
+        Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
+        showProgress();
+        user_id = new SessionManager(getContext()).get_user_register_Id();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+        RequestBody facility_id = RequestBody.create(MediaType.parse("multipart/form-data"), facilityId);
+        RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), like);
+
+
+        Call<FollowFacilityModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                .call_like_facility(user_id1, facility_id, type_);
+
+        call.enqueue(new Callback<FollowFacilityModel>() {
+            @Override
+            public void onResponse(Call<FollowFacilityModel> call, Response<FollowFacilityModel> response) {
+                try {
+                    assert response.body() != null;
+                    if (!response.body().getApiStatus().equals("1")) {
+                        errorProgress(true);
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        dismissProgress();
+                        Log.e("follow", "Success");
+                        fecthBrowseFacility();
+
+                    } else {
+                        errorProgress(true);
+                    }
+                } catch (Exception e) {
+                    errorProgress(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FollowFacilityModel> call, Throwable t) {
+                errorProgress(true);
+
+            }
+        });
+
+
+    }
+
     private void click() {
         binding.imgFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -297,7 +485,7 @@ public class BrowseFragment extends Fragment {
                 binding.textJobs.setTextColor(Color.parseColor("#000000"));
                 binding.textFacilities.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
                 binding.textJobs.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
-                binding.recyclerViewJobs.setAdapter(new FacilityAdapter(getActivity()));
+                binding.recyclerViewJobs.setAdapter(facilityAdapter);
             }
         });
     }

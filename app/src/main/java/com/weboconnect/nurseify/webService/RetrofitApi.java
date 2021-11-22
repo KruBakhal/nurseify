@@ -6,6 +6,8 @@ import com.weboconnect.nurseify.screen.nurse.model.AddCredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.CernersModel;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
+import com.weboconnect.nurseify.screen.nurse.model.FollowFacilityModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
@@ -225,4 +227,28 @@ public interface RetrofitApi {
     @POST("job-like")
     Call<LikeModel> call_like_job(@Part("user_id") RequestBody user_id, @Part("job_id") RequestBody job_id,
                                   @Part("like") RequestBody like);
+
+
+    @Multipart
+    @POST("browse-jobs")
+    Call<FacilityModel> call_browser_facility(
+            @Query("page") String page,
+            @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("facility-follow")
+    Call<FollowFacilityModel> call_follow_facility(
+            @Part("user_id") RequestBody user_id,
+            @Part("facility_id") RequestBody facility_id,
+            @Part("type") RequestBody type
+    );
+
+    @Multipart
+    @POST("facility-like")
+    Call<FollowFacilityModel> call_like_facility(
+            @Part("user_id") RequestBody user_id,
+            @Part("facility_id") RequestBody facility_id,
+            @Part("like") RequestBody like
+    );
 }
