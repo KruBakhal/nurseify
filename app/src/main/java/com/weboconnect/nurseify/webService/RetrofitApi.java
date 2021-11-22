@@ -230,7 +230,7 @@ public interface RetrofitApi {
 
 
     @Multipart
-    @POST("browse-jobs")
+    @POST("browse-facility")
     Call<FacilityModel> call_browser_facility(
             @Query("page") String page,
             @Part("user_id") RequestBody user_id

@@ -64,7 +64,7 @@ public class BrowseFragment extends Fragment {
     FacilityListCallback facilityListCallback = new FacilityListCallback() {
         @Override
         public void onFollow(String facilityId, String type) {
-            Log.e("facilityId", facilityId);
+//            Log.e("facilityId", facilityId);
             Log.e("type", type);
 //            followFacility(facilityId,type);
         }
@@ -326,7 +326,7 @@ public class BrowseFragment extends Fragment {
                         }
                         if (list_facility.size() > 0) {
                             list_facility.addAll(facilityModel.getData());
-                            if (browserJobsAdapter != null) {
+                            if (facilityAdapter != null) {
                                 facilityAdapter.notifyDataSetChanged();
                             } else
                                 setAdapter();
