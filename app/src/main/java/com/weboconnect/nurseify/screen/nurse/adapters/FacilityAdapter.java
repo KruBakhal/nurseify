@@ -47,8 +47,8 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-
-            Glide.with(activity).load(list.get(position).getFacilityLogo()).load(holder.imageView);
+            
+            Glide.with(holder.itemView.getContext()).load(list.get(position).getFacilityLogo()).into(holder.imageView);
 
             holder.tv_name.setText(list.get(position).getName());
             holder.tv_description.setText(Html.fromHtml(list.get(position).getAboutFacility()));

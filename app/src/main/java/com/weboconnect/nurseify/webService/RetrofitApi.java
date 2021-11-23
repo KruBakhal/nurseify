@@ -13,8 +13,9 @@ import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionMo
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageModel;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesModel;
+import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.screen.nurse.model.RoleModel;
-import com.weboconnect.nurseify.screen.nurse.model.SignupModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
@@ -251,4 +252,40 @@ public interface RetrofitApi {
             @Part("facility_id") RequestBody facility_id,
             @Part("like") RequestBody like
     );
+
+    @Multipart
+    @POST("job-offered")
+    Call<OfferedJobModel> call_offered_job(
+            @Query("page") String page,
+            @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("job-accept")
+    Call<ResponseModel> call_offered_job_accept(
+            @Part("user_id") RequestBody user_id,
+            @Part("job_id") RequestBody job_id
+    );
+
+    @Multipart
+    @POST("job-reject")
+    Call<ResponseModel> call_offered_job_reject(
+            @Part("user_id") RequestBody user_id,
+            @Part("job_id") RequestBody job_id
+    );
+
+    @Multipart
+    @POST("job-active")
+    Call<OfferedJobModel> call_active_job(
+            @Query("page") String page,
+            @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("job-completed")
+    Call<OfferedJobModel> call_completed_job(
+            @Query("page") String page,
+            @Part("user_id") RequestBody user_id
+    );
+
 }

@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.adapter.JobAdapter;
+import com.weboconnect.nurseify.screen.nurse.adapters.JobAdapter;
 import com.weboconnect.nurseify.databinding.ActivityCreateProfileBinding;
 
 public class CreateProfileActivity extends AppCompatActivity {

@@ -15,12 +15,10 @@ import androidx.fragment.app.Fragment;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.ActiveFAdapter;
-import com.weboconnect.nurseify.adapter.FacilityAdapter;
-import com.weboconnect.nurseify.adapter.JobAdapter;
+import com.weboconnect.nurseify.screen.nurse.adapters.JobAdapter;
 import com.weboconnect.nurseify.adapter.NursesAdapter;
 import com.weboconnect.nurseify.adapter.OfferedFAdapter;
 import com.weboconnect.nurseify.adapter.PastAdapter;
-import com.weboconnect.nurseify.databinding.FragmentBrowseBinding;
 import com.weboconnect.nurseify.databinding.FragmentBrowseFBinding;
 
 

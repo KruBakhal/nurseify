@@ -1,4 +1,4 @@
-package com.weboconnect.nurseify.adapter;
+package com.weboconnect.nurseify.screen.nurse.adapters;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -37,19 +37,21 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
+
+
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     activity.startActivity(new Intent(activity, JobDetailsActivity.class));
                 }
             });
+
             holder.layoutApply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                    tearmsDialog();
                 }
             });
-
 
         }catch (Exception e){
             Log.e("Service_Adapter",e.toString());
@@ -95,6 +97,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
             }
         });
     }
+
     private void selectDate(){
         final View loc = activity.getLayoutInflater().from(activity).inflate(R.layout.dialog_select_dates, null);
         final Dialog dialog = new Dialog(activity,R.style.AlertDialog);

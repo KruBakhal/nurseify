@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.FacilityAdapter;
-import com.weboconnect.nurseify.adapter.JobAdapter;
+import com.weboconnect.nurseify.screen.nurse.adapters.JobAdapter;
 import com.weboconnect.nurseify.adapter.LikeModel;
 import com.weboconnect.nurseify.databinding.DialogFilterBinding;
 import com.weboconnect.nurseify.databinding.FragmentBrowseBinding;
@@ -64,9 +64,7 @@ public class BrowseFragment extends Fragment {
     FacilityListCallback facilityListCallback = new FacilityListCallback() {
         @Override
         public void onFollow(String facilityId, String type) {
-//            Log.e("facilityId", facilityId);
-            Log.e("type", type);
-//            followFacility(facilityId,type);
+            followFacility(facilityId,type);
         }
 
         @Override
@@ -376,11 +374,6 @@ public class BrowseFragment extends Fragment {
             @Override
             public void onResponse(Call<FollowFacilityModel> call, Response<FollowFacilityModel> response) {
                 try {
-                    assert response.body() != null;
-                    if (!response.body().getApiStatus().equals("1")) {
-                        errorProgress(true);
-                        return;
-                    }
                     if (response.isSuccessful()) {
                         dismissProgress();
                         Log.e("follow", "Success");
@@ -427,11 +420,7 @@ public class BrowseFragment extends Fragment {
             @Override
             public void onResponse(Call<FollowFacilityModel> call, Response<FollowFacilityModel> response) {
                 try {
-                    assert response.body() != null;
-                    if (!response.body().getApiStatus().equals("1")) {
-                        errorProgress(true);
-                        return;
-                    }
+
                     if (response.isSuccessful()) {
                         dismissProgress();
                         Log.e("follow", "Success");

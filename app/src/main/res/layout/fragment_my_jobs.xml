@@ -9,97 +9,112 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/primary_gradient"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bk_input"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="17dp"
-                    android:src="@drawable/menue_search_active"
-                    app:tint="@color/white" />
-
-                <EditText
-                    android:id="@+id/editTextSearch"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="9dp"
-                    android:layout_weight="1"
-                    android:background="@color/trans"
-                    android:fontFamily="@font/sf_500"
-                    android:hint="Search for jobs..."
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:textSize="17dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="#F4F3F9"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="21dp">
-
-                <TextView
-                    android:id="@+id/textOffered"
-                    android:layout_width="0dp"
-                    android:layout_height="33dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_tab"
-                    android:fontFamily="@font/sf_600"
-                    android:gravity="center"
-                    android:text="Offered"
-                    android:textColor="#8A4999"
-                    android:textSize="17dp" />
-
-                <TextView
-                    android:id="@+id/textActive"
-                    android:layout_width="0dp"
-                    android:layout_height="33dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/sf_600"
-                    android:gravity="center"
-                    android:text="Active "
-                    android:textColor="@color/black"
-                    android:textSize="17dp" />
-
-                <TextView
-                    android:id="@+id/textCompleted"
-                    android:layout_width="0dp"
-                    android:layout_height="33dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/sf_600"
-                    android:gravity="center"
-                    android:text="Completed "
-                    android:textColor="@color/black"
-                    android:textSize="17dp" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_jobs"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FFFFFF"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_jobs" />
-        </LinearLayout>
+                android:background="@drawable/primary_gradient"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bk_input"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="17dp"
+                        android:src="@drawable/menue_search_active"
+                        app:tint="@color/white" />
+
+                    <EditText
+                        android:id="@+id/editTextSearch"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="9dp"
+                        android:layout_weight="1"
+                        android:background="@color/trans"
+                        android:fontFamily="@font/sf_500"
+                        android:hint="Search for jobs..."
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="17dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="#F4F3F9"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="21dp">
+
+                    <TextView
+                        android:id="@+id/textOffered"
+                        android:layout_width="0dp"
+                        android:layout_height="33dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_tab"
+                        android:fontFamily="@font/sf_600"
+                        android:gravity="center"
+                        android:text="Offered"
+                        android:textColor="#8A4999"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/textActive"
+                        android:layout_width="0dp"
+                        android:layout_height="33dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sf_600"
+                        android:gravity="center"
+                        android:text="Active "
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/textCompleted"
+                        android:layout_width="0dp"
+                        android:layout_height="33dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sf_600"
+                        android:gravity="center"
+                        android:text="Completed "
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_jobs"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#FFFFFF"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_jobs" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
 </layout>

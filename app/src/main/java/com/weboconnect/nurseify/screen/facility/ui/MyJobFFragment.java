@@ -11,13 +11,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.adapter.ActiveAdapter;
 import com.weboconnect.nurseify.adapter.ActiveFAdapter;
 import com.weboconnect.nurseify.adapter.CompletedAdapter;
-import com.weboconnect.nurseify.adapter.JobAdapter;
-import com.weboconnect.nurseify.adapter.OfferedAdapter;
 import com.weboconnect.nurseify.adapter.PostedAdapter;
-import com.weboconnect.nurseify.databinding.FragmentMyJobsBinding;
 import com.weboconnect.nurseify.databinding.FragmentMyJobsFBinding;
 
 public class MyJobFFragment extends Fragment {
