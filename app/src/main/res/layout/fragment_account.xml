@@ -143,7 +143,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rating"
+                        android:text="Bill Rate"
                         android:textSize="14dp"
                         android:fontFamily="@font/sf_400"
                         android:textColor="#A7A6AD"/>
@@ -170,7 +170,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Earnings"
+                        android:text="Experience"
                         android:textSize="14dp"
                         android:fontFamily="@font/sf_400"
                         android:textColor="#A7A6AD"/>
@@ -197,7 +197,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Services\nCompleted"
+                        android:text="Shift"
                         android:textSize="14dp"
                         android:fontFamily="@font/sf_400"
                         android:textColor="#A7A6AD"/>
@@ -231,7 +231,8 @@
                     android:text="Personal Details"
                     android:layout_marginLeft="17dp"
                     android:textSize="19dp"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600"
+                    android:textColor="@color/black"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -258,7 +259,8 @@
                     android:text="Hourly Rate &amp; Availability"
                     android:layout_marginLeft="17dp"
                     android:textSize="19dp"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600"
+                    android:textColor="@color/black"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -285,7 +287,8 @@
                     android:text="Work History &amp; Certifications"
                     android:layout_marginLeft="17dp"
                     android:textSize="19dp"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600"
+                    android:textColor="@color/black"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -312,7 +315,8 @@
                     android:text="Role Interest"
                     android:layout_marginLeft="17dp"
                     android:textSize="19dp"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600"
+                    android:textColor="@color/black"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -340,7 +344,8 @@
                     android:text="Settings"
                     android:layout_marginLeft="17dp"
                     android:textSize="19dp"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600"
+                    android:textColor="@color/black"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"

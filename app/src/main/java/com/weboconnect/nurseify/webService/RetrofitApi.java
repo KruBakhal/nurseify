@@ -13,6 +13,7 @@ import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionMo
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageModel;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesModel;
+import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
 import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.screen.nurse.model.RoleModel;
@@ -285,6 +286,12 @@ public interface RetrofitApi {
     @POST("job-completed")
     Call<OfferedJobModel> call_completed_job(
             @Query("page") String page,
+            @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("get-notification")
+    Call<NotificationModel> call_notification(
             @Part("user_id") RequestBody user_id
     );
 

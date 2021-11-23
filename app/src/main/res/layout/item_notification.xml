@@ -52,12 +52,14 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1">
                <ImageView
+                   android:id="@+id/imgClose"
                    android:layout_width="17dp"
                    android:layout_height="17dp"
                    app:tint="@color/black"
                    android:src="@drawable/ic_close"/>
             </LinearLayout>
             <TextView
+                android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="23 July"
