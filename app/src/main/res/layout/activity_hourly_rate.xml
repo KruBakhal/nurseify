@@ -12,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:background="@drawable/primary_gradient"
@@ -39,12 +40,14 @@
                     android:layout_height="24dp"
                     android:layout_marginRight="15dp"/>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="21dp"
                 android:background="@color/page_bk"
                 android:orientation="horizontal">
+
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -54,6 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -106,6 +110,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginHorizontal="16dp"
                         android:background="#D2DCE2"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -116,9 +121,9 @@
                         android:textColor="#848297"
                         android:fontFamily="@font/sf_500"/>
                     <TextView
+                        android:id="@+id/tvHourlyRate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$ 38"
                         android:layout_marginLeft="35dp"
                         android:layout_marginTop="7dp"
                         android:textSize="16dp"
@@ -130,6 +135,7 @@
                         android:layout_marginTop="6dp"
                         android:layout_marginHorizontal="16dp"
                         android:background="#D2DCE2"/>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -181,6 +187,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginHorizontal="16dp"
                         android:background="#D2DCE2"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -191,9 +198,9 @@
                         android:textColor="#848297"
                         android:fontFamily="@font/sf_500"/>
                     <TextView
+                        android:id="@+id/tvShiftDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="06 Hours"
                         android:layout_marginLeft="35dp"
                         android:layout_marginTop="7dp"
                         android:textSize="16dp"
@@ -205,6 +212,7 @@
                         android:layout_marginTop="6dp"
                         android:layout_marginHorizontal="16dp"
                         android:background="#D2DCE2"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -215,9 +223,9 @@
                         android:textColor="#848297"
                         android:fontFamily="@font/sf_500"/>
                     <TextView
+                        android:id="@+id/tvAssignmentDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10 Week"
                         android:layout_marginLeft="35dp"
                         android:layout_marginTop="7dp"
                         android:textSize="16dp"
@@ -229,6 +237,7 @@
                         android:layout_marginTop="6dp"
                         android:layout_marginHorizontal="16dp"
                         android:background="#D2DCE2"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -239,9 +248,9 @@
                         android:textColor="#848297"
                         android:fontFamily="@font/sf_500"/>
                     <TextView
+                        android:id="@+id/tvPreferredShift"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Day Shift"
                         android:layout_marginLeft="35dp"
                         android:layout_marginTop="7dp"
                         android:textSize="16dp"
@@ -253,6 +262,7 @@
                         android:layout_marginTop="6dp"
                         android:layout_marginHorizontal="16dp"
                         android:background="#D2DCE2"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -272,9 +282,9 @@
                         android:textColor="#848297"
                         android:fontFamily="@font/sf_500"/>
                     <TextView
+                        android:id="@+id/tvPreferredDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tuesday, Friday"
                         android:layout_marginLeft="35dp"
                         android:layout_marginTop="7dp"
                         android:textSize="16dp"
@@ -286,6 +296,7 @@
                         android:layout_marginTop="6dp"
                         android:layout_marginHorizontal="16dp"
                         android:background="#D2DCE2"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -296,9 +307,9 @@
                         android:textColor="#848297"
                         android:fontFamily="@font/sf_500"/>
                     <TextView
+                        android:id="@+id/tvEarliestStartDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="26/07/2021"
                         android:layout_marginLeft="35dp"
                         android:layout_marginTop="7dp"
                         android:textSize="16dp"
@@ -315,6 +326,7 @@
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
             </LinearLayout>
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

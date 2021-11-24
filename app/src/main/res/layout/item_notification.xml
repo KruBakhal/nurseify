@@ -37,7 +37,6 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:textSize="16dp"
-                    android:fontFamily="@font/sf_600"
                     android:textColor="@color/black"/>
             </LinearLayout>
         </LinearLayout>

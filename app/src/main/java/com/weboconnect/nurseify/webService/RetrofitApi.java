@@ -17,6 +17,7 @@ import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
 import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.screen.nurse.model.RoleModel;
+import com.weboconnect.nurseify.screen.nurse.model.SettingModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
@@ -292,6 +293,12 @@ public interface RetrofitApi {
     @Multipart
     @POST("get-notification")
     Call<NotificationModel> call_notification(
+            @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("settings")
+    Call<SettingModel> call_setting(
             @Part("user_id") RequestBody user_id
     );
 
