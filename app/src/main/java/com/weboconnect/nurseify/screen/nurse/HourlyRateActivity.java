@@ -53,5 +53,6 @@ public class HourlyRateActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 }

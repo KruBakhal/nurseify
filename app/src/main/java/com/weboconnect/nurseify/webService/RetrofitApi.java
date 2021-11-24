@@ -14,6 +14,7 @@ import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageModel;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesModel;
 import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
+import com.weboconnect.nurseify.screen.nurse.model.NurseProfileModel;
 import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.screen.nurse.model.RoleModel;
@@ -300,6 +301,20 @@ public interface RetrofitApi {
     @POST("settings")
     Call<SettingModel> call_setting(
             @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("get-nurse-profile")
+    Call<NurseProfileModel> call_nurse_profile(
+            @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("remove-credentials-image")
+    Call<ResponseModel> call_remove_image(
+            @Part("user_id") RequestBody user_id,
+            @Part("certificate_image") RequestBody certificate_image,
+            @Part("certificate_id") RequestBody certificate_id
     );
 
 }

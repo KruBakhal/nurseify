@@ -5,11 +5,13 @@
       <map>
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/activity_hourly_rate.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/activity_personal_details.xml" value="0.184375" />
+        <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/activity_work_history.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/fragment_account.xml" value="0.22" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/fragment_my_jobs.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/fragment_notification.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/item_active.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/item_completed.xml" value="0.184375" />
+        <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/item_credentials.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/item_jobs.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/item_notification.xml" value="0.184375" />
         <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/item_offered.xml" value="0.184375" />
