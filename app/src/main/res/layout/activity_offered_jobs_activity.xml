@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data>
-    </data>
+
+    <data></data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/page_bk">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:background="@drawable/primary_gradient"
                 android:layout_height="60dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:id="@+id/imgBack"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginLeft="15dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/back"/>
+                    android:src="@drawable/back" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -33,11 +38,12 @@
                     android:text="Infection Prevention"
                     android:textSize="27dp"
                     android:fontFamily="@font/sf_500"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
+
                 <View
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginRight="15dp"/>
+                    android:layout_marginRight="15dp" />
             </LinearLayout>
 
             <androidx.core.widget.NestedScrollView
@@ -45,10 +51,12 @@
                 android:layout_height="match_parent"
                 android:background="@color/page_bk"
                 android:scrollbars="none">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -57,39 +65,46 @@
                         android:layout_marginTop="17dp"
                         android:paddingBottom="30dp"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="29dp"
                             android:layout_marginHorizontal="17dp"
                             android:orientation="horizontal">
+
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:layout_width="49dp"
                                 android:layout_height="49dp"
-                                android:src="@drawable/test1"/>
+                                android:src="@drawable/test1" />
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="19dp"
                                 android:orientation="vertical">
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Nurseify Facility"
                                         android:textSize="19dp"
                                         android:fontFamily="@font/sf_500"
-                                        android:textColor="@color/black"/>
+                                        android:textColor="@color/black" />
+
                                     <ImageView
                                         android:layout_width="17dp"
                                         android:layout_height="17dp"
                                         android:src="@drawable/verified"
                                         android:layout_marginLeft="5dp"
-                                        android:layout_gravity="center"/>
+                                        android:layout_gravity="center" />
                                 </LinearLayout>
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -97,7 +112,8 @@
                                     android:textSize="22dp"
                                     android:layout_marginTop="3dp"
                                     android:fontFamily="@font/sf_600"
-                                    android:textColor="@color/black"/>
+                                    android:textColor="@color/black" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -105,7 +121,7 @@
                                     android:textSize="10dp"
                                     android:layout_marginTop="3dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:textColor="#7E92A0"/>
+                                    android:textColor="#7E92A0" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -115,11 +131,13 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginLeft="35dp"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="17dp"
                                 android:layout_height="17dp"
                                 android:src="@drawable/peroid"
-                                android:layout_gravity="center"/>
+                                android:layout_gravity="center" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
@@ -128,19 +146,22 @@
                                 android:text="10 Week"
                                 android:textSize="13dp"
                                 android:fontFamily="@font/sf_400"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:layout_marginLeft="35dp"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"
                                 android:src="@drawable/ic_location"
-                                android:layout_gravity="center"/>
+                                android:layout_gravity="center" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -148,19 +169,22 @@
                                 android:text="National Traveler (anywhere in the US)"
                                 android:textSize="13dp"
                                 android:fontFamily="@font/sf_400"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:layout_marginLeft="35dp"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"
                                 android:src="@drawable/ic_calendar_black"
-                                android:layout_gravity="center"/>
+                                android:layout_gravity="center" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -168,7 +192,8 @@
                                 android:text="Start Date"
                                 android:textSize="13dp"
                                 android:fontFamily="@font/sf_400"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -179,7 +204,8 @@
                                 android:textSize="13dp"
                                 android:fontFamily="@font/sf_600"
                                 android:textColor="@color/white"
-                                android:background="@drawable/btn_corner_secondary"/>
+                                android:background="@drawable/btn_corner_secondary" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -191,15 +217,17 @@
                                 android:layout_gravity="right"
                                 android:gravity="right"
                                 android:fontFamily="@font/sf_600"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
                         </LinearLayout>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bk_page"
                         android:layout_marginTop="22dp"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -208,7 +236,8 @@
                             android:textSize="17dp"
                             android:layout_marginLeft="21dp"
                             android:fontFamily="@font/sf_600"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -217,8 +246,9 @@
                             android:textSize="15dp"
                             android:layout_marginHorizontal="21dp"
                             android:fontFamily="@font/sf_500"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -228,6 +258,7 @@
                         android:paddingBottom="24dp"
                         android:layout_marginTop="25dp"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -236,13 +267,15 @@
                             android:textSize="17dp"
                             android:layout_marginLeft="21dp"
                             android:fontFamily="@font/sf_600"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="17dp"
                             android:layout_marginHorizontal="35dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -250,7 +283,8 @@
                                 android:text="Seniority Level"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="#A4ABB2"/>
+                                android:textColor="#A4ABB2" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -258,14 +292,16 @@
                                 android:text="Preferred Shift Duration"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="#A4ABB2"/>
+                                android:textColor="#A4ABB2" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="17dp"
                             android:layout_marginHorizontal="35dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -273,7 +309,8 @@
                                 android:text="ACNO"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -281,14 +318,16 @@
                                 android:text="8 hour"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="26dp"
                             android:layout_marginHorizontal="35dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -296,7 +335,8 @@
                                 android:text="Preferred Experience"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="#A4ABB2"/>
+                                android:textColor="#A4ABB2" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -304,14 +344,16 @@
                                 android:text="Cerner"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="#A4ABB2"/>
+                                android:textColor="#A4ABB2" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="17dp"
                             android:layout_marginHorizontal="35dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -319,7 +361,8 @@
                                 android:text="3 Years"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -327,14 +370,16 @@
                                 android:text="Advanced (5+ year's experience)"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="17dp"
                             android:layout_marginHorizontal="35dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -342,7 +387,8 @@
                                 android:text="Meditech"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="#A4ABB2"/>
+                                android:textColor="#A4ABB2" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -350,14 +396,16 @@
                                 android:text="Epic"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="#A4ABB2"/>
+                                android:textColor="#A4ABB2" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="17dp"
                             android:layout_marginHorizontal="35dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -366,7 +414,8 @@
 experience)"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -374,8 +423,9 @@ experience)"
                                 android:text="Advanced (5+ year's experience)"
                                 android:fontFamily="@font/sf_500"
                                 android:textSize="13dp"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -383,6 +433,7 @@ experience)"
                             android:layout_marginHorizontal="22dp"
                             android:layout_marginBottom="10dp"
                             android:orientation="horizontal">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
@@ -390,6 +441,7 @@ experience)"
                                 android:layout_marginRight="24dp"
                                 android:gravity="center"
                                 android:background="@drawable/btn_accept">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -398,15 +450,17 @@ experience)"
                                     android:textSize="16dp"
                                     android:textColor="@color/white"
                                     android:layout_gravity="center"
-                                    android:gravity="center"/>
+                                    android:gravity="center" />
 
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="40dp"
                                 android:gravity="center"
                                 android:background="@drawable/btn_reject">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -415,7 +469,7 @@ experience)"
                                     android:textSize="16dp"
                                     android:textColor="@color/white"
                                     android:layout_gravity="center"
-                                    android:gravity="center"/>
+                                    android:gravity="center" />
 
                             </LinearLayout>
                         </LinearLayout>

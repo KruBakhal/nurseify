@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data>
-    </data>
+
+    <data></data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/page_bk">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:background="@drawable/primary_gradient"
                 android:layout_height="80dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:id="@+id/imgBack"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginLeft="15dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/back"/>
+                    android:src="@drawable/back" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -33,35 +38,41 @@
                     android:text="About App"
                     android:textSize="27dp"
                     android:fontFamily="@font/sf_500"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
+
                 <View
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginRight="15dp"/>
+                    android:layout_marginRight="15dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/page_bk"
                 android:orientation="horizontal">
+
                 <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="none">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="21dp"
                         android:layout_marginHorizontal="11dp"
                         android:orientation="vertical">
+
                         <TextView
+                            android:id="@+id/tv_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Provides an online resource for health care professionals. These terms may be changed from time to time and without further notice. Your continued use of the Site after any such changes constitutes your acceptance of the new terms. If you do not agree to abide by these or any future terms, please do not use the Site or download materials from it. GE Healthcare, a division of General Electric Company, may terminate, change, suspend or discontinue any aspect of the Site, including the availability of any features, at any time. GE may remove, modify or otherwise change any content, including that of third parties, on or from this Site. "
-                            android:textSize="16dp"
-                            android:justificationMode="inter_word"
                             android:fontFamily="@font/sf_400"
-                            android:textColor="#4C525A"/>
+                            android:justificationMode="inter_word"
+                            android:text="Provides an online resource for health care professionals. These terms may be changed from time to time and without further notice. Your continued use of the Site after any such changes constitutes your acceptance of the new terms. If you do not agree to abide by these or any future terms, please do not use the Site or download materials from it. GE Healthcare, a division of General Electric Company, may terminate, change, suspend or discontinue any aspect of the Site, including the availability of any features, at any time. GE may remove, modify or otherwise change any content, including that of third parties, on or from this Site. "
+                            android:textColor="#4C525A"
+                            android:textSize="16dp" />
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
             </LinearLayout>

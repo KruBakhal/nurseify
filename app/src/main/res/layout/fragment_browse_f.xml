@@ -2,16 +2,19 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-    </data>
+
+    <data></data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/primary_gradient"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
@@ -19,13 +22,15 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/menue_search_active"
                     android:layout_gravity="center"
                     app:tint="@color/white"
-                    android:layout_marginLeft="17dp"/>
+                    android:layout_marginLeft="17dp" />
+
                 <EditText
                     android:id="@+id/editTextSearch"
                     android:layout_width="0dp"
@@ -37,8 +42,9 @@
                     android:textColorHint="@color/white"
                     android:background="@color/trans"
                     android:hint="Search for Nurses"
-                    android:textColor="#D7CDE3"/>
+                    android:textColor="#D7CDE3" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,6 +53,7 @@
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="21dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/textNurses"
                     android:layout_width="0dp"
@@ -58,7 +65,8 @@
                     android:textColor="#8A4999"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600" />
+
                 <TextView
                     android:id="@+id/textOffered"
                     android:layout_width="0dp"
@@ -69,7 +77,8 @@
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600" />
+
                 <TextView
                     android:id="@+id/textActive"
                     android:layout_width="0dp"
@@ -80,7 +89,8 @@
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600" />
+
                 <TextView
                     android:id="@+id/textPast"
                     android:layout_width="0dp"
@@ -91,8 +101,9 @@
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/filter"
                 android:layout_width="match_parent"
@@ -102,10 +113,12 @@
                 android:paddingBottom="15dp"
                 android:paddingLeft="20dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_filter_black"/>
+                    android:src="@drawable/ic_filter_black" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,15 +126,16 @@
                     android:fontFamily="@font/sf_500"
                     android:textColor="@color/black"
                     android:textSize="16dp"
-                    android:layout_marginLeft="16dp"/>
+                    android:layout_marginLeft="16dp" />
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_jobs"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#FFFFFF"
                 tools:listitem="@layout/item_nurses"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </LinearLayout>
 
     </FrameLayout>

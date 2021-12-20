@@ -8,7 +8,7 @@ public class RoleModel {
 
     @SerializedName("api_status")
     @Expose
-    private Integer apiStatus;
+    private String apiStatus;
     @SerializedName("message")
     @Expose
     private String message;
@@ -16,11 +16,11 @@ public class RoleModel {
     @Expose
     private Role_Data Role_Data;
 
-    public Integer getApiStatus() {
+    public String getApiStatus() {
         return apiStatus;
     }
 
-    public void setApiStatus(Integer apiStatus) {
+    public void setApiStatus(String apiStatus) {
         this.apiStatus = apiStatus;
     }
 
@@ -55,22 +55,22 @@ public class RoleModel {
         private String specialty;
         @SerializedName("nursing_license_state")
         @Expose
-        private String nursingLicenseState;
+        private Object nursingLicenseState;
         @SerializedName("nursing_license_number")
         @Expose
-        private String nursingLicenseNumber;
+        private Object nursingLicenseNumber;
         @SerializedName("highest_nursing_degree")
         @Expose
         private Integer highestNursingDegree;
         @SerializedName("serving_preceptor")
         @Expose
-        private Integer servingPreceptor;
+        private Boolean servingPreceptor;
         @SerializedName("serving_interim_nurse_leader")
         @Expose
-        private Integer servingInterimNurseLeader;
+        private Boolean servingInterimNurseLeader;
         @SerializedName("leadership_roles")
         @Expose
-        private Integer leadershipRoles;
+        private String leadershipRoles;
         @SerializedName("address")
         @Expose
         private String address;
@@ -154,22 +154,22 @@ public class RoleModel {
         private Object nursesYoutube;
         @SerializedName("clinical_educator")
         @Expose
-        private Integer clinicalEducator;
+        private Boolean clinicalEducator;
         @SerializedName("is_daisy_award_winner")
         @Expose
-        private Integer isDaisyAwardWinner;
+        private Boolean isDaisyAwardWinner;
         @SerializedName("employee_of_the_mth_qtr_yr")
         @Expose
-        private Integer employeeOfTheMthQtrYr;
+        private Boolean employeeOfTheMthQtrYr;
         @SerializedName("other_nursing_awards")
         @Expose
-        private Integer otherNursingAwards;
+        private Boolean otherNursingAwards;
         @SerializedName("is_professional_practice_council")
         @Expose
-        private Integer isProfessionalPracticeCouncil;
+        private Boolean isProfessionalPracticeCouncil;
         @SerializedName("is_research_publications")
         @Expose
-        private Integer isResearchPublications;
+        private Boolean isResearchPublications;
         @SerializedName("credential_title")
         @Expose
         private Object credentialTitle;
@@ -202,13 +202,13 @@ public class RoleModel {
         private String facilityHourlyPayRate;
         @SerializedName("n_lat")
         @Expose
-        private Object nLat;
+        private String nLat;
         @SerializedName("n_lang")
         @Expose
-        private Object nLang;
+        private String nLang;
         @SerializedName("resume")
         @Expose
-        private String resume;
+        private Object resume;
         @SerializedName("nu_video")
         @Expose
         private Object nuVideo;
@@ -230,6 +230,9 @@ public class RoleModel {
         @SerializedName("gig_account_invite_date")
         @Expose
         private Object gigAccountInviteDate;
+        @SerializedName("user")
+        @Expose
+        private User user;
 
         public String getId() {
             return id;
@@ -255,19 +258,19 @@ public class RoleModel {
             this.specialty = specialty;
         }
 
-        public String getNursingLicenseState() {
+        public Object getNursingLicenseState() {
             return nursingLicenseState;
         }
 
-        public void setNursingLicenseState(String nursingLicenseState) {
+        public void setNursingLicenseState(Object nursingLicenseState) {
             this.nursingLicenseState = nursingLicenseState;
         }
 
-        public String getNursingLicenseNumber() {
+        public Object getNursingLicenseNumber() {
             return nursingLicenseNumber;
         }
 
-        public void setNursingLicenseNumber(String nursingLicenseNumber) {
+        public void setNursingLicenseNumber(Object nursingLicenseNumber) {
             this.nursingLicenseNumber = nursingLicenseNumber;
         }
 
@@ -279,27 +282,27 @@ public class RoleModel {
             this.highestNursingDegree = highestNursingDegree;
         }
 
-        public Integer getServingPreceptor() {
+        public Boolean getServingPreceptor() {
             return servingPreceptor;
         }
 
-        public void setServingPreceptor(Integer servingPreceptor) {
+        public void setServingPreceptor(Boolean servingPreceptor) {
             this.servingPreceptor = servingPreceptor;
         }
 
-        public Integer getServingInterimNurseLeader() {
+        public Boolean getServingInterimNurseLeader() {
             return servingInterimNurseLeader;
         }
 
-        public void setServingInterimNurseLeader(Integer servingInterimNurseLeader) {
+        public void setServingInterimNurseLeader(Boolean servingInterimNurseLeader) {
             this.servingInterimNurseLeader = servingInterimNurseLeader;
         }
 
-        public Integer getLeadershipRoles() {
+        public String getLeadershipRoles() {
             return leadershipRoles;
         }
 
-        public void setLeadershipRoles(Integer leadershipRoles) {
+        public void setLeadershipRoles(String leadershipRoles) {
             this.leadershipRoles = leadershipRoles;
         }
 
@@ -519,51 +522,51 @@ public class RoleModel {
             this.nursesYoutube = nursesYoutube;
         }
 
-        public Integer getClinicalEducator() {
+        public Boolean getClinicalEducator() {
             return clinicalEducator;
         }
 
-        public void setClinicalEducator(Integer clinicalEducator) {
+        public void setClinicalEducator(Boolean clinicalEducator) {
             this.clinicalEducator = clinicalEducator;
         }
 
-        public Integer getIsDaisyAwardWinner() {
+        public Boolean getIsDaisyAwardWinner() {
             return isDaisyAwardWinner;
         }
 
-        public void setIsDaisyAwardWinner(Integer isDaisyAwardWinner) {
+        public void setIsDaisyAwardWinner(Boolean isDaisyAwardWinner) {
             this.isDaisyAwardWinner = isDaisyAwardWinner;
         }
 
-        public Integer getEmployeeOfTheMthQtrYr() {
+        public Boolean getEmployeeOfTheMthQtrYr() {
             return employeeOfTheMthQtrYr;
         }
 
-        public void setEmployeeOfTheMthQtrYr(Integer employeeOfTheMthQtrYr) {
+        public void setEmployeeOfTheMthQtrYr(Boolean employeeOfTheMthQtrYr) {
             this.employeeOfTheMthQtrYr = employeeOfTheMthQtrYr;
         }
 
-        public Integer getOtherNursingAwards() {
+        public Boolean getOtherNursingAwards() {
             return otherNursingAwards;
         }
 
-        public void setOtherNursingAwards(Integer otherNursingAwards) {
+        public void setOtherNursingAwards(Boolean otherNursingAwards) {
             this.otherNursingAwards = otherNursingAwards;
         }
 
-        public Integer getIsProfessionalPracticeCouncil() {
+        public Boolean getIsProfessionalPracticeCouncil() {
             return isProfessionalPracticeCouncil;
         }
 
-        public void setIsProfessionalPracticeCouncil(Integer isProfessionalPracticeCouncil) {
+        public void setIsProfessionalPracticeCouncil(Boolean isProfessionalPracticeCouncil) {
             this.isProfessionalPracticeCouncil = isProfessionalPracticeCouncil;
         }
 
-        public Integer getIsResearchPublications() {
+        public Boolean getIsResearchPublications() {
             return isResearchPublications;
         }
 
-        public void setIsResearchPublications(Integer isResearchPublications) {
+        public void setIsResearchPublications(Boolean isResearchPublications) {
             this.isResearchPublications = isResearchPublications;
         }
 
@@ -647,27 +650,27 @@ public class RoleModel {
             this.facilityHourlyPayRate = facilityHourlyPayRate;
         }
 
-        public Object getnLat() {
+        public String getnLat() {
             return nLat;
         }
 
-        public void setnLat(Object nLat) {
+        public void setnLat(String nLat) {
             this.nLat = nLat;
         }
 
-        public Object getnLang() {
+        public String getnLang() {
             return nLang;
         }
 
-        public void setnLang(Object nLang) {
+        public void setnLang(String nLang) {
             this.nLang = nLang;
         }
 
-        public String getResume() {
+        public Object getResume() {
             return resume;
         }
 
-        public void setResume(String resume) {
+        public void setResume(Object resume) {
             this.resume = resume;
         }
 
@@ -726,5 +729,250 @@ public class RoleModel {
         public void setGigAccountInviteDate(Object gigAccountInviteDate) {
             this.gigAccountInviteDate = gigAccountInviteDate;
         }
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+    }
+
+    public class User {
+
+        @SerializedName("id")
+        @Expose
+        private String id;
+        @SerializedName("role")
+        @Expose
+        private String role;
+        @SerializedName("first_name")
+        @Expose
+        private String firstName;
+        @SerializedName("last_name")
+        @Expose
+        private String lastName;
+        @SerializedName("image")
+        @Expose
+        private String image;
+        @SerializedName("email")
+        @Expose
+        private String email;
+        @SerializedName("user_name")
+        @Expose
+        private String userName;
+        @SerializedName("fcm_token")
+        @Expose
+        private Object fcmToken;
+        @SerializedName("email_verified_at")
+        @Expose
+        private Object emailVerifiedAt;
+        @SerializedName("date_of_birth")
+        @Expose
+        private Object dateOfBirth;
+        @SerializedName("mobile")
+        @Expose
+        private String mobile;
+        @SerializedName("email_notification")
+        @Expose
+        private Integer emailNotification;
+        @SerializedName("sms_notification")
+        @Expose
+        private Integer smsNotification;
+        @SerializedName("active")
+        @Expose
+        private Integer active;
+        @SerializedName("deleted_at")
+        @Expose
+        private Object deletedAt;
+        @SerializedName("created_at")
+        @Expose
+        private String createdAt;
+        @SerializedName("updated_at")
+        @Expose
+        private String updatedAt;
+        @SerializedName("banned_until")
+        @Expose
+        private Object bannedUntil;
+        @SerializedName("last_login_at")
+        @Expose
+        private Object lastLoginAt;
+        @SerializedName("last_login_ip")
+        @Expose
+        private Object lastLoginIp;
+        @SerializedName("fullName")
+        @Expose
+        private String fullName;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public Object getFcmToken() {
+            return fcmToken;
+        }
+
+        public void setFcmToken(Object fcmToken) {
+            this.fcmToken = fcmToken;
+        }
+
+        public Object getEmailVerifiedAt() {
+            return emailVerifiedAt;
+        }
+
+        public void setEmailVerifiedAt(Object emailVerifiedAt) {
+            this.emailVerifiedAt = emailVerifiedAt;
+        }
+
+        public Object getDateOfBirth() {
+            return dateOfBirth;
+        }
+
+        public void setDateOfBirth(Object dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
+
+        public Integer getEmailNotification() {
+            return emailNotification;
+        }
+
+        public void setEmailNotification(Integer emailNotification) {
+            this.emailNotification = emailNotification;
+        }
+
+        public Integer getSmsNotification() {
+            return smsNotification;
+        }
+
+        public void setSmsNotification(Integer smsNotification) {
+            this.smsNotification = smsNotification;
+        }
+
+        public Integer getActive() {
+            return active;
+        }
+
+        public void setActive(Integer active) {
+            this.active = active;
+        }
+
+        public Object getDeletedAt() {
+            return deletedAt;
+        }
+
+        public void setDeletedAt(Object deletedAt) {
+            this.deletedAt = deletedAt;
+        }
+
+        public String getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public String getUpdatedAt() {
+            return updatedAt;
+        }
+
+        public void setUpdatedAt(String updatedAt) {
+            this.updatedAt = updatedAt;
+        }
+
+        public Object getBannedUntil() {
+            return bannedUntil;
+        }
+
+        public void setBannedUntil(Object bannedUntil) {
+            this.bannedUntil = bannedUntil;
+        }
+
+        public Object getLastLoginAt() {
+            return lastLoginAt;
+        }
+
+        public void setLastLoginAt(Object lastLoginAt) {
+            this.lastLoginAt = lastLoginAt;
+        }
+
+        public Object getLastLoginIp() {
+            return lastLoginIp;
+        }
+
+        public void setLastLoginIp(Object lastLoginIp) {
+            this.lastLoginIp = lastLoginIp;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
     }
 }

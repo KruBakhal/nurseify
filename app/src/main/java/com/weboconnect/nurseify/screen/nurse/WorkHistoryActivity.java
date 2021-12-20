@@ -1,23 +1,32 @@
 package com.weboconnect.nurseify.screen.nurse;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityWorkHistoryBinding;
 import com.weboconnect.nurseify.intermediate.CertificationCallback;
 import com.weboconnect.nurseify.screen.nurse.adapters.CertificationsAdapter;
-import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
-import com.weboconnect.nurseify.screen.nurse.model.NurseProfileModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
+import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
+import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
+import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
+
+import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -33,112 +42,171 @@ public class WorkHistoryActivity extends AppCompatActivity {
     String TAG = "WorkHistoryActivity ";
 
 
-    NurseProfileModel nurseProfileModel;
+    UserProfile nurseProfileModel;
+    private int SCROLL_TO = 0;
+    private Context context = WorkHistoryActivity.this;
 
-    CertificationCallback callback = new CertificationCallback() {
-        @Override
-        public void onRemove(String url, String id) {
-            removeImage(url,id);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(WorkHistoryActivity.this,R.layout.activity_work_history);
+        binding = DataBindingUtil.setContentView(WorkHistoryActivity.this, R.layout.activity_work_history);
 
-
+        binding.progressBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
         getNurseProfile();
 
+        click();
+
+    }
+
+    private void click() {
         binding.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(WorkHistoryActivity.this, RegisterActivity.class);
-                i.putExtra("state",4);
-                startActivity(i);
+                i.putExtra(Constant.EDIT_MODE, true);
+                i.putExtra(Constant.SECTION, Constant.Work_History_Experience);
+                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+                startActivityForResult(i, Constant.REQUEST_EDIT);
             }
         });
-
-
+        binding.edit3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(WorkHistoryActivity.this, RegisterActivity.class);
+                i.putExtra(Constant.EDIT_MODE, true);
+                i.putExtra(Constant.SECTION, Constant.Work_History_Resume);
+                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+                startActivityForResult(i, Constant.REQUEST_EDIT);
+            }
+        });
+        binding.edit31.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(WorkHistoryActivity.this, RegisterActivity.class);
+                i.putExtra(Constant.EDIT_MODE, true);
+                i.putExtra(Constant.SECTION, Constant.Work_History_Certifications);
+                i.putExtra(Constant.ADD, true);
+                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+                startActivityForResult(i, Constant.REQUEST_EDIT);
+            }
+        });
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
     }
 
-    private void getNurseProfile(){
-
+    private void getNurseProfile() {
+        if (!Utils.isNetworkAvailable(WorkHistoryActivity.this)) {
+            Utils.displayToast(WorkHistoryActivity.this, getResources().getString(R.string.no_internet));
+            return;
+        }
         binding.progressBar.setVisibility(View.VISIBLE);
 
         user_id = new SessionManager(getApplicationContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<NurseProfileModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
                 .call_nurse_profile(user_id1);
 
-        call.enqueue(new Callback<NurseProfileModel>() {
+        call.enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<NurseProfileModel> call, Response<NurseProfileModel> response) {
-                Log.d(TAG+"getNurseProfile ResCode",response.code()+"");
-                if (response.isSuccessful()){
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                Log.d(TAG + "getNurseProfile ResCode", response.code() + "");
 
+                if (response.body() == null) {
                     try {
-                        nurseProfileModel = response.body();
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                setData();
-
-                            }
-                        });
-
+                        binding.progressBar.setVisibility(View.GONE);
+                        Log.d("TAG", "onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    catch (Exception e){
-                        Log.e(TAG+"getNurseProfile",e.toString());
-                    }
-
-                }else {
-                    Log.e(TAG+"getNurseProfile",response.message());
                     return;
                 }
+                if (response.body().getApiStatus().equals("1")) {
+//                    Utils.displayToast(context, null);
+//                    Utils.displayToast(context, response.message());
+
+                    binding.progressBar.setVisibility(View.GONE);
+//                    Utils.displayToast(context, "" + response.body().getMessage());
+
+                    nurseProfileModel = response.body();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setData();
+                        }
+                    });
+
+                } else {
+                    Utils.displayToast(context, "Data has not been updated");
+
+                    binding.progressBar.setVisibility(View.GONE);
+                }
+
+
                 binding.progressBar.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(Call<NurseProfileModel> call, Throwable t) {
+            public void onFailure(Call<UserProfile> call, Throwable t) {
                 binding.progressBar.setVisibility(View.GONE);
-                Log.e(TAG+"getNurseProfile",t.toString());
+                Utils.displayToast(WorkHistoryActivity.this, "Failed to get updated data !");
+                Log.e(TAG + "getNurseProfile", t.toString());
             }
         });
 
     }
 
-    private void setData(){
+    private void setData() {
 
         binding.tvHighestNurseDegree.setText(nurseProfileModel.getData().getExperience().getHighestNursingDegreeDefinition());
         binding.tvCollageName.setText(nurseProfileModel.getData().getExperience().getCollegeUniName());
         binding.tvFacilityExperience.setText(nurseProfileModel.getData().getExperience().getExperienceAsAcuteCareFacility());
         binding.tvNursingExperience.setText(nurseProfileModel.getData().getExperience().getExperienceAsAmbulatoryCareFacility());
-        binding.tvCerner.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyCerner());
-        binding.tvMeditech.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyMeditech());
-        binding.tvEpic.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyEpic());
+        binding.tvCerner.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyCernerDefinition());
+        binding.tvMeditech.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyMeditechDefinition());
+        binding.tvEpic.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyEpicDefinition());
         binding.tvOther.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyOther());
+//        binding.tvSearchForCredential.setText(nurseProfileModel.getData().get);
 
+        binding.recyclerView.setAdapter(new CertificationsAdapter(WorkHistoryActivity.this,
+                nurseProfileModel.getData().getCertitficate(), new CertificationCallback() {
+            @Override
+            public void onEdit(int position) {
+                Intent i = new Intent(WorkHistoryActivity.this, RegisterActivity.class);
+                i.putExtra(Constant.EDIT_MODE, true);
+                i.putExtra(Constant.SECTION, Constant.Work_History_Certifications);
+                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+                i.putExtra(Constant.POSITION, position);
+                startActivityForResult(i, Constant.REQUEST_EDIT);
 
-        binding.recyclerView.setAdapter(new CertificationsAdapter(WorkHistoryActivity.this,nurseProfileModel.getData().getCertitficate(),callback));
+            }
+
+            @Override
+            public void onRemove(int position, UserProfileData.Certitficate certitficate) {
+
+                removeImage(certitficate.getCertificateImage(), certitficate.getCertificateId());
+            }
+        }));
+
+        if (nurseProfileModel.getData().getCertitficate() != null && nurseProfileModel.getData().getCertitficate().size() != 0)
+            binding.recyclerView.scrollToPosition(SCROLL_TO);
 
         binding.downloadFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent viewIntent =
-                        new Intent("android.intent.action.VIEW",
-                                Uri.parse(nurseProfileModel.getData().getResume()));
+                Intent viewIntent = new Intent("android.intent.action.VIEW",
+                        Uri.parse(nurseProfileModel.getData().getResume()));
                 startActivity(viewIntent);
 
             }
@@ -146,47 +214,69 @@ public class WorkHistoryActivity extends AppCompatActivity {
 
     }
 
-    private void removeImage(String url, String id){
+    private void removeImage(String url, String id) {
 
+        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(id)) {
+            Utils.displayToast(WorkHistoryActivity.this, "certificate data is empty retry to delete !");
+            return;
+        }
         binding.progressBar.setVisibility(View.VISIBLE);
 
         user_id = new SessionManager(getApplicationContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
-        RequestBody img_url = RequestBody.create(MediaType.parse("multipart/form-data"), url);
+//        RequestBody img_url = RequestBody.create(MediaType.parse("multipart/form-data"), url);
         RequestBody c_id = RequestBody.create(MediaType.parse("multipart/form-data"), id);
 
         Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
-                .call_remove_image(user_id1,img_url,c_id);
+                .call_remove_certificate_image(user_id1, c_id);
 
         call.enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                Log.d(TAG+"getNurseProfile ResCode",response.code()+"");
-                if (response.isSuccessful()){
-
-                    try {
-
-                        getNurseProfile();
-
-                    }
-                    catch (Exception e){
-                        Log.e(TAG+"getNurseProfile",e.toString());
-                    }
-
-                }else {
-                    Log.e(TAG+"getNurseProfile",response.message());
+                assert response.body() != null;
+                if (!response.body().getApiStatus().equals("1")) {
+                    Utils.displayToast(context, "" + response.body().getMessage());
+                    binding.progressBar.setVisibility(View.GONE);
                     return;
                 }
+                if (response.isSuccessful()) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    Utils.displayToast(WorkHistoryActivity.this, "Certificate deleted !");
+                    getNurseProfile();
+                } else {
+
+                    binding.progressBar.setVisibility(View.GONE);
+                    Utils.displayToast(context, "Failed to delete data");
+                }
+
+
                 binding.progressBar.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onFailure(Call<ResponseModel> call, Throwable t) {
                 binding.progressBar.setVisibility(View.GONE);
-                Log.e(TAG+"getNurseProfile",t.toString());
+                Log.e(TAG + "getNurseProfile", t.toString());
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.REQUEST_EDIT) {
+            if (resultCode == RESULT_OK) {
+                String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
+                SCROLL_TO = data.getIntExtra(Constant.SCROLL_TO, 0);
+                if (!TextUtils.isEmpty(data1)) {
+                    getNurseProfile();
+                    setResult(RESULT_OK);
+                } else
+                    Utils.displayToast(context, "Empty Data on Result");
+            }
+        }
     }
 
 }

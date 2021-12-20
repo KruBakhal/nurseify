@@ -6,22 +6,29 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="true" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_logo"
-        android:supportsRtl="true"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
+        android:roundIcon="@drawable/ic_logo"
+        android:supportsRtl="true"
         android:theme="@style/Theme.nurseify"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".screen.nurse.ForgetPasswordActivity"
+            android:exported="false" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".screen.facility.NurseDetailsActivity"></activity>
+        <activity android:name=".screen.facility.NurseDetailsActivity" />
         <activity android:name=".screen.facility.FacilityDetails4Activity" />
         <activity android:name=".screen.facility.FacilityDetails3Activity" />
         <activity android:name=".screen.facility.FacilityDetails2Activity" />
@@ -43,7 +50,7 @@
         <activity android:name=".screen.nurse.HourlyRateActivity" />
         <activity android:name=".screen.nurse.PersonalDetailsActivity" />
         <activity android:name=".screen.nurse.MessageActivity" />
-        <activity android:name=".screen.nurse.JobDetailsActivity" />
+        <activity android:name=".screen.nurse.Browse_Facility_Offered_JobDetailsActivity" />
         <activity android:name=".screen.nurse.RegisterActivity" />
         <activity android:name=".screen.nurse.CreateProfileActivity" />
         <activity android:name=".screen.nurse.HomeActivity" />

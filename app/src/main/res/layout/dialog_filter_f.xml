@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:background="@drawable/secondary_gradient"
     android:layout_width="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
@@ -20,7 +22,8 @@
             android:text="Filter"
             android:textSize="27dp"
             android:fontFamily="@font/sf_500"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
+
         <ImageView
             android:id="@+id/close_dialog"
             android:layout_width="20dp"
@@ -41,346 +44,386 @@
             app:layout_constraintTop_toBottomOf="@+id/title"
             android:background="#F5F7F9"
             android:scrollbars="none">
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="20dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_600"
-                    android:layout_marginLeft="15dp"
-                    android:text="Location"
-                    android:textColor="@color/black"
-                    android:textSize="27dp" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E8EAEC"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="18dp"
-                android:visibility="visible"
-                android:layout_marginHorizontal="26dp">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Location"
-                    android:textSize="16dp"
-                    android:paddingLeft="16dp"
-                    android:layout_gravity="left"
-                    android:gravity="center_vertical"
-                    android:fontFamily="@font/sf_500"
-                    android:textColor="#A4ADBB"
-                    android:background="@drawable/bk_grey"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:visibility="visible"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_600"
-                    android:layout_marginLeft="15dp"
-                    android:gravity="left"
-                    android:text="Specialty"
-                    android:textColor="@color/black"
-                    android:textSize="27dp" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E8EAEC"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="18dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="visible"
-                android:background="@drawable/bk_grey"
-                android:layout_marginHorizontal="26dp">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    tools:listitem="@layout/item_chips"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="27dp"
-                android:visibility="visible"
-                android:orientation="horizontal">
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Select All"
-                    android:layout_marginLeft="6dp"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#5B6268"
-                    android:textSize="17dp"
-                    android:fontFamily="@font/sf_400"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:visibility="visible"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_600"
-                    android:layout_marginLeft="15dp"
-                    android:text="Work Days"
-                    android:textColor="@color/black"
-                    android:textSize="27dp" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E8EAEC"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_600"
-                android:layout_marginTop="19dp"
-                android:layout_marginLeft="15dp"
-                android:text="Shift Preference"
-                android:textColor="@color/black"
-                android:textSize="20dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="18dp"
-                android:layout_gravity="center"
-                android:visibility="visible"
-                android:gravity="center"
-                android:background="@drawable/bk_grey"
-                android:layout_marginHorizontal="26dp">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    tools:listitem="@layout/item_chips"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="27dp"
-                android:orientation="horizontal">
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Select All"
-                    android:layout_marginLeft="6dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#5B6268"
-                    android:textSize="17dp"
-                    android:fontFamily="@font/sf_400"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="43dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_600"
-                    android:layout_marginLeft="15dp"
-                    android:text="Bill Rate Range"
-                    android:textColor="@color/black"
-                    android:textSize="27dp" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E8EAEC"/>
-            <com.google.android.material.slider.RangeSlider
-                android:id="@+id/ageSlider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
-                android:valueFrom="18.0"
-                android:valueTo="80.0"
-                app:labelBehavior="floating"
-                app:values="@array/initial_range_slider_values" />
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:visibility="visible"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_600"
-                    android:layout_marginLeft="15dp"
-                    android:gravity="left"
-                    android:text="Specialty"
-                    android:textColor="@color/black"
-                    android:textSize="27dp" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E8EAEC"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="18dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="visible"
-                android:background="@drawable/bk_grey"
-                android:layout_marginHorizontal="26dp">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    tools:listitem="@layout/item_chips"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="43dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_600"
-                    android:layout_marginLeft="15dp"
-                    android:text="Tenure"
-                    android:textColor="@color/black"
-                    android:textSize="27dp" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E8EAEC"/>
-            <com.google.android.material.slider.RangeSlider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
-                android:valueFrom="18.0"
-                android:valueTo="80.0"
-                app:labelBehavior="floating"
-                app:values="@array/initial_range_slider_values" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_600"
-                    android:layout_marginLeft="15dp"
-                    android:text="Start Date "
-                    android:textColor="@color/black"
-                    android:textSize="27dp" />
-            </LinearLayout>
-            <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="30dp">
+                android:paddingTop="20dp">
+
                 <LinearLayout
-                    android:id="@+id/headerCalender"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:background="@drawable/bg_calender_top"
-                    android:gravity="center|start"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
                     <TextView
-                        android:id="@+id/headerText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="20dp"
+                        android:layout_width="0dp"
                         android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/sf_600"
-                        android:gravity="center"
-                        android:text="Select Date Range "
-                        android:textColor="@color/white"
-                        android:textSize="20dp"/>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#595094" />
+                        android:layout_marginLeft="15dp"
+                        android:text="Location"
+                        android:textColor="@color/black"
+                        android:textSize="27dp" />
                 </LinearLayout>
-                <CalendarView
-                    android:id="@+id/calenderView"
+
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_below="@+id/headerCalender"
-                    android:background="@drawable/bg_calender"
-                    android:dateTextAppearance="@style/CalenderViewDateCustomText"
-                    android:theme="@style/CalenderViewCustom"
-                    android:weekDayTextAppearance="@style/CalenderViewWeekCustomText">
-                </CalendarView>
+                    android:layout_height="1dp"
+                    android:background="#E8EAEC" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="18dp"
+                    android:visibility="visible"
+                    android:layout_marginHorizontal="26dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Location"
+                        android:textSize="16dp"
+                        android:paddingLeft="16dp"
+                        android:layout_gravity="left"
+                        android:gravity="center_vertical"
+                        android:fontFamily="@font/sf_500"
+                        android:textColor="#A4ADBB"
+                        android:background="@drawable/bk_grey" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_600"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="left"
+                        android:text="Specialty"
+                        android:textColor="@color/black"
+                        android:textSize="27dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E8EAEC" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:background="@drawable/bk_grey"
+                    android:layout_marginHorizontal="26dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        tools:listitem="@layout/item_chips"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="27dp"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select All"
+                        android:layout_marginLeft="6dp"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="#5B6268"
+                        android:textSize="17dp"
+                        android:fontFamily="@font/sf_400" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_600"
+                        android:layout_marginLeft="15dp"
+                        android:text="Work Days"
+                        android:textColor="@color/black"
+                        android:textSize="27dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E8EAEC" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_600"
+                    android:layout_marginTop="19dp"
+                    android:layout_marginLeft="15dp"
+                    android:text="Shift Preference"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:background="@drawable/bk_grey"
+                    android:layout_marginHorizontal="26dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        tools:listitem="@layout/item_chips"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="27dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select All"
+                        android:layout_marginLeft="6dp"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="#5B6268"
+                        android:textSize="17dp"
+                        android:fontFamily="@font/sf_400" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="43dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_600"
+                        android:layout_marginLeft="15dp"
+                        android:text="Bill Rate Range"
+                        android:textColor="@color/black"
+                        android:textSize="27dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E8EAEC" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/ageSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    android:valueFrom="18.0"
+                    android:valueTo="80.0"
+                    app:labelBehavior="floating"
+                    app:values="@array/initial_range_slider_values" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_600"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="left"
+                        android:text="Specialty"
+                        android:textColor="@color/black"
+                        android:textSize="27dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E8EAEC" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:background="@drawable/bk_grey"
+                    android:layout_marginHorizontal="26dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        tools:listitem="@layout/item_chips"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="43dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_600"
+                        android:layout_marginLeft="15dp"
+                        android:text="Tenure"
+                        android:textColor="@color/black"
+                        android:textSize="27dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E8EAEC" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    android:valueFrom="18.0"
+                    android:valueTo="80.0"
+                    app:labelBehavior="floating"
+                    app:values="@array/initial_range_slider_values" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_600"
+                        android:layout_marginLeft="15dp"
+                        android:text="Start Date "
+                        android:textColor="@color/black"
+                        android:textSize="27dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="50dp"
+                    android:layout_marginTop="30dp">
+
+                    <LinearLayout
+                        android:id="@+id/headerCalender"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/bg_calender_top"
+                        android:gravity="center|start"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/headerText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/sf_600"
+                            android:gravity="center"
+                            android:text="Select Date Range "
+                            android:textColor="@color/white"
+                            android:textSize="20dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#595094" />
+                    </LinearLayout>
+
+                    <CalendarView
+                        android:id="@+id/calenderView"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_below="@+id/headerCalender"
+                        android:background="@drawable/bg_calender"
+                        android:dateTextAppearance="@style/CalenderViewDateCustomText"
+                        android:theme="@style/CalenderViewCustom"
+                        android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"></CalendarView>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_apply"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="35dp"
+                    android:text="Apply Filters"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/btn_corner_secondary"
+                    android:layout_marginTop="40dp"
+                    android:textSize="17dp"
+                    android:fontFamily="@font/sf_600"
+                    android:textColor="#595094" />
             </LinearLayout>
-            <TextView
-                android:id="@+id/text_apply"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginHorizontal="35dp"
-                android:text="Apply Filters"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/btn_corner_secondary"
-                android:layout_marginTop="40dp"
-                android:textSize="17dp"
-                android:fontFamily="@font/sf_600"
-                android:textColor="#595094"/>
-        </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

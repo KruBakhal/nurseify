@@ -114,6 +114,8 @@ public class RealPathUtil {
                     contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }else {
+                    contentUri = MediaStore.Files.getContentUri("external");
                 }
 
                 final String selection = "_id=?";

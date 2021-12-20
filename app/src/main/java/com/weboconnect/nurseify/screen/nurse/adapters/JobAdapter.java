@@ -16,13 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.screen.nurse.JobDetailsActivity;
+import com.weboconnect.nurseify.screen.nurse.Browse_Facility_Offered_JobDetailsActivity;
 
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
 
     Activity activity;
 
-    public JobAdapter(Activity activity) {
+    public JobAdapter(Activity activity, int i) {
         this.activity = activity;
     }
 
@@ -42,7 +42,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.startActivity(new Intent(activity, JobDetailsActivity.class));
+                    activity.startActivity(new Intent(activity, Browse_Facility_Offered_JobDetailsActivity.class));
                 }
             });
 

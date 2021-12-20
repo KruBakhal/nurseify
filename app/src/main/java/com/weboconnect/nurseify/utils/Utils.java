@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 
 import com.google.gson.reflect.TypeToken;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.QuestionModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
@@ -19,6 +20,7 @@ import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Utils {
@@ -26,6 +28,8 @@ public class Utils {
     public static Type typeUserProfileData = new TypeToken<UserProfileData>() {
     }.getType();
     public static Type typeJob = new TypeToken<JobModel.JobDatum>() {
+    }.getType();
+    public static Type typeFacilityJob = new TypeToken<FacilityModel.Facility>() {
     }.getType();
 
     public static boolean isNetworkAvailable(Context mContext) {
@@ -45,7 +49,7 @@ public class Utils {
         if (digitGroups >= 2 && value > 5000) {
             return "0";
         }
-        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups))
+        return new DecimalFormat("###0.#").format(size / Math.pow(1024, digitGroups)).replaceAll(",", "")
                 + " " + units[digitGroups];
 
     }
@@ -60,7 +64,7 @@ public class Utils {
         if (digitGroups >= 2 && value > 5000) {
             return "0";
         }
-        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups));
+        return new DecimalFormat("###0.#").format(size / Math.pow(1024, digitGroups)).replaceAll(",", "");
 
     }
 
@@ -137,6 +141,80 @@ public class Utils {
         questionModelList.add(new QuestionModel("Other nursing awards?"));
         questionModelList.add(new QuestionModel("Professional practice council?"));
         questionModelList.add(new QuestionModel("Research / publications?"));
+        return questionModelList;
+    }
+
+    public static List<QuestionModel> getQuesListByProfile(UserProfileData.RoleInterest roleInterest) {
+        List<QuestionModel> questionModelList = new ArrayList<>();
+        if (TextUtils.isEmpty(roleInterest.getServingPreceptor()) || roleInterest.getServingPreceptor().equals("0")) {
+            questionModelList.add(new QuestionModel("Are you interested in serving as a preceptor for a" +
+                    " graduate nurse?", 0));
+        } else {
+            questionModelList.add(new QuestionModel("Are you interested in serving as a preceptor for a" +
+                    " graduate nurse?", 1));
+        }
+        if (TextUtils.isEmpty(roleInterest.getServingInterimNurseLeader()) || roleInterest.getServingInterimNurseLeader().equals("0")) {
+            questionModelList.add(new QuestionModel("Are you interested in serving as an interim nurse leader?",
+                    0));
+        } else {
+            questionModelList.add(new QuestionModel("Are you interested in serving as an interim nurse leader?",
+                    1));
+        }
+        if (TextUtils.isEmpty(roleInterest.getLeadershipRoles()) || roleInterest.getLeadershipRoles().equals("0")) {
+            questionModelList.add(new QuestionModel("Please select the leadership role you have experience in and are willing to work as an interim leader?"
+                    , 0, 0));
+        } else {
+            try {
+                questionModelList.add(new QuestionModel("Please select the leadership role you have experience in and are willing to work as an interim leader?"
+                        , 0, Integer.parseInt(roleInterest.getLeadershipRoles())));
+            } catch (Exception e) {
+                questionModelList.add(new QuestionModel("Please select the leadership role you have experience in and are willing to work as an interim leader?"
+                        , 0, 0));
+            }
+        }
+        if (TextUtils.isEmpty(roleInterest.getClinicalEducator()) || roleInterest.getClinicalEducator().equals("0")) {
+            questionModelList.add(new QuestionModel("Clinical educator",
+                    0));
+        } else {
+            questionModelList.add(new QuestionModel("Clinical educator",
+                    1));
+        }
+        if (TextUtils.isEmpty(roleInterest.getIsDaisyAwardWinner()) || roleInterest.getIsDaisyAwardWinner().equals("0")) {
+            questionModelList.add(new QuestionModel("Daisy Award winner?",
+                    0));
+        } else {
+            questionModelList.add(new QuestionModel("Daisy Award winner?",
+                    1));
+        }
+        if (TextUtils.isEmpty(roleInterest.getEmployeeOfTheMthQtrYr()) || roleInterest.getEmployeeOfTheMthQtrYr().equals("0")) {
+            questionModelList.add(new QuestionModel("Employee of the mth, qtr, yr?",
+                    0));
+        } else {
+            questionModelList.add(new QuestionModel("Employee of the mth, qtr, yr?",
+                    1));
+        }
+        if (TextUtils.isEmpty(roleInterest.getOtherNursingAwards()) || roleInterest.getOtherNursingAwards().equals("0")) {
+            questionModelList.add(new QuestionModel("Other nursing awards?",
+                    0));
+        } else {
+            questionModelList.add(new QuestionModel("Other nursing awards?",
+                    1));
+        }
+        if (TextUtils.isEmpty(roleInterest.getIsProfessionalPracticeCouncil()) || roleInterest.getIsProfessionalPracticeCouncil().equals("0")) {
+            questionModelList.add(new QuestionModel("Professional practice council?",
+                    0));
+        } else {
+            questionModelList.add(new QuestionModel("Professional practice council?",
+                    1));
+        }
+        if (TextUtils.isEmpty(roleInterest.getIsResearchPublications()) || roleInterest.getIsResearchPublications().equals("0")) {
+            questionModelList.add(new QuestionModel("Research / publications?",
+                    0));
+        } else {
+            questionModelList.add(new QuestionModel("Research / publications?",
+                    1));
+        }
+
         return questionModelList;
     }
 }

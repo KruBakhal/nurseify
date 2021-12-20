@@ -10,7 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.weboconnect.nurseify.screen.LoginSelectActivity;
 import com.weboconnect.nurseify.screen.facility.HomeFActivity;
@@ -22,11 +26,18 @@ import com.weboconnect.nurseify.utils.SessionManager;
 public class MainActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
+    private FirebaseCrashlytics crashlytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        crashlytics = FirebaseCrashlytics.getInstance();
+
+//        crashlytics.setUserId(Constant.DEVICE_INFO);
+
+
         sessionManager = new SessionManager(MainActivity.this);
         String type = sessionManager.get_TYPE();
         Handler handler = new Handler(Looper.getMainLooper());
@@ -43,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
                         } else
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class)
                                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-//                        startActivity(new Intent(getApplicationContext(), RegisterActivity.class)
-//                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//                                .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(sessionManager.get_User())));
+                     /*   startActivity(new Intent(getApplicationContext(), RegisterActivity.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(sessionManager.get_User())));*/
 //
                         return;
                     }
@@ -62,6 +73,6 @@ public class MainActivity extends AppCompatActivity {
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 );
             }
-        }, 3000);
+        }, 2000);
     }
 }

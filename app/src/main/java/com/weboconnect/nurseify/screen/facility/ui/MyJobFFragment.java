@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.ActiveFAdapter;
-import com.weboconnect.nurseify.adapter.CompletedAdapter;
 import com.weboconnect.nurseify.adapter.PostedAdapter;
 import com.weboconnect.nurseify.databinding.FragmentMyJobsFBinding;
 
@@ -62,7 +61,7 @@ public class MyJobFFragment extends Fragment {
                 binding.textCompleted.setTextColor(Color.parseColor("#8A4999"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
-                binding.recyclerViewJobs.setAdapter(new CompletedAdapter(getActivity()));
+//                binding.recyclerViewJobs.setAdapter(new CompletedAdapter(getActivity(), list_Completed_Job, offeredJobCallback));
             }
         });
         return view = binding.getRoot();

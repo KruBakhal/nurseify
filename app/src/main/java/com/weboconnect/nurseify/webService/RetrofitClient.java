@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -17,13 +18,16 @@ public class RetrofitClient {
     private OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
 
     public OkHttpClient.Builder getOkHttpBuilder() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         okHttpBuilder.networkInterceptors().add(chain -> {
             Request.Builder requestBuilder = chain.request().newBuilder();
 //            requestBuilder.addHeader("Client-Service", "pNvZIhreWf56RxGfw9ERwVFQlNilSEU7hfWOndQ7iJ1Y6y1svw");
 //            requestBuilder.addHeader("Auth-Key", "oRo5qJC1fwrYyPHODqLRpIrYU0H7XWBaDN5");
             return chain.proceed(requestBuilder.build());
         });
-        return okHttpBuilder;
+        return okHttpBuilder.addInterceptor(interceptor);
     }
 
     public RetrofitClient() {

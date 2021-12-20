@@ -30,7 +30,7 @@
                 android:layout_marginLeft="19dp"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -39,18 +39,41 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/sf_600"
-                        android:text="Facility Hospital.us"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/sf_500"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="Nurseify Facility "
+                        android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@color/black"
-                        android:textSize="19dp" />
+                        android:textSize="19dp"
+                        android:visibility="visible"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/sds"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
 
                     <ImageView
+                        android:id="@+id/sds"
                         android:layout_width="17dp"
                         android:layout_height="17dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:src="@drawable/verified" />
-                </LinearLayout>
+                        android:src="@drawable/verified"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toEndOf="@+id/tv_name"
+                        app:layout_constraintTop_toTopOf="@+id/tv_name" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -155,8 +178,9 @@
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="47dp"
-                android:layout_height="47dp"
+                android:layout_width="42dp"
+                android:id="@+id/lay_heart"
+                android:layout_height="42dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
@@ -164,23 +188,32 @@
                 app:cardCornerRadius="40dp">
 
                 <ImageView
-                    android:id="@id/img_heart"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:id="@+id/img_heart"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_gravity="center"
                     android:src="@drawable/heart" />
+
+                <ImageView
+                    android:id="@+id/img_heart1"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:src="@drawable/heart_press" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="47dp"
-                android:layout_height="47dp"
+                android:layout_width="42dp"
+                android:id="@+id/lay_share"
+                android:layout_height="42dp"
                 android:layout_marginBottom="2dp"
                 app:cardBackgroundColor="#F4F3F9"
                 app:cardCornerRadius="40dp">
 
                 <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_gravity="center"
                     android:src="@drawable/share" />
             </androidx.cardview.widget.CardView>

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ResponseModel {
 
+
     @SerializedName("api_status")
     @Expose
     private String apiStatus;
@@ -15,7 +16,7 @@ public class ResponseModel {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<Object> data = null;
+    private Data data;
 
     public String getApiStatus() {
         return apiStatus;
@@ -33,12 +34,15 @@ public class ResponseModel {
         this.message = message;
     }
 
-    public List<Object> getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(List<Object> data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
+    public class Data {
+
+    }
 }

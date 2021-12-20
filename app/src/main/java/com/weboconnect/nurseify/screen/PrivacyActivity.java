@@ -3,19 +3,36 @@ package com.weboconnect.nurseify.screen;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityPrivacyBinding;
+import com.weboconnect.nurseify.screen.nurse.SettingActivity;
+import com.weboconnect.nurseify.screen.nurse.model.PrivacyPolicyModel;
+import com.weboconnect.nurseify.screen.nurse.sample.SampleModel;
+import com.weboconnect.nurseify.utils.Utils;
+import com.weboconnect.nurseify.webService.RetrofitClient;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PrivacyActivity extends AppCompatActivity {
 
     ActivityPrivacyBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(PrivacyActivity.this,R.layout.activity_privacy);
+        binding = DataBindingUtil.setContentView(PrivacyActivity.this, R.layout.activity_privacy);
+        performTest();
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -23,4 +40,52 @@ public class PrivacyActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void performTest() {
+        ProgressDialog progressDialog = new ProgressDialog(PrivacyActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        String id = "";
+
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                .call_privacy_policy();
+
+        call.enqueue(new Callback<PrivacyPolicyModel>() {
+            @Override
+            public void onResponse(Call<PrivacyPolicyModel> call, Response<PrivacyPolicyModel> response) {
+                assert response.body() != null;
+                if (!response.body().getApiStatus().equals("1")) {
+                    progressDialog.dismiss();
+                    Utils.displayToast(PrivacyActivity.this, "" + response.body().getMessage());
+                    Log.d("TAG", "onResponse: " + response.body().toString());
+                    return;
+                }
+                if (response.isSuccessful()) {
+
+                    progressDialog.dismiss();
+
+                    if (response.body() != null && !TextUtils.isEmpty(response.body().getData()))
+                        binding.tvText.setText(Html.fromHtml("" + response.body().getData()));
+
+                } else {
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    Utils.displayToast(PrivacyActivity.this, response.body().getMessage());
+                }
+
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<PrivacyPolicyModel> call, Throwable t) {
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+
+//                Utils.displayToast(PrivacyActivity.this, "Login Failed, please retry again ");
+            }
+        });
+
+    }
+
 }

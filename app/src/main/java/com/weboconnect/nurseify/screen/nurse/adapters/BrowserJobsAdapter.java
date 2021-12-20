@@ -1,13 +1,17 @@
 package com.weboconnect.nurseify.screen.nurse.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.PorterDuff;
+import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,30 +23,55 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
+import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
+import com.weboconnect.nurseify.webService.RetrofitClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.ViewHolder> {
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    private final List<JobModel.JobDatum> list_jobs;
+public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.ViewHolder>
+        implements Filterable {
+
+    private List<JobModel.JobDatum> list_jobs;
+    private List<JobModel.JobDatum> copy_contactList = new ArrayList<>();
     Activity activity;
-
+    private long mLastClickTime = 0;
     public BrowserJobsAdapter(Activity activity, List<JobModel.JobDatum> list_jobs, BrowseJobInteface browseJobInteface) {
         this.activity = activity;
         this.list_jobs = list_jobs;
+        this.copy_contactList = list_jobs;
         this.browseJobInteface = browseJobInteface;
+        setHasStableIds(true);
+    }
+
+    public void setList(JobModel.JobDatum datum, int position) {
+        list_jobs.set(position, datum);
+        notifyItemChanged(position);
     }
 
     public interface BrowseJobInteface {
         void onClick_Like(JobModel.JobDatum datum, int position);
 
-        void onClick_Apply();
+        void onClick_Apply(int position, JobModel.JobDatum datum);
 
-        void onClick_Job(JobModel.JobDatum datum);
+        void onClick_Job(JobModel.JobDatum datum, int position);
     }
 
     BrowseJobInteface browseJobInteface;
+
+    @Override
+    public long getItemId(int position) {
+
+        return position;
+    }
 
     @NonNull
     @Override
@@ -53,8 +82,9 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
+
             JobModel.JobDatum datum = list_jobs.get(position);
             try {
                 Glide.with(holder.itemView.getContext()).load(datum.getFacilityLogo()).into(holder.img);
@@ -71,31 +101,59 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
             for (int i = 0; i < datum.getPreferredDaysOfTheWeek().size(); i++) {
                 String str = datum.getPreferredDaysOfTheWeek().get(i);
                 if (TextUtils.isEmpty(days)) {
-                    if (str.equals("Thursday")) {
-                        days = "Th";
-                    } else if (str.equals("Tuesday")) {
-                        days = "T";
-                    } else {
-                        days = (str.substring(0, 1).toUpperCase());
+                    if (str.startsWith("T")) {
+                        if (str.equals("Thursday")) {
+                            days = "Th";
+                        } else if (str.equals("Tuesday")) {
+                            days = "T";
+                        } else {
+                            days = (str.substring(0, 1).toUpperCase());
+                        }
+                    } else if (str.startsWith("S")) {
+                        if (str.equals("Sunday")) {
+                            days = "Su";
+                        } else if (str.equals("Saturday")) {
+                            days = "Sa";
+                        } else {
+                            days = (str.substring(0, 1).toUpperCase());
+                        }
                     }
                 } else {
-                    if (str.equals("Thursday")) {
+                    if (str.startsWith("T")) {
+                        if (str.equals("Thursday")) {
+                            days = days + ", Th";
+                        } else if (str.equals("Tuesday")) {
+                            days = days + ", T";
+                        } else {
+                            days = days + ", " + (str.substring(0, 1).toUpperCase());
+                        }
+                    } else if (str.startsWith("S")) {
+                        if (str.equals("Sunday")) {
+                            days = days + ", Su";
+                        } else if (str.equals("Saturday")) {
+                            days = days + ", Sa";
+                        } else {
+                            days = days + ", " + (str.substring(0, 1).toUpperCase());
+                        }
+                    }
+                    /*if (str.equals("Thursday")) {
                         days = days + ",Th";
                     } else if (str.equals("Tuesday")) {
                         days = days + ",T";
                     } else {
                         days = days + "," + (str.substring(0, 1).toUpperCase());
-                    }
+                    }*/
                 }
             }
             holder.tv_weeks_days.setText("" + days);
             holder.tv_hourly_rate.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
 
             if (datum.getIsLiked().equals("0")) {
-                holder.img_heart.setImageResource(R.drawable.heart);
+                holder.img_heart.setVisibility(View.VISIBLE);
+                holder.img_heart1.setVisibility(View.GONE);
             } else {
-                holder.img_heart.setColorFilter(ContextCompat.getColor(holder.itemView.getContext()
-                        , R.color.black), PorterDuff.Mode.SRC_IN);
+                holder.img_heart1.setVisibility(View.VISIBLE);
+                holder.img_heart.setVisibility(View.GONE);
             }
 
             if (datum.getIsApplied().equals("0")) {
@@ -103,38 +161,59 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                     holder.lay_apply.setBackgroundTintList(ContextCompat.getColorStateList(
                             activity, R.color.grad1));
                 }
+                holder.tv_applied1.setText("Apply");
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     holder.lay_apply.setBackgroundTintList(ContextCompat.getColorStateList(
                             activity, R.color.secondary_till));
                 }
+                holder.tv_applied1.setText("Applied");
             }
 
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    browseJobInteface.onClick_Job(datum);
+                    browseJobInteface.onClick_Job(datum, position);
                 }
             });
             holder.lay_apply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (datum.getIsApplied().equals("0")) {
+                        browseJobInteface.onClick_Apply(position, datum);
                     } else {
-                        Utils.displayToast(v.getContext(), "You have already applied for this job !");
+                        browseJobInteface.onClick_Apply(position, datum);
                     }
                 }
             });
-            holder.img_heart.setOnClickListener(new View.OnClickListener() {
+         /*   holder.lay_heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (datum.getIsLiked().equals("0")) {
-                        browseJobInteface.onClick_Like(datum,position);
+                        browseJobInteface.onClick_Like(datum, position);
                     } else {
-                        Utils.displayToast(v.getContext(), "You have already applied for this job !");
+                        browseJobInteface.onClick_Like(datum, position);
                     }
                 }
+            });*/
+
+            holder.lay_share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 300) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    String shareBody = datum.getName() + "\n" + datum.getPreferredShiftDurationDefinition()
+                            + "\n" + datum.getPreferredAssignmentDurationDefinition()
+                            + "\n" + datum.getPreferredShiftDurationDefinition();
+                    intent.setType("text/plain");
+                    intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                    activity.startActivity(Intent.createChooser(intent, "Share"));
+                }
             });
+            holder.bind(datum, position);
         } catch (Exception e) {
             Log.e("Service_Adapter", e.toString());
 
@@ -142,16 +221,22 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         return list_jobs.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout mainLayout;
-        ImageView img, img_applied, img_heart;
-        TextView tv_name, tv_specialty, tv_created_at_definition, tv_assignment_duration_definition, tv_applied, tv_shift_duration, tv_hourly_rate, tv_weeks_days;
-        LinearLayout lay_apply;
-        TextView tv_applied1;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public LinearLayout mainLayout;
+        public ImageView img, img_applied, img_heart, img_heart1;
+        public TextView tv_name, tv_specialty, tv_created_at_definition, tv_assignment_duration_definition, tv_applied, tv_shift_duration, tv_hourly_rate, tv_weeks_days;
+        public LinearLayout lay_apply;
+        public TextView tv_applied1;
+        public View lay_share, lay_heart;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -169,7 +254,133 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
             tv_name = itemView.findViewById(R.id.tv_name);
             lay_apply = itemView.findViewById(R.id.lay_apply);
             tv_applied1 = itemView.findViewById(R.id.tv_applied1);
+            lay_share = itemView.findViewById(R.id.lay_share);
+            img_heart1 = itemView.findViewById(R.id.img_heart1);
+            lay_heart = itemView.findViewById(R.id.lay_heart);
 
+
+        }
+
+        public void bind(JobModel.JobDatum datum, int position) {
+            lay_heart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    browseJobInteface.onClick_Like(datum, position);
+                    performLike(datum.getJobId(), datum.getIsLiked(), position, datum);
+                }
+            });
+
+        }
+
+        void performLike(String jobId, String isLiked, int position, JobModel.JobDatum datum) {
+
+            Utils.displayToast(itemView.getContext(), null); // to cancel toast if showing on screen
+
+            if (!Utils.isNetworkAvailable(itemView.getContext())) {
+                Utils.displayToast(itemView.getContext(), itemView.getResources().getString(R.string.no_internet));
+                return;
+            }
+            Utils.displayToast(itemView.getContext(), null); // to cancel toast if showing on screen
+
+
+            if (isLiked.equals("0")) {
+                isLiked = "1";
+            } else {
+                isLiked = "0";
+            }
+            String user_id = new SessionManager(itemView.getContext()).get_user_register_Id();
+            RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+            RequestBody jobId1 = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
+            RequestBody isLiked1 = RequestBody.create(MediaType.parse("multipart/form-data"), isLiked);
+
+
+            Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                    .call_like_job(user_id1, jobId1, isLiked1);
+
+            String finalIsLiked = isLiked;
+            call.enqueue(new Callback<ResponseModel>() {
+                @Override
+                public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                    try {
+                        assert response.body() != null;
+                        if (!response.body().getApiStatus().equals("1")) {
+
+                            return;
+                        }
+                        if (response.isSuccessful()) {
+                            ResponseModel jobModel = response.body();
+                            datum.setIsLiked(finalIsLiked);
+                            list_jobs.set(position, datum);
+                            browseJobInteface.onClick_Like(datum,position);
+                            notifyItemChanged(position);
+                        } else {
+
+                        }
+                    } catch (Exception e) {
+
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseModel> call, Throwable t) {
+
+
+                }
+            });
+
+
+        }
+    }
+
+    private Filter fRecords;
+
+    @Override
+    public Filter getFilter() {
+
+        if (fRecords == null) {
+            fRecords = new RecordFilter1();
+        }
+
+        return fRecords;
+    }
+
+    public class RecordFilter1 extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            final FilterResults oReturn = new FilterResults();
+            final ArrayList<JobModel.JobDatum> results = new ArrayList<>();
+            if (list_jobs != null)
+
+                if (constraint != null && !TextUtils.isEmpty(constraint)) {
+                    if (copy_contactList != null && copy_contactList.size() > 0) {
+                        for (JobModel.JobDatum g : copy_contactList) {
+
+                            if (g.getPreferredSpecialtyDefinition().toLowerCase()
+                                    .startsWith(constraint.toString().toLowerCase())) {
+                                results.add(g);
+                            } else if (g.getName().toLowerCase()
+                                    .startsWith(constraint.toString().toLowerCase())) {
+                                results.add(g);
+                            }
+
+                        }
+
+
+                    }
+                    oReturn.values = results;
+                } else {
+                    oReturn.count = copy_contactList.size();
+                    oReturn.values = copy_contactList;
+                }
+            return oReturn;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            list_jobs = (ArrayList<JobModel.JobDatum>) filterResults.values;
+            notifyDataSetChanged();
         }
     }
 }

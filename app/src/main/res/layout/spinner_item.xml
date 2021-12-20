@@ -8,4 +8,4 @@
     android:layout_height="40dp"
     android:ellipsize="marquee"
     android:textColor="#962b2b"
-    android:textAlignment="inherit"/>
+    android:textAlignment="inherit" />

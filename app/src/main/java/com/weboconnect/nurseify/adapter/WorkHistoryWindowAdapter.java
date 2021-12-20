@@ -3,8 +3,8 @@ package com.weboconnect.nurseify.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,26 +15,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
-import com.weboconnect.nurseify.screen.nurse.SignupDetailsActivity;
 import com.weboconnect.nurseify.screen.nurse.model.CernersDatum;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialDatum;
 import com.weboconnect.nurseify.screen.nurse.model.Degree_Datum;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
-import com.weboconnect.nurseify.screen.nurse.model.State_Datum;
-import com.weboconnect.nurseify.screen.nurse.model.WorkLocationDatum;
+import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
+import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment;
+import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment.CommonData;
+import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment.Datum;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
 public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWindowAdapter.WorkHistoryWindowMyViewHolder> {
 
+    private BrowseFragment context;
     private int type;
     public List<Degree_Datum> list_nurse_degrees = new ArrayList<>();
-    public List<CernersDatum> list_experience = new ArrayList<>();
     public List<CredentialDatum> list_Credential = new ArrayList<>();
-    Activity context;
+    Activity activity;
+    private List<SpecialtyDatum> list_assignment = new ArrayList<>();
+    private List<SpecialtyDatum> list_facilty_type = new ArrayList<>();
+    private List<SpecialtyDatum> list_media = new ArrayList<>();
 
     public WorkHistoryWindowAdapter(Activity context, int type, List<Object> list_nurse_degrees,
                                     WorkHistoryWindowInterface parentInterface) {
@@ -43,27 +46,62 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
             if (((List) list_nurse_degrees).size() > 0
                     && (((List) list_nurse_degrees.get(0)).get(0) instanceof Degree_Datum)) {
                 this.list_nurse_degrees = ((List<Degree_Datum>) list_nurse_degrees.get(0));
+            }  else if (((List) list_nurse_degrees).size() > 0
+                    && (((List) list_nurse_degrees.get(0)).get(0) instanceof CredentialDatum)) {
+                this.list_Credential = ((List<CredentialDatum>) list_nurse_degrees.get(0));
+            } else if (((List) list_nurse_degrees).size() > 0
+                    && (((List) list_nurse_degrees.get(0)).get(0) instanceof Datum)) {
+                if (type == 6)
+                    this.list_assignment = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
+                else if (type == 7)
+                    this.list_facilty_type = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
+                else if (type == 8)
+                    this.list_media = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
+
+
+            }
+        }
+        this.activity = context;
+        this.parentInterface = parentInterface;
+    }
+
+    public WorkHistoryWindowAdapter(Activity context, int type, int type1, List<Degree_Datum> list_nurse_degrees,
+                                    WorkHistoryWindowInterface parentInterface) {
+        this.type = type;
+        this.list_nurse_degrees = list_nurse_degrees;
+        this.activity = context;
+        this.parentInterface = parentInterface;
+    }
+
+    WorkHistoryWindowInterface parentInterface;
+
+    public WorkHistoryWindowAdapter(BrowseFragment context, int type, List<Object> list_nurse_degrees, WorkHistoryWindowInterface parentInterface) {
+        this.type = type;
+        if (list_nurse_degrees instanceof List) {
+            if (((List) list_nurse_degrees).size() > 0
+                    && (((List) list_nurse_degrees.get(0)).get(0) instanceof Degree_Datum)) {
+                this.list_nurse_degrees = ((List<Degree_Datum>) list_nurse_degrees.get(0));
             } else if (((List) list_nurse_degrees).size() > 0
                     && (((List) list_nurse_degrees.get(0)).get(0) instanceof CernersDatum)) {
-                this.list_experience = ((List<CernersDatum>) list_nurse_degrees.get(0));
+                this.list_nurse_degrees = ((List<Degree_Datum>) list_nurse_degrees.get(0));
             } else if (((List) list_nurse_degrees).size() > 0
                     && (((List) list_nurse_degrees.get(0)).get(0) instanceof CredentialDatum)) {
                 this.list_Credential = ((List<CredentialDatum>) list_nurse_degrees.get(0));
+            } else if (((List) list_nurse_degrees).size() > 0
+                    && (((List) list_nurse_degrees.get(0)).get(0) instanceof SpecialtyDatum)) {
+                if (type == 6)
+                    this.list_assignment = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
+                else if (type == 7)
+                    this.list_facilty_type = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
+                else if (type == 8)
+                    this.list_media = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
+
+
             }
         }
         this.context = context;
         this.parentInterface = parentInterface;
     }
-
-    public WorkHistoryWindowAdapter(Activity context, int type, int type1, List<CernersDatum> list_nurse_degrees,
-                                    WorkHistoryWindowInterface parentInterface) {
-        this.type = type;
-        this.list_experience = list_nurse_degrees;
-        this.context = context;
-        this.parentInterface = parentInterface;
-    }
-
-    WorkHistoryWindowInterface parentInterface;
 
 
     public interface WorkHistoryWindowInterface {
@@ -92,29 +130,52 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
 
     @Override
     public void onBindViewHolder(WorkHistoryWindowMyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        RegisterActivity activity = (RegisterActivity) context;
+        Context context1 = null;
         boolean isNotSelected = true;
         int selectedPos = 0;
-        if (type == 1) {
-            Degree_Datum movie = list_nurse_degrees.get(position);
+        if (type >= 1 && type <= 5) {
+            RegisterActivity activity = (RegisterActivity) this.activity;
+            context1 = activity;
+            if (type == 1) {
+                Degree_Datum movie = list_nurse_degrees.get(position);
+                holder.title.setText(movie.getName());
+                selectedPos = activity.selected_nurse_degree;
+            } else if (type == 2) {
+                Degree_Datum movie = list_nurse_degrees.get(position);
+                holder.title.setText(movie.getName());
+                selectedPos = activity.selected_nurse_cerner;
+            } else if (type == 3) {
+                Degree_Datum movie = list_nurse_degrees.get(position);
+                holder.title.setText(movie.getName());
+                selectedPos = activity.selected_nurse_meditech;
+            } else if (type == 4) {
+                Degree_Datum movie = list_nurse_degrees.get(position);
+                holder.title.setText(movie.getName());
+                selectedPos = activity.selected_nurse_epic;
+            } else if (type == 5) {
+                CredentialDatum movie = list_Credential.get(position);
+                holder.title.setText(movie.getName());
+                selectedPos = activity.selected_Credential;
+            }
+        } else if (type == 6 || type == 7 || type == 8) {
+            BrowseFragment activity = (BrowseFragment) context;
+            SpecialtyDatum movie = null;
+            context1 = activity.getContext();
+            if (type == 6) {
+                movie = (SpecialtyDatum) list_assignment.get(position);
+                selectedPos = activity.selected_open_assignment_type;
+            } else if (type == 7) {
+
+                movie = (SpecialtyDatum) list_facilty_type.get(position);
+                selectedPos = activity.selected_facility_type;
+            } else if (type == 8) {
+                movie = (SpecialtyDatum) list_media.get(position);
+                selectedPos = activity.selected_electronic_medical_records;
+            }
+            if (movie == null)
+                return;
             holder.title.setText(movie.getName());
-            selectedPos = activity.selected_nurse_degree;
-        } else if (type == 2) {
-            CernersDatum movie = list_experience.get(position);
-            holder.title.setText(movie.getName());
-            selectedPos = activity.selected_nurse_cerner;
-        } else if (type == 3) {
-            CernersDatum movie = list_experience.get(position);
-            holder.title.setText(movie.getName());
-            selectedPos = activity.selected_nurse_meditech;
-        } else if (type == 4) {
-            CernersDatum movie = list_experience.get(position);
-            holder.title.setText(movie.getName());
-            selectedPos = activity.selected_nurse_epic;
-        } else if (type == 5) {
-            CredentialDatum movie = list_Credential.get(position);
-            holder.title.setText(movie.getName());
-            selectedPos = activity.selected_Credential;
+
         }
 
         if (selectedPos == position) {
@@ -122,13 +183,12 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
         } else {
             isNotSelected = true;
         }
-
         if (!isNotSelected) {
             holder.lay_item.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.grad1));
             holder.title.setTextColor(Color.WHITE);
         } else {
             holder.lay_item.setBackground(null);
-            holder.title.setTextColor(activity.getResources().getColor(R.color.gray));
+            holder.title.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.gray));
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -151,10 +211,27 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
             if (list_Credential == null || list_Credential.size() == 0)
                 return 0;
             return list_Credential.size();
+        } else if (type == 6 || type == 7 || type == 8) {
+            if (type == 6)
+                if (list_assignment != null || list_assignment.size() != 0)
+                    return this.list_assignment.size();
+                else
+                    return 0;
+            else if (type == 7)
+                if (list_facilty_type != null || list_facilty_type.size() != 0)
+                    return this.list_facilty_type.size();
+                else
+                    return 0;
+            else if (type == 8)
+                if (list_media != null || list_media.size() != 0)
+                    return this.list_media.size();
+                else
+                    return 0;
         } else {
-            if (list_experience == null || list_experience.size() == 0)
+            if (list_nurse_degrees == null || list_nurse_degrees.size() == 0)
                 return 0;
-            return list_experience.size();
+            return list_nurse_degrees.size();
         }
+        return 0;
     }
 }

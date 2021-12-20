@@ -42,13 +42,15 @@ public class PathUtil {
                     uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 } else if ("audio".equals(type)) {
                     uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
+                } else
+                    uri = MediaStore.Files.getContentUri("external");
+
                 selection = "_id=?";
-                selectionArgs = new String[]{ split[1] };
+                selectionArgs = new String[]{split[1]};
             }
         }
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { MediaStore.Images.Media.DATA };
+            String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = null;
             try {
                 cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);

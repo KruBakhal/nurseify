@@ -16,6 +16,6 @@ public class CreateProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(CreateProfileActivity.this, R.layout.activity_create_profile);
-        binding.recyclerViewJobs.setAdapter(new JobAdapter(CreateProfileActivity.this));
+        binding.recyclerViewJobs.setAdapter(new JobAdapter(CreateProfileActivity.this, 1));
     }
 }

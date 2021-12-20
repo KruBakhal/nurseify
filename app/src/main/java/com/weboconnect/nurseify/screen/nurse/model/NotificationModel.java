@@ -42,13 +42,23 @@ public class NotificationModel {
     }
 
     public class Notification{
-
+        @SerializedName("notification_id")
+        @Expose
+        private String notificationId;
         @SerializedName("message")
         @Expose
         private String message;
         @SerializedName("date")
         @Expose
         private String date;
+
+        public String getNotificationId() {
+            return notificationId;
+        }
+
+        public void setNotificationId(String notificationId) {
+            this.notificationId = notificationId;
+        }
 
         public String getMessage() {
             return message;
@@ -65,6 +75,7 @@ public class NotificationModel {
         public void setDate(String date) {
             this.date = date;
         }
+
 
     }
 

@@ -2,8 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-    </data>
+
+    <data></data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +18,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/primary_gradient"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
@@ -25,6 +27,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -33,7 +36,7 @@
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:fontFamily="@font/sf_500"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <androidx.core.widget.NestedScrollView
@@ -42,10 +45,12 @@
                     android:layout_marginTop="24dp"
                     android:background="@color/page_bk"
                     android:scrollbars="none">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/profileLayout"
                             android:layout_width="124dp"
@@ -58,12 +63,13 @@
                                 android:layout_width="124dp"
                                 android:layout_height="124dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/test2"
+                                android:src="@drawable/person"
                                 app:civ_border_color="#C4C4C4"
                                 app:civ_border_width="4dp"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
+
                             <LinearLayout
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
@@ -73,13 +79,15 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent">
+
                                 <ImageView
                                     android:layout_width="18dp"
                                     android:layout_height="18dp"
                                     android:layout_gravity="center"
-                                    android:src="@drawable/ic_camera"/>
+                                    android:src="@drawable/ic_camera" />
                             </LinearLayout>
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
                         <TextView
                             android:id="@+id/tvName"
                             android:layout_width="wrap_content"
@@ -88,17 +96,20 @@
                             android:fontFamily="@font/sf_600"
                             android:textSize="24dp"
                             android:textColor="@color/black"
-                            android:layout_gravity="center"/>
+                            android:layout_gravity="center" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:orientation="horizontal"
                             android:layout_marginTop="7dp">
+
                             <ImageView
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                android:src="@drawable/ic_location_grey"/>
+                                android:src="@drawable/ic_location_grey" />
+
                             <TextView
                                 android:id="@+id/tvAddress"
                                 android:layout_width="wrap_content"
@@ -107,18 +118,21 @@
                                 android:layout_marginLeft="6dp"
                                 android:fontFamily="@font/sf_400"
                                 android:textSize="15dp"
-                                android:textColor="#979CA5"/>
+                                android:textColor="#979CA5" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:orientation="horizontal"
                             android:layout_marginTop="7dp">
+
                             <ImageView
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                android:src="@drawable/ic_liecence"/>
+                                android:src="@drawable/ic_liecence" />
+
                             <TextView
                                 android:id="@+id/tvLicenceNo"
                                 android:layout_width="wrap_content"
@@ -127,19 +141,22 @@
                                 android:layout_marginLeft="6dp"
                                 android:fontFamily="@font/sf_400"
                                 android:textSize="15dp"
-                                android:textColor="#979CA5"/>
+                                android:textColor="#979CA5" />
                         </LinearLayout>
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginTop="15dp"
                             android:layout_marginHorizontal="16dp"
-                            android:background="#E4E7EA"/>
+                            android:background="#E4E7EA" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="19dp"
                             android:orientation="horizontal">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -147,13 +164,15 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:orientation="vertical">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Bill Rate"
+                                    android:text="Hourly Rate"
                                     android:textSize="14dp"
                                     android:fontFamily="@font/sf_400"
-                                    android:textColor="#A7A6AD"/>
+                                    android:textColor="#A7A6AD" />
+
                                 <TextView
                                     android:id="@+id/tvBill"
                                     android:layout_width="wrap_content"
@@ -161,12 +180,14 @@
                                     android:layout_marginTop="12dp"
                                     android:textSize="18dp"
                                     android:fontFamily="@font/sf_600"
-                                    android:textColor="#8A4999"/>
+                                    android:textColor="#8A4999" />
                             </LinearLayout>
+
                             <View
                                 android:layout_width="1dp"
                                 android:layout_height="match_parent"
-                                android:background="#E2E0EA"/>
+                                android:background="#E2E0EA" />
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -174,13 +195,15 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:orientation="vertical">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Experience"
                                     android:textSize="14dp"
                                     android:fontFamily="@font/sf_400"
-                                    android:textColor="#A7A6AD"/>
+                                    android:textColor="#A7A6AD" />
+
                                 <TextView
                                     android:id="@+id/tvExperience"
                                     android:layout_width="wrap_content"
@@ -188,12 +211,14 @@
                                     android:layout_marginTop="12dp"
                                     android:textSize="18dp"
                                     android:fontFamily="@font/sf_600"
-                                    android:textColor="#8A4999"/>
+                                    android:textColor="#8A4999" />
                             </LinearLayout>
+
                             <View
                                 android:layout_width="1dp"
                                 android:layout_height="match_parent"
-                                android:background="#E2E0EA"/>
+                                android:background="#E2E0EA" />
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -201,13 +226,15 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:orientation="vertical">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Shift"
                                     android:textSize="14dp"
                                     android:fontFamily="@font/sf_400"
-                                    android:textColor="#A7A6AD"/>
+                                    android:textColor="#A7A6AD" />
+
                                 <TextView
                                     android:id="@+id/tvShift"
                                     android:layout_width="wrap_content"
@@ -216,9 +243,10 @@
                                     android:layout_marginTop="6dp"
                                     android:textSize="18dp"
                                     android:fontFamily="@font/sf_600"
-                                    android:textColor="#8A4999"/>
+                                    android:textColor="#8A4999" />
                             </LinearLayout>
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/layoutPersonal"
                             android:layout_width="match_parent"
@@ -228,10 +256,12 @@
                             android:layout_marginHorizontal="16dp"
                             android:background="@drawable/bk_white_8"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
-                                android:src="@drawable/ic_personal"/>
+                                android:src="@drawable/ic_personal" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -240,12 +270,14 @@
                                 android:layout_marginLeft="17dp"
                                 android:textSize="19dp"
                                 android:fontFamily="@font/sf_600"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_forward"/>
+                                android:src="@drawable/ic_forward" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/layoutHourly"
                             android:layout_width="match_parent"
@@ -255,11 +287,13 @@
                             android:layout_marginHorizontal="16dp"
                             android:background="@drawable/bk_white_8"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
                                 app:tint="@color/black"
-                                android:src="@drawable/ic_rate"/>
+                                android:src="@drawable/ic_rate" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -268,12 +302,14 @@
                                 android:layout_marginLeft="17dp"
                                 android:textSize="19dp"
                                 android:fontFamily="@font/sf_600"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_forward"/>
+                                android:src="@drawable/ic_forward" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/layoutWork"
                             android:layout_width="match_parent"
@@ -283,11 +319,13 @@
                             android:layout_marginHorizontal="16dp"
                             android:background="@drawable/bk_white_8"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
                                 app:tint="@color/black"
-                                android:src="@drawable/ic_exprience"/>
+                                android:src="@drawable/ic_exprience" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -296,12 +334,14 @@
                                 android:layout_marginLeft="17dp"
                                 android:textSize="19dp"
                                 android:fontFamily="@font/sf_600"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_forward"/>
+                                android:src="@drawable/ic_forward" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/layoutRole"
                             android:layout_width="match_parent"
@@ -311,11 +351,13 @@
                             android:layout_marginHorizontal="16dp"
                             android:background="@drawable/bk_white_8"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
                                 app:tint="@color/black"
-                                android:src="@drawable/ic_interest"/>
+                                android:src="@drawable/ic_interest" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -324,12 +366,14 @@
                                 android:layout_marginLeft="17dp"
                                 android:textSize="19dp"
                                 android:fontFamily="@font/sf_600"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_forward"/>
+                                android:src="@drawable/ic_forward" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/layoutSetting"
                             android:layout_width="match_parent"
@@ -340,11 +384,13 @@
                             android:layout_marginHorizontal="16dp"
                             android:background="@drawable/bk_white_8"
                             android:orientation="horizontal">
+
                             <ImageView
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
                                 app:tint="@color/black"
-                                android:src="@drawable/ic_setting"/>
+                                android:src="@drawable/ic_setting" />
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -353,11 +399,12 @@
                                 android:layout_marginLeft="17dp"
                                 android:textSize="19dp"
                                 android:fontFamily="@font/sf_600"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
+
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_forward"/>
+                                android:src="@drawable/ic_forward" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
@@ -370,7 +417,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

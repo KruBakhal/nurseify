@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data>
-    </data>
+
+    <data></data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/primary_gradient">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/primary_gradient"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
@@ -20,13 +23,15 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/menue_search_active"
                     android:layout_gravity="center"
                     app:tint="@color/white"
-                    android:layout_marginLeft="17dp"/>
+                    android:layout_marginLeft="17dp" />
+
                 <EditText
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -37,8 +42,9 @@
                     android:textColorHint="@color/white"
                     android:background="@color/trans"
                     android:hint="Search for jobs..."
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,6 +53,7 @@
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="21dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -56,7 +63,8 @@
                     android:textSize="17dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -65,7 +73,7 @@
                     android:textSize="17dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:fontFamily="@font/sf_600"/>
+                    android:fontFamily="@font/sf_600" />
 
                 <ImageView
                     android:layout_width="30dp"
@@ -73,30 +81,35 @@
                     android:paddingLeft="10dp"
                     android:src="@drawable/filter"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="17dp"/>
+                    android:layout_marginLeft="17dp" />
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_jobs"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#FFFFFF"
                 tools:listitem="@layout/item_jobs"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:background="#C4C4C4"/>
+                android:background="#C4C4C4" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="71dp"
                 android:background="@color/white"
                 android:orientation="horizontal">
+
                 <LinearLayout
                     android:id="@+id/jobs"
                     android:layout_width="0dp"
@@ -104,11 +117,13 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/jobIcon"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/menue_search_active"/>
+                        android:src="@drawable/menue_search_active" />
+
                     <TextView
                         android:id="@+id/jobText"
                         android:layout_width="wrap_content"
@@ -118,7 +133,7 @@
                         android:textSize="11dp"
                         android:textFontWeight="600"
                         android:layout_marginTop="6dp"
-                        android:fontFamily="@font/sf_600"/>
+                        android:fontFamily="@font/sf_600" />
 
                 </LinearLayout>
 
@@ -134,7 +149,8 @@
                         android:id="@+id/myJobsIcon"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/menue_jobs"/>
+                        android:src="@drawable/menue_jobs" />
+
                     <TextView
                         android:id="@+id/myJobsText"
                         android:layout_width="wrap_content"
@@ -144,8 +160,9 @@
                         android:textSize="11dp"
                         android:textFontWeight="600"
                         android:layout_marginTop="6dp"
-                        android:fontFamily="@font/sf_600"/>
+                        android:fontFamily="@font/sf_600" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/message"
                     android:layout_width="0dp"
@@ -158,7 +175,8 @@
                         android:id="@+id/messageIcon"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/menue_msg"/>
+                        android:src="@drawable/menue_msg" />
+
                     <TextView
                         android:id="@+id/messageText"
                         android:layout_width="wrap_content"
@@ -168,18 +186,21 @@
                         android:textSize="11dp"
                         android:textFontWeight="600"
                         android:layout_marginTop="6dp"
-                        android:fontFamily="@font/sf_600"/>
+                        android:fontFamily="@font/sf_600" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
+
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/menue_notification"/>
+                        android:src="@drawable/menue_notification" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -188,8 +209,9 @@
                         android:textSize="11dp"
                         android:textFontWeight="600"
                         android:layout_marginTop="6dp"
-                        android:fontFamily="@font/sf_600"/>
+                        android:fontFamily="@font/sf_600" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/account"
                     android:layout_width="0dp"
@@ -197,11 +219,13 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
+
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/accountIcon"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/menue_user"/>
+                        android:src="@drawable/menue_user" />
+
                     <TextView
                         android:id="@+id/accountText"
                         android:layout_width="wrap_content"
@@ -211,7 +235,7 @@
                         android:textSize="11dp"
                         android:textFontWeight="600"
                         android:layout_marginTop="6dp"
-                        android:fontFamily="@font/sf_600"/>
+                        android:fontFamily="@font/sf_600" />
 
                 </LinearLayout>
 

@@ -42,8 +42,8 @@ public class JobModel {
         this.data = data;
     }
 
-    public class JobDatum {
 
+    public class JobDatum {
 
         @SerializedName("job_id")
         @Expose
@@ -251,13 +251,19 @@ public class JobModel {
         private String traumaDesignation;
         @SerializedName("total_applied")
         @Expose
-        private Integer totalApplied;
+        private String totalApplied;
         @SerializedName("is_applied")
         @Expose
         private String isApplied;
         @SerializedName("is_liked")
         @Expose
         private String isLiked;
+        @SerializedName("shift")
+        @Expose
+        private String shift;
+        @SerializedName("start_date")
+        @Expose
+        private String startDate;
 
         public String getJobId() {
             return jobId;
@@ -803,11 +809,11 @@ public class JobModel {
             this.traumaDesignation = traumaDesignation;
         }
 
-        public Integer getTotalApplied() {
+        public String getTotalApplied() {
             return totalApplied;
         }
 
-        public void setTotalApplied(Integer totalApplied) {
+        public void setTotalApplied(String totalApplied) {
             this.totalApplied = totalApplied;
         }
 
@@ -827,5 +833,22 @@ public class JobModel {
             this.isLiked = isLiked;
         }
 
+        public String getShift() {
+            return shift;
+        }
+
+        public void setShift(String shift) {
+            this.shift = shift;
+        }
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
     }
+
 }

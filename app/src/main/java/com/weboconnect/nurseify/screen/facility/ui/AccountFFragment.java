@@ -21,9 +21,11 @@ import com.weboconnect.nurseify.screen.nurse.SettingActivity;
 import com.weboconnect.nurseify.screen.nurse.WorkHistoryActivity;
 
 public class AccountFFragment extends Fragment {
+
     String id;
     FragmentAccountFBinding binding;
     View view;
+
     public AccountFFragment(){ }
     public AccountFFragment(String id) {
         this.id = id;
@@ -31,25 +33,31 @@ public class AccountFFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         binding  = DataBindingUtil.inflate(inflater, R.layout.fragment_account_f, null, false);
+
         binding.profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(getContext(), PersonalDetailsActivity.class));
             }
         });
+
         binding.layoutPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), FacilityDetails1Activity.class));
             }
         });
+
         binding.layoutSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), SettingActivity.class));
             }
         });
+
         return view = binding.getRoot();
+
     }
 }

@@ -5,152 +5,277 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityActiveJobDetailsBinding;
+import com.weboconnect.nurseify.databinding.DialogRatingBinding;
+import com.weboconnect.nurseify.screen.nurse.adapters.RatingAdapter;
+import com.weboconnect.nurseify.screen.nurse.model.MyJobModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
+import com.weboconnect.nurseify.utils.SessionManager;
+import com.weboconnect.nurseify.utils.Utils;
+import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ActiveJobDetailsActivity extends AppCompatActivity {
 
+    public String selected_onBoard;
+    public String selected_onNurse;
+    public String selected_onLeader;
+    public String selected_onTool;
     ActivityActiveJobDetailsBinding binding;
+    private Context context = ActiveJobDetailsActivity.this;
+    private ProgressDialog progressDialog;
+    private String job_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(ActiveJobDetailsActivity.this,R.layout.activity_active_job_details);
-        ratingDailog();
+        binding = DataBindingUtil.setContentView(ActiveJobDetailsActivity.this, R.layout.activity_active_job_details);
+
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Please Wait");
+
+//        ratingDailog();
+        job_id = getIntent().getStringExtra("data");
+        fetch_Job_Detail(job_id);
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
     }
-    private void ratingDailog(){
-        final View loc = getLayoutInflater().from(ActiveJobDetailsActivity.this).inflate(R.layout.dialog_rating, null);
-        final Dialog dialog = new Dialog(ActiveJobDetailsActivity.this,R.style.AlertDialog);
-        dialog.setContentView(loc);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
-        dialog.setCancelable(true);
+
+    private void fetch_Job_Detail(String jobId) {
+
+        if (!Utils.isNetworkAvailable(context)) {
+//            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+            return;
+        }
+        Utils.displayToast(context, null); // to cancel toast if showing on screen
+        progressDialog.show();
+        String user_id = new SessionManager(context).get_user_register_Id();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+        RequestBody jobId1 = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
+
+        Call<MyJobModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                .call_view_job_detail(user_id1, jobId1);
+
+        call.enqueue(new Callback<MyJobModel>() {
+            @Override
+            public void onResponse(Call<MyJobModel> call, Response<MyJobModel> response) {
+                try {
+                    assert response.body() != null;
+                    if (!response.body().getApiStatus().equals("1")) {
+                        progressDialog.dismiss();
+                        Utils.displayToast(context, "" + response.body().getMessage());
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        MyJobModel jobModel = response.body();
+                        setupOfferedJobData(jobModel.getData().get(0));
+                        ratingDailog();
+
+                    } else {
+                        Utils.displayToast(context, "Failed to fetch job detail");
+                        progressDialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyJobModel> call, Throwable t) {
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private void setupOfferedJobData(MyJobModel.MyJobDatum jobModel) {
+        if (jobModel == null) {
+            Utils.displayToast(context, "Empty Data");
+            return;
+        }
+        binding.tvName.setText("" + jobModel.getFacilityName());
+        binding.tvSpecialty.setText("" + jobModel.getJobTitle());
+        binding.tvDate.setText("" + jobModel.getStartDate());
+        binding.tvAssignmentDurationDefinition.setText("" + jobModel.getAssignmentDurationDefinition());
+        binding.tvShiftDuration.setText("" + jobModel.getShiftDefinition());
+        binding.tvHourlyRate.setText("$ " + jobModel.getHourlyPayRate() + "/Hr");
+
+        try {
+            Glide.with(context).load(jobModel.getFacilityLogo()).into(binding.circleImageView);
+        } catch (Exception e) {
+
+        }
+        binding.tvDescriptions.setText(Html.fromHtml("" + jobModel.getJobDescription()));
+        binding.tvSeniority.setText("" + jobModel.getAboutJob().getSeniorityLevelDefinition());
+        binding.tvShiftDuration.setText("" + jobModel.getAboutJob().getPreferredShiftDurationDefinition());
+        binding.tvPrefferedExp.setText("" + jobModel.getAboutJob().getPreferredExperience());
+        binding.tvCerner.setText("" + jobModel.getAboutJob().getCernerDefinition());
+        binding.tvMeditech.setText("" + jobModel.getAboutJob().getMeditechDefinition());
+        binding.tvEpic.setText("" + jobModel.getAboutJob().getEpicDefinition());
+
+    }
+
+    private void ratingDailog() {
+//        final View loc = getLayoutInflater().from(ActiveJobDetailsActivity.this).inflate(R.layout.dialog_rating, null);
+        DialogRatingBinding dialogRatingBinding = DialogRatingBinding.inflate(getLayoutInflater());
+        final Dialog dialog = new Dialog(ActiveJobDetailsActivity.this, R.style.AlertDialog);
+        dialog.setContentView(dialogRatingBinding.getRoot());
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(false);
+
+        dialogRatingBinding.close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        ArrayList<String> onBoard = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            onBoard.add("" + (i + 1));
+        }
+        RatingAdapter ratingAdapter1 = new RatingAdapter(this, 1, onBoard);
+        dialogRatingBinding.rvOnBoard.setAdapter(ratingAdapter1);
+        RatingAdapter ratingAdapter2 = new RatingAdapter(this, 2, onBoard);
+        dialogRatingBinding.rvNurse.setAdapter(ratingAdapter2);
+        RatingAdapter ratingAdapter3 = new RatingAdapter(this, 3, onBoard);
+        dialogRatingBinding.rvLeader.setAdapter(ratingAdapter3);
+        RatingAdapter ratingAdapter4 = new RatingAdapter(this, 4, onBoard);
+        dialogRatingBinding.rvTools.setAdapter(ratingAdapter4);
+
+
+        dialogRatingBinding.textSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkValidation()) {
+                    if (Utils.isNetworkAvailable(context)) {
+                        performRating_Call((int) dialogRatingBinding.reatingBar.getRating(),
+                                dialogRatingBinding.edReview.getText().toString());
+                    } else {
+                        Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                    }
+                }
+//                dialog.dismiss();
+            }
+
+            private boolean checkValidation() {
+                if (dialogRatingBinding.reatingBar.getRating() == 0) {
+                    Utils.displayToast(context, "Please give rating to facility first !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onBoard)) {
+                    Utils.displayToast(context, "Please Rate Onboarding !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onNurse)) {
+                    Utils.displayToast(context, "Please Rate Nurse Teamwork  !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onLeader)) {
+                    Utils.displayToast(context, "Please Rate Leadership Support  !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onTool)) {
+                    Utils.displayToast(context, "Please Rate Tools to do my job   !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(dialogRatingBinding.edReview.getText().toString())) {
+                    Utils.displayToast(context, "Please, enter your experience !");
+                    return false;
+                }
+
+                return true;
+            }
+
+            private void performRating_Call(int rating, String review) {
+                if (!Utils.isNetworkAvailable(context)) {
+                    Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                    return;
+                }
+                Utils.displayToast(context, null); // to cancel toast if showing on screen
+//                progressDialog.show();
+                String user_id = new SessionManager(context).get_user_register_Id();
+                RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+                RequestBody user_id2 = RequestBody.create(MediaType.parse("multipart/form-data"), job_id);
+                RequestBody user_id3 = RequestBody.create(MediaType.parse("multipart/form-data"), "" + rating);
+                RequestBody user_id4 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onBoard);
+                RequestBody user_id5 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onNurse);
+                RequestBody user_id6 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onLeader);
+                RequestBody user_id7 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onTool);
+                RequestBody user_id8 = RequestBody.create(MediaType.parse("multipart/form-data"), review);
+
+                Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                        .call_facility_rating(user_id1, user_id2, user_id3, user_id4, user_id5, user_id6, user_id7, user_id8);
+
+                call.enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        try {
+                            assert response.body() != null;
+                            if (!response.body().getApiStatus().equals("1")) {
+//                                progressDialog.dismiss();
+                                return;
+                            }
+                            if (response.isSuccessful()) {
+//                                progressDialog.dismiss();
+                                ResponseModel jobModel = response.body();
+                                Utils.displayToast(context, jobModel.getMessage());
+                                dialog.dismiss();
+                                ratingDailogDone();
+
+                            } else {
+                                Utils.displayToast(context, "Failed to submit your rating details");
+//                                progressDialog.dismiss();
+                            }
+                        } catch (Exception e) {
+//                            progressDialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+//                        progressDialog.dismiss();
+                    }
+                });
+            }
+
+        });
         dialog.show();
-        ImageView close = dialog.findViewById(R.id.close);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        TextView text_submit = dialog.findViewById(R.id.text_submit);
-        text_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ratingDailogDone();
-                dialog.dismiss();
-            }
-        });
-        ArrayList<TextView> onBoard = new ArrayList<>();
-        onBoard.add((TextView) dialog.findViewById(R.id.com1));
-        onBoard.add((TextView) dialog.findViewById(R.id.com2));
-        onBoard.add((TextView) dialog.findViewById(R.id.com3));
-        onBoard.add((TextView) dialog.findViewById(R.id.com4));
-        onBoard.add((TextView) dialog.findViewById(R.id.com5));
-        onBoard.add((TextView) dialog.findViewById(R.id.com6));
-        onBoard.add((TextView) dialog.findViewById(R.id.com7));
-        onBoard.add((TextView) dialog.findViewById(R.id.com8));
-        onBoard.add((TextView) dialog.findViewById(R.id.com9));
-        onBoard.add((TextView) dialog.findViewById(R.id.com10));
-        ArrayList<TextView> teamWork = new ArrayList<>();
-        teamWork.add((TextView) dialog.findViewById(R.id.beh1));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh2));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh3));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh4));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh5));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh6));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh7));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh8));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh9));
-        teamWork.add((TextView) dialog.findViewById(R.id.beh10));
-        ArrayList<TextView> leaderShip = new ArrayList<>();
-        leaderShip.add((TextView) dialog.findViewById(R.id.res1));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res2));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res3));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res4));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res5));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res6));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res7));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res8));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res9));
-        leaderShip.add((TextView) dialog.findViewById(R.id.res10));
-        ArrayList<TextView> toolsJob = new ArrayList<>();
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas1));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas2));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas3));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas4));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas5));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas6));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas7));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas8));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas9));
-        leaderShip.add((TextView) dialog.findViewById(R.id.fas10));
-        for(int i =0;i<onBoard.size();i++){
-            int finalI = i;
-            onBoard.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    for(int j =0;j<onBoard.size();j++){
-                        onBoard.get(j).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating));
-                    }
-                    onBoard.get(finalI).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating_active));
-                }
-            });
-        }
-        for(int i =0;i<teamWork.size();i++){
-            int finalI = i;
-            teamWork.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    for(int j =0;j<teamWork.size();j++){
-                        teamWork.get(j).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating));
-                    }
-                    teamWork.get(finalI).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating_active));
-                }
-            });
-        }
-        for(int i =0;i<leaderShip.size();i++){
-            int finalI = i;
-            leaderShip.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    for(int j =0;j<leaderShip.size();j++){
-                        leaderShip.get(j).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating));
-                    }
-                    leaderShip.get(finalI).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating_active));
-                }
-            });
-        }
-        for(int i =0;i<toolsJob.size();i++){
-            int finalI = i;
-            toolsJob.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    for(int j =0;j<toolsJob.size();j++){
-                        toolsJob.get(j).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating));
-                    }
-                    toolsJob.get(finalI).setBackground(ContextCompat.getDrawable(ActiveJobDetailsActivity.this,R.drawable.bg_rating_active));
-                }
-            });
-        }
     }
-    private void ratingDailogDone(){
+
+
+    private void ratingDailogDone() {
         final View loc = getLayoutInflater().from(ActiveJobDetailsActivity.this).inflate(R.layout.dialog_rating_done, null);
-        final Dialog dialog = new Dialog(ActiveJobDetailsActivity.this,R.style.AlertDialog);
+        final Dialog dialog = new Dialog(ActiveJobDetailsActivity.this, R.style.AlertDialog);
         dialog.setContentView(loc);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(true);
         dialog.show();
         TextView text_ok = dialog.findViewById(R.id.text_ok);

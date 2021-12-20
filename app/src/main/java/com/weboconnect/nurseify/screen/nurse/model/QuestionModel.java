@@ -5,6 +5,17 @@ public class QuestionModel {
     int answer = 2;
     int leader = 0;
 
+    public QuestionModel(String question, int answer, int leader) {
+        this.question = question;
+        this.answer = answer;
+        this.leader = leader;
+    }
+
+    public QuestionModel(String question, int answer) {
+        this.question = question;
+        this.answer = answer;
+    }
+
     public int getLeader() {
         return leader;
     }

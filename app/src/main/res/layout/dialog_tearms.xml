@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center"
-    android:layout_width="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    android:gravity="center">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="510dp"
+        android:orientation="vertical">
+
         <ImageView
             android:id="@+id/close_dialog"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_close"
+            android:layout_gravity="right|center_horizontal"
             android:layout_marginRight="16dp"
+            android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:layout_marginHorizontal="14dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/bk_dialog"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,42 +40,59 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="21dp"
                 android:fontFamily="@font/sf_600"
-                android:text="Term and Condition"
+                android:text="Terms and Conditions"
                 android:textColor="@color/black"
                 android:textSize="24dp" />
-            <TextView
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Provides an online resource for health care professionals. These terms may be changed from time to time and without further notice. Your continued use of the Site after any such changes constitutes your acceptance of the new terms. If you do not agree to abide by these or any future terms, please do not use the Site or download materials from it. GE Healthcare, a division of General Electric Company (GE), may terminate, change, suspend or discontinue any aspect of the Site, including the availability of any features, at any time. GE may remove, modify or otherwise change any content, including that of third parties, on or from this Site."
+                android:layout_height="283dp"
                 android:layout_marginHorizontal="21dp"
-                android:textSize="16dp"
-                android:textColor="#4C525A"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/sf_400"/>
+                android:layout_marginTop="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_400"
+                        android:gravity="left|center"
+                        android:text="Provides an online resource for health care professionals. These terms may be changed from time to time and without further notice. Your continued use of the Site after any such changes constitutes your acceptance of the new terms. If you do not agree to abide by these or any future terms, please do not use the Site or download materials from it. GE Healthcare, a division of General Electric Company (GE), may terminate, change, suspend or discontinue any aspect of the Site, including the availability of any features, at any time. GE may remove, modify or otherwise change any content, including that of third parties, on or from this Site."
+                        android:textColor="#4C525A"
+                        android:textSize="16dp" />
+                </LinearLayout>
+            </ScrollView>
+
             <LinearLayout
+                android:id="@+id/sdsds"
                 android:layout_width="138dp"
                 android:layout_height="51dp"
-                android:layout_marginTop="34dp"
-                android:gravity="center"
+                android:layout_marginTop="51dp"
                 android:background="@drawable/btn_corner_secondary"
-                android:layout_marginBottom="20dp"
+                android:gravity="center"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_accept"/>
+                    android:src="@drawable/ic_accept" />
+
                 <TextView
                     android:id="@+id/text_apply"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Apply"
-                    android:gravity="center"
-                    android:textSize="17dp"
                     android:fontFamily="@font/sf_600"
-                    android:textColor="@color/white"/>
+                    android:gravity="center"
+                    android:text="Apply"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
             </LinearLayout>
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </LinearLayout>

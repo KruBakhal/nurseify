@@ -1,5 +1,6 @@
 package com.weboconnect.nurseify.screen.nurse.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -16,8 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.intermediate.CertificationCallback;
-import com.weboconnect.nurseify.screen.nurse.ActiveJobDetailsActivity;
-import com.weboconnect.nurseify.screen.nurse.model.NurseProfileModel;
+import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 
 import java.util.List;
 
@@ -26,10 +26,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAdapter.ViewHolder> {
 
     Activity activity;
-    List<NurseProfileModel.Certitficate> list;
+    List<UserProfileData.Certitficate> list;
     CertificationCallback callback;
 
-    public CertificationsAdapter(Activity activity, List<NurseProfileModel.Certitficate> list,CertificationCallback callback) {
+    public CertificationsAdapter(Activity activity, List<UserProfileData.Certitficate> list, CertificationCallback callback) {
         this.activity = activity;
         this.list = list;
         this.callback = callback;
@@ -38,13 +38,13 @@ public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_certifications,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_certifications, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
 
             int pp = position;
@@ -53,17 +53,27 @@ public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAd
             holder.tv_date.setText(list.get(pp).getEffectiveDate());
             holder.tv_eDate.setText(list.get(pp).getExpirationDate());
 
-            holder.delete.setOnClickListener(new View.OnClickListener() {
+
+            Glide.with(holder.imageView.getContext()).load(list.get(pp).getCertificateImage())
+                  .placeholder(R.drawable.place_holder_img)  .into(holder.imageView);
+
+            holder.lay_Delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callback.onRemove(list.get(pp).getCertificateImage(),list.get(pp).getCertificateId());
+                    callback.onRemove(position, list.get(position));
+                }
+            });
+            holder.edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    callback.onEdit(position);
                 }
             });
 
-            Glide.with(holder.imageView.getContext()).load(list.get(pp).getCertificateImage()).into(holder.imageView);
 
-        }catch (Exception e){
-            Log.e("CertificationsAdapter ",e.toString());
+        } catch (Exception e) {
+            Log.e("CertificationsAdapter ", e.toString());
 
         }
     }
@@ -81,14 +91,17 @@ public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAd
         TextView tv_name;
         TextView tv_date;
         TextView tv_eDate;
+        View edit, lay_Delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
 
+            lay_Delete = itemView.findViewById(R.id.layDelete);
             imageView = itemView.findViewById(R.id.imageView);
+            edit = itemView.findViewById(R.id.edit);
             delete = itemView.findViewById(R.id.delete);
-            tv_name = itemView.findViewById(R.id.tvSearchForCredential);
+            tv_name = itemView.findViewById(R.id.tv_search_credential);
             tv_date = itemView.findViewById(R.id.tvEffectiveDate);
             tv_eDate = itemView.findViewById(R.id.tvExpirationDate);
 

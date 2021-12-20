@@ -1,11 +1,16 @@
 package com.weboconnect.nurseify.screen.nurse;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
 import static com.weboconnect.nurseify.utils.FileUtils.getPath;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +26,16 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -41,11 +52,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.adapter.CertificateDialogAdapter;
 import com.weboconnect.nurseify.adapter.HourlyRateWindowAdapter;
-import com.weboconnect.nurseify.screen.nurse.adapters.JobAdapter;
+import com.weboconnect.nurseify.databinding.DialogWorkHistory3Binding;
 import com.weboconnect.nurseify.adapter.PhotoFilesAdapter;
 import com.weboconnect.nurseify.adapter.QuestionAdapter;
 import com.weboconnect.nurseify.adapter.RoleInteresetWindowAdapter;
@@ -61,13 +81,16 @@ import com.weboconnect.nurseify.databinding.DialogWorkHistory2Binding;
 import com.weboconnect.nurseify.databinding.DialogWorkHistoryBinding;
 import com.weboconnect.nurseify.intermediate.API_ResponseCallback;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
+import com.weboconnect.nurseify.screen.nurse.model.AddCredentialData;
 import com.weboconnect.nurseify.screen.nurse.model.AddCredentialModel;
-import com.weboconnect.nurseify.screen.nurse.model.CernersDatum;
-import com.weboconnect.nurseify.screen.nurse.model.CernersModel;
+import com.weboconnect.nurseify.screen.nurse.model.CityModel;
+import com.weboconnect.nurseify.screen.nurse.model.CityModel.CityDatum;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_HourlyRate_DataModel;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_PersonalDetail_2_DataModel;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_RoleIneterest_DataModel;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_WorkHistory_DataModel;
+import com.weboconnect.nurseify.screen.nurse.model.CountryModel;
+import com.weboconnect.nurseify.screen.nurse.model.CountryModel.CountryDatum;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialDatum;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
@@ -82,16 +105,18 @@ import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesData;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesModel;
 import com.weboconnect.nurseify.screen.nurse.model.QuestionModel;
 import com.weboconnect.nurseify.screen.nurse.model.RoleModel;
+import com.weboconnect.nurseify.screen.nurse.model.RoleModel2;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
-import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel.SpecialtyDatum;
+import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.State_Datum;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
-import com.weboconnect.nurseify.screen.nurse.model.WorkHistorysModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationDatum;
 import com.weboconnect.nurseify.utils.Constant;
+import com.weboconnect.nurseify.utils.FileUtils;
+import com.weboconnect.nurseify.utils.PathUtil;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitApi;
@@ -100,21 +125,28 @@ import com.weboconnect.nurseify.webService.RetrofitClient;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function4;
 import io.reactivex.functions.Function5;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -131,6 +163,8 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean hourlyRate = false;
     private boolean workHistory = false;
     private boolean roleInterest = false;
+    private boolean workCertificate = false;
+
     private List<String> arrayList = new ArrayList();
     private int state = 0;
     private UserProfileData model;
@@ -140,6 +174,10 @@ public class RegisterActivity extends AppCompatActivity {
     private String user_profile;
     public List<State_Datum> list_State = new ArrayList<com.weboconnect.nurseify.screen.nurse.model.State_Datum>();
     public String selected_state = null;
+    public List<CountryDatum> list_Country = new ArrayList<>();
+    public String selected_Country = null;
+    public List<CityDatum> list_City = new ArrayList<>();
+    public String selected_City = null;
     public List<SpecialtyDatum> list_Specialty = new ArrayList<>();
     public List<Integer> select_specialty = new ArrayList<>();
     private SpecialtyAdapter specialtyAdapter;
@@ -159,7 +197,7 @@ public class RegisterActivity extends AppCompatActivity {
     /*----------------------------*/
     public List<Degree_Datum> list_nurse_degrees = new ArrayList<>();
     public int selected_nurse_degree = 0;
-    public List<CernersDatum> list_experience = new ArrayList<>();
+    public List<Degree_Datum> list_experience = new ArrayList<>();
     public int selected_nurse_cerner = 0;
     public int selected_nurse_meditech = 0;
     public int selected_nurse_epic = 0;
@@ -177,49 +215,152 @@ public class RegisterActivity extends AppCompatActivity {
     /*-------------------------*/
     private List<String> list_photos = new ArrayList<>();
     private List<String> list_Files = new ArrayList<>();
+    private List<String> selected_list_photos = new ArrayList<>();
+    private List<String> selected_list_Files = new ArrayList<>();
     private SpecialtyAdapter languageAdapter;
     private List<LeaderRolesData> list_LeaderShipRole = new ArrayList<>();
     public int selected_leadership = 0;
     private PhotoFilesAdapter photoFilesAdapter;
     private PhotoFilesAdapter filesAdapter;
     private DialogWorkHistory2Binding history2Binding;
+    private DialogWorkHistory3Binding history3Binding;
     private DialogPersonalDetailsBinding personalDetailsBinding;
-
+    private boolean edit_mode;
+    private String option_call;
+    private List<AddCredentialData> list_Certificate = new ArrayList<>();
+    private int select_certificate_pos = 0;
+    private CertificateDialogAdapter certificateDialogAdapter;
+    String date1, date2;
+    private boolean isAdd = false;
+    DecimalFormat formatter = new DecimalFormat("00");
+    private int dayOfMonth2 = 0, monthOfYear2 = 0, year2 = 0;
+    private int dayOfMonth3 = 0, monthOfYear3 = 0, year3 = 0;
+    Pattern patternLettersNoSpace = Pattern.compile("^[A-z][A-z]*$");
+    Pattern patternLetters2 = Pattern.compile("^[a-zA-Z]*$");
+    Pattern patternLettersSpace = Pattern.compile("^[a-zA-Z ]*$");
+    Pattern patternNumbers = Pattern.compile("^[0-9]*$");
+    Pattern patternAlphabetNumbers = Pattern.compile("^[a-zA-Z0-9]*$");
+    FirebaseCrashlytics crashlytics;
+    private Pattern patternAddress = Pattern.compile("^[a-zA-Z 0-9,\\-\\/]+$");
+    private Pattern patternCity = Pattern.compile("^[a-zA-Z ]+$");
+    private Pattern patternCollege = Pattern.compile("^[a-zA-Z 0-9,\\-\\/]+$");
+    private Pattern patternExp = Pattern.compile("^[0-9.\\+]+$");
+    private Pattern patternOther = Pattern.compile("^[a-zA-Z 0-9]+$");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(RegisterActivity.this, R.layout.activity_register);
         context = this;
+//        binding.recyclerViewJobs.setAdapter(new JobAdapter(RegisterActivity.this,1));
+        crashlytics = FirebaseCrashlytics.getInstance();
 
-        binding.recyclerViewJobs.setAdapter(new JobAdapter(RegisterActivity.this));
+        edit_mode = getIntent().getBooleanExtra(Constant.EDIT_MODE, false);
+        option_call = getIntent().getStringExtra(Constant.SECTION);
+        isAdd = getIntent().getBooleanExtra(Constant.ADD, false);
+        select_certificate_pos = getIntent().getIntExtra(Constant.POSITION, 0);
         String data = getIntent().getStringExtra(Constant.STR_RESPONSE_DATA);
         Type type = new TypeToken<UserProfileData>() {
         }.getType();
         model = new Gson().fromJson(data, type);
+        if (!edit_mode) {
+            chooseOption();
+        } else {
+            switch (option_call) {
+                case Constant.PERSON_DETAIL:
+                    personalDialog();
+                    break;
+                case Constant.HOURLY_RATE_AVAILABILITY:
+                    hourlyRate();
+                    break;
+                case Constant.Work_History_Experience:
+                    workDialog();
+                    break;
+                case Constant.Work_History_Certifications:
+                    workDialog2(true);
+                    break;
+                case Constant.Work_History_Resume:
+                    workDialog2(false);
+                    break;
+                case Constant.Role_Interest1:
+                    roleDialog();
+                    break;
+                case Constant.Role_Interest2:
+                    roleDialog2();
+                    break;
+            }
 
+        }
+    }
+
+    private void setupSelectedOption() {
         if (model != null) {
-            setData();
             if (model.getProfileDetailFlag().equals("0")) {
 //                state = 1;
                 personalDetails = false;
             } else {
                 personalDetails = true;
             }
+
             if (model.getHourlyRateAndAvailFlag().equals("0")) {
                 hourlyRate = false;
             } else {
                 hourlyRate = true;
             }
+            if (checkWorkHistory()) {
+                workHistory = true;
+            }
+            if (model.getCertitficate() != null && model.getCertitficate().size() != 0) {
+                workCertificate = true;
+            }
+            if (new SessionManager(context).get_RoleDialogStatus()) {
+                roleInterest = true;
+            }
         }
-        chooseOption();
     }
 
-    private void setData() {
-
+    private boolean checkWorkHistory() {
+        if (model == null)
+            return false;
+        if (TextUtils.isEmpty(model.getExperience().getHighestNursingDegree())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getCollegeUniName())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getCollegeUniCity())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getCollegeUniState())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getCollegeUniCountry())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getExperienceAsAcuteCareFacility())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getExperienceAsAmbulatoryCareFacility())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getEhrProficiencyCerner())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getEhrProficiencyMeditech())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getEhrProficiencyEpic())) {
+            return false;
+        }
+        if (TextUtils.isEmpty(model.getExperience().getEhrProficiencyOther())) {
+            return false;
+        }
+        return true;
     }
+
 
     private void chooseOption() {
+        setupSelectedOption();
         final View loc = getLayoutInflater().from(RegisterActivity.this).inflate(R.layout.dialog_choose_option, null);
         final Dialog dialog = new Dialog(RegisterActivity.this, R.style.AlertDialog);
         dialog.setContentView(loc);
@@ -250,7 +391,7 @@ public class RegisterActivity extends AppCompatActivity {
             text_hourly.setTextColor(Color.parseColor("#FFFFFF"));
         }
 
-        if (workHistory) {
+        if (workHistory && workCertificate) {
             text_work.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.btn_fill_secondary));
             text_work.setTextColor(Color.parseColor("#FFFFFF"));
         }
@@ -325,7 +466,10 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(true);
         TextView next = dialog.findViewById(R.id.next);
-
+        if (edit_mode) {
+            personalDetailsBinding.imgClose.setVisibility(View.VISIBLE);
+            personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
+        }
         if (model != null) {
 
             personalDetailsBinding.edFirstName.setText(model.getFirstName());
@@ -334,25 +478,171 @@ public class RegisterActivity extends AppCompatActivity {
             personalDetailsBinding.edLicenseState.setText(model.getNursingLicenseState());
             personalDetailsBinding.edLicenseNos.setText(model.getNursingLicenseNumber());
             personalDetailsBinding.edPhone.setText(model.getMobile());
+            if (!TextUtils.isEmpty(model.getImage()))
+                Glide.with(context).load(model.getImage())
+                        .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        Log.d("TAG", "onLoadFailed: 1 " + e.getMessage());
+                        return false;
+                    }
 
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(personalDetailsBinding.imgProfile);
+            personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
         }
+        personalDetailsBinding.edFirstName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    personalDetailsBinding.edFirstName.setError(null);
+                else if (!patternLettersNoSpace.matcher(s.toString()).find() || s.toString().length() < 3) {
+                    String estring = "First Name Can Contain Only Alphabet, No Space And Min 3 Letter Required!";
+                    personalDetailsBinding.edFirstName.setError(estring);
+                } else {
+                    personalDetailsBinding.edFirstName.setError(null);
+                }
+            }
+        });
+        personalDetailsBinding.edLastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    personalDetailsBinding.edLastName.setError(null);
+                else if (!patternLettersNoSpace.matcher(s.toString()).find() || s.toString().length() < 3) {
+                    String estring = "Last Name Can Contain Only Alphabet, No Space And Min 3 Letter Required!";
+                    personalDetailsBinding.edLastName.setError(estring);
+                } else {
+                    personalDetailsBinding.edLastName.setError(null);
+                }
+            }
+        });
+        personalDetailsBinding.edEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    personalDetailsBinding.edEmail.setError(null);
+                else if (!Patterns.EMAIL_ADDRESS.matcher(s.toString()).find()) {
+                    personalDetailsBinding.edEmail.setError("Enter Email Id In Proper Format !");
+                } else {
+                    personalDetailsBinding.edEmail.setError(null);
+                }
+            }
+        });
+        personalDetailsBinding.edPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    personalDetailsBinding.edPhone.setError(null);
+                else if (s.toString().length() < 10) {
+                    personalDetailsBinding.edPhone.setError("Phone Nos Can Contain Only Numbers And Min 10 Digits Are Required");
+                } else {
+                    personalDetailsBinding.edPhone.setError(null);
+                }
+            }
+        });
+        personalDetailsBinding.edLicenseState.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    personalDetailsBinding.edLicenseState.setError(null);
+                else if (!Pattern.compile("^[a-zA-Z0-9 ]+$").matcher(s.toString()).find()) {
+                    personalDetailsBinding.edLicenseState.setError("Nurse License State Can Contain Only Alphabets, Numbers And Min Length Required Is 5");
+                } else {
+                    personalDetailsBinding.edLicenseState.setError(null);
+                }
+            }
+        });
+        personalDetailsBinding.edLicenseNos.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    personalDetailsBinding.edLicenseNos.setError(null);
+                else if (!Pattern.compile("^[a-zA-Z0-9 ]+$").matcher(s.toString()).find()) {
+                    personalDetailsBinding.edLicenseNos.setError("Nurse License Number Can Contain Only Alphabets, Numbers And Min Length Required Is 5");
+                } else {
+                    personalDetailsBinding.edLicenseNos.setError(null);
+                }
+            }
+        });
+
+        if (TextUtils.isEmpty(model.getImage())) {
+            Glide.with(context).load(model.getImage()).into(personalDetailsBinding.imgProfile);
+            personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
+        }
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkValidation()) {
-                    String edLicenseState = personalDetailsBinding.edLicenseState.getText().toString();
-                    String edLicenseNos = personalDetailsBinding.edLicenseNos.getText().toString();
-                    String edFirstName = personalDetailsBinding.edFirstName.getText().toString();
-                    String edLastName = personalDetailsBinding.edLastName.getText().toString();
-                    String email = personalDetailsBinding.edEmail.getText().toString();
-                    String mobile = personalDetailsBinding.edPhone.getText().toString();
-//                    model.setFirstName(edFirstName);
-//                    model.setLastName(edLastName);
-//                    model.setEmail(email);
-//                    model.setMobile(mobile);
-//                    model.setNursingLicenseState(edLicenseState);
-//                    model.setNursingLicenseNumber(edLicenseNos);
+                    String edLicenseState = personalDetailsBinding.edLicenseState.getText().toString().trim();
+                    String edLicenseNos = personalDetailsBinding.edLicenseNos.getText().toString().trim();
+                    String edFirstName = personalDetailsBinding.edFirstName.getText().toString().trim();
+                    String edLastName = personalDetailsBinding.edLastName.getText().toString().trim();
+                    String email = personalDetailsBinding.edEmail.getText().toString().trim();
+                    String mobile = personalDetailsBinding.edPhone.getText().toString().trim();
                     if (Utils.isNetworkAvailable(context)) {
                         personalDialog2(edLicenseState, edLicenseNos, edFirstName, edLastName, email, mobile);
                         dialog.dismiss();
@@ -372,13 +662,29 @@ public class RegisterActivity extends AppCompatActivity {
                 String edLastName = personalDetailsBinding.edLastName.getText().toString();
                 String email = personalDetailsBinding.edEmail.getText().toString();
                 String mobile = personalDetailsBinding.edPhone.getText().toString();
+                Pattern pattern = Pattern.compile("^[A-z][A-z]*$");
+                Matcher matcher1 = pattern.matcher(edFirstName);
+                Matcher matcher2 = pattern.matcher(edLastName);
 
+
+                if (TextUtils.isEmpty(model.getImage()) && TextUtils.isEmpty(user_profile)) {
+                    Utils.displayToast(context, "First, select profile photo!");
+                    return false;
+                }
                 if (TextUtils.isEmpty(edFirstName)) {
                     Utils.displayToast(context, "Enter First Name !");
                     return false;
                 }
+                if (!matcher1.find()) {
+                    Utils.displayToast(context, "Enter First Name Proper Format. First Name Must Contain Only Alphabet and No Space !");
+                    return false;
+                }
                 if (TextUtils.isEmpty(edLastName)) {
                     Utils.displayToast(context, "Enter Last Name !");
+                    return false;
+                }
+                if (!matcher2.find()) {
+                    Utils.displayToast(context, "Enter Last Name Proper Format. Last Name Must Contain Only Alphabet and No Space !");
                     return false;
                 }
                 if (TextUtils.isEmpty(email)) {
@@ -386,30 +692,48 @@ public class RegisterActivity extends AppCompatActivity {
                     return false;
                 }
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Utils.displayToast(context, "Enter Email ID In Proper Format !");
                     return false;
                 }
 
                 if (TextUtils.isEmpty(mobile) ||
                         (mobile.contains("+") && (mobile.length() < 13 || mobile.length() > 13)) ||
                         (!mobile.contains("+") && (mobile.length() < 10 || mobile.length() > 10))) {
-                    Utils.displayToast(context, "Enter Valid Mobile Nos");
+                    Utils.displayToast(context, "Enter Valid Mobile Nos Min 10 Digit Required !");
                     return false;
                 }
 
                 if (TextUtils.isEmpty(edLicenseState)) {
-                    Utils.displayToast(context, "Select Nurse License State First !");
+                    Utils.displayToast(context, "Enter Nurse License State First !");
                     return false;
                 }
+                matcher1 = patternAlphabetNumbers.matcher(edLicenseState);
+                if (!matcher1.find()) {
+                    Utils.displayToast(context, "Enter Nurse State in proper format only alphabet,no space and numbers are allowed !");
+                    return false;
+                }
+
                 if (TextUtils.isEmpty(edLicenseNos)) {
                     Utils.displayToast(context, "Select Nurse License Number First !");
                     return false;
                 }
-
+                matcher1 = patternAlphabetNumbers.matcher(edLicenseNos);
+                if (!matcher1.find()) {
+                    Utils.displayToast(context, "Enter Nurse License Number in proper format only alphabet,no space and numbers are allowed !");
+                    return false;
+                }
 
                 return true;
             }
 
 
+        });
+        personalDetailsBinding.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
+            }
         });
         personalDetailsBinding.layProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -418,36 +742,90 @@ public class RegisterActivity extends AppCompatActivity {
                 Utils.hideKeyboardFrom(context, v);
 
                 if (!checkReadExternal()) {
-                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+//                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+                    requestPermission();
                     return;
                 }
 
-                if (list_photos != null && list_photos.size() > 3) {
-                    Utils.displayToast(context, "Max 4 photos can be upload only !");
-                    return;
-                }
+
                 System.gc();
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*"});
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/jpg", "image/png", "image/jpeg"});
                 resultLauncherProfile.launch(intent);
                 Utils.onClickEvent(v);
             }
-
-
         });
 
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                chooseOption();
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
             }
         });
         dialog.show();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 229) {
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    // perform action when allow permission success
+                    Utils.displayToast(context, "Permission Allowed");
+                } else {
+                    Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 123:
+                if (grantResults.length > 0) {
+                    boolean READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+                    if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
+                        // perform action when allow permission success
+                        Utils.displayToast(context, "Permission Allowed");
+                    } else {
+                        Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void requestPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                startActivityForResult(intent, 229);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, 229);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{READ_EXTERNAL_STORAGE,
+                            WRITE_EXTERNAL_STORAGE},
+                    123);
+        }
+    }
 
     private void personalDialog2(String edLicenseState, String edLicenseNos, String edFirstName, String edLastName, String email, String mobile) {
 
@@ -458,6 +836,7 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.setCancelable(true);
         binding_personalDetail_2.edAddress.setText(model.getAddress());
         binding_personalDetail_2.edCity.setText(model.getCity());
+        binding_personalDetail_2.edCountry.setText(model.getCountry());
         binding_personalDetail_2.edPostalCode.setText(model.getPostcode());
         binding_personalDetail_2.layProgress.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -465,6 +844,76 @@ public class RegisterActivity extends AppCompatActivity {
                 return true;
             }
         });
+        if (edit_mode)
+            binding_personalDetail_2.imgClose.setVisibility(View.VISIBLE);
+
+        binding_personalDetail_2.edAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    binding_personalDetail_2.edAddress.setError(null);
+                else if (!patternAddress.matcher(s.toString()).find() || s.toString().length() < 2) {
+                    binding_personalDetail_2.edAddress.setError("Address Can Contain Alphabets, Numbers, Symbol And Min Length Required Is 2 !");
+                } else {
+                    binding_personalDetail_2.edAddress.setError(null);
+                }
+            }
+        });
+//        binding_personalDetail_2.edCity.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if (s == null || s.length() == 0)
+//                    binding_personalDetail_2.edCity.setError(null);
+//                else if (!patternCity.matcher(s.toString()).find() || s.toString().length() < 2) {
+//                    binding_personalDetail_2.edCity.setError("City Name Can Contain Only Alphabets And Min Length Required Is 2 !");
+//                } else {
+//                    binding_personalDetail_2.edCity.setError(null);
+//                }
+//            }
+//        });
+        binding_personalDetail_2.edPostalCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    binding_personalDetail_2.edPostalCode.setError(null);
+                else if (!patternNumbers.matcher(s.toString()).find() || s.toString().length() < 5) {
+                    binding_personalDetail_2.edPostalCode.setError("Post Code Can Contain Numbers Only And Min Digits Required Is 5!");
+                } else {
+                    binding_personalDetail_2.edPostalCode.setError(null);
+                }
+            }
+        });
+
         if (check_Any_Data_Empty_PersonalDetail_2()) {
             API_ResponseCallback apiResponseCallback = new API_ResponseCallback() {
                 @Override
@@ -475,12 +924,14 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onSucces(Object models) {
                     binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+
                     if (models instanceof Combine_PersonalDetail_2_DataModel) {
-                        Combine_PersonalDetail_2_DataModel combineData = (Combine_PersonalDetail_2_DataModel) models;
+                        Combine_PersonalDetail_2_DataModel combineData
+                                = (Combine_PersonalDetail_2_DataModel) models;
                         try {
                             list_Specialty.addAll(combineData.specialtyModel.getData());
                             list_State.addAll(combineData.stateModel.getData());
-
+                            list_Country.addAll(combineData.countryModel.getData());
                             fill_personal_2_field(combineData);
                         } catch (Exception e) {
                             Log.d("TAG", "personalDialog2 apicallback success() onError: " + e.getMessage());
@@ -504,19 +955,81 @@ public class RegisterActivity extends AppCompatActivity {
                     if (combineData.stateModel.getData() != null
                             && combineData.stateModel.getData().size() != 0) {
                         list_State.addAll(combineData.stateModel.getData());
-
+                    }
+                    if (list_Country != null && list_Country.size() != 0) {
+                        if (!TextUtils.isEmpty(model.getCountry())) {
+                            if (checkItemInList_Country(model.getCountry(), list_Country)) {
+                                binding_personalDetail_2.edCountry.setText(list_Country.get(
+                                        getIndexFromList_Country(model.getCountry(), list_Country)).getName());
+                                selected_Country = String.valueOf(getIndexFromList_Country(model.getCountry(), list_Country));
+                            }
+                        } else {
+                            selected_Country = null;
+                        }
+                    }
+                    if (list_State != null && list_State.size() != 0) {
                         if (!TextUtils.isEmpty(model.getState())) {
                             if (checkItemInList_State(model.getState(), list_State)) {
                                 binding_personalDetail_2.tvState.setText(list_State.get(
-                                        getIndexFromList_State(model.getState(), list_State)).getState());
+                                        getIndexFromList_State(model.getState(), list_State)).getNames());
                                 selected_state = String.valueOf(getIndexFromList_State(model.getState(), list_State));
+                                fetch_state_by_City(list_State.get(Integer.parseInt(selected_state)).getState_id(),
+                                        new API_ResponseCallback() {
+                                            @Override
+                                            public void onShowProgress() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.VISIBLE);
+                                            }
+
+                                            @Override
+                                            public void onSucces(Object models) {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                                if (models instanceof CityModel) {
+                                                    CityModel combineData = (CityModel) models;
+                                                    try {
+                                                        if (list_City != null)
+                                                            list_City.clear();
+                                                        else list_City = new ArrayList<>();
+                                                        selected_City = null;
+                                                        binding_personalDetail_2.edCity.setText("");
+                                                        list_City.addAll(combineData.getData());
+
+                                                        if (list_City != null && list_City.size() != 0) {
+                                                            if (!TextUtils.isEmpty(model.getCity())) {
+                                                                if (checkItemInList_City(model.getCity(), list_City)) {
+                                                                    binding_personalDetail_2.edCity.setText(list_City.get(
+                                                                            getIndexFromList_City(model.getCity(), list_City)).getName());
+                                                                    selected_City = String.valueOf(getIndexFromList_City(model.getCity(), list_City));
+                                                                }
+                                                            } else {
+                                                                selected_City = null;
+                                                            }
+                                                        }
+
+                                                    } catch (Exception e) {
+                                                        Log.d("TAG", "personalDialog2 apicallback success() onError: " + e.getMessage());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailed() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                            }
+                                        });
                             }
+
                         } else {
                             selected_state = null;
                         }
                     }
-                }
 
+
+                }
 
                 @Override
                 public void onFailed() {
@@ -547,14 +1060,35 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(model.getState())) {
                     if (checkItemInList_State(model.getState(), list_State)) {
                         binding_personalDetail_2.tvState.setText(list_State.get(
-                                getIndexFromList_State(model.getState(), list_State)).getState());
+                                getIndexFromList_State(model.getState(), list_State)).getNames());
                         selected_state = String.valueOf(getIndexFromList_State(model.getState(), list_State));
                     }
                 } else {
                     selected_state = null;
                 }
             }
-
+            if (list_Country != null && list_Country.size() != 0) {
+                if (!TextUtils.isEmpty(model.getCountry())) {
+                    if (checkItemInList_Country(model.getCountry(), list_Country)) {
+                        binding_personalDetail_2.edCountry.setText(list_Country.get(
+                                getIndexFromList_Country(model.getCountry(), list_Country)).getName());
+                        selected_Country = String.valueOf(getIndexFromList_Country(model.getCountry(), list_Country));
+                    }
+                } else {
+                    selected_Country = null;
+                }
+            }
+            if (list_City != null && list_City.size() != 0) {
+                if (!TextUtils.isEmpty(model.getCity())) {
+                    if (checkItemInList_City(model.getCity(), list_City)) {
+                        binding_personalDetail_2.edCity.setText(list_City.get(
+                                getIndexFromList_City(model.getCity(), list_City)).getName());
+                        selected_City = String.valueOf(getIndexFromList_City(model.getCity(), list_City));
+                    }
+                } else {
+                    selected_City = null;
+                }
+            }
         }
 
         specialtyAdapter = new SpecialtyAdapter(context, select_specialty, list_Specialty,
@@ -600,51 +1134,192 @@ public class RegisterActivity extends AppCompatActivity {
                 Utils.onClickEvent(v);
             }
         });
-        binding_personalDetail_2.layState.setOnClickListener(new View.OnClickListener() {
+        binding_personalDetail_2.layCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Utils.hideKeyboardFrom(context, v);
-                showOptionPopup_State(context, binding_personalDetail_2.view2, 6,
-                        binding_personalDetail_2.img2, binding_personalDetail_2.tvState
+                showOptionPopup_Country(context, binding_personalDetail_2.view3, 4,
+                        binding_personalDetail_2.img3, binding_personalDetail_2.edCountry
+                        , list_Country, selected_Country
                         , new ItemCallback() {
                             @Override
                             public void onClick(int position) {
-                                selected_state = "" + position;
-                                binding_personalDetail_2.tvState
-                                        .setText("" + list_State.get(position).getState());
+                                if (!TextUtils.isEmpty(selected_Country) && selected_Country.equals("" + position)) {
+                                    return;
+                                }
+                                if (!list_Country.get(position).getCountryId().equals("233")) {
+                                    Utils.displayToast(context, "No states and cities available for this country");
+                                    return;
+                                }
+                                selected_Country = "" + position;
+                                binding_personalDetail_2.edCountry
+                                        .setText("" + list_Country.get(position).getName());
+                                fetch_state_by_States(list_Country.get(position).getCountryId(),
+                                        new API_ResponseCallback() {
+                                            @Override
+                                            public void onShowProgress() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.VISIBLE);
+                                            }
+
+                                            @Override
+                                            public void onSucces(Object models) {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                                if (models instanceof StateModel) {
+                                                    StateModel combineData = (StateModel) models;
+                                                    try {
+                                                        if (list_State != null)
+                                                            list_State.clear();
+                                                        else list_State = new ArrayList<>();
+                                                        selected_state = null;
+                                                        binding_personalDetail_2.tvState.setText("");
+                                                        list_State.addAll(combineData.getData());
+                                                    } catch (Exception e) {
+                                                        Log.d("TAG", "personalDialog2 apicallback success() onError: " + e.getMessage());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailed() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                            }
+                                        });
+
                             }
                         });
                 Utils.onClickEvent(v);
             }
         });
+        binding_personalDetail_2.layState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(context, v);
+                if (TextUtils.isEmpty(selected_Country)) {
+                    Utils.displayToast(context, "Select Country First !");
+                    return;
+                }
+                if (!TextUtils.isEmpty(selected_Country) && !list_Country.get(Integer.parseInt(selected_Country)).getCountryId().equals("233")) {
+                    Utils.displayToast(context, "No State Available For Selected Country!");
+                    return;
+                }
+                showOptionPopup_State(context, binding_personalDetail_2.view2, 6,
+                        binding_personalDetail_2.img2, binding_personalDetail_2.tvState
+                        , new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                if (!TextUtils.isEmpty(selected_state) && selected_state.equals("" + position)) {
+                                    return;
+                                }
 
+                                fetch_state_by_City(list_State.get(position).getState_id(),
+                                        new API_ResponseCallback() {
+                                            @Override
+                                            public void onShowProgress() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.VISIBLE);
+                                            }
+
+                                            @Override
+                                            public void onSucces(Object models) {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                                if (models instanceof CityModel) {
+                                                    CityModel combineData = (CityModel) models;
+                                                    try {
+                                                        if (list_City != null)
+                                                            list_City.clear();
+                                                        else list_City = new ArrayList<>();
+                                                        selected_City = null;
+                                                        binding_personalDetail_2.edCity.setText("");
+                                                        list_City.addAll(combineData.getData());
+                                                        selected_state = "" + position;
+                                                        binding_personalDetail_2.tvState
+                                                                .setText("" + list_State.get(position).getNames());
+                                                    } catch (Exception e) {
+                                                        Log.d("TAG", "personalDialog2 apicallback success() onError: " + e.getMessage());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailed() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                binding_personalDetail_2.layProgress.setVisibility(View.GONE);
+                                            }
+                                        });
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+        binding_personalDetail_2.layCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(selected_Country)) {
+                    Utils.displayToast(context, "Select Country First !");
+                    return;
+                }
+                if (!TextUtils.isEmpty(selected_Country) && !list_Country.get(Integer.parseInt(selected_Country)).getCountryId().equals("233")) {
+                    Utils.displayToast(context, "No State Available For Selected Country!");
+                    return;
+                }
+                if (TextUtils.isEmpty(selected_state)) {
+                    Utils.displayToast(context, "No City Available For Selected State!");
+                    return;
+                }
+
+                Utils.hideKeyboardFrom(context, v);
+                showOptionPopup_City(context, binding_personalDetail_2.view4, 7,
+                        binding_personalDetail_2.img4, binding_personalDetail_2.edCity
+                        , list_City, selected_City, new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                selected_City = "" + position;
+                                binding_personalDetail_2.edCity
+                                        .setText("" + list_City.get(position).getName());
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
         binding_personalDetail_2.next.setOnClickListener(new View.OnClickListener() {
             String address, city, country, postal_code, nos = "", state = "";
 
             @Override
             public void onClick(View v) {
-                Utils.hideKeyboardFrom(context, v);
-                if (checkValidation()) {
-                    address = binding_personalDetail_2.edAddress.getText().toString();
-                    city = binding_personalDetail_2.edCity.getText().toString();
-                    country = binding_personalDetail_2.edCountry.getText().toString();
-                    postal_code = binding_personalDetail_2.edPostalCode.getText().toString();
-                    nos = "";
-                    state = list_State.get(Integer.parseInt(selected_state)).getState();
-                    for (int i = 0; i < select_specialty.size(); i++) {
-                        if (i == 0) {
-                            nos = "" + list_Specialty.get(select_specialty.get(i)).getId();
-                        } else
-                            nos = nos + "," + list_Specialty.get(select_specialty.get(i)).getId();
+                try {
+                    Utils.hideKeyboardFrom(context, v);
+                    if (checkValidation()) {
+                        address = binding_personalDetail_2.edAddress.getText().toString();
+                        city = binding_personalDetail_2.edCity.getText().toString();
+                        country = binding_personalDetail_2.edCountry.getText().toString();
+                        postal_code = binding_personalDetail_2.edPostalCode.getText().toString();
+                        nos = "";
+                        state = list_State.get(Integer.parseInt(selected_state)).getIso_name();
+                        country = list_Country.get(Integer.parseInt(selected_Country)).getName();
+                        city = list_City.get(Integer.parseInt(selected_City)).getName();
+                        for (int i = 0; i < select_specialty.size(); i++) {
+                            if (i == 0) {
+                                nos = "" + list_Specialty.get(select_specialty.get(i)).getId();
+                            } else
+                                nos = nos + "," + list_Specialty.get(select_specialty.get(i)).getId();
+                        }
+                        if (Utils.isNetworkAvailable(context)) {
+                            call_sendData_For_PersonalDetail();
+                        } else {
+                            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                        }
                     }
-                    if (Utils.isNetworkAvailable(context)) {
-                        call_sendData_For_PersonalDetail();
-                    } else {
-                        Utils.displayToast(context, getResources().getString(R.string.no_internet));
-                    }
+                } catch (Exception exception) {
+                    crashlytics.recordException(exception);
                 }
-
             }
 
             private void call_sendData_For_PersonalDetail() {
@@ -675,11 +1350,26 @@ public class RegisterActivity extends AppCompatActivity {
                 RequestBody request_spec1111 = RequestBody.create(MediaType.parse("multipart/form-data"),
                         country);
                 binding_personalDetail_2.layProgress.setVisibility(View.VISIBLE);
+                Call<UserProfile> call;
+                if (!TextUtils.isEmpty(user_profile)) {
+                    RequestBody certificate_img
+                            = RequestBody.create(MediaType.parse("image/*"),
+                            new File(user_profile));
+                    MultipartBody.Part image =
+                            MultipartBody.Part.createFormData("profile_image", new File(user_profile).getName(),
+                                    certificate_img);
+                    call = backendApi.call_PersonalDetail(request_id, request_firstName, request_lastName,
+                            request_lastName1, request_lastName11, request_state, request_nos,
+                            request_spec, request_spec1, request_spec11, request_spec111,
+                            request_spec121, request_spec1111, image);
+                } else {
+                    call = backendApi.call_PersonalDetail(request_id, request_firstName, request_lastName,
+                            request_lastName1, request_lastName11, request_state, request_nos,
+                            request_spec, request_spec1, request_spec11, request_spec111,
+                            request_spec121, request_spec1111);
+                }
 
-                backendApi.call_PersonalDetail(request_id, request_firstName, request_lastName,
-                        request_lastName1, request_lastName11, request_state, request_nos,
-                        request_spec, request_spec1, request_spec11, request_spec111,
-                        request_spec121, request_spec1111).enqueue(new Callback<UserProfile>() {
+                call.enqueue(new Callback<UserProfile>() {
                     @Override
                     public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                         assert response.body() != null;
@@ -697,16 +1387,20 @@ public class RegisterActivity extends AppCompatActivity {
                             new SessionManager(context).save_user(userProfile.getData());
                             model = userProfile.getData();
                             Utils.displayToast(context, userProfile.getMessage().toString());
-                            mRegistrationStep++;
-                            personalDetails = true;
-                            dialog.dismiss();
-                            mRegistrationStep++;
-                            personalDetails = true;
-                            if (model.getHourlyRateAndAvailFlag().equals("0")) {
-                                chooseOption();
+                            if (edit_mode) {
+                                dialog.dismiss();
+                                setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                        new Gson().toJson(model)));
+                                finish();
                             } else {
-                                move_TO_Home_Screen();
+                                mRegistrationStep++;
+                                personalDetails = true;
+                                dialog.dismiss();
+                                mRegistrationStep++;
+                                personalDetails = true;
+                                create_user_inside_firebase();
                             }
+
                         } else {
 
 //                            progressDialog.dismiss();
@@ -732,43 +1426,240 @@ public class RegisterActivity extends AppCompatActivity {
                     return false;
                 }
                 String address = binding_personalDetail_2.edAddress.getText().toString();
-                String city = binding_personalDetail_2.edCity.getText().toString();
-                String country = binding_personalDetail_2.edCountry.getText().toString();
+//                String city = binding_personalDetail_2.edCity.getText().toString();
+//                String country = binding_personalDetail_2.edCountry.getText().toString();
                 String postal_code = binding_personalDetail_2.edPostalCode.getText().toString();
 
                 if (TextUtils.isEmpty(address)) {
-                    Utils.displayToast(context, "Enter Address First");
+                    Utils.displayToast(context, "Enter Address First !");
                     return false;
                 }
-                if (TextUtils.isEmpty(city)) {
-                    Utils.displayToast(context, "Enter City First");
+                if (!patternAddress.matcher(address).find() || address.toString().length() < 2) {
+                    Utils.displayToast(context, "Address Can Contain Alphabets, Numbers, Symbol And Min Length Required Is 2 !");
+                    return false;
+                }
+
+                if (TextUtils.isEmpty(selected_Country)) {
+                    Utils.displayToast(context, "Select Country First !");
                     return false;
                 }
                 if (TextUtils.isEmpty(selected_state)) {
-                    Utils.displayToast(context, "Select State First");
+                    Utils.displayToast(context, "Select State First !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_City)) {
+                    Utils.displayToast(context, "Enter City First !");
                     return false;
                 }
 
+                if (!patternNumbers.matcher(postal_code).find()) {
+                    Utils.displayToast(context, "Post Code Can Contain Numbers Only And Min Digits Required Is 5!");
+                    return false;
+                }
                 if (TextUtils.isEmpty(postal_code)) {
-                    Utils.displayToast(context, "Enter Postal Code First");
+                    Utils.displayToast(context, "Enter Postal Code First !");
                     return false;
                 }
-                if (TextUtils.isEmpty(country)) {
-                    Utils.displayToast(context, "Enter Country First");
+
+
+
+                /*if (!patternLetters2.matcher(country).find()) {
+                    Utils.displayToast(context, "Country Name Can Contain Only Alphabets And Min Length Required Is 5 !");
                     return false;
-                }
+                }*/
 
                 return true;
+            }
+        });
+        binding_personalDetail_2.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
             }
         });
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                chooseOption();
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
             }
         });
         dialog.show();
 
+    }
+
+    private int getIndexFromList_City(String collegeUniCity, List<CityDatum> list_city) {
+        int pos = 0;
+        for (int i = 0; i < list_city.size(); i++) {
+            CityDatum workLocationModel = list_city.get(i);
+            if (workLocationModel.getName().toString().equals(collegeUniCity.toString())) {
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+
+    private void showOptionPopup_City(Context context, View v, int type, ImageView img1,
+                                      TextView tvState, List<CityDatum> cityData, String selected_City, ItemCallback itemCallback) {
+        if (cityData == null || cityData.size() == 0) {
+            Utils.displayToast(context, "data empty");
+            return;
+        }
+        LayoutInflater layoutInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.popup_dropdown, null);
+
+        PopupWindow popup = new PopupWindow(context);
+        popup.setContentView(layout);
+        popup.setFocusable(true);
+        popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        int height = 193;
+        popup.setWidth(v.getWidth());
+        popup.setHeight(getWindowManager().getDefaultDisplay().getHeight() * height / 1080);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.rv_pop);
+        img1.setRotation(-180);
+        View finalImg = img1;
+        popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                finalImg.setRotation(0);
+            }
+        });
+
+        PersonalDetailWindowAdapter parentChildAdapter
+                = new PersonalDetailWindowAdapter(RegisterActivity.this,
+                type, type, type,
+                cityData, selected_City, new PersonalDetailWindowAdapter.UserPopupWindowAdapterInterface() {
+            @Override
+            public void onCLickItem(int position, int i) {
+                itemCallback.onClick(position);
+                popup.dismiss();
+            }
+        });
+        recyclerView.setAdapter(parentChildAdapter);
+        if (!TextUtils.isEmpty(selected_Country)) {
+            recyclerView.scrollToPosition(Integer.parseInt(selected_Country));
+        }
+        popup.showAsDropDown(v, 0, 0);
+    }
+
+    private void fetch_state_by_City(String state_id, API_ResponseCallback apiResponseCallback) {
+        apiResponseCallback.onShowProgress();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
+                "" + state_id);
+        backendApi.call_city_ID(request_id)
+                .enqueue(new Callback<CityModel>() {
+                    @Override
+                    public void onResponse(Call<CityModel> call, Response<CityModel> response) {
+                        assert response.body() != null;
+                        if (!response.body().getApiStatus().equals("1")) {
+                            apiResponseCallback.onFailed();
+                            Utils.displayToast(context, "No cities available for the city !");
+                            return;
+                        }
+
+                        if (response.isSuccessful()) {
+                            CityModel credentialModel = response.body();
+                            apiResponseCallback.onSucces(credentialModel);
+                        } else {
+                            Utils.displayToast(context, "Data Not Found !");
+                            apiResponseCallback.onFailed();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<CityModel> call, Throwable t) {
+//                                    progressDialog.dismiss();
+//                        Log.d("TAG", "fetch_state_by_Country() onFailure: " + t.getMessage());
+                        Log.d("TAG", "No Data Found !");
+                        Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
+                        apiResponseCallback.onError();
+                    }
+                });
+    }
+
+    private void fetch_state_by_States(String id, API_ResponseCallback apiResponseCallback) {
+        apiResponseCallback.onShowProgress();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
+                "" + id);
+        backendApi.call_state_ID(request_id)
+                .enqueue(new Callback<StateModel>() {
+                    @Override
+                    public void onResponse(Call<StateModel> call, Response<StateModel> response) {
+                        assert response.body() != null;
+                        if (!response.body().getApiStatus().equals("1")) {
+                            apiResponseCallback.onFailed();
+                            Utils.displayToast(context, "No states available for the country !");
+                            return;
+                        }
+
+                        if (response.isSuccessful()) {
+                            StateModel credentialModel = response.body();
+                            apiResponseCallback.onSucces(credentialModel);
+                        } else {
+                            Utils.displayToast(context, "Data has not been updated");
+                            apiResponseCallback.onFailed();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<StateModel> call, Throwable t) {
+//                                    progressDialog.dismiss();
+                        Log.d("TAG", "fetch_state_by_Country() onFailure: " + t.getMessage());
+                        Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
+                        apiResponseCallback.onError();
+                    }
+                });
+    }
+
+    private boolean checkItemInList_Country(String country, List<CountryDatum> list_country) {
+        for (CountryDatum workLocationModel :
+                list_country) {
+            if (workLocationModel.getName().toString().equals(country)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int getIndexFromList_Country(String state, List<CountryDatum> list_state) {
+        int pos = 0;
+        for (int i = 0; i < list_state.size(); i++) {
+
+            CountryDatum workLocationModel = list_state.get(i);
+            if (workLocationModel.getName().toString().equals(state.toString())) {
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    private void create_user_inside_firebase() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("email", model.getEmail());
+        hashMap.put("id", model.getId());
+        hashMap.put("full_name", model.getFullName());
+        hashMap.put("profile_path", model.getImage());
+        hashMap.put("status", true);
+        hashMap.put("specialty", model.getSpecialty().get(0).getName());
+        hashMap.put("type", 1); // nurse side
+        reference.child("users").push().setValue(hashMap);
+
+        if (model.getHourlyRateAndAvailFlag().equals("0")) {
+            chooseOption();
+        } else {
+            move_TO_Home_Screen();
+        }
     }
 
     private void hourlyRate() {
@@ -806,6 +1697,16 @@ public class RegisterActivity extends AppCompatActivity {
         ImageView imgDate = dialog.findViewById(R.id.imgDate);
         RecyclerView rv_weeks_days = dialog.findViewById(R.id.rv_weeks_days);
         TextView next = dialog.findViewById(R.id.next);
+        ImageView imgClose = dialog.findViewById(R.id.imgClose);
+        if (edit_mode)
+            imgClose.setVisibility(View.VISIBLE);
+        imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
+            }
+        });
         layProgress.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -830,7 +1731,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 }
             });
-            distanceSlider.setProgress(1);
+            distanceSlider.setProgress(5);
             daysOfWeekAdapter = new SpecialtyAdapter(context, select_daysOfWeek, list_days_of_week, 3, 3, new SpecialtyAdapter.SpecialtyListener() {
                 @Override
                 public void onClickItem(int position) {
@@ -856,31 +1757,34 @@ public class RegisterActivity extends AppCompatActivity {
 
                 @Override
                 public void onClick(View v) {
-                    if (checkValidation()) {
-                        hourlyRates_str = String.valueOf(distanceSlider.getProgress());
-                        shift_D_str = String.valueOf(list_shift_durations.get
-                                (Integer.parseInt(selected_shift_duration)).getId());
-                        assign_D_str = String.valueOf(list_assignment_durations
-                                .get(Integer.parseInt(selected_assignment_duration)).getId());
-                        preferred_S_str = String.valueOf(list_preferred_shift
-                                .get(Integer.parseInt(selected_preferred_shift)).getId());
-                        work_loc = list_geography.get(Integer.parseInt(selected_geography)).getId().toString();
+                    try {
+                        if (checkValidation()) {
+                            hourlyRates_str = String.valueOf(distanceSlider.getProgress());
+                            shift_D_str = String.valueOf(list_shift_durations.get
+                                    (Integer.parseInt(selected_shift_duration)).getId());
+                            assign_D_str = String.valueOf(list_assignment_durations
+                                    .get(Integer.parseInt(selected_assignment_duration)).getId());
+                            preferred_S_str = String.valueOf(list_preferred_shift
+                                    .get(Integer.parseInt(selected_preferred_shift)).getId());
+                            work_loc = list_geography.get(Integer.parseInt(selected_geography)).getId().toString();
 
-                        for (int i = 0; i < select_daysOfWeek.size(); i++) {
-                            listDays.add(list_days_of_week.get(select_daysOfWeek.get(i)).getName());
-                            if (i == 0) {
-                                days_str = list_days_of_week.get(select_daysOfWeek.get(i)).getName();
-                            } else
-                                days_str = days_str + "," + list_days_of_week.get(select_daysOfWeek.get(i)).getName();
+                            for (int i = 0; i < select_daysOfWeek.size(); i++) {
+                                listDays.add(list_days_of_week.get(select_daysOfWeek.get(i)).getName());
+                                if (i == 0) {
+                                    days_str = list_days_of_week.get(select_daysOfWeek.get(i)).getName();
+                                } else
+                                    days_str = days_str + "," + list_days_of_week.get(select_daysOfWeek.get(i)).getName();
+                            }
+                            date_str = dayOfMonth1 + "-" + (monthOfYear1 + 1) + "-" + year1;
+
+                            if (Utils.isNetworkAvailable(context)) {
+                                performHourlyRateSubmitProcess();
+                            } else {
+                                Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                            }
                         }
-                        date_str = dayOfMonth1 + "-" + (monthOfYear1) + "-" + year1;
-
-                        if (Utils.isNetworkAvailable(context)) {
-                            performHourlyRateSubmitProcess();
-                        } else {
-                            Utils.displayToast(context, getResources().getString(R.string.no_internet));
-                        }
-
+                    } catch (Exception exception) {
+                        crashlytics.recordException(exception);
                     }
 
 
@@ -909,7 +1813,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                                     assert response.body() != null;
                                     if (!response.body().getApiStatus().equals("1")) {
-                                        Utils.displayToast(context, response.message());
+
                                         layProgress.setVisibility(View.GONE);
                                         Utils.displayToast(context, "" + response.body().getMessage());
                                         return;
@@ -921,14 +1825,21 @@ public class RegisterActivity extends AppCompatActivity {
                                         Utils.displayToast(context, SignupModel.getMessage());
                                         RegisterActivity.this.model = SignupModel.getData();
                                         new SessionManager(context).save_user(model);
-                                        hourlyRate = true;
-                                        mRegistrationStep++;
-                                        if (state == 0) {
-                                            chooseOption();
-                                        } else {
+                                        if (edit_mode) {
+                                            dialog.dismiss();
+                                            setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                                    new Gson().toJson(model)));
                                             finish();
+                                        } else {
+                                            hourlyRate = true;
+                                            mRegistrationStep++;
+                                            if (state == 0) {
+                                                chooseOption();
+                                            } else {
+                                                finish();
+                                            }
+                                            dialog.dismiss();
                                         }
-                                        dialog.dismiss();
                                     } else {
                                         Utils.displayToast(context, "Data has not been updated");
                                         layProgress.setVisibility(View.GONE);
@@ -950,7 +1861,7 @@ public class RegisterActivity extends AppCompatActivity {
                 private boolean checkValidation() {
 
                     if (distanceSlider.getProgress() == 0) {
-                        Utils.displayToast(context, "Please, Select Proper Rate First !");
+                        Utils.displayToast(context, "Please, Selaect Proper Rate First !");
                         return false;
                     }
                     if (TextUtils.isEmpty(selected_shift_duration)) {
@@ -971,6 +1882,10 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if (TextUtils.isEmpty(selected_geography)) {
                         Utils.displayToast(context, "Please, Select Preferred Geography First !");
+                        return false;
+                    }
+                    if (TextUtils.isEmpty(tv_date.getText().toString())) {
+                        Utils.displayToast(context, "Please, Select Earliest Date First !");
                         return false;
                     }
                     return true;
@@ -1104,13 +2019,13 @@ public class RegisterActivity extends AppCompatActivity {
                     final Calendar c = Calendar.getInstance();
 
                     DatePickerDialog dpd = null;
-                    if (dayOfMonth1 == 0 && year1 == 0 && dayOfMonth1 == 0) {
+                    if (dayOfMonth1 == 0 && year1 == 0 && monthOfYear1 == 0) {
                         dpd = new DatePickerDialog(context,
                                 new DatePickerDialog.OnDateSetListener() {
                                     @Override
                                     public void onDateSet(DatePicker view, int year,
                                                           int monthOfYear, int dayOfMonth) {
-                                        tv_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                        tv_date.setText((monthOfYear + 1) + "-" + dayOfMonth + "-" + year);
                                         dayOfMonth1 = dayOfMonth;
                                         monthOfYear1 = monthOfYear;
                                         year1 = year;
@@ -1123,19 +2038,21 @@ public class RegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onDateSet(DatePicker view, int year,
                                                           int monthOfYear, int dayOfMonth) {
-                                        tv_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                        tv_date.setText((monthOfYear + 1) + "-" + dayOfMonth + "-" + year);
                                         dayOfMonth1 = dayOfMonth;
                                         monthOfYear1 = monthOfYear;
                                         year1 = year;
                                     }
-                                }, year1, monthOfYear1, dayOfMonth1);
+                                },
+                                year1, monthOfYear1, dayOfMonth1);
                     }
+                    dpd.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                     dpd.show();
 
                     Utils.onClickEvent(v);
                 }
-
             });
+
         }
 
         if (check_Any_Data_Empty_HourlyRate()) {
@@ -1174,30 +2091,30 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if (!TextUtils.isEmpty(model.getShiftDuration())) {
 //                selected_shift_duration = String.valueOf(model.getShiftDuration());
-                        if (checkItemInList(model.getShiftDuration(), list_shift_durations)) {
+                        if (checkItemInList(model.getShiftDuration(), list_shift_durations, false)) {
                             spinner_shift_duration.setText(list_shift_durations.get(
-                                    getIndexFromList(model.getShiftDuration(), list_shift_durations)).getName());
-                            selected_shift_duration = String.valueOf(getIndexFromList(model.getShiftDuration(), list_shift_durations));
+                                    getIndexFromList(model.getShiftDuration(), list_shift_durations, false)).getName());
+                            selected_shift_duration = String.valueOf(getIndexFromList(model.getShiftDuration(), list_shift_durations, false));
 
                         }
                     }
-                    if (!TextUtils.isEmpty(model.getAssignmentDuration())) {
+                    if (!TextUtils.isEmpty(model.getAssignmentDurationDefinition())) {
 //                selected_assignment_duration = String.valueOf(model.getAssignmentDuration());
-                        if (checkItemInList(model.getAssignmentDuration(), list_assignment_durations)) {
+                        if (checkItemInList(model.getAssignmentDurationDefinition(), list_assignment_durations, true)) {
                             spinner_assignment.setText(list_assignment_durations.get(
-                                    getIndexFromList(model.getAssignmentDuration(), list_assignment_durations)).getName());
-                            selected_assignment_duration = String.valueOf(getIndexFromList(model.getAssignmentDuration()
-                                    , list_assignment_durations));
+                                    getIndexFromList(model.getAssignmentDurationDefinition(), list_assignment_durations, true)).getName());
+                            selected_assignment_duration = String.valueOf(getIndexFromList(model.getAssignmentDurationDefinition()
+                                    , list_assignment_durations, true));
 
                         }
                     }
                     if (!TextUtils.isEmpty(model.getPreferredShift())) {
 //                selected_preferred_shift = String.valueOf(model.getPreferredShift());
-                        if (checkItemInList(model.getPreferredShift(), list_preferred_shift)) {
+                        if (checkItemInList(model.getPreferredShift(), list_preferred_shift, false)) {
                             spinner_preferred_shift.setText(list_preferred_shift.get(
-                                    getIndexFromList(model.getPreferredShift(), list_preferred_shift)).getName());
+                                    getIndexFromList(model.getPreferredShift(), list_preferred_shift, false)).getName());
                             selected_preferred_shift = String.valueOf(getIndexFromList(model.getPreferredShift()
-                                    , list_preferred_shift));
+                                    , list_preferred_shift, false));
                         }
                     }
                     setupSelection_DaysOfWeeks_ByModelData(model.getDaysOfTheWeek());
@@ -1221,7 +2138,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (!TextUtils.isEmpty(model.getEarliestStartDate())) {
 
                         try {
-                            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                            SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy");
                             Date currentTime = inputFormat.parse(model.getEarliestStartDate());
                             String formattedDate = simpleDateFormat.format(currentTime);
                             DateFormat formatter = new SimpleDateFormat("yyyy", Locale.getDefault());
@@ -1230,9 +2147,11 @@ public class RegisterActivity extends AppCompatActivity {
                             monthOfYear1 = Integer.parseInt(formatter.format(currentTime.getTime()));
                             formatter = new SimpleDateFormat("dd", Locale.getDefault());
                             dayOfMonth1 = Integer.parseInt(formatter.format(currentTime.getTime()));
-                            tv_date.setText("" + formattedDate);
+                            tv_date.setText("" + model.getEarliestStartDate().replace("/", "-"));
+                            monthOfYear1--;
                         } catch (ParseException e) {
-                            e.printStackTrace();
+//                            e.printStackTrace();
+                            Log.d("TAG", "setupDialogFieldData: " + e.getMessage());
                         }
 
                     }
@@ -1258,30 +2177,30 @@ public class RegisterActivity extends AppCompatActivity {
             }
             if (!TextUtils.isEmpty(model.getShiftDuration())) {
 //                selected_shift_duration = String.valueOf(model.getShiftDuration());
-                if (checkItemInList(model.getShiftDuration(), list_shift_durations)) {
+                if (checkItemInList(model.getShiftDuration(), list_shift_durations, false)) {
                     spinner_shift_duration.setText(list_shift_durations.get(
-                            getIndexFromList(model.getShiftDuration(), list_shift_durations)).getName());
-                    selected_shift_duration = String.valueOf(getIndexFromList(model.getShiftDuration(), list_shift_durations));
+                            getIndexFromList(model.getShiftDuration(), list_shift_durations, false)).getName());
+                    selected_shift_duration = String.valueOf(getIndexFromList(model.getShiftDuration(), list_shift_durations, false));
 
                 }
             }
-            if (!TextUtils.isEmpty(model.getAssignmentDuration())) {
+            if (!TextUtils.isEmpty(model.getAssignmentDurationDefinition())) {
 //                selected_assignment_duration = String.valueOf(model.getAssignmentDuration());
-                if (checkItemInList(model.getAssignmentDuration(), list_assignment_durations)) {
+                if (checkItemInList(model.getAssignmentDurationDefinition(), list_assignment_durations, true)) {
                     spinner_assignment.setText(list_assignment_durations.get(
-                            getIndexFromList(model.getAssignmentDuration(), list_assignment_durations)).getName());
-                    selected_assignment_duration = String.valueOf(getIndexFromList(model.getAssignmentDuration()
-                            , list_assignment_durations));
+                            getIndexFromList(model.getAssignmentDurationDefinition(), list_assignment_durations, true)).getName());
+                    selected_assignment_duration = String.valueOf(getIndexFromList(model.getAssignmentDurationDefinition()
+                            , list_assignment_durations, true));
 
                 }
             }
             if (!TextUtils.isEmpty(model.getPreferredShift())) {
 //                selected_preferred_shift = String.valueOf(model.getPreferredShift());
-                if (checkItemInList(model.getPreferredShift(), list_preferred_shift)) {
+                if (checkItemInList(model.getPreferredShift(), list_preferred_shift, false)) {
                     spinner_preferred_shift.setText(list_preferred_shift.get(
-                            getIndexFromList(model.getPreferredShift(), list_preferred_shift)).getName());
+                            getIndexFromList(model.getPreferredShift(), list_preferred_shift, false)).getName());
                     selected_preferred_shift = String.valueOf(getIndexFromList(model.getPreferredShift()
-                            , list_preferred_shift));
+                            , list_preferred_shift, false));
                 }
             }
             setupSelection_DaysOfWeeks_ByModelData(model.getDaysOfTheWeek());
@@ -1300,7 +2219,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(model.getEarliestStartDate())) {
 
                 try {
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy");
                     Date currentTime = inputFormat.parse(model.getEarliestStartDate());
                     String formattedDate = simpleDateFormat.format(currentTime);
                     DateFormat formatter = new SimpleDateFormat("yyyy", Locale.getDefault());
@@ -1309,7 +2228,8 @@ public class RegisterActivity extends AppCompatActivity {
                     monthOfYear1 = Integer.parseInt(formatter.format(currentTime.getTime()));
                     formatter = new SimpleDateFormat("dd", Locale.getDefault());
                     dayOfMonth1 = Integer.parseInt(formatter.format(currentTime.getTime()));
-                    tv_date.setText("" + formattedDate);
+                    tv_date.setText("" + model.getEarliestStartDate().replace("/", "-"));
+                    monthOfYear1--;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -1321,7 +2241,11 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                chooseOption();
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
             }
         });
         dialog.show();
@@ -1333,7 +2257,8 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.setContentView(workHistoryBinding.getRoot());
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(true);
-
+        if (edit_mode)
+            workHistoryBinding.imgClose.setVisibility(View.VISIBLE);
         if (check_Any_Data_Empty_WorkHistory()) {
             API_ResponseCallback apiResponseCallback = new API_ResponseCallback() {
                 @Override
@@ -1350,6 +2275,8 @@ public class RegisterActivity extends AppCompatActivity {
                             clearAllOptionList();
                             list_nurse_degrees.addAll(combineData.getDegreeModel().getData());
                             list_experience.addAll(combineData.getCernersModel().getData());
+                            list_Country.addAll(combineData.getCountryModel().getData());
+                            list_State.addAll(combineData.getStateModel().getData());
                             setupDialogFieldData();
 
                         } catch (Exception e) {
@@ -1369,12 +2296,150 @@ public class RegisterActivity extends AppCompatActivity {
                     } else if (list_experience != null || list_experience.size() != 0) {
                         list_experience.clear();
                     }
+                    if (list_State == null) {
+                        list_State = new ArrayList<>();
+                    } else if (list_State != null || list_State.size() != 0) {
+                        list_State.clear();
+                    }
                     list_nurse_degrees.add(new Degree_Datum(0, "Select Highest Degree"));
-                    list_experience.add(new CernersDatum(0, "Select Experience"));
+                    list_experience.add(new Degree_Datum(0, "Select Experience"));
+
                 }
 
                 void setupDialogFieldData() {
-//                    if(TextUtils.isEmpty(model.get))
+//
+                    if (!TextUtils.isEmpty(model.getExperience().getHighestNursingDegreeDefinition())) {
+                        if (checkItemInList_Work(model.getExperience().getHighestNursingDegree().toString()
+                                , list_nurse_degrees, false)) {
+                            workHistoryBinding.tvSearchCredential.setText(list_nurse_degrees.get(
+                                    getIndexFromList_Work(model.getExperience().getHighestNursingDegree().toString()
+                                            , list_nurse_degrees)).getName());
+                            selected_nurse_degree = getIndexFromList_Work(model.getExperience().getHighestNursingDegree().toString()
+                                    , list_nurse_degrees);
+                        }
+                    }
+                    workHistoryBinding.edColleageName.setText("" + model.getExperience().getCollegeUniName());
+                    workHistoryBinding.edCity.setText("" + model.getExperience().getCollegeUniCity());
+                    workHistoryBinding.edState.setText("" + model.getExperience().getCollegeUniState());
+                    workHistoryBinding.edCountry.setText("" + model.getExperience().getCollegeUniCountry());
+                    workHistoryBinding.edOther.setText("" + model.getExperience().getEhrProficiencyOther());
+                    if (!TextUtils.isEmpty(model.getExperience().getEhrProficiencyCernerDefinition())) {
+                        if (checkItemInList_Work(model.getExperience().getEhrProficiencyCerner().toString()
+                                , list_experience, false)) {
+                            workHistoryBinding.tvCenter.setText(list_experience.get(
+                                    getIndexFromList_Work(model.getExperience().getEhrProficiencyCerner().toString()
+                                            , list_experience)).getName());
+                            selected_nurse_cerner = getIndexFromList_Work(model.getExperience().getEhrProficiencyCerner().toString()
+                                    , list_experience);
+
+                        }
+                    }
+                    if (!TextUtils.isEmpty(model.getExperience().getEhrProficiencyMeditechDefinition())) {
+                        if (checkItemInList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                                , list_experience, false)) {
+                            workHistoryBinding.tvMeditech.setText(list_experience.get(
+                                    getIndexFromList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                                            , list_experience)).getName());
+                            selected_nurse_meditech = getIndexFromList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                                    , list_experience);
+
+                        }
+                    }
+                    if (!TextUtils.isEmpty(model.getExperience().getEhrProficiencyEpicDefinition())) {
+                        if (checkItemInList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                                , list_experience, false)) {
+                            workHistoryBinding.tvEpic.setText(list_experience.get(
+                                    getIndexFromList_Work(model.getExperience().getEhrProficiencyEpic().toString()
+                                            , list_experience)).getName());
+                            selected_nurse_epic = getIndexFromList_Work(model.getExperience().getEhrProficiencyEpic().toString()
+                                    , list_experience);
+
+                        }
+                    }
+                    workHistoryBinding.edFacilityExp.setText("" + model.getExperience().getExperienceAsAcuteCareFacility());
+                    workHistoryBinding.edNursingExp.setText("" + model.getExperience().getExperienceAsAmbulatoryCareFacility());
+
+                    if (list_Country != null && list_Country.size() != 0) {
+                        if (!TextUtils.isEmpty(model.getExperience().getCollegeUniCountry())) {
+                            if (checkItemInList_Country(model.getExperience().getCollegeUniCountry(), list_Country)) {
+                                workHistoryBinding.edCountry.setText(list_Country.get(
+                                        getIndexFromList_Country(model.getExperience().getCollegeUniCountry(), list_Country)).getName());
+                                selected_Country = String.valueOf(getIndexFromList_Country(model.getExperience().getCollegeUniCountry(), list_Country));
+                            }
+                        } else {
+                            selected_Country = null;
+                        }
+                    }
+                    if (list_State != null && list_State.size() != 0) {
+                        if (!TextUtils.isEmpty(model.getExperience().getCollegeUniState())) {
+                            if (checkItemInList_State(model.getExperience().getCollegeUniState(), list_State)) {
+                                workHistoryBinding.edState.setText(list_State.get(
+                                        getIndexFromList_State(model.getExperience().getCollegeUniState(), list_State)).getNames());
+                                selected_state = String.valueOf(getIndexFromList_State(model.getExperience().getCollegeUniState(), list_State));
+                                fetch_state_by_City(list_State.get(Integer.parseInt(selected_state)).getState_id(),
+                                        new API_ResponseCallback() {
+                                            @Override
+                                            public void onShowProgress() {
+                                                workHistoryBinding.layProgress.setVisibility(View.VISIBLE);
+                                            }
+
+                                            @Override
+                                            public void onSucces(Object models) {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                                if (models instanceof CityModel) {
+                                                    CityModel combineData = (CityModel) models;
+                                                    try {
+                                                        if (list_City != null)
+                                                            list_City.clear();
+                                                        else list_City = new ArrayList<>();
+                                                        selected_City = null;
+                                                        workHistoryBinding.edCity.setText("");
+                                                        list_City.addAll(combineData.getData());
+
+                                                        if (list_City != null && list_City.size() != 0) {
+                                                            if (!TextUtils.isEmpty(model.getExperience().getCollegeUniCity())) {
+                                                                if (checkItemInList_City(model.getExperience().getCollegeUniCity(), list_City)) {
+                                                                    workHistoryBinding.edCity.setText(list_City.get(
+                                                                            getIndexFromList_City(model.getExperience().getCollegeUniCity(), list_City)).getName());
+                                                                    selected_City = String.valueOf(getIndexFromList_City(model.getExperience().getCollegeUniCity(), list_City));
+                                                                }
+                                                            } else {
+                                                                selected_City = null;
+                                                            }
+                                                        }
+
+                                                    } catch (Exception e) {
+                                                        Log.d("TAG", "personalDialog2 apicallback success() onError: " + e.getMessage());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailed() {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                            }
+                                        });
+                            }
+                        } else {
+                            selected_state = null;
+                        }
+                    }
+//                    if (list_City != null && list_City.size() != 0) {
+//                        if (!TextUtils.isEmpty(model.getExperience().getCollegeUniCity())) {
+//                            if (checkItemInList_Country(model.getExperience().getCollegeUniCity(), list_City)) {
+//                                workHistoryBinding.edCity.setText(list_City.get(
+//                                        getIndexFromList_Country(model.getExperience().getCollegeUniCity(), list_City)).getName());
+//                                selected_City = String.valueOf(getIndexFromList_Country(model.getExperience().getCollegeUniCity(), list_City));
+//                            }
+//                        } else {
+//                            selected_City = null;
+//                        }
+//                    }
 
                 }
 
@@ -1388,12 +2453,384 @@ public class RegisterActivity extends AppCompatActivity {
                     workHistoryBinding.layProgress.setVisibility(View.GONE);
                 }
             };
-
             fetch_WorkHistory_Field_Data(apiResponseCallback);
-
         } else {
+            if (!TextUtils.isEmpty(model.getExperience().getHighestNursingDegreeDefinition())) {
+                if (checkItemInList_Work(model.getExperience().getHighestNursingDegree().toString()
+                        , list_nurse_degrees, false)) {
+                    workHistoryBinding.tvSearchCredential.setText(list_nurse_degrees.get(
+                            getIndexFromList_Work(model.getExperience().getHighestNursingDegree().toString()
+                                    , list_nurse_degrees)).getName());
+                    selected_nurse_degree = getIndexFromList_Work(model.getExperience().getHighestNursingDegree().toString()
+                            , list_nurse_degrees);
+                }
+            }
+            workHistoryBinding.edColleageName.setText("" + model.getExperience().getCollegeUniName());
+            workHistoryBinding.edCity.setText("" + model.getExperience().getCollegeUniCity());
+            workHistoryBinding.edState.setText("" + model.getExperience().getCollegeUniState());
+            workHistoryBinding.edCountry.setText("" + model.getExperience().getCollegeUniCountry());
+            workHistoryBinding.edOther.setText("" + model.getExperience().getEhrProficiencyOther());
+            if (!TextUtils.isEmpty(model.getExperience().getEhrProficiencyCernerDefinition())) {
+                if (checkItemInList_Work(model.getExperience().getEhrProficiencyCerner().toString()
+                        , list_experience, false)) {
+                    workHistoryBinding.tvCenter.setText(list_experience.get(
+                            getIndexFromList_Work(model.getExperience().getEhrProficiencyCerner().toString()
+                                    , list_experience)).getName());
+                    selected_nurse_cerner = getIndexFromList_Work(model.getExperience().getEhrProficiencyCerner().toString()
+                            , list_experience);
+
+                }
+            }
+            if (!TextUtils.isEmpty(model.getExperience().getEhrProficiencyMeditechDefinition())) {
+                if (checkItemInList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                        , list_experience, false)) {
+                    workHistoryBinding.tvMeditech.setText(list_experience.get(
+                            getIndexFromList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                                    , list_experience)).getName());
+                    selected_nurse_meditech = getIndexFromList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                            , list_experience);
+
+                }
+            }
+            if (!TextUtils.isEmpty(model.getExperience().getEhrProficiencyEpicDefinition())) {
+                if (checkItemInList_Work(model.getExperience().getEhrProficiencyMeditech().toString()
+                        , list_experience, false)) {
+                    workHistoryBinding.tvEpic.setText(list_experience.get(
+                            getIndexFromList_Work(model.getExperience().getEhrProficiencyEpic().toString()
+                                    , list_experience)).getName());
+                    selected_nurse_epic = getIndexFromList_Work(model.getExperience().getEhrProficiencyEpic().toString()
+                            , list_experience);
+
+                }
+            }
+            workHistoryBinding.edFacilityExp.setText("" + model.getExperience().getExperienceAsAcuteCareFacility());
+            workHistoryBinding.edNursingExp.setText("" + model.getExperience().getExperienceAsAmbulatoryCareFacility());
+            if (list_State != null && list_State.size() != 0) {
+                if (!TextUtils.isEmpty(model.getExperience().getCollegeUniState())) {
+                    if (checkItemInList_State(model.getExperience().getCollegeUniState(), list_State)) {
+                        workHistoryBinding.edState.setText(list_State.get(
+                                getIndexFromList_State(model.getExperience().getCollegeUniState(), list_State)).getNames());
+                        selected_state = String.valueOf(getIndexFromList_State(model.getExperience().getCollegeUniState(), list_State));
+                    }
+                } else {
+                    selected_state = null;
+                }
+            }
+            if (list_Country != null && list_Country.size() != 0) {
+                if (!TextUtils.isEmpty(model.getExperience().getCollegeUniCountry())) {
+                    if (checkItemInList_Country(model.getExperience().getCollegeUniCountry(), list_Country)) {
+                        workHistoryBinding.edCountry.setText(list_Country.get(
+                                getIndexFromList_Country(model.getExperience().getCollegeUniCountry(), list_Country)).getName());
+                        selected_Country = String.valueOf(getIndexFromList_Country(model.getExperience().getCollegeUniCountry(), list_Country));
+                    }
+                } else {
+                    selected_Country = null;
+                }
+            }
+//            if (list_City != null && list_City.size() != 0) {
+//                if (!TextUtils.isEmpty(model.getExperience().getCollegeUniCity())) {
+//                    if (checkItemInList_Country(model.getExperience().getCollegeUniCity(), list_City)) {
+//                        workHistoryBinding.edCity.setText(list_City.get(
+//                                getIndexFromList_Country(model.getExperience().getCollegeUniCity(), list_City)).getName());
+//                        selected_City = String.valueOf(getIndexFromList_Country(model.getExperience().getCollegeUniCity(), list_City));
+//                    }
+//                } else {
+//                    selected_City = null;
+//                }
+//            }
 
         }
+
+        workHistoryBinding.edColleageName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    workHistoryBinding.edColleageName.setError(null);
+                else if (!patternCollege.matcher(s.toString()).find() || s.toString().length() < 1) {
+                    workHistoryBinding.edColleageName.setError("College / University Name Can Contain Alphabets, Numbers And Min Length Required Is 1 !");
+                } else {
+                    workHistoryBinding.edColleageName.setError(null);
+                }
+            }
+        });
+   /*     workHistoryBinding.edCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    workHistoryBinding.edCity.setError(null);
+                else if (!patternCity.matcher(s.toString()).find() || s.toString().length() < 2) {
+                    workHistoryBinding.edCity.setError("City Name Can Contain Alphabets And Min Length Required Is 1 !");
+                } else {
+                    workHistoryBinding.edCity.setError(null);
+                }
+            }
+        });
+        workHistoryBinding.edCountry.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    workHistoryBinding.edCountry.setError(null);
+                else if (!patternCity.matcher(s.toString()).find() || s.toString().length() < 2) {
+                    workHistoryBinding.edCountry.setError("Country Name Can Contain Alphabets And Min Length Required Is 1 !");
+                } else {
+                    workHistoryBinding.edCountry.setError(null);
+                }
+            }
+        });
+  */
+        workHistoryBinding.edFacilityExp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    workHistoryBinding.edFacilityExp.setError(null);
+                else if (!patternExp.matcher(s.toString()).find()) {
+                    workHistoryBinding.edFacilityExp.setError("Acute Care Facility Experience Can Contain Numbers And Max Length Is 5 !");
+                } else {
+                    workHistoryBinding.edFacilityExp.setError(null);
+                }
+            }
+        });
+        workHistoryBinding.edNursingExp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    workHistoryBinding.edNursingExp.setError(null);
+                else if (!patternExp.matcher(s.toString()).find()) {
+                    workHistoryBinding.edNursingExp.setError("Non-Acute Care Nursing Experience Can Contain Numbers And Max Length Is 5 !");
+                } else {
+                    workHistoryBinding.edNursingExp.setError(null);
+                }
+            }
+        });
+        workHistoryBinding.edOther.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    workHistoryBinding.edOther.setError(null);
+                else if (!patternOther.matcher(s.toString()).find() || s.toString().length() < 2) {
+                    workHistoryBinding.edOther.setError("Other Can Contain Numbers And Min Length Required Is 2 !");
+                } else {
+                    workHistoryBinding.edOther.setError(null);
+                }
+            }
+        });
+        workHistoryBinding.layCountry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(context, v);
+                showOptionPopup_Country(context, workHistoryBinding.view5, 4,
+                        workHistoryBinding.img5, workHistoryBinding.edCountry
+                        , list_Country, selected_Country
+                        , new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                if (!TextUtils.isEmpty(selected_Country) && selected_Country.equals("" + position)) {
+                                    return;
+                                }
+                                if (!list_Country.get(position).getCountryId().equals("233")) {
+                                    Utils.displayToast(context, "No states and cities available for this country");
+                                    return;
+                                }
+                                selected_Country = "" + position;
+                                workHistoryBinding.edCountry
+                                        .setText("" + list_Country.get(position).getName());
+                                fetch_state_by_States(list_Country.get(position).getCountryId(),
+                                        new API_ResponseCallback() {
+                                            @Override
+                                            public void onShowProgress() {
+                                                workHistoryBinding.layProgress.setVisibility(View.VISIBLE);
+                                            }
+
+                                            @Override
+                                            public void onSucces(Object models) {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                                if (models instanceof StateModel) {
+                                                    StateModel combineData = (StateModel) models;
+                                                    try {
+                                                        if (list_State != null)
+                                                            list_State.clear();
+                                                        else list_State = new ArrayList<>();
+                                                        selected_state = null;
+                                                        workHistoryBinding.edState.setText("");
+                                                        list_State.addAll(combineData.getData());
+                                                    } catch (Exception e) {
+                                                        Log.d("TAG", "personalDialog2 apicallback success() onError: " + e.getMessage());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailed() {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                            }
+                                        });
+
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+        workHistoryBinding.layState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(context, v);
+                if (TextUtils.isEmpty(selected_Country)) {
+                    Utils.displayToast(context, "Select Country First !");
+                    return;
+                }
+                if (!TextUtils.isEmpty(selected_Country) && !list_Country.get(Integer.parseInt(selected_Country)).getCountryId().equals("233")) {
+                    Utils.displayToast(context, "No State Available For Selected Country!");
+                    return;
+                }
+                showOptionPopup_State(context, workHistoryBinding.view6, 6,
+                        workHistoryBinding.img6, workHistoryBinding.edState
+                        , new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                if (!TextUtils.isEmpty(selected_state) && selected_state.equals("" + position)) {
+                                    return;
+                                }
+
+                                fetch_state_by_City(list_State.get(position).getState_id(),
+                                        new API_ResponseCallback() {
+                                            @Override
+                                            public void onShowProgress() {
+                                                workHistoryBinding.layProgress.setVisibility(View.VISIBLE);
+                                            }
+
+                                            @Override
+                                            public void onSucces(Object models) {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                                if (models instanceof CityModel) {
+                                                    CityModel combineData = (CityModel) models;
+                                                    try {
+                                                        if (list_City != null)
+                                                            list_City.clear();
+                                                        else list_City = new ArrayList<>();
+                                                        selected_City = null;
+                                                        workHistoryBinding.edCity.setText("");
+                                                        list_City.addAll(combineData.getData());
+                                                        selected_state = "" + position;
+                                                        workHistoryBinding.edState
+                                                                .setText("" + list_State.get(position).getNames());
+                                                    } catch (Exception e) {
+                                                        Log.d("TAG", "personalDialog2 apicallback success() onError: " + e.getMessage());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailed() {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                workHistoryBinding.layProgress.setVisibility(View.GONE);
+                                            }
+                                        });
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+        workHistoryBinding.layCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(selected_Country)) {
+                    Utils.displayToast(context, "Select Country First !");
+                    return;
+                }
+                if (!TextUtils.isEmpty(selected_Country) && !list_Country.get(Integer.parseInt(selected_Country)).getCountryId().equals("233")) {
+                    Utils.displayToast(context, "No State Available For Selected Country!");
+                    return;
+                }
+                if (TextUtils.isEmpty(selected_state)) {
+                    Utils.displayToast(context, "No City Available For Selected State!");
+                    return;
+                }
+
+                Utils.hideKeyboardFrom(context, v);
+                showOptionPopup_City(context, workHistoryBinding.view7, 7,
+                        workHistoryBinding.img7, workHistoryBinding.edCity
+                        , list_City, selected_City, new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                selected_City = "" + position;
+                                workHistoryBinding.edCity
+                                        .setText("" + list_City.get(position).getName());
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+
+
         workHistoryBinding.layNurseDegree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1477,21 +2914,27 @@ public class RegisterActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         workHistoryBinding.next.setOnClickListener(new View.OnClickListener() {
+            String state = "AK", city = "", country = "";
+
             @Override
             public void onClick(View v) {
 
-                Utils.hideKeyboardFrom(context, v);
-
-                if (checkValiation()) {
-//                    workDialog2();
-//                    dialog.dismiss();
-
-                    if (Utils.isNetworkAvailable(context)) {
-                        send_WorkHistoryDate_1();
-                    } else {
-                        Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                try {
+                    Utils.hideKeyboardFrom(context, v);
+                    if (checkValiation()) {
+                        if (Utils.isNetworkAvailable(context)) {
+                            country = list_Country.get(Integer.parseInt(selected_Country)).getName();
+                            city = list_City.get(Integer.parseInt(selected_City)).getName();
+                            state = list_State.get(Integer.parseInt(selected_state)).getIso_name();
+                            send_WorkHistoryDate_1();
+                        } else {
+                            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                        }
                     }
+                } catch (Exception exception) {
+                    crashlytics.recordException(exception);
                 }
             }
 
@@ -1509,13 +2952,13 @@ public class RegisterActivity extends AppCompatActivity {
                         workHistoryBinding.edColleageName.getText().toString());
                 RequestBody college_uni_city
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        workHistoryBinding.edCity.getText().toString());
+                        city);
                 RequestBody college_uni_state
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        "AK");
+                        "" + state);
                 RequestBody college_uni_country
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        workHistoryBinding.edCountry.getText().toString());
+                        country);
                 RequestBody experience_as_acute_care_facility
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
                         workHistoryBinding.edFacilityExp.getText().toString());
@@ -1542,9 +2985,9 @@ public class RegisterActivity extends AppCompatActivity {
                         experience_as_acute_care_facility, experience_as_ambulatory_care_facility,
                         ehr_proficiency_cerner, ehr_proficiency_meditech, ehr_proficiency_epic,
                         ehr_proficiency_other, request_id)
-                        .enqueue(new Callback<WorkHistorysModel>() {
+                        .enqueue(new Callback<UserProfile>() {
                             @Override
-                            public void onResponse(Call<WorkHistorysModel> call, Response<WorkHistorysModel> response) {
+                            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                                 if (response.body() == null) {
                                     try {
                                         workHistoryBinding.layProgress.setVisibility(View.GONE);
@@ -1555,24 +2998,24 @@ public class RegisterActivity extends AppCompatActivity {
                                     return;
                                 }
                                 if (!response.body().getApiStatus().equals("1")) {
-                                    Utils.displayToast(context, response.message());
+
                                     workHistoryBinding.layProgress.setVisibility(View.GONE);
                                     Utils.displayToast(context, "" + response.body().getMessage());
                                     return;
                                 }
                                 if (response.isSuccessful()) {
-                                    workHistoryBinding.layProgress.setVisibility(View.GONE);
-                                    workDialog2();
-                                    dialog.dismiss();
+                                    model = response.body().getData();
+                                    new SessionManager(context).save_user(model);
+                                    workHistory = true;
+                                    getNurseProfile(workHistoryBinding.layProgress, dialog, 4);
                                 } else {
                                     Utils.displayToast(context, "Data has not been updated");
                                     workHistoryBinding.layProgress.setVisibility(View.GONE);
                                 }
-
                             }
 
                             @Override
-                            public void onFailure(Call<WorkHistorysModel> call, Throwable t) {
+                            public void onFailure(Call<UserProfile> call, Throwable t) {
                                 Log.d("TAG", "send_WorkHistoryDate_1() onFailure: " + t.getMessage());
                                 Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
                                 workHistoryBinding.layProgress.setVisibility(View.GONE);
@@ -1589,25 +3032,56 @@ public class RegisterActivity extends AppCompatActivity {
                     Utils.displayToast(context, "Enter College / University Name");
                     return false;
                 }
-                if (TextUtils.isEmpty(workHistoryBinding.edCity.getText())) {
-                    Utils.displayToast(context, "Enter City Name");
+                if (!patternLettersSpace.matcher(workHistoryBinding.edColleageName.getText()).find()) {
+                    Utils.displayToast(context, "Enter College / University Name In Proper Format Only Aplhabets Are Allowed");
                     return false;
                 }
-                if (TextUtils.isEmpty(workHistoryBinding.edState.getText())) {
+
+                if (TextUtils.isEmpty(selected_Country)) {
+                    Utils.displayToast(context, "Select Country First !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_state)) {
+                    Utils.displayToast(context, "Select State First !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_City)) {
+                    Utils.displayToast(context, "Enter City First !");
+                    return false;
+                }
+               /* if (TextUtils.isEmpty(workHistoryBinding.edState.getText())) {
                     Utils.displayToast(context, "Enter State Name");
                     return false;
                 }
-                if (TextUtils.isEmpty(workHistoryBinding.edCountry.getText())) {
-                    Utils.displayToast(context, "Enter Country Name");
+                if (!patternLettersSpace.matcher(workHistoryBinding.edState.getText()).find()) {
+                    Utils.displayToast(context, "Enter State Name In Proper Format Only Aplhabets Are Allowed");
+                    return false;
+                }*/
+
+
+                if (TextUtils.isEmpty(workHistoryBinding.edFacilityExp.getText())) {
+                    Utils.displayToast(context, "Enter Acute Care Facility Experience");
                     return false;
                 }
-                if (TextUtils.isEmpty(workHistoryBinding.edFacilityExp.getText())) {
-                    Utils.displayToast(context, "Select Highest Nursing Degree");
+                if (!patternExp.matcher(workHistoryBinding.edFacilityExp.getText().toString()).find()) {
+                    workHistoryBinding.edFacilityExp.setError("Acute Care Facility Experience Can Contain Numbers And Max Length Is 5 !");
                     return false;
                 }
                 if (TextUtils.isEmpty(workHistoryBinding.edNursingExp.getText())) {
-                    Utils.displayToast(context, "Select Highest Nursing Degree");
+                    Utils.displayToast(context, "Enter Non-Acute Care Nursing Experience");
                     return false;
+                }
+                if (!patternExp.matcher(workHistoryBinding.edNursingExp.getText().toString()).find()) {
+                    workHistoryBinding.edNursingExp.setError("Non-Acute Care Nursing Experience Can Contain Numbers And Max Length Is 5 !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(workHistoryBinding.edOther.getText())) {
+                    Utils.displayToast(context, "Enter Other ");
+                    return false;
+                }
+                if (!patternOther.matcher(workHistoryBinding.edOther.getText().toString()).find()
+                        || workHistoryBinding.edOther.getText().toString().length() < 2) {
+                    workHistoryBinding.edOther.setError("Other Can Contain Numbers And Min Length Required Is 2 !");
                 }
                 if (selected_nurse_cerner == 0) {
                     Utils.displayToast(context, "Select Cerner");
@@ -1624,25 +3098,60 @@ public class RegisterActivity extends AppCompatActivity {
                 return true;
             }
         });
+        workHistoryBinding.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
+            }
+        });
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                chooseOption();
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
             }
         });
         dialog.show();
     }
 
-
-    private void workDialog2() {
+    private void workDialog2(boolean sectionStatus) {
         uploadCertificate = null;
         resumeFile = null;
         selected_Credential = 0;
+        dayOfMonth2 = 0;
+        monthOfYear2 = 0;
+        year2 = 0;
+        dayOfMonth3 = 0;
+        monthOfYear3 = 0;
+        year3 = 0;
         history2Binding = DialogWorkHistory2Binding.inflate(getLayoutInflater());
         final Dialog dialog = new Dialog(RegisterActivity.this, R.style.AlertDialog);
         dialog.setContentView(history2Binding.getRoot());
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(true);
+        if (edit_mode) {
+            history2Binding.imgClose.setVisibility(View.VISIBLE);
+        }
+        if (isAdd) {
+            history2Binding.layCer.setVisibility(View.VISIBLE);
+//            history2Binding.imgCertificate.setVisibility(View.VISIBLE);
+            history2Binding.layUploadResume.setVisibility(View.GONE);
+        } else if (sectionStatus) {
+            if (model.getCertitficate() != null && model.getCertitficate().size() > 0) {
+                UserProfileData.Certitficate certificateModel = model.getCertitficate().get(select_certificate_pos);
+                history2Binding.layCer.setVisibility(View.VISIBLE);
+                history2Binding.imgCertificate.setVisibility(View.VISIBLE);
+                Glide.with(context).load(certificateModel.getCertificateImage()).into(history2Binding.imgCertificate);
+                history2Binding.layUploadResume.setVisibility(View.GONE);
+            }
+        } else {
+            history2Binding.layCer.setVisibility(View.GONE);
+            history2Binding.layRes.setVisibility(View.VISIBLE);
+        }
 
         if (check_Any_Data_Empty_WorkHistory_2()) {
             API_ResponseCallback apiResponseCallback = new API_ResponseCallback() {
@@ -1659,6 +3168,7 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             clearAllOptionList();
                             list_Credential.addAll(combineData.getData());
+
                             setupDialogFieldData();
 
                         } catch (Exception e) {
@@ -1675,8 +3185,47 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 void setupDialogFieldData() {
-//                    if(TextUtils.isEmpty(model.get))
+                    if (isAdd) {
+                        return;
+                    }
+                    history2Binding.edEffectiveDate.setText("" + model.getCertitficate().get(select_certificate_pos).getEffectiveDate());
+                    history2Binding.edExpiredDate.setText("" + model.getCertitficate().get(select_certificate_pos).getExpirationDate());
 
+
+                    if (checkItemInList_Work2(model.getCertitficate().get(select_certificate_pos).getSearchForCredential().toString(),
+                            list_Credential, false)) {
+                        selected_Credential = getIndexFromList_Work2(model.getCertitficate().get(select_certificate_pos).getSearchForCredential().toString(), list_Credential);
+                        history2Binding.tvSearchCredential.setText(list_Credential.get(selected_Credential).getName());
+                    }
+                    history2Binding.imgCertificate.setVisibility(View.VISIBLE);
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        Date str1 = simpleDateFormat.parse(model.getCertitficate().get(select_certificate_pos).
+                                getEffectiveDate());
+                        Date str2 = simpleDateFormat.parse(model.getCertitficate().get(select_certificate_pos).
+                                getExpirationDate());
+                        date1 = simpleDateFormat1.format(str1);
+                        date2 = simpleDateFormat1.format(str2);
+                        DateFormat formatter = new SimpleDateFormat("yyyy", Locale.getDefault());
+                        year2 = Integer.parseInt(formatter.format(str1.getTime()));
+                        formatter = new SimpleDateFormat("MM", Locale.getDefault());
+                        monthOfYear2 = Integer.parseInt(formatter.format(str1.getTime()));
+                        formatter = new SimpleDateFormat("dd", Locale.getDefault());
+                        dayOfMonth2 = Integer.parseInt(formatter.format(str1.getTime()));
+
+                        formatter = new SimpleDateFormat("yyyy", Locale.getDefault());
+                        year3 = Integer.parseInt(formatter.format(str2.getTime()));
+                        formatter = new SimpleDateFormat("MM", Locale.getDefault());
+                        monthOfYear3 = Integer.parseInt(formatter.format(str2.getTime()));
+                        formatter = new SimpleDateFormat("dd", Locale.getDefault());
+                        dayOfMonth3 = Integer.parseInt(formatter.format(str2.getTime()));
+                        monthOfYear2--;
+                        monthOfYear3--;
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -1692,10 +3241,16 @@ public class RegisterActivity extends AppCompatActivity {
 
             fetch_WorkHistory_2_Field_Data(apiResponseCallback);
 
-        }
-        else {
+        } else {
 
         }
+        history2Binding.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
+            }
+        });
         history2Binding.layCredential.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1724,22 +3279,45 @@ public class RegisterActivity extends AppCompatActivity {
 
                 Utils.hideKeyboardFrom(context, v);
 
+                final Calendar c = Calendar.getInstance();
+
                 DatePickerDialog dpd = null;
+                if (dayOfMonth2 == 0 && year2 == 0 && monthOfYear2 == 0) {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    history2Binding.edEffectiveDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date1 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth2 = dayOfMonth;
+                                    monthOfYear2 = monthOfYear;
+                                    year2 = year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
 
-                dpd = new DatePickerDialog(context,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                history2Binding.edEffectiveDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-//                                dayOfMonth1 = dayOfMonth;
-//                                monthOfYear1 = monthOfYear;
-//                                year1 = year;
-                            }
-                        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH)
-                        , Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-
+                } else {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    history2Binding.edEffectiveDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date1 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth2 = dayOfMonth;
+                                    monthOfYear2 = monthOfYear;
+                                    year2 = year;
+                                }
+                            },
+                            year2, monthOfYear2, dayOfMonth2);
+                }
                 dpd.show();
+
+
                 Utils.onClickEvent(v);
 
             }
@@ -1750,21 +3328,65 @@ public class RegisterActivity extends AppCompatActivity {
 
                 Utils.hideKeyboardFrom(context, v);
 
+                final Calendar c = Calendar.getInstance();
+
                 DatePickerDialog dpd = null;
+                if (dayOfMonth3 == 0 && year3 == 0 && monthOfYear3 == 0) {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // here set the pattern as you date in string was containing like date/month/year
+                                    try {
+                                        Date d1 = sdf.parse(dayOfMonth + "/" + monthOfYear + "/" + year);
+                                        Date d2 = sdf.parse(dayOfMonth2 + "/" + monthOfYear2 + "/" + year2);
+                                        if (d1.getTime() <= d2.getTime()) {
+                                            Utils.displayToast(context, "Please Select Proper Valid Date, It Must Be After Effective Date  ");
+                                            return;
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
 
-                dpd = new DatePickerDialog(context,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                history2Binding.edExpiredDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-//                                dayOfMonth1 = dayOfMonth;
-//                                monthOfYear1 = monthOfYear;
-//                                year1 = year;
-                            }
-                        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH)
-                        , Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                                    history2Binding.edExpiredDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date2 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth3 = dayOfMonth;
+                                    monthOfYear3 = monthOfYear;
+                                    year3 = year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
 
+                } else {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // here set the pattern as you date in string was containing like date/month/year
+                                    try {
+                                        Date d1 = sdf.parse(dayOfMonth + "/" + monthOfYear + "/" + year);
+                                        Date d2 = sdf.parse(dayOfMonth2 + "/" + monthOfYear2 + "/" + year2);
+                                        if (d1.getTime() <= d2.getTime()) {
+                                            Utils.displayToast(context, "Please Select Proper Valid Date, It Must Be After Effective Date  ");
+                                            return;
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    history2Binding.edExpiredDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date2 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth3 = dayOfMonth;
+                                    monthOfYear3 = monthOfYear;
+                                    year3 = year;
+                                }
+                            },
+                            year3, monthOfYear3, dayOfMonth3);
+                }
                 dpd.show();
                 Utils.onClickEvent(v);
 
@@ -1777,7 +3399,8 @@ public class RegisterActivity extends AppCompatActivity {
                 Utils.hideKeyboardFrom(context, v);
 
                 if (!checkReadExternal()) {
-                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE});
+//                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE});
+                    requestPermission();
                     return;
                 }
                 System.gc();
@@ -1799,8 +3422,9 @@ public class RegisterActivity extends AppCompatActivity {
                 Utils.hideKeyboardFrom(context, v);
 
                 if (!checkReadExternal()) {
-                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    });
+                    /*startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
+                    });*/
+                    requestPermission();
                     return;
                 }
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -1816,19 +3440,31 @@ public class RegisterActivity extends AppCompatActivity {
         history2Binding.next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    Utils.hideKeyboardFrom(context, v);
 
-                Utils.hideKeyboardFrom(context, v);
-
-                if (checkValiation()) {
-                    if (Utils.isNetworkAvailable(context)) {
-                        send_WorkHistoryDate_2();
+                    if (sectionStatus && checkValiation()) {
+                        if (Utils.isNetworkAvailable(context)) {
+                            if (isAdd) {
+                                if (TextUtils.isEmpty(uploadCertificate)) {
+                                    Utils.displayToast(context, "Select Certificate first !");
+                                    return;
+                                }
+                                add_Certificate();
+                            } else
+                                send_WorkHistoryDate_2();
+                        } else {
+                            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                        }
                     } else {
-                        Utils.displayToast(context, getResources().getString(R.string.no_internet));
+
                     }
+                } catch (Exception exception) {
+                    crashlytics.recordException(exception);
                 }
             }
 
-            private void send_WorkHistoryDate_2() {
+            private void add_Certificate() {
                 history2Binding.layProgress.setVisibility(View.VISIBLE);
                 RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
                 RequestBody request_id
@@ -1837,26 +3473,22 @@ public class RegisterActivity extends AppCompatActivity {
                 RequestBody type_sd
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
                         list_Credential.get(selected_Credential).getId().toString());
-                RequestBody date1
+                RequestBody date11
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        history2Binding.edEffectiveDate.getText().toString());
-                RequestBody date2
+                        date1);
+                RequestBody date22
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        history2Binding.edExpiredDate.getText().toString());
+                        date2);
                 RequestBody certificate_img
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        uploadCertificate);
-                RequestBody resume_file
-                        = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        resumeFile);
+                        new File(uploadCertificate));
 
 
-                MultipartBody.Part multipartBodyCertifcate = MultipartBody.Part.createFormData("file", new File(uploadCertificate).getName(), certificate_img);
-                MultipartBody.Part multipartBodyResume = MultipartBody.Part.createFormData("file", new File(resumeFile).getName(), resume_file);
+                MultipartBody.Part multipartBodyCertifcate = MultipartBody.Part.createFormData("certificate_image", new File(uploadCertificate).getName(), certificate_img);
 
 
-                backendApi.call_send_WorkHistory_Certificate(request_id, type_sd, date1, date2,
-                        multipartBodyCertifcate, multipartBodyResume)
+                backendApi.call_send_WorkHistory_Certificate_add(request_id, type_sd, date11, date22,
+                        multipartBodyCertifcate)
                         .enqueue(new Callback<AddCredentialModel>() {
                             @Override
                             public void onResponse(Call<AddCredentialModel> call, Response<AddCredentialModel> response) {
@@ -1869,28 +3501,107 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                     return;
                                 }
-                                if (!response.body().getApiStatus().equals("1")) {
+                                if (response.body().getApiStatus().equals("1")) {
                                     Utils.displayToast(context, null);
-                                    Utils.displayToast(context, response.message());
+                                    workCertificate = true;
                                     history2Binding.layProgress.setVisibility(View.GONE);
-                                    Utils.displayToast(context, "" + response.body().getMessage());
-                                    history2Binding.layProgress.setVisibility(View.GONE);
+                                    Utils.displayToast(context, "Certificate has been added !");
                                     dialog.dismiss();
-                                    chooseOption();
+                                    setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                            new Gson().toJson(model)));
+                                    finish();
+
                                 } else {
-                                    Utils.displayToast(context, "Data has not been updated");
+                                    Utils.displayToast(context, response.body().getMessage());
                                     history2Binding.layProgress.setVisibility(View.GONE);
                                 }
 
                             }
 
+
                             @Override
                             public void onFailure(Call<AddCredentialModel> call, Throwable t) {
-                                Log.d("TAG", "send_WorkHistoryDate_1() onFailure: " + t.getMessage());
+                                Log.d("TAG", "send_WorkHistoryDate_3() onFailure: " + t.getMessage());
                                 Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
                                 history2Binding.layProgress.setVisibility(View.GONE);
                             }
                         });
+            }
+
+            private void send_WorkHistoryDate_2() {
+
+                history2Binding.layProgress.setVisibility(View.VISIBLE);
+                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RequestBody request_id
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        new SessionManager(context).get_user_register_Id());
+                String sdas = model.getCertitficate().get(select_certificate_pos).getCertificateId();
+                RequestBody certif_id
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        sdas);
+                RequestBody type_sd
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        list_Credential.get(selected_Credential).getId().toString());
+                RequestBody date11
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        date1);
+                RequestBody date22
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        date2);
+                Call<AddCredentialModel> call = null;
+                if (TextUtils.isEmpty(uploadCertificate)) {
+                    call = backendApi.call_send_WorkHistory_Certificate(request_id, certif_id, type_sd, date11, date22);
+                } else {
+                    RequestBody certificate_img = RequestBody.create(MediaType.parse("multipart/form-data"),
+                            new File(uploadCertificate));
+                    MultipartBody.Part multipartBodyCertifcate = MultipartBody.Part.createFormData("certificate_image", new File(uploadCertificate).getName(), certificate_img);
+                    call = backendApi.call_send_WorkHistory_Certificate(request_id, certif_id, type_sd, date11, date22,
+                            multipartBodyCertifcate);
+                }
+                call.enqueue(new Callback<AddCredentialModel>() {
+                    @Override
+                    public void onResponse(Call<AddCredentialModel> call, Response<AddCredentialModel> response) {
+                        if (response.body() == null) {
+                            try {
+                                history2Binding.layProgress.setVisibility(View.GONE);
+                                Log.d("TAG", "onResponse: " + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }
+                        if (response.body().getApiStatus().equals("1")) {
+                            Utils.displayToast(context, null);
+                            workCertificate = true;
+                            history2Binding.layProgress.setVisibility(View.GONE);
+                            Utils.displayToast(context, "Certificate has been updated !");
+                            if (edit_mode) {
+                                dialog.dismiss();
+                                setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                        new Gson().toJson(model))
+                                        .putExtra(Constant.SCROLL_TO,
+                                                select_certificate_pos));
+                                finish();
+                            } else {
+                                history2Binding.layProgress.setVisibility(View.GONE);
+
+                                dialog.dismiss();
+                                chooseOption();
+                            }
+                        } else {
+                            Utils.displayToast(context, response.body().getMessage());
+                            history2Binding.layProgress.setVisibility(View.GONE);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<AddCredentialModel> call, Throwable t) {
+                        Log.d("TAG", "send_WorkHistoryDate_1() onFailure: " + t.getMessage());
+                        Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
+                        history2Binding.layProgress.setVisibility(View.GONE);
+                    }
+                });
 
             }
 
@@ -1907,6 +3618,431 @@ public class RegisterActivity extends AppCompatActivity {
                     Utils.displayToast(context, "Select Expiration Date ");
                     return false;
                 }
+                if (TextUtils.isEmpty(date1)) {
+                    Utils.displayToast(context, "Select Effective Date");
+                    return false;
+                }
+                if (TextUtils.isEmpty(date2)) {
+                    Utils.displayToast(context, "Select Expiration Date ");
+                    return false;
+                }
+
+                /*SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date strDate = null;
+                try {
+                    Date strDate1 = sdf.parse(history2Binding.edEffectiveDate.getText().toString());
+                    strDate = sdf.parse(history2Binding.edExpiredDate.getText().toString());
+                    if (strDate1.getTime() > strDate.getTime()) {
+                        Utils.displayToast(context, "Expired date must be of after effective date !");
+                        return false;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }*/
+
+                return true;
+            }
+        });
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
+            }
+        });
+        dialog.show();
+    }
+
+    private void workDialog3() {
+        uploadCertificate = null;
+        resumeFile = null;
+        selected_Credential = 0;
+        dayOfMonth2 = 0;
+        monthOfYear2 = 0;
+        year2 = 0;
+        dayOfMonth3 = 0;
+        monthOfYear3 = 0;
+        year3 = 0;
+        history3Binding = DialogWorkHistory3Binding.inflate(getLayoutInflater());
+        final Dialog dialog = new Dialog(RegisterActivity.this, R.style.AlertDialog);
+        dialog.setContentView(history3Binding.getRoot());
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(true);
+        if (edit_mode)
+            history3Binding.imgClose.setVisibility(View.VISIBLE);
+        certificateDialogAdapter = new CertificateDialogAdapter(this, list_Certificate);
+        history3Binding.rvCertificate.setAdapter(certificateDialogAdapter);
+        if (check_Any_Data_Empty_WorkHistory_2()) {
+            API_ResponseCallback apiResponseCallback = new API_ResponseCallback() {
+                @Override
+                public void onShowProgress() {
+                    history3Binding.layProgress.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onSucces(Object models) {
+                    history3Binding.layProgress.setVisibility(View.GONE);
+                    if (models instanceof CredentialModel) {
+                        CredentialModel combineData = (CredentialModel) models;
+                        try {
+                            clearAllOptionList();
+                            list_Credential.addAll(combineData.getData());
+                            setupDialogFieldData();
+
+                        } catch (Exception e) {
+                            Log.d("TAG", "getHourlyRate_OptionsData() catch(): " + e.getMessage());
+                        }
+                    }
+                }
+
+                void clearAllOptionList() {
+                    if (list_Credential == null) {
+                        list_Credential = new ArrayList<>();
+                    }
+                    list_Credential.add(new CredentialDatum(0, "Select Credential"));
+                }
+
+                void setupDialogFieldData() {
+                    if (model.getCertitficate() != null && model.getCertitficate().size() != 0) {
+                        list_Certificate.clear();
+                        for (UserProfileData.Certitficate certitficate : model.getCertitficate()) {
+                            list_Certificate.add(new AddCredentialData(certitficate.getCertificateId()
+                                    , certitficate.getSearchForCredentialDefinition()));
+                        }
+
+                        certificateDialogAdapter = new CertificateDialogAdapter(RegisterActivity.this, list_Certificate);
+                        history3Binding.rvCertificate.setAdapter(certificateDialogAdapter);
+                        history3Binding.rvCertificate.setVisibility(View.VISIBLE);
+                    }
+                    if (!TextUtils.isEmpty(model.getResume())) {
+                        history3Binding.imgResume.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+                @Override
+                public void onFailed() {
+                    history3Binding.layProgress.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onError() {
+                    history3Binding.layProgress.setVisibility(View.GONE);
+                }
+            };
+
+            fetch_WorkHistory_2_Field_Data(apiResponseCallback);
+
+        } else {
+            if (model.getCertitficate() != null && model.getCertitficate().size() != 0) {
+                list_Certificate.clear();
+                for (UserProfileData.Certitficate certitficate : model.getCertitficate()) {
+                    list_Certificate.add(new AddCredentialData(certitficate.getCertificateId()
+                            , certitficate.getSearchForCredentialDefinition()));
+                }
+                certificateDialogAdapter = new CertificateDialogAdapter(this, list_Certificate);
+                history3Binding.rvCertificate.setAdapter(certificateDialogAdapter);
+                history3Binding.rvCertificate.setVisibility(View.VISIBLE);
+            }
+            if (!TextUtils.isEmpty(model.getResume())) {
+                history3Binding.imgResume.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+        history3Binding.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
+            }
+        });
+        history3Binding.layCredential.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Utils.hideKeyboardFrom(context, v);
+
+                showOptionPopup_Degrees(context, 5, history3Binding.view1, history3Binding.img1,
+                        Collections.singletonList(list_Credential),
+                        new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                selected_Credential = position;
+                                if (position == 0) {
+                                    history3Binding.tvSearchCredential.setText("");
+                                } else
+                                    history3Binding.tvSearchCredential.setText("" + list_Credential
+                                            .get(position).getName());
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+        history3Binding.immgDate1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Utils.hideKeyboardFrom(context, v);
+
+                final Calendar c = Calendar.getInstance();
+
+                DatePickerDialog dpd = null;
+                if (dayOfMonth2 == 0 && year2 == 0 && monthOfYear2 == 0) {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    history3Binding.edEffectiveDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date1 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth2 = dayOfMonth;
+                                    monthOfYear2 = monthOfYear;
+                                    year2 = year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+
+                } else {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    history3Binding.edEffectiveDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date1 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth2 = dayOfMonth;
+                                    monthOfYear2 = monthOfYear;
+                                    year2 = year;
+                                }
+                            },
+                            year2, monthOfYear2, dayOfMonth2);
+                }
+                dpd.show();
+                Utils.onClickEvent(v);
+
+            }
+        });
+        history3Binding.immgDate2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Utils.hideKeyboardFrom(context, v);
+
+                final Calendar c = Calendar.getInstance();
+
+                DatePickerDialog dpd = null;
+                if (dayOfMonth3 == 0 && year3 == 0 && monthOfYear3 == 0) {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // here set the pattern as you date in string was containing like date/month/year
+                                    try {
+                                        Date d1 = sdf.parse(dayOfMonth + "/" + monthOfYear + "/" + year);
+                                        Date d2 = sdf.parse(dayOfMonth2 + "/" + monthOfYear2 + "/" + year2);
+                                        if (d1.getTime() <= d2.getTime()) {
+                                            Utils.displayToast(context, "Please Select Proper Valid Date, It Must Be After Effective Date  ");
+                                            return;
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    history3Binding.edExpiredDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date2 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth3 = dayOfMonth;
+                                    monthOfYear3 = monthOfYear;
+                                    year3 = year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+
+                } else {
+                    dpd = new DatePickerDialog(context,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // here set the pattern as you date in string was containing like date/month/year
+                                    try {
+                                        Date d1 = sdf.parse(dayOfMonth + "/" + monthOfYear + "/" + year);
+                                        Date d2 = sdf.parse(dayOfMonth2 + "/" + monthOfYear2 + "/" + year2);
+                                        if (d1.getTime() <= d2.getTime()) {
+                                            Utils.displayToast(context, "Please Select Proper Valid Date, It Must Be After Effective Date  ");
+                                            return;
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    history3Binding.edExpiredDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    date2 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth3 = dayOfMonth;
+                                    monthOfYear3 = monthOfYear;
+                                    year3 = year;
+                                }
+                            },
+                            year3, monthOfYear3, dayOfMonth3);
+                }
+                dpd.show();
+                Utils.onClickEvent(v);
+
+            }
+        });
+        history3Binding.layUploadFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Utils.hideKeyboardFrom(context, v);
+
+                if (!checkReadExternal()) {
+
+//                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE});
+                    requestPermission();
+                    return;
+                }
+                System.gc();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*"});
+                resultLauncherCertificate.launch(intent);
+                Utils.onClickEvent(v);
+            }
+
+
+        });
+
+        history3Binding.layUploadResume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(context, v);
+                if (!checkReadExternal()) {
+                    /*startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
+                    });*/
+                    requestPermission();
+                    return;
+                }
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("application/pdf");
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/pdf"});
+                resultLauncherResume.launch(intent);
+                Utils.onClickEvent(v);
+            }
+
+        });
+        history3Binding.next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(context, v);
+
+                if (edit_mode) {
+                    finish();
+                } else {
+                    if (history2Binding != null) {
+                        history2Binding.layProgress.setVisibility(View.GONE);
+                    } else {
+                        history3Binding.layProgress.setVisibility(View.GONE);
+                    }
+                    getNurseProfile(history3Binding.layProgress, dialog, 3);
+//                    dialog.dismiss();
+//                    chooseOption();
+                }
+            }
+
+            private void send_WorkHistoryDate_3() {
+                history3Binding.layProgress.setVisibility(View.VISIBLE);
+                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RequestBody request_id
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        new SessionManager(context).get_user_register_Id());
+                RequestBody type_sd
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        list_Credential.get(selected_Credential).getId().toString());
+                RequestBody date1
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        history3Binding.edEffectiveDate.getText().toString());
+                RequestBody date2
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        history3Binding.edExpiredDate.getText().toString());
+                RequestBody certificate_img
+                        = RequestBody.create(MediaType.parse("*/*"),
+                        new File(uploadCertificate));
+
+
+                MultipartBody.Part multipartBodyCertifcate = MultipartBody.Part.createFormData("certificate_image", new File(uploadCertificate).getName(), certificate_img);
+
+
+                backendApi.call_send_WorkHistory_Certificate_add(request_id, type_sd, date1, date2,
+                        multipartBodyCertifcate)
+                        .enqueue(new Callback<AddCredentialModel>() {
+                            @Override
+                            public void onResponse(Call<AddCredentialModel> call, Response<AddCredentialModel> response) {
+                                if (response.body() == null) {
+                                    try {
+                                        history3Binding.layProgress.setVisibility(View.GONE);
+                                        Log.d("TAG", "onResponse: " + response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return;
+                                }
+                                if (response.body().getApiStatus().equals("1")) {
+                                    Utils.displayToast(context, null);
+
+                                    history3Binding.layProgress.setVisibility(View.GONE);
+                                    Utils.displayToast(context, "" + response.body().getMessage());
+                                    if (edit_mode) {
+                                        dialog.dismiss();
+                                        setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                                new Gson().toJson(model)));
+                                        finish();
+                                    } else {
+                                        history3Binding.layProgress.setVisibility(View.GONE);
+                                        dialog.dismiss();
+                                        chooseOption();
+                                    }
+                                } else {
+                                    Utils.displayToast(context, "Data has not been updated");
+                                    history3Binding.layProgress.setVisibility(View.GONE);
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<AddCredentialModel> call, Throwable t) {
+                                Log.d("TAG", "send_WorkHistoryDate_1() onFailure: " + t.getMessage());
+                                Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
+                                history3Binding.layProgress.setVisibility(View.GONE);
+                            }
+                        });
+
+            }
+
+            private boolean checkValiation() {
+                if (selected_Credential == 0) {
+                    Utils.displayToast(context, "Select Highest Nursing Degree");
+                    return false;
+                }
+                if (TextUtils.isEmpty(history3Binding.edEffectiveDate.getText())) {
+                    Utils.displayToast(context, "Select Effective Date");
+                    return false;
+                }
+                if (TextUtils.isEmpty(history3Binding.edExpiredDate.getText())) {
+                    Utils.displayToast(context, "Select Expiration Date ");
+                    return false;
+                }
                 if (TextUtils.isEmpty(uploadCertificate)) {
                     Utils.displayToast(context, "Upload Certificate First !");
                     return false;
@@ -1917,11 +4053,156 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 return true;
             }
+
         });
+        history3Binding.imgSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(context, v);
+                try {
+                    if (checkValiation()) {
+                        if (Utils.isNetworkAvailable(context)) {
+                            send_certificateData();
+                        } else {
+                            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                        }
+                    }
+                } catch (Exception exception) {
+                    crashlytics.recordException(exception);
+                }
+                Utils.onClickEvent(v);
+            }
+
+            private boolean checkValiation() {
+                if (selected_Credential == 0) {
+                    Utils.displayToast(context, "Select Highest Nursing Degree");
+                    return false;
+                }
+                if (TextUtils.isEmpty(history3Binding.edEffectiveDate.getText())) {
+                    Utils.displayToast(context, "Select Effective Date");
+                    return false;
+                }
+
+                if (TextUtils.isEmpty(history3Binding.edExpiredDate.getText())) {
+                    Utils.displayToast(context, "Select Expiration Date ");
+                    return false;
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date strDate = null;
+                try {
+                    Date strDate1 = sdf.parse(history3Binding.edEffectiveDate.getText().toString());
+                    strDate = sdf.parse(history3Binding.edExpiredDate.getText().toString());
+                    if (strDate1.getTime() > strDate.getTime()) {
+                        Utils.displayToast(context, "Expired date must be of after effective date !");
+                        return false;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if (TextUtils.isEmpty(uploadCertificate)) {
+                    Utils.displayToast(context, "Upload Certificate First !");
+                    return false;
+                }
+
+                return true;
+            }
+
+            private void send_certificateData() {
+                history3Binding.layProgress.setVisibility(View.VISIBLE);
+                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RequestBody request_id
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        new SessionManager(context).get_user_register_Id());
+                RequestBody type_sd
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        list_Credential.get(selected_Credential).getId().toString());
+                RequestBody date1
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        history3Binding.edEffectiveDate.getText().toString());
+                RequestBody date2
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        history3Binding.edExpiredDate.getText().toString());
+                RequestBody certificate_img
+                        = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        new File(uploadCertificate));
+
+
+                MultipartBody.Part multipartBodyCertifcate = MultipartBody.Part.createFormData("certificate_image", new File(uploadCertificate).getName(), certificate_img);
+
+
+                backendApi.call_send_WorkHistory_Certificate_add(request_id, type_sd, date1, date2,
+                        multipartBodyCertifcate)
+                        .enqueue(new Callback<AddCredentialModel>() {
+                            @Override
+                            public void onResponse(Call<AddCredentialModel> call, Response<AddCredentialModel> response) {
+                                if (response.body() == null) {
+                                    try {
+                                        history3Binding.layProgress.setVisibility(View.GONE);
+                                        Log.d("TAG", "onResponse: " + response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return;
+                                }
+                                if (response.body().getApiStatus().equals("1")) {
+                                    Utils.displayToast(context, null);
+                                    workCertificate = true;
+                                    history3Binding.layProgress.setVisibility(View.GONE);
+                                    Utils.displayToast(context, "" + response.body().getMessage());
+                                    if (edit_mode) {
+                                        dialog.dismiss();
+                                        setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                                new Gson().toJson(model)));
+                                        finish();
+                                    } else {
+                                        if (list_Certificate == null)
+                                            list_Certificate = new ArrayList<AddCredentialData>();
+                                        history3Binding.rvCertificate.setVisibility(View.VISIBLE);
+                                        list_Certificate.add(response.body().getData());
+                                        certificateDialogAdapter.setList(list_Certificate);
+                                        history3Binding.rvCertificate.scrollToPosition(list_Certificate.size() - 1);
+                                        resetFiled();
+                                        if (list_Certificate != null && list_Certificate.size() != 0) {
+                                            workCertificate = true;
+                                        }
+                                    }
+                                } else {
+                                    Utils.displayToast(context, response.body().getMessage());
+                                    history3Binding.layProgress.setVisibility(View.GONE);
+
+                                }
+
+                            }
+
+
+                            @Override
+                            public void onFailure(Call<AddCredentialModel> call, Throwable t) {
+                                Log.d("TAG", "send_WorkHistoryDate_3() onFailure: " + t.getMessage());
+                                Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
+                                history3Binding.layProgress.setVisibility(View.GONE);
+                            }
+                        });
+            }
+
+            private void resetFiled() {
+                selected_Credential = 0;
+                history3Binding.tvSearchCredential.setText(list_Credential.get(selected_Credential).getName());
+                history3Binding.edEffectiveDate.setText("");
+                history3Binding.edExpiredDate.setText("");
+                uploadCertificate = "";
+                history3Binding.imgCertificate.setVisibility(View.GONE);
+            }
+        });
+
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                chooseOption();
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
             }
         });
         dialog.show();
@@ -1933,10 +4214,16 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.setContentView(roleInterestBinding.getRoot());
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(true);
-
         list_Ques = new ArrayList<>();
-        list_Ques.addAll(Utils.getQuesList());
-        QuestionAdapter questionAdapter = new QuestionAdapter(this, list_Ques, list_LeaderShipRole,
+        if (edit_mode) {
+            roleInterestBinding.imgClose.setVisibility(View.VISIBLE);
+            list_Ques.addAll(Utils.getQuesListByProfile(model.getRoleInterest()));
+        } else if (new SessionManager(context).get_RoleDialogStatus() && model.getRoleInterest() != null) {
+            list_Ques.addAll(Utils.getQuesListByProfile(model.getRoleInterest()));
+        } else {
+            list_Ques.addAll(Utils.getQuesList());
+        }
+        QuestionAdapter questionAdapter = new QuestionAdapter(this, list_Ques, list_LeaderShipRole, edit_mode,
                 new QuestionAdapter.QuestionInterface() {
                     @Override
                     public void onCLickItem(int position, int yes) {
@@ -1944,30 +4231,36 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
         roleInterestBinding.rvQuestions.setAdapter(questionAdapter);
-
-        languageAdapter = new SpecialtyAdapter(context, list_Language, select_Language, 7, 7, 7,
-                new SpecialtyAdapter.SpecialtyListener() {
-                    @Override
-                    public void onClickItem(int position) {
-                        if (select_Language != null && select_Language.size() != 0
-                                && position < select_Language.size()) {
-                            select_Language.remove(position);
-                            if (languageAdapter != null)
-                                languageAdapter.notifyDataSetChanged();
-                            if (roleInterestBinding.tvLang != null && roleInterestBinding.rvLanguage != null)
-                                if (select_Language == null || select_Language.size() == 0) {
-                                    roleInterestBinding.tvLang.setVisibility(View.VISIBLE);
-                                    roleInterestBinding.rvLanguage.setVisibility(View.GONE);
-                                } else {
-                                    roleInterestBinding.tvLang.setVisibility(View.GONE);
-                                    roleInterestBinding.rvLanguage.setVisibility(View.VISIBLE);
-                                }
+        SpecialtyAdapter.SpecialtyListener callbacl = new SpecialtyAdapter.SpecialtyListener() {
+            @Override
+            public void onClickItem(int position) {
+                if (select_Language != null && select_Language.size() != 0
+                        && position < select_Language.size()) {
+                    select_Language.remove(position);
+                    if (languageAdapter != null)
+                        languageAdapter.notifyDataSetChanged();
+                    if (roleInterestBinding.tvLang != null && roleInterestBinding.rvLanguage != null)
+                        if (select_Language == null || select_Language.size() == 0) {
+                            roleInterestBinding.tvLang.setVisibility(View.VISIBLE);
+                            roleInterestBinding.rvLanguage.setVisibility(View.GONE);
+                        } else {
+                            roleInterestBinding.tvLang.setVisibility(View.GONE);
+                            roleInterestBinding.rvLanguage.setVisibility(View.VISIBLE);
                         }
-                    }
-                });
+                }
+            }
+        };
+        languageAdapter = new SpecialtyAdapter(context, list_Language, select_Language, 7, 7, 7, callbacl
+        );
         roleInterestBinding.rvLanguage.setAdapter(languageAdapter);
 
-
+        roleInterestBinding.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
+            }
+        });
         roleInterestBinding.rvQuestions.setVisibility(View.VISIBLE);
         roleInterestBinding.layProgress.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -1986,19 +4279,6 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onSucces(Object models) {
                     roleInterestBinding.layProgress.setVisibility(View.GONE);
-
-                    /*if (models instanceof LanguageModel) {
-                        LanguageModel combineData = (LanguageModel) models;
-                        try {
-                            clearAllOptionList();
-                            list_Language.addAll(combineData.getData());
-                            setupDialogFieldData();
-
-                        } catch (Exception e) {
-                            Log.d("TAG", "getHourlyRate_OptionsData() catch(): " + e.getMessage());
-                        }
-                    }*/
-
                     if (models instanceof Combine_RoleIneterest_DataModel) {
                         Combine_RoleIneterest_DataModel combineData = (Combine_RoleIneterest_DataModel) models;
                         try {
@@ -2028,6 +4308,23 @@ public class RegisterActivity extends AppCompatActivity {
 
                 void setupDialogFieldData() {
 
+                    if (checkItemInList_Role(model.getRoleInterest().getLeadershipRoles().toString(),
+                            list_LeaderShipRole, false)) {
+                        selected_leadership = getIndexFromList_Role(model.getRoleInterest().getLeadershipRoles(),
+                                list_LeaderShipRole);
+                    /*    roleInterest.tvSearchCredential.setText(list_LeaderShipRole.get(selected_leadership)
+                                .getName());*/
+                    }
+                    setupSelection_Language_ByModelData(model.getRoleInterest().getLanguages(), roleInterestBinding.tvLang);
+                    languageAdapter = new SpecialtyAdapter(context, list_Language, select_Language, 7, 7, 7, callbacl);
+                    roleInterestBinding.rvLanguage.setAdapter(languageAdapter);
+                    if (select_Language != null && select_Language.size() != 0) {
+                        roleInterestBinding.rvLanguage.setVisibility(View.VISIBLE);
+                        roleInterestBinding.tvLang.setVisibility(View.GONE);
+                    }
+
+                    if (questionAdapter != null)
+                        questionAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -2044,7 +4341,23 @@ public class RegisterActivity extends AppCompatActivity {
             fetch_Role_Of_Interset_1_Field_Data(apiResponseCallback);
 
         } else {
-
+            if (checkItemInList_Role(model.getRoleInterest().getLeadershipRoles(),
+                    list_LeaderShipRole, false)) {
+                selected_leadership = getIndexFromList_Role(model.getRoleInterest().getLeadershipRoles(),
+                        list_LeaderShipRole);
+                history2Binding.tvSearchCredential.setText(list_LeaderShipRole.get(selected_leadership)
+                        .getName());
+            }
+            setupSelection_Language_ByModelData(model.getRoleInterest().getLanguages(), roleInterestBinding.tvLang);
+            languageAdapter = new SpecialtyAdapter(context, list_Language, select_Language, 7, 7, 7, callbacl
+            );
+            roleInterestBinding.rvLanguage.setAdapter(languageAdapter);
+            if (select_Language != null && select_Language.size() != 0) {
+                roleInterestBinding.rvLanguage.setVisibility(View.VISIBLE);
+                roleInterestBinding.tvLang.setVisibility(View.GONE);
+            }
+            if (questionAdapter != null)
+                questionAdapter.notifyDataSetChanged();
         }
         roleInterestBinding.layLang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2079,14 +4392,19 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Utils.hideKeyboardFrom(context, v);
+                try {
+                    if (checkValiation()) {
+                        if (edit_mode) {
+                            roleDialog2();
+                        } else if (Utils.isNetworkAvailable(context)) {
+                            send_RoleInterested();
+                        } else {
+                            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                        }
 
-                if (checkValiation()) {
-                    if (Utils.isNetworkAvailable(context)) {
-                        send_RoleInterested();
-                    } else {
-                        Utils.displayToast(context, getResources().getString(R.string.no_internet));
                     }
-
+                } catch (Exception exception) {
+                    crashlytics.recordException(exception);
                 }
 
                 Utils.onClickEvent(v);
@@ -2097,7 +4415,9 @@ public class RegisterActivity extends AppCompatActivity {
                 String id = new SessionManager(context).get_user_register_Id();
                 String ans1 = list_Ques.get(0).getAnswer_Str();
                 String ans2 = list_Ques.get(1).getAnswer_Str();
-                String leader = String.valueOf(list_LeaderShipRole.get(selected_leadership).getId());
+                String leader = "";
+                if (selected_leadership != 0)
+                    leader = String.valueOf(list_LeaderShipRole.get(selected_leadership).getId());
                 String ans3 = list_Ques.get(3).getAnswer_Str();
                 String ans4 = list_Ques.get(4).getAnswer_Str();
                 String ans5 = list_Ques.get(5).getAnswer_Str();
@@ -2143,13 +4463,14 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                     return;
                                 }
-                                if (!response.body().getApiStatus().equals("1")) {
-                                    Utils.displayToast(context, response.message());
+                                if (response.body().getApiStatus().equals("1")) {
+                                    Utils.displayToast(context, null);
                                     roleInterestBinding.layProgress.setVisibility(View.GONE);
                                     Utils.displayToast(context, "" + response.body().getMessage());
                                     roleInterestBinding.layProgress.setVisibility(View.GONE);
-                                    dialog.dismiss();
-                                    roleDialog2();
+                                    new SessionManager(context).saveRoleDialog(true);
+                                    getNurseProfile(roleInterestBinding.layProgress, dialog, 1);
+
                                 } else {
                                     Utils.displayToast(context, "Data has not been updated");
                                     roleInterestBinding.layProgress.setVisibility(View.GONE);
@@ -2176,7 +4497,12 @@ public class RegisterActivity extends AppCompatActivity {
                         status = false;
                         st = String.valueOf(i);
                         break;
-
+                    }
+                }
+                if (list_Ques.get(1).getAnswer() != 2 && list_Ques.get(1).getAnswer() == 1) {
+                    if (selected_leadership == 0) {
+                        Utils.displayToast(context, "Select leadership role first!");
+                        return false;
                     }
                 }
                 if (!status) {
@@ -2196,7 +4522,11 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                chooseOption();
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
             }
         });
         dialog.show();
@@ -2206,19 +4536,70 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void roleDialog2() {
         list_photos.clear();
+        selected_list_photos.clear();
         list_Files.clear();
+        selected_list_Files.clear();
         DialogRoleInterest2Binding roleInterest2Binding = DialogRoleInterest2Binding.inflate(getLayoutInflater());
         final Dialog dialog = new Dialog(RegisterActivity.this, R.style.AlertDialog);
         dialog.setContentView(roleInterest2Binding.getRoot());
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(true);
+        if (edit_mode) {
+            roleInterest2Binding.imgClose.setVisibility(View.VISIBLE);
+            roleInterest2Binding.edLinks.setText(model.getRoleInterest().getNuVideoEmbedUrl());
+            roleInterest2Binding.edIntro.setText(model.getRoleInterest().getSummary());
 
+            for (UserProfileData.AdditionalPicture additionalPicture : model.getRoleInterest().getAdditionalPictures()) {
+                list_photos.add(additionalPicture.getPhoto());
+            }
+            for (UserProfileData.AdditionalFile additionalPicture : model.getRoleInterest().getAdditionalFiles()) {
+                list_Files.add(additionalPicture.getPhoto());
+            }
+        } else if (model.getRoleInterest() != null) {
+            roleInterest2Binding.imgClose.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(model.getRoleInterest().getNuVideoEmbedUrl()))
+                roleInterest2Binding.edLinks.setText(model.getRoleInterest().getNuVideoEmbedUrl());
+            if (!TextUtils.isEmpty(model.getRoleInterest().getSummary()))
+                roleInterest2Binding.edIntro.setText(model.getRoleInterest().getSummary());
+            if (model.getRoleInterest().getAdditionalPictures() != null
+                    && model.getRoleInterest().getAdditionalPictures().size() != 0)
+                for (UserProfileData.AdditionalPicture additionalPicture : model.getRoleInterest().getAdditionalPictures()) {
+                    list_photos.add(additionalPicture.getPhoto());
+                }
+            if (model.getRoleInterest().getAdditionalFiles() != null
+                    && model.getRoleInterest().getAdditionalFiles().size() != 0)
+                for (UserProfileData.AdditionalFile additionalPicture : model.getRoleInterest().getAdditionalFiles()) {
+                    list_Files.add(additionalPicture.getPhoto());
+                }
+        }
+        roleInterest2Binding.edIntro.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         photoFilesAdapter = new PhotoFilesAdapter(list_photos, 1);
         roleInterest2Binding.rvPhotos.setAdapter(photoFilesAdapter);
 
         filesAdapter = new PhotoFilesAdapter(list_Files, 2);
         roleInterest2Binding.rvFiles.setAdapter(filesAdapter);
-
+        roleInterest2Binding.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Utils.onClickEvent(v);
+            }
+        });
         roleInterest2Binding.layAddPhotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2226,7 +4607,8 @@ public class RegisterActivity extends AppCompatActivity {
                 Utils.hideKeyboardFrom(context, v);
 
                 if (!checkReadExternal()) {
-                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+//                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE});
+                    requestPermission();
                     return;
                 }
 
@@ -2240,14 +4622,13 @@ public class RegisterActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*"});
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/jpg", "image/png", "image/jpeg"});
                 resultLauncherPhotos.launch(intent);
                 Utils.onClickEvent(v);
             }
 
 
         });
-
         roleInterest2Binding.layAddFiles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2255,9 +4636,10 @@ public class RegisterActivity extends AppCompatActivity {
                 Utils.hideKeyboardFrom(context, v);
 
                 if (!checkReadExternal()) {
-                    startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    });
+                   /* startForResultPermission.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                            WRITE_EXTERNAL_STORAGE
+                    });*/
+                    requestPermission();
                     return;
                 }
                 if (list_Files != null && list_Files.size() > 3) {
@@ -2268,25 +4650,157 @@ public class RegisterActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("application/pdf");
+//                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/pdf", "application/doc"});
                 resultLauncherPDF.launch(intent);
                 Utils.onClickEvent(v);
             }
 
         });
-
         roleInterest2Binding.next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Utils.hideKeyboardFrom(context, v);
-
-                if (checkValiation()) {
-                    if (Utils.isNetworkAvailable(context)) {
-                        send_RoleInterested();
-                    } else {
-                        Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                try {
+                    if (checkValiation()) {
+                        if (Utils.isNetworkAvailable(context)) {
+                            if (edit_mode) {
+                                edit_sendRoleInterset();
+                            } else
+                                send_RoleInterested();
+                        } else {
+                            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+                        }
                     }
+                } catch (Exception exception) {
+                    crashlytics.recordException(exception);
                 }
+            }
+
+            private void edit_sendRoleInterset() {
+                roleInterest2Binding.layProgress.setVisibility(View.VISIBLE);
+                String id = new SessionManager(context).get_user_register_Id();
+                String ans1 = list_Ques.get(0).getAnswer_Str();
+                String ans2 = list_Ques.get(1).getAnswer_Str();
+                String leader = "";
+                if (selected_leadership != 0)
+                    leader = String.valueOf(list_LeaderShipRole.get(selected_leadership).getId());
+                String ans3 = list_Ques.get(3).getAnswer_Str();
+                String ans4 = list_Ques.get(4).getAnswer_Str();
+                String ans5 = list_Ques.get(5).getAnswer_Str();
+                String ans6 = list_Ques.get(6).getAnswer_Str();
+                String ans7 = list_Ques.get(7).getAnswer_Str();
+                String ans8 = list_Ques.get(8).getAnswer_Str();
+                String lang = "";
+                for (int i = 0; i < select_Language.size(); i++) {
+                    if (i == 0) {
+                        lang = "" + list_Language.get(select_Language.get(i)).getLanguage();
+                    } else
+                        lang = lang + "," + list_Language.get(select_Language.get(i)).getLanguage();
+                }
+                String intro = roleInterest2Binding.edIntro.getText().toString();
+                String links = roleInterest2Binding.edLinks.getText().toString();
+
+                MediaType mediaType = MediaType.parse("multipart/form-data");
+                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RequestBody request_id = RequestBody.create(mediaType, id);
+                RequestBody serving_preceptor = RequestBody.create(mediaType, ans1);
+                RequestBody serving_interim_nurse_leader = RequestBody.create(mediaType, ans2);
+                RequestBody leadership_roles = RequestBody.create(mediaType, leader);
+                RequestBody linical_educator = RequestBody.create(mediaType, ans3);
+                RequestBody is_daisy_award_winner = RequestBody.create(mediaType, ans4);
+                RequestBody employee_of_the_mth_qtr_yr = RequestBody.create(mediaType, ans5);
+                RequestBody other_nursing_awards = RequestBody.create(mediaType, ans6);
+                RequestBody is_professional_practice_council = RequestBody.create(mediaType, ans7);
+                RequestBody is_research_publications = RequestBody.create(mediaType, ans8);
+                RequestBody languages = RequestBody.create(mediaType, lang);
+                RequestBody intro1 = RequestBody.create(mediaType, intro);
+                RequestBody link1 = RequestBody.create(mediaType, links);
+                MultipartBody.Part[] multiPart_Pictures = null;
+                MultipartBody.Part[] multiPart_Files = null;
+                if (selected_list_photos != null && selected_list_photos.size() != 0) {
+                    multiPart_Pictures = new MultipartBody.Part[selected_list_photos.size()];
+                    if (list_photos != null && selected_list_photos.size() != 0)
+                        for (int index = 0; index < selected_list_photos.size(); index++) {
+                            File file = new File(selected_list_photos.get(index));
+                            RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+                            multiPart_Pictures[index] = MultipartBody.Part.createFormData("additional_pictures[]",
+                                    file.getName(), body);
+                        }
+                }
+                if (selected_list_Files != null && selected_list_Files.size() != 0) {
+                    multiPart_Files = new MultipartBody.Part[selected_list_Files.size()];
+                    if (selected_list_Files != null && selected_list_Files.size() != 0)
+                        for (int index = 0; index < selected_list_Files.size(); index++) {
+                            File file = new File(selected_list_Files.get(index));
+                            RequestBody body = RequestBody.create(MediaType.parse("*/*"), file);
+                            multiPart_Files[index] = MultipartBody.Part.createFormData("additional_files[]",
+                                    file.getName(), body);
+                        }
+                }
+                Call<UserProfile> call = null;
+                if (multiPart_Pictures != null && multiPart_Files != null) {
+                    call = backendApi.call_EDIT_role_interest(request_id, serving_preceptor,
+                            serving_interim_nurse_leader, leadership_roles,
+                            linical_educator, is_daisy_award_winner, employee_of_the_mth_qtr_yr, other_nursing_awards,
+                            is_professional_practice_council, is_research_publications, languages, intro1, link1,
+                            multiPart_Pictures, multiPart_Files);
+
+                } else if ((multiPart_Pictures != null && multiPart_Files == null) ||
+                        (multiPart_Pictures == null && multiPart_Files != null)) {
+                    MultipartBody.Part[] part = null;
+                    if (multiPart_Pictures != null && multiPart_Files == null)
+                        part = multiPart_Pictures;
+                    else
+                        part = multiPart_Files;
+                    call = backendApi.call_EDIT_role_interest(request_id, serving_preceptor,
+                            serving_interim_nurse_leader, leadership_roles,
+                            linical_educator, is_daisy_award_winner, employee_of_the_mth_qtr_yr, other_nursing_awards,
+                            is_professional_practice_council, is_research_publications, languages, intro1, link1,
+                            part);
+                } else {
+                    call = backendApi.call_EDIT_role_interest(request_id, serving_preceptor,
+                            serving_interim_nurse_leader, leadership_roles,
+                            linical_educator, is_daisy_award_winner, employee_of_the_mth_qtr_yr, other_nursing_awards,
+                            is_professional_practice_council, is_research_publications, languages, intro1, link1);
+                }
+
+                call.enqueue(new Callback<UserProfile>() {
+                    @Override
+                    public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                        if (response.body() == null) {
+                            try {
+                                roleInterest2Binding.layProgress.setVisibility(View.GONE);
+                                Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
+                                Log.d("TAG", "onResponse: " + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }
+
+                        if (response.body().getApiStatus().equals("1")) {
+                            Utils.displayToast(context, null);
+
+                            roleInterest2Binding.layProgress.setVisibility(View.GONE);
+                            dialog.dismiss();
+                            setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                    new Gson().toJson(model)));
+                            finish();
+
+                        } else {
+                            Utils.displayToast(context, response.body().getMessage());
+                            roleInterest2Binding.layProgress.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserProfile> call, Throwable t) {
+                        roleInterest2Binding.layProgress.setVisibility(View.GONE);
+                        Log.d("TAG", "onFailure: " + t.getMessage());
+                    }
+                });
+
             }
 
             private void send_RoleInterested() {
@@ -2294,20 +4808,20 @@ public class RegisterActivity extends AppCompatActivity {
                 String id = new SessionManager(context).get_user_register_Id();
                 String intro = roleInterest2Binding.edIntro.getText().toString();
                 String links = roleInterest2Binding.edLinks.getText().toString();
-                MultipartBody.Part[] photoList = new MultipartBody.Part[list_photos.size()];
-                if (list_photos != null && list_photos.size() != 0)
-                    for (int index = 0; index < list_photos.size(); index++) {
-                        File file = new File(list_photos.get(index));
+                MultipartBody.Part[] photoList = new MultipartBody.Part[selected_list_photos.size()];
+                if (selected_list_photos != null && selected_list_photos.size() != 0)
+                    for (int index = 0; index < selected_list_photos.size(); index++) {
+                        File file = new File(selected_list_photos.get(index));
                         RequestBody body;
                         body = RequestBody.create(MediaType.parse("image/*"), file);
                         photoList[index] = MultipartBody.Part.createFormData("additional_pictures[]",
                                 file.getName(), body);
                     }
 
-                MultipartBody.Part[] filesList = new MultipartBody.Part[list_Files.size()];
-                if (list_Files != null && list_Files.size() != 0)
-                    for (int index = 0; index < list_Files.size(); index++) {
-                        File file = new File(list_Files.get(index));
+                MultipartBody.Part[] filesList = new MultipartBody.Part[selected_list_Files.size()];
+                if (selected_list_Files != null && selected_list_Files.size() != 0)
+                    for (int index = 0; index < selected_list_Files.size(); index++) {
+                        File file = new File(selected_list_Files.get(index));
                         RequestBody body;
                         body = RequestBody.create(MediaType.parse("*/*"), file);
                         filesList[index] = MultipartBody.Part.createFormData("additional_files[]",
@@ -2321,9 +4835,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 backendApi.call_role_interest_2(request_id, intro1, link1, photoList, filesList)
-                        .enqueue(new Callback<RoleModel>() {
+                        .enqueue(new Callback<RoleModel2>() {
                             @Override
-                            public void onResponse(Call<RoleModel> call, Response<RoleModel> response) {
+                            public void onResponse(Call<RoleModel2> call, Response<RoleModel2> response) {
                                 if (response.body() == null) {
                                     try {
                                         roleInterest2Binding.layProgress.setVisibility(View.GONE);
@@ -2334,27 +4848,33 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                     return;
                                 }
-                                if (!response.body().getApiStatus().equals("1")) {
+                                if (response.body().getApiStatus().equals("1")) {
                                     Utils.displayToast(context, null);
-                                    Utils.displayToast(context, response.message());
+
                                     roleInterest2Binding.layProgress.setVisibility(View.GONE);
                                     Utils.displayToast(context, "" + response.body().getMessage());
-                                    roleInterest = true;
-                                    dialog.dismiss();
-                                    if (state == 0) {
-                                        chooseOption();
-                                    } else {
+                                    if (edit_mode) {
+                                        dialog.dismiss();
+                                        setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                                new Gson().toJson(model)));
                                         finish();
+                                    } else {
+                                        roleInterest = true;
+                                        dialog.dismiss();
+                                        if (state == 0) {
+                                            chooseOption();
+                                        } else {
+                                            finish();
+                                        }
                                     }
                                 } else {
                                     Utils.displayToast(context, "Data has not been updated");
                                     roleInterest2Binding.layProgress.setVisibility(View.GONE);
                                 }
-
                             }
 
                             @Override
-                            public void onFailure(Call<RoleModel> call, Throwable t) {
+                            public void onFailure(Call<RoleModel2> call, Throwable t) {
                                 Log.d("TAG", "send_RoleInterested() onFailure: " + t.getMessage());
                                 Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
                                 roleInterest2Binding.layProgress.setVisibility(View.GONE);
@@ -2400,10 +4920,15 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
         });
+
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                chooseOption();
+                if (edit_mode) {
+                    setResult(RESULT_CANCELED, new Intent());
+                    finish();
+                } else
+                    chooseOption();
             }
         });
         dialog.show();
@@ -2411,11 +4936,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean checkReadExternal() {
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        /*if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED)) {
             return false;
         }
-        return true;
+        return true;*/
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int result = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
+            int result1 = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+        }
     }
 
     private void fetch_WorkHistory_2_Field_Data(API_ResponseCallback apiResponseCallback) {
@@ -2643,20 +5175,25 @@ public class RegisterActivity extends AppCompatActivity {
     private void fetch_WorkHistory_Field_Data(API_ResponseCallback apiResponseCallback) {
         apiResponseCallback.onShowProgress();
         RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
+                "233");
         Observable<Combine_WorkHistory_DataModel> listObservable
                 = Observable.zip(
                 backendApi.call_nursing_degrees_options().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
                 backendApi.call_cerner_medtech_epic_options().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
-                new BiFunction<DegreeModel, CernersModel,
+                backendApi.call_state_ID_2(request_id).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
+                backendApi.call_Country().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
+                new Function4<DegreeModel, DegreeModel, StateModel, CountryModel,
                         Combine_WorkHistory_DataModel>() {
 
                     @NonNull
                     @Override
                     public Combine_WorkHistory_DataModel apply(@NonNull DegreeModel specialtyModel,
-                                                               @NonNull CernersModel stateModel
+                                                               @NonNull DegreeModel stateModel1,
+                                                               StateModel stateModel, CountryModel countryModel
 
                     ) throws Exception {
-                        return new Combine_WorkHistory_DataModel(specialtyModel, stateModel);
+                        return new Combine_WorkHistory_DataModel(specialtyModel, stateModel1, stateModel, countryModel);
                     }
 
 
@@ -2712,7 +5249,6 @@ public class RegisterActivity extends AppCompatActivity {
                 finalImg.setRotation(0);
             }
         });
-
         PersonalDetailWindowAdapter parentChildAdapter = new PersonalDetailWindowAdapter(RegisterActivity.this,
                 3, 3,
                 list_State, selected_state, new PersonalDetailWindowAdapter.UserPopupWindowAdapterInterface() {
@@ -2723,6 +5259,52 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(parentChildAdapter);
+        if (!TextUtils.isEmpty(selected_state)) {
+            recyclerView.scrollToPosition(Integer.parseInt(selected_state));
+        }
+        popup.showAsDropDown(v, 0, 0);
+    }
+
+    private void showOptionPopup_Country(Context context, View v, int type, ImageView img1,
+                                         TextView tvState, List<CountryModel.CountryDatum> list_Country, String selected_Country, ItemCallback itemCallback) {
+        if (list_Country == null || list_Country.size() == 0) {
+            Utils.displayToast(context, "data empty");
+            return;
+        }
+        LayoutInflater layoutInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.popup_dropdown, null);
+
+        PopupWindow popup = new PopupWindow(context);
+        popup.setContentView(layout);
+        popup.setFocusable(true);
+        popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        int height = 193;
+        popup.setWidth(v.getWidth());
+        popup.setHeight(getWindowManager().getDefaultDisplay().getHeight() * height / 1080);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.rv_pop);
+        img1.setRotation(-180);
+        View finalImg = img1;
+        popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                finalImg.setRotation(0);
+            }
+        });
+
+        PersonalDetailWindowAdapter parentChildAdapter = new PersonalDetailWindowAdapter(RegisterActivity.this,
+                type,
+                list_Country, selected_Country, new PersonalDetailWindowAdapter.UserPopupWindowAdapterInterface() {
+            @Override
+            public void onCLickItem(int position, int i) {
+                itemCallback.onClick(position);
+                popup.dismiss();
+            }
+        });
+        recyclerView.setAdapter(parentChildAdapter);
+        if (!TextUtils.isEmpty(selected_Country)) {
+            recyclerView.scrollToPosition(Integer.parseInt(selected_Country));
+        }
         popup.showAsDropDown(v, 0, 0);
     }
 
@@ -2770,10 +5352,21 @@ public class RegisterActivity extends AppCompatActivity {
         popup.showAsDropDown(v, 0, -30);
     }
 
+    private boolean checkItemInList_City(String collegeUniCity, List<CityDatum> list_city) {
+        for (CityDatum workLocationModel :
+                list_city) {
+            if (workLocationModel.getName().toString().equals(collegeUniCity)) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
     private boolean checkItemInList_State(String state, List<State_Datum> list_state) {
         for (State_Datum workLocationModel :
                 list_state) {
-            if (workLocationModel.getState().toString().equals(state)) {
+            if (workLocationModel.getIso_name().toString().equals(state)) {
                 return true;
             }
 
@@ -2786,7 +5379,7 @@ public class RegisterActivity extends AppCompatActivity {
         for (int i = 0; i < list_state.size(); i++) {
 
             State_Datum workLocationModel = list_state.get(i);
-            if (workLocationModel.getState().toString().equals(state.toString())) {
+            if (workLocationModel.getIso_name().toString().equals(state.toString())) {
                 pos = i;
             }
         }
@@ -2797,20 +5390,21 @@ public class RegisterActivity extends AppCompatActivity {
 
         apiResponseCallback.onShowProgress();
         RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
+                "233");
         Observable<Combine_PersonalDetail_2_DataModel> listObservable
                 = Observable.zip(
                 backendApi.call_specialty().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
-                backendApi.call_state().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
-                new BiFunction<SpecialtyModel, StateModel,
+                backendApi.call_state_ID_2(request_id).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
+                backendApi.call_Country().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()),
+                new Function3<SpecialtyModel, StateModel, CountryModel,
                         Combine_PersonalDetail_2_DataModel>() {
 
                     @NonNull
                     @Override
                     public Combine_PersonalDetail_2_DataModel apply(@NonNull SpecialtyModel specialtyModel,
-                                                                    @NonNull StateModel stateModel
-
-                    ) throws Exception {
-                        return new Combine_PersonalDetail_2_DataModel(specialtyModel, stateModel);
+                                                                    @NonNull StateModel stateModel, @NonNull CountryModel stateModel1) throws Exception {
+                        return new Combine_PersonalDetail_2_DataModel(specialtyModel, stateModel, stateModel1);
                     }
 
 
@@ -2841,15 +5435,15 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void setupSelection_Specialty_ByModelData(List<String> specialty) {
+    private void setupSelection_Specialty_ByModelData(List<UserProfileData.Specialty> specialty) {
         if (select_specialty != null)
             select_specialty.clear();
         for (int i = 0; i < list_Specialty.size(); i++) {
             SpecialtyDatum data = list_Specialty.get(i);
             for (int j = 0; j < specialty.size(); j++) {
                 Log.d("TAG1", "setupSelectionSpecialtyByModelData: " + "" + data.getId() +
-                        " " + specialty.get(j));
-                if (("" + data.getId()).equals(specialty.get(j))) {
+                        " " + specialty.get(j).getId());
+                if (("" + data.getId()).equals(specialty.get(j).getId())) {
                     select_specialty.add(i);
                 }
             }
@@ -2862,9 +5456,24 @@ public class RegisterActivity extends AppCompatActivity {
             HourlyRate_DayOfWeek_OptionDatum data = list_days_of_week.get(i);
             for (int j = 0; j < specialty.size(); j++) {
                 Log.d("TAG1", "setupSelectionSpecialtyByModelData: " + "" + data.getId() +
-                        " " + specialty.get(j));
-                if (("" + data.getId()).equals(specialty.get(j))) {
+                        " " + ((String) specialty.get(j)));
+                if (("" + data.getId()).equals(((String) specialty.get(j)))) {
                     select_daysOfWeek.add(i);
+                }
+            }
+        }
+    }
+
+    private void setupSelection_Language_ByModelData(List<String> specialty, TextView tvLang) {
+        select_Language.clear();
+        String str = "";
+        for (int i = 0; i < list_Language.size(); i++) {
+            LanguageDatum data = list_Language.get(i);
+            for (int j = 0; j < specialty.size(); j++) {
+                Log.d("TAG1", "setupSelectionSpecialtyByModelData: " + "" + data.getLanguage() +
+                        " " + ((String) specialty.get(j)));
+                if (("" + data.getLanguage()).equals(((String) specialty.get(j)))) {
+                    select_Language.add(i);
                 }
             }
         }
@@ -2971,7 +5580,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    void showOptionPopup(final Context context, int type, View view1, ImageView img1, TextView view,
+    void showOptionPopup(final Context context, int type, View view1, ImageView img1, TextView
+            view,
                          List<HourlyRate_Common_OptionDatum> list_days_of_week,
                          List<WorkLocationDatum> list_geography, String select_pos,
                          ItemCallback itemCallback) {
@@ -3047,23 +5657,55 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
-    private int getIndexFromList(String shiftDuration, List<HourlyRate_Common_OptionDatum> list_shift_durations) {
+    private int getIndexFromList(String shiftDuration, List<HourlyRate_Common_OptionDatum> list_shift_durations, boolean isName) {
         int pos = 0;
         for (int i = 0; i < list_shift_durations.size(); i++) {
 
             HourlyRate_Common_OptionDatum workLocationModel = list_shift_durations.get(i);
-            if (workLocationModel.getId().toString().equals(shiftDuration)) {
+            if (isName) {
+                if (workLocationModel.getName().toString().equals(shiftDuration)) {
+                    pos = i;
+                    break;
+                }
+            } else if (workLocationModel.getId().toString().equals(shiftDuration)) {
                 pos = i;
+                break;
             }
         }
         return pos;
     }
 
 
-    private boolean checkItemInList(String shiftDuration, List<HourlyRate_Common_OptionDatum> list_shift_durations) {
+    private boolean checkItemInList(String shiftDuration, List<HourlyRate_Common_OptionDatum>
+            list_shift_durations, boolean isName) {
+        boolean status = false;
         for (HourlyRate_Common_OptionDatum workLocationModel :
                 list_shift_durations) {
-            if (workLocationModel.getId().toString().equals(shiftDuration)) {
+            if (isName) {
+                if (workLocationModel.getName().toString().equals(shiftDuration)) {
+                    status = true;
+                    break;
+                }
+            } else if (workLocationModel.getId().toString().equals(shiftDuration)) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
+    private boolean checkItemInList_Role(String shiftDuration, List<LeaderRolesData>
+            list_shift_durations, boolean isName) {
+        if (TextUtils.isEmpty(shiftDuration)) {
+            return false;
+        }
+        for (LeaderRolesData workLocationModel :
+                list_shift_durations) {
+            if (isName) {
+                if (workLocationModel.getId().toString().equals(shiftDuration.toString())) {
+                    return true;
+                }
+            } else if (workLocationModel.getId().toString().equals(shiftDuration.toString())) {
                 return true;
             }
 
@@ -3071,7 +5713,81 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
-    private int getIndexFromList(Integer workLocation, List<WorkLocationDatum> list_geography) {
+    private int getIndexFromList_Role(String workLocation, List<LeaderRolesData> list_geography) {
+        int pos = 0;
+        if (TextUtils.isEmpty(workLocation)) {
+            return 0;
+        }
+        for (int i = 0; i < list_geography.size(); i++) {
+
+            LeaderRolesData workLocationModel = list_geography.get(i);
+            if (workLocationModel.getId().toString().equals(workLocation.toString())) {
+                pos = i;
+                break;
+            }
+        }
+        return pos;
+    }
+
+    private boolean checkItemInList_Work2(String shiftDuration, List<CredentialDatum>
+            list_shift_durations, boolean isName) {
+        for (CredentialDatum workLocationModel :
+                list_shift_durations) {
+            if (isName) {
+                if (workLocationModel.getId().toString().equals(shiftDuration)) {
+                    return true;
+                }
+            } else if (workLocationModel.getId().toString().equals(shiftDuration)) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    private int getIndexFromList_Work2(String
+                                               workLocation, List<CredentialDatum> list_geography) {
+        int pos = 0;
+        for (int i = 0; i < list_geography.size(); i++) {
+
+            CredentialDatum workLocationModel = list_geography.get(i);
+            if (workLocationModel.getId().toString().equals(workLocation.toString())) {
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    private boolean checkItemInList_Work(String shiftDuration, List<Degree_Datum>
+            list_shift_durations, boolean isName) {
+        for (Degree_Datum workLocationModel :
+                list_shift_durations) {
+            if (isName) {
+                if (workLocationModel.getName().toString().equals(shiftDuration)) {
+                    return true;
+                }
+            } else if (workLocationModel.getId().toString().equals(shiftDuration)) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    private int getIndexFromList_Work(String workLocation, List<Degree_Datum> list_geography) {
+        int pos = 0;
+        for (int i = 0; i < list_geography.size(); i++) {
+
+            Degree_Datum workLocationModel = list_geography.get(i);
+            if (workLocationModel.getId().toString().equals(workLocation.toString())) {
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    private int getIndexFromList(Integer
+                                         workLocation, List<WorkLocationDatum> list_geography) {
         int pos = 0;
         for (int i = 0; i < list_geography.size(); i++) {
 
@@ -3083,7 +5799,8 @@ public class RegisterActivity extends AppCompatActivity {
         return pos;
     }
 
-    private boolean checkItemInList(Integer workLocation, List<WorkLocationDatum> list_geography) {
+    private boolean checkItemInList(Integer
+                                            workLocation, List<WorkLocationDatum> list_geography) {
         for (WorkLocationDatum workLocationModel :
                 list_geography) {
             if (workLocationModel.getId().toString().equals(workLocation.toString())) {
@@ -3128,23 +5845,43 @@ public class RegisterActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     File file = null;
+//                    try {
+                    if (result.getData() == null || result.getData().getScheme() == null) {
+                        Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
+                        return;
+                    }
                     try {
-                        file = new File(getPath(context, data.getData()));
-                        String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
-                        Log.d("TAG", file.length() + " size : " + str);
-                        if (!(file.getName().endsWith(".png") || file.getName().endsWith(".jpg")
-                                || file.getName().endsWith(".jpeg"))) {
-                            Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
-                        }
+                        file = new File(FileUtils.getPath(getApplicationContext(), data.getData()));
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Log.d("TAG", ": " + e.getMessage());
+                        crashlytics.recordException(e);
+                    }
+                    String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
+                    Log.d("TAG", file.length() + " size : " + str);
+                    if (!(file.getName().endsWith(".png") || file.getName().endsWith(".jpg")
+                            || file.getName().endsWith(".jpeg"))) {
+                        Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
+                        return;
+                    }
+                    try {
                         double sis = Double.parseDouble(Utils.getFileSize_size(file.length()));
                         if ((sis > 5 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
                             Utils.displayToast(context, "Select File less than equal to 5 MB");
                             return;
                         }
-                    } catch (Exception e) {
-                        Utils.displayToast(context, "Select file is damage");
-                        return;
+                    } catch (NumberFormatException exception) {
+                        Log.d("TAG", ": " + exception.getMessage());
+                        crashlytics.recordException(exception);
                     }
+//                    } catch (Exception e) {
+//                        Utils.displayToast(context, "Select file is damage");
+//                    Utils.displayToast(context, "uri " + data.getData());
+//                    Utils.displayToast(context, "file " + file.getAbsolutePath());
+//                        Log.d("TAG", ": " + e.getMessage());
+//                        crashlytics.recordException(e);
+//                        return;
+//                    }
                     if (file != null) {
                         user_profile = file.getAbsolutePath();
                         Glide.with(context).load(file.getAbsolutePath()).
@@ -3160,48 +5897,191 @@ public class RegisterActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     File file = null;
+//                    try {
+                    if (result.getData() == null || result.getData().getScheme() == null) {
+                        Utils.displayToast(context, "Select Proper File Format. Only pdf,doc,docx are allowed");
+                        return;
+                    }
                     try {
-                        file = new File(getPath(context, data.getData()));
-                        String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
-                        Log.d("TAG", file.length() + " size : " + str);
-                        if (!(file.getName().endsWith(".pdf") || file.getName().endsWith(".doc")
-                                || file.getName().endsWith(".docx"))) {
-                            Utils.displayToast(context, "Select Proper File Format. Only pdf,doc,docx are allowed");
-                        }
+                        file = new File(FileUtils.getPath(getApplicationContext(), data.getData()));
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Log.d("TAG", ": " + e.getMessage());
+                        crashlytics.recordException(e);
+                    }
+                    String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
+                    Log.d("TAG", file.length() + " size : " + str);
+                    if (!(file.getName().endsWith(".pdf") || file.getName().endsWith(".doc")
+                            || file.getName().endsWith(".docx"))) {
+                        Utils.displayToast(context, "Select Proper File Format. Only pdf,doc,docx are allowed");
+                        return;
+                    }
+
+                    try {
                         double sis = Double.parseDouble(Utils.getFileSize_size(file.length()));
-                        if ((sis > 1 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
-                            Utils.displayToast(context, "Select File less than equal to 1 MB");
+                        if ((sis > 5 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
+                            Utils.displayToast(context, "Select File less than equal to 5 MB");
                             return;
                         }
-                    } catch (Exception e) {
-
+                    } catch (NumberFormatException exception) {
+                        Log.d("TAG", ": " + exception.getMessage());
+                        crashlytics.recordException(exception);
                     }
+//                    } catch (Exception e) {
+//                    Utils.displayToast(context, "uri " + data.getData());
+//                    Utils.displayToast(context, "file " + file.getAbsolutePath());
+//                        Log.d("TAG", "resultLauncherResume: " + e.getMessage());
+//                        Utils.displayToast(context, "Select Proper File Format. Only pdf,doc,docx are allowed");
+//                        crashlytics.recordException(e);
+//                    }
                     if (file != null) {
                         resumeFile = file.getAbsolutePath();
-                        history2Binding.imgResume.setVisibility(View.VISIBLE);
+                        View view;
+                        if (history2Binding != null) {
+                            history2Binding.imgResume.setVisibility(View.VISIBLE);
+                        }
+                        if (history3Binding != null) {
+                            history3Binding.imgResume.setVisibility(View.VISIBLE);
+                        }
+                        upload_Resume();
                     }
                 }
             });
+
+    private void upload_Resume() {
+        if (history2Binding != null) {
+            history2Binding.layProgress.setVisibility(View.VISIBLE);
+        } else {
+            history3Binding.layProgress.setVisibility(View.VISIBLE);
+        }
+        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RequestBody request_id
+                = RequestBody.create(MediaType.parse("multipart/form-data"),
+                new SessionManager(context).get_user_register_Id());
+
+        RequestBody resume_file
+                = RequestBody.create(MediaType.parse("*/*"),
+                new File(resumeFile));
+
+        MultipartBody.Part multipartBodyResume = MultipartBody.Part.
+                createFormData("resume", new File(resumeFile).getName(), resume_file);
+
+
+        backendApi.call_Resume_upload(request_id, multipartBodyResume)
+                .enqueue(new Callback<UserProfile>() {
+                    @Override
+                    public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                        if (response.body() == null) {
+                            try {
+                                if (history2Binding != null) {
+                                    history2Binding.layProgress.setVisibility(View.GONE);
+                                } else {
+                                    history3Binding.layProgress.setVisibility(View.GONE);
+                                }
+                                Log.d("TAG", "onResponse: " + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }
+                        if (response.body().getApiStatus().equals("1")) {
+                            Utils.displayToast(context, null);
+
+                            if (history2Binding != null) {
+                                history2Binding.layProgress.setVisibility(View.GONE);
+                            } else {
+                                history3Binding.layProgress.setVisibility(View.GONE);
+                            }
+                            Utils.displayToast(context, "" + response.body().getMessage());
+                            if (edit_mode) {
+                                setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                        new Gson().toJson(model)));
+                                finish();
+                            } else {
+                                if (history2Binding != null) {
+                                    history2Binding.layProgress.setVisibility(View.GONE);
+                                } else {
+                                    history3Binding.layProgress.setVisibility(View.GONE);
+                                }
+//                                dialog.dismiss();
+//                                chooseOption();
+                            }
+                        } else {
+                            Utils.displayToast(context, "Data has not been updated");
+                            if (history2Binding != null) {
+                                history2Binding.layProgress.setVisibility(View.GONE);
+                            } else {
+                                history3Binding.layProgress.setVisibility(View.GONE);
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserProfile> call, Throwable t) {
+                        Log.d("TAG", "send_WorkHistoryDate_1() onFailure: " + t.getMessage());
+                        Utils.displayToast(context, getResources().getString(R.string.something_when_wrong));
+                        if (history2Binding != null) {
+                            history2Binding.layProgress.setVisibility(View.GONE);
+                        } else {
+                            history3Binding.layProgress.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+
+    }
+
     ActivityResultLauncher<Intent> resultLauncherCertificate = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
-                    File file = new File(getPath(context, data.getData()));
+                    File file = null;
+//                    try {
+                    if (result.getData() == null || result.getData().getScheme() == null) {
+                        Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
+                        return;
+                    }
+                    try {
+                        file = new File(FileUtils.getPath(getApplicationContext(), data.getData()));
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Log.d("TAG", ": " + e.getMessage());
+                        crashlytics.recordException(e);
+                    }
                     String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
                     Log.d("TAG", file.length() + " size : " + str);
                     if (!(file.getName().endsWith(".png") || file.getName().endsWith(".jpg")
                             || file.getName().endsWith(".jpeg"))) {
                         Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
-                    }
-                    double sis = Double.parseDouble(Utils.getFileSize_size(file.length()));
-                    if ((sis > 5 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
-                        Utils.displayToast(context, "Select File less than equal to 5 MB");
                         return;
                     }
+                    try {
+                        double sis = Double.parseDouble(Utils.getFileSize_size(file.length()));
+                        if ((sis > 5 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
+                            Utils.displayToast(context, "Select File less than equal to 5 MB");
+                            return;
+                        }
+                    } catch (NumberFormatException exception) {
+                        Log.d("TAG", ": " + exception.getMessage());
+                        crashlytics.recordException(exception);
+                    }
+//                    } catch (Exception e) {
+//                    Utils.displayToast(context, "uri " + data.getData());
+//                    Utils.displayToast(context, "file " + file.getAbsolutePath());
+//                        Log.d("TAG", "resultLauncherCertificate: " + e.getMessage());
+//                        crashlytics.recordException(e);
+//                        return;
+//                    }
                     if (file != null) {
                         uploadCertificate = file.getAbsolutePath();
-                        Glide.with(context).load(file.getAbsolutePath()).into(history2Binding.imgCertificate);
-                        history2Binding.imgCertificate.setVisibility(View.VISIBLE);
+                        if (history2Binding != null) {
+                            Glide.with(context).load(file.getAbsolutePath()).into(history2Binding.imgCertificate);
+                            history2Binding.imgCertificate.setVisibility(View.VISIBLE);
+                        } else if (history3Binding != null) {
+                            Glide.with(context).load(file.getAbsolutePath()).into(history3Binding.imgCertificate);
+                            history3Binding.imgCertificate.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             });
@@ -3209,32 +6089,52 @@ public class RegisterActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
-                    if (data.getData() == null) {
-                        Log.d("TAG", ": empty uri");
+                    File file = null;
+//                    try {
+                    if (result.getData() == null || result.getData().getScheme() == null) {
+                        Utils.displayToast(context, "Select Proper File Format. Only pdf,doc,docx are allowed");
                         return;
                     }
-                    File file = null;
                     try {
-                        file = new File(getPath(context, data.getData()));
-                        String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
-                        Log.d("TAG", file.length() + " size : " + str);
-                        if (!(file.getName().endsWith(".pdf") || file.getName().endsWith(".doc")
-                                || file.getName().endsWith(".docx"))) {
-                            Utils.displayToast(context, "Select Proper File Format. Only pdf,doc,docx are allowed");
-                        }
+                        file = new File(FileUtils.getPath(getApplicationContext(), data.getData()));
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Log.d("TAG", ": " + e.getMessage());
+                        crashlytics.recordException(e);
+                    }
+                    String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
+                    Log.d("TAG", file.length() + " size : " + str);
+                    if (!(file.getName().endsWith(".pdf") || file.getName().endsWith(".doc")
+                            || file.getName().endsWith(".docx"))) {
+                        Utils.displayToast(context, "Select Proper File Format. Only pdf,doc,docx are allowed");
+                        return;
+                    }
+                    try {
                         double sis = Double.parseDouble(Utils.getFileSize_size(file.length()));
-                        if ((sis > 1 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
-                            Utils.displayToast(context, "Select File less than equal to 1 MB");
+                        if ((sis > 5 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
+                            Utils.displayToast(context, "Select File less than equal to 5 MB");
                             return;
                         }
-
-                    } catch (Exception e) {
-                        Utils.displayToast(context, "Select file is damage");
+                    } catch (NumberFormatException exception) {
+                        Log.d("TAG", ": " + exception.getMessage());
+                        crashlytics.recordException(exception);
                     }
-                    if (file != null)
+
+//                    } catch (Exception e) {
+//                    Utils.displayToast(context, "uri " + data.getData());
+//                    Utils.displayToast(context, "file " + file.getAbsolutePath());
+//                        Log.d("TAG", "resultLauncherPDF: " + e.getMessage());
+//                        crashlytics.recordException(e);
+//                    return;
+//                    }
+                    if (file != null) {
                         list_Files.add(file.getAbsolutePath());
-                    if (filesAdapter != null)
-                        filesAdapter.notifyDataSetChanged();
+                        if (selected_list_Files == null)
+                            selected_list_Files = new ArrayList<>();
+                        selected_list_Files.add(file.getAbsolutePath());
+                        if (filesAdapter != null)
+                            filesAdapter.notifyDataSetChanged();
+                    }
                 }
             });
     ActivityResultLauncher<Intent> resultLauncherPhotos = registerForActivityResult(
@@ -3242,27 +6142,51 @@ public class RegisterActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     File file = null;
+//                    try {
+                    if (result.getData() == null || result.getData().getScheme() == null) {
+                        Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
+                        return;
+                    }
                     try {
-                        file = new File(getPath(context, data.getData()));
-                        String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
-                        Log.d("TAG", file.length() + " size : " + str);
-                        if (!(file.getName().endsWith(".png") || file.getName().endsWith(".jpg")
-                                || file.getName().endsWith(".jpeg"))) {
-                            Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
-                        }
+                        file = new File(FileUtils.getPath(getApplicationContext(), data.getData()));
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Log.d("TAG", ": " + e.getMessage());
+                        crashlytics.recordException(e);
+                    }
+                    String str = Utils.getFileSize(Long.parseLong(String.valueOf(file.length())));
+                    Log.d("TAG", file.length() + " size : " + str);
+                    if (!(file.getName().endsWith(".png") || file.getName().endsWith(".jpg")
+                            || file.getName().endsWith(".jpeg"))) {
+                        Utils.displayToast(context, "Select Proper Image Format. Only png, jpg, jpeg are allowed");
+                        return;
+                    }
+                    try {
                         double sis = Double.parseDouble(Utils.getFileSize_size(file.length()));
                         if ((sis > 5 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
                             Utils.displayToast(context, "Select File less than equal to 5 MB");
                             return;
                         }
-                    } catch (Exception e) {
-                        Utils.displayToast(context, "Select file is damage");
-                        return;
+                    } catch (NumberFormatException exception) {
+                        Log.d("TAG", ": " + exception.getMessage());
+                        crashlytics.recordException(exception);
                     }
-                    if (file != null)
+//                    } catch (Exception e) {
+//                    Utils.displayToast(context, "uri " + data.getData());
+//                    Utils.displayToast(context, "file " + file.getAbsolutePath());
+//                    Log.d("TAG", "resultLauncherPhotos: " + e.getMessage());
+//                    crashlytics.recordException();
+
+//                        return;
+//                    }
+                    if (file != null) {
                         list_photos.add(file.getAbsolutePath());
-                    if (photoFilesAdapter != null)
-                        photoFilesAdapter.notifyDataSetChanged();
+                        if (selected_list_photos == null)
+                            selected_list_photos = new ArrayList<>();
+                        selected_list_photos.add(file.getAbsolutePath());
+                        if (photoFilesAdapter != null)
+                            photoFilesAdapter.notifyDataSetChanged();
+                    }
                 }
             });
     ActivityResultLauncher<String[]> startForResultPermission = registerForActivityResult(
@@ -3275,5 +6199,87 @@ public class RegisterActivity extends AppCompatActivity {
                     Utils.displayToast(context, "Important Permission Denied !");
                 }
             });
+
+    private void getNurseProfile(LinearLayout layProgressBar, Dialog dialog, int flag) {
+        if (!Utils.isNetworkAvailable(context)) {
+            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+            return;
+        }
+        layProgressBar.setVisibility(View.VISIBLE);
+
+        String user_id = new SessionManager(getApplicationContext()).get_user_register_Id();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+
+        Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
+                .call_nurse_profile(user_id1);
+
+        call.enqueue(new Callback<UserProfile>() {
+            @Override
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                if (response.body() == null) {
+                    try {
+                        layProgressBar.setVisibility(View.GONE);
+                        closeDialogPage_1(flag);
+                        Log.d("TAG", "onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+                if (response.body().getApiStatus().equals("1")) {
+                    layProgressBar.setVisibility(View.GONE);
+                    model = response.body().getData();
+                    new SessionManager(context).save_user(model);
+                    closeDialogPage_1(flag);
+
+                } else {
+//                    Utils.displayToast(context, "Data has not been updated");
+                    closeDialogPage_1(flag);
+                    layProgressBar.setVisibility(View.GONE);
+                }
+
+
+                layProgressBar.setVisibility(View.GONE);
+            }
+
+            private void closeDialogPage_1(int flag) {
+                if (flag == 4) {
+                    if (edit_mode) {
+                        dialog.dismiss();
+                        setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                new Gson().toJson(model)));
+                        finish();
+                    } else {
+                        layProgressBar.setVisibility(View.GONE);
+                        workDialog3();
+                        dialog.dismiss();
+                    }
+                } else if (flag == 3) {
+                    dialog.dismiss();
+                    chooseOption();
+                } else if (flag == 2) {
+
+                } else {
+                    if (edit_mode) {
+                        dialog.dismiss();
+                        setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
+                                new Gson().toJson(model)));
+                        finish();
+                    } else {
+                        dialog.dismiss();
+                        roleDialog2();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserProfile> call, Throwable t) {
+                layProgressBar.setVisibility(View.GONE);
+                Log.e("TAG" + "getNurseProfile", t.toString());
+                closeDialogPage_1(flag);
+            }
+        });
+
+    }
 
 }

@@ -1,70 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="17dp"
         android:paddingHorizontal="23dp"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:src="@drawable/test2"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:src="@drawable/test2" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Margaret Sanger"
-                    android:textSize="20dp"
-                    android:fontFamily="@font/sf_600"
-                    android:textColor="@color/black"/>
+                android:layout_marginLeft="19dp"
+                android:orientation="vertical">
+
                 <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_star_grey"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Margaret Sanger"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/sf_600"
+                        android:textColor="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star_grey" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="4.5"
+                            android:textSize="20dp"
+                            android:fontFamily="@font/sf_600"
+                            android:textColor="#9C9E9F" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="4.5"
-                    android:textSize="20dp"
-                    android:fontFamily="@font/sf_600"
-                    android:textColor="#9C9E9F"/>
+                    android:text="Today, 9:41 am"
+                    android:textSize="15dp"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/sf_400"
+                    android:textColor="#ACACAD" />
             </LinearLayout>
-            </LinearLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Today, 9:41 am"
-                android:textSize="15dp"
-                android:layout_marginTop="3dp"
-                android:fontFamily="@font/sf_400"
-                android:textColor="#ACACAD"/>
         </LinearLayout>
-    </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,90 +83,103 @@
             android:textSize="22dp"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/sf_600"
-            android:textColor="@color/black"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:src="@drawable/peroid"
-            android:layout_gravity="center"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:text="10 Week"
-            android:textSize="13dp"
-            android:fontFamily="@font/sf_500"
-            android:textColor="@color/black"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:text="$ 20.00/Hr"
-            android:textSize="18dp"
-            android:fontFamily="@font/sf_600"
-            android:textColor="@color/black"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:text="Shift:"
-            android:textSize="13dp"
-            android:fontFamily="@font/sf_500"
-            android:textColor="#7E92A0"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="9dp"
-            android:text="Days"
-            android:textSize="13dp"
-            android:fontFamily="@font/sf_500"
-            android:textColor="@color/black"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:text="Work Days:"
-            android:textSize="13dp"
-            android:fontFamily="@font/sf_500"
-            android:textColor="#7E92A0"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="9dp"
-            android:text="W, Th, F"
-            android:textSize="13dp"
-            android:fontFamily="@font/sf_500"
-            android:textColor="@color/black"/>
-    </LinearLayout>
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:src="@drawable/peroid"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="10 Week"
+                android:textSize="13dp"
+                android:fontFamily="@font/sf_500"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="$ 20.00/Hr"
+                android:textSize="18dp"
+                android:fontFamily="@font/sf_600"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="Shift:"
+                android:textSize="13dp"
+                android:fontFamily="@font/sf_500"
+                android:textColor="#7E92A0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:text="Days"
+                android:textSize="13dp"
+                android:fontFamily="@font/sf_500"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="Work Days:"
+                android:textSize="13dp"
+                android:fontFamily="@font/sf_500"
+                android:textColor="#7E92A0" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:text="W, Th, F"
+                android:textSize="13dp"
+                android:fontFamily="@font/sf_500"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/ic_calendar_black"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,7 +187,8 @@
                 android:text="Start Date"
                 android:textSize="13dp"
                 android:fontFamily="@font/sf_400"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -174,18 +199,21 @@
                 android:textSize="13dp"
                 android:fontFamily="@font/sf_600"
                 android:textColor="@color/white"
-                android:background="@drawable/btn_corner_secondary"/>
+                android:background="@drawable/btn_corner_secondary" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/ic_calendar_black"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -193,7 +221,8 @@
                 android:text="End Date"
                 android:textSize="13dp"
                 android:fontFamily="@font/sf_400"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -204,11 +233,12 @@
                 android:textSize="13dp"
                 android:fontFamily="@font/sf_600"
                 android:textColor="@color/white"
-                android:background="@drawable/btn_corner_secondary"/>
+                android:background="@drawable/btn_corner_secondary" />
         </LinearLayout>
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="#F4F3F9"/>
+        android:background="#F4F3F9" />
 </LinearLayout>

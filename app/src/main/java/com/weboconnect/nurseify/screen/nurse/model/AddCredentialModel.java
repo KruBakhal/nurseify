@@ -7,7 +7,7 @@ public class AddCredentialModel {
 
     @SerializedName("api_status")
     @Expose
-    private Integer apiStatus;
+    private String apiStatus;
     @SerializedName("message")
     @Expose
     private String message;
@@ -15,11 +15,11 @@ public class AddCredentialModel {
     @Expose
     private AddCredentialData data;
 
-    public Integer getApiStatus() {
+    public String getApiStatus() {
         return apiStatus;
     }
 
-    public void setApiStatus(Integer apiStatus) {
+    public void setApiStatus(String apiStatus) {
         this.apiStatus = apiStatus;
     }
 

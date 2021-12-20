@@ -1,18 +1,33 @@
 package com.weboconnect.nurseify.utils;
 
+import static android.os.Build.VERSION.SDK_INT;
+
+import android.os.Build;
+
 public class Constant {
 
 
+    public static final int REQUEST_EDIT = 333;
+    public static final int REQUEST_Browse_Job_FUNS = 456;
+    public static final String POSITION = "POSITION";
+    public static final String SCROLL_TO = "SCROLL_TO";
+    public static final String ADD = "Add";
+    public static final String FLAG = "flag";
+    public static final String DEVICE_INFO = "Device: " + Build.DEVICE + " Model: " + Build.MODEL + " Version: " + SDK_INT + "";
     // person session constant
     public static String CONST_NURSE_TYPE = "Nurse";
     public static String CONST_FACULTY_TYPE = "Faculty";
     public static String TYPE = "type";
     public static String User_Register_ID = "register_id";
     public static final String API_KEY = "api_key";
+    public static final String SECTION = "section";
     public static final String PERSON_DETAIL = "personal_detail";
     public static final String HOURLY_RATE_AVAILABILITY = "hourly_rate_availability";
+    public static final String Work_History_Experience = "Work_History_Experience";
     public static final String Work_History_Certifications = "Work_History_Certifications";
-    public static final String Role_Interest = "Role_Interest";
+    public static final String Work_History_Resume = "Work_History_Resume";
+    public static final String Role_Interest1 = "Role_Interest1";
+    public static final String Role_Interest2 = "Role_Interest2";
     // extra constant
     public static String USER_NAME = "user_name";
     public static String EMAIL_ID = "email";
@@ -28,9 +43,11 @@ public class Constant {
 
     // intent param
     public static String STR_RESPONSE_DATA = "response_data";
+    public static String STR_WORK_CERTIFICATE = "STR_WORK_CERTIFICATE";
 
     // data constant
     public static final String EDIT_MODE = "Edit_Mode";
 
 
+    public static int REQUEST_Facility_FUNS = 457;
 }

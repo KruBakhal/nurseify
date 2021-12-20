@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
@@ -8,66 +8,75 @@
     android:layout_marginBottom="6dp"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minWidth="78dp"
-        android:orientation="horizontal">
+
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:orientation="vertical">
+            android:minWidth="78dp"
+            android:orientation="horizontal">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/messageText"
+                android:layout_marginLeft="12dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/messageText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Applications for the recording and management of a patient’s  #vital signs."
+                        android:minHeight="70dp"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Applications for the recording and management of a patient’s  #vital signs."
-                    android:minHeight="70dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:textSize="16dp"
-                    android:textColor="@color/black"/>
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/imgClose"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        app:tint="@color/black"
+                        android:src="@drawable/ic_close" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23 July"
+                    android:textSize="12dp"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:fontFamily="@font/sf_400"
+                    android:textColor="#66000000" />
             </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="23dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1">
-               <ImageView
-                   android:id="@+id/imgClose"
-                   android:layout_width="17dp"
-                   android:layout_height="17dp"
-                   app:tint="@color/black"
-                   android:src="@drawable/ic_close"/>
-            </LinearLayout>
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="23 July"
-                android:textSize="12dp"
-                android:layout_gravity="bottom"
-                android:gravity="bottom"
-                android:fontFamily="@font/sf_400"
-                android:textColor="#66000000"/>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 </LinearLayout>

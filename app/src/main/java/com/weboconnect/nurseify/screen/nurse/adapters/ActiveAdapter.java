@@ -1,34 +1,49 @@
 package com.weboconnect.nurseify.screen.nurse.adapters;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.screen.nurse.ActiveJobDetailsActivity;
+import com.weboconnect.nurseify.intermediate.OfferedJobCallback;
+import com.weboconnect.nurseify.screen.nurse.model.ActiveModel;
+import com.weboconnect.nurseify.screen.nurse.model.JobModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder> {
+public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder> implements Filterable {
 
+    private List<ActiveModel.ActiveDatum> list;
+    private List<ActiveModel.ActiveDatum> copy_contactList;
+    private final OfferedJobCallback callback;
     Activity activity;
 
-    public ActiveAdapter(Activity activity) {
+    public ActiveAdapter(Activity activity, List<ActiveModel.ActiveDatum> list, OfferedJobCallback callback) {
         this.activity = activity;
+        this.list = list;
+        this.copy_contactList = list;
+        this.callback = callback;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_active,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_active, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -36,23 +51,40 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
+            ActiveModel.ActiveDatum datum = list.get(position);
+            try {
+                Glide.with(holder.itemView.getContext()).load(datum.getFacilityLogo())
+                        .placeholder(R.drawable.test1)
+                        .error(R.drawable.test1).into(holder.imageView);
+            } catch (Exception e) {
+
+            }
+            holder.tv_name.setText("" + datum.getFacilityName());
+            holder.tv_title.setText("" + datum.getTitle());
+            holder.tv_duration.setText("" + datum.getWorkDurationDefinition());
+            holder.tv_shift.setText("" + datum.getShiftDefinition());
+            holder.tv_workingDay.setText("" + datum.getWorkDays());
+            holder.tv_amount.setText("$ " + datum.getHourlyRate() + "/Hr");
+            holder.tv_start_date.setText("" + datum.getStartDate());
 
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.startActivity(new Intent(activity, ActiveJobDetailsActivity.class));
+                    callback.onClick(position);
                 }
             });
 
-        }catch (Exception e){
-            Log.e("ActiveAdapter ",e.toString());
+        } catch (Exception e) {
+            Log.e("ActiveAdapter ", e.toString());
 
         }
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        if (list == null || list.size() == 0)
+            return 0;
+        return list.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -81,6 +113,53 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
             tv_amount = itemView.findViewById(R.id.tv_amount);
             tv_start_date = itemView.findViewById(R.id.tv_start_date);
 
+        }
+    }
+
+    private Filter fRecords;
+
+    @Override
+    public Filter getFilter() {
+
+        if (fRecords == null) {
+            fRecords = new RecordFilter1();
+        }
+
+        return fRecords;
+    }
+
+    public class RecordFilter1 extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            final FilterResults oReturn = new FilterResults();
+            final ArrayList<ActiveModel.ActiveDatum> results = new ArrayList<>();
+            if (list != null)
+
+                if (constraint != null && !TextUtils.isEmpty(constraint)) {
+                    if (copy_contactList != null && copy_contactList.size() > 0) {
+                        for (ActiveModel.ActiveDatum g : copy_contactList) {
+
+                            if (g.getTitle().toLowerCase()
+                                    .startsWith(constraint.toString().toLowerCase()))
+                                results.add(g);
+
+                        }
+
+
+                    }
+                    oReturn.values = results;
+                } else {
+                    oReturn.count = copy_contactList.size();
+                    oReturn.values = copy_contactList;
+                }
+            return oReturn;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            list = (List<ActiveModel.ActiveDatum>) filterResults.values;
+            notifyDataSetChanged();
         }
     }
 }

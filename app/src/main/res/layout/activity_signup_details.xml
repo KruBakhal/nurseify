@@ -64,14 +64,15 @@
                         android:layout_width="103dp"
                         android:layout_height="103dp"
                         android:src="@drawable/logo_circle"
+                        app:tint="#8A4999"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
+                        android:layout_width="61dp"
+                        android:layout_height="61dp"
                         android:src="@drawable/logo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -108,10 +109,10 @@
                         android:hint="*************"
                         android:imeOptions="actionNext"
                         android:inputType="textPassword"
+                        android:maxLength="255"
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textCursorDrawable="@drawable/effect_cursor_color"
-
                         android:textSize="16dp" />
 
                     <View
@@ -153,7 +154,6 @@
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textCursorDrawable="@drawable/effect_cursor_color"
-
                         android:textSize="16dp" />
 
                     <View
@@ -181,10 +181,10 @@
                         android:hint="ex. Texas"
                         android:imeOptions="actionNext"
                         android:inputType="text"
+                        android:maxLength="15"
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textCursorDrawable="@drawable/effect_cursor_color"
-
                         android:textSize="16dp" />
 
                     <View
@@ -210,9 +210,9 @@
                         android:background="@color/trans"
                         android:fontFamily="@font/sf_500"
                         android:hint="XXXXXXXXXXXXXXX"
-                        android:imeOptions="actionNext"
+                        android:imeOptions="actionDone"
                         android:inputType="text"
-                        android:nextFocusForward="@id/tv_specialty"
+                        android:maxLength="20"
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textCursorDrawable="@drawable/effect_cursor_color"

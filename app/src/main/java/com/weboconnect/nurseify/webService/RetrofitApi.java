@@ -2,10 +2,15 @@ package com.weboconnect.nurseify.webService;
 
 
 import com.weboconnect.nurseify.adapter.LikeModel;
+import com.weboconnect.nurseify.screen.nurse.model.ActiveModel;
 import com.weboconnect.nurseify.screen.nurse.model.AddCredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.CernersModel;
+import com.weboconnect.nurseify.screen.nurse.model.CityModel;
+import com.weboconnect.nurseify.screen.nurse.model.CompletedJobModel;
+import com.weboconnect.nurseify.screen.nurse.model.CountryModel;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
+import com.weboconnect.nurseify.screen.nurse.model.Degree_Datum;
 import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
 import com.weboconnect.nurseify.screen.nurse.model.FollowFacilityModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
@@ -13,17 +18,21 @@ import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionMo
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageModel;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesModel;
+import com.weboconnect.nurseify.screen.nurse.model.MyJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
 import com.weboconnect.nurseify.screen.nurse.model.NurseProfileModel;
 import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
+import com.weboconnect.nurseify.screen.nurse.model.PrivacyPolicyModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.screen.nurse.model.RoleModel;
+import com.weboconnect.nurseify.screen.nurse.model.RoleModel2;
 import com.weboconnect.nurseify.screen.nurse.model.SettingModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.screen.nurse.model.WorkHistorysModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
+import com.weboconnect.nurseify.screen.nurse.sample.SampleModel;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -39,6 +48,10 @@ import retrofit2.http.Query;
 public interface RetrofitApi {
 
     @Multipart
+    @POST("testing")
+    Call<SampleModel> call_test(@Part("id") RequestBody aasd);
+
+    @Multipart
     @POST("login")
     Call<UserProfile> call_login_check_user(
             @Part("email") RequestBody aasd,
@@ -51,8 +64,8 @@ public interface RetrofitApi {
     Call<UserProfile> call_Signup(
             @Part("first_name") RequestBody first_name,
             @Part("last_name") RequestBody last_name,
-            @Part("mobile") RequestBody mobile,
             @Part("email") RequestBody email,
+            @Part("mobile") RequestBody mobile,
             @Part("password") RequestBody password,
             @Part("nursing_license_state") RequestBody nursing_license_state,
             @Part("nursing_license_number") RequestBody nursing_license_number,
@@ -72,6 +85,40 @@ public interface RetrofitApi {
 
     @POST("state-list")
     Observable<StateModel> call_state();
+
+    @Multipart
+    @POST("get-states")
+    Call<StateModel> call_state_ID(@Part("country_id") RequestBody id);
+
+    @Multipart
+    @POST("get-states")
+    Observable<StateModel> call_state_ID_2(@Part("country_id") RequestBody id);
+
+    @Multipart
+    @POST("get-cities")
+    Call<CityModel> call_city_ID(@Part("state_id") RequestBody id);
+
+    @POST("get-countries")
+    Observable<CountryModel> call_Country();
+
+    @Multipart
+    @POST("personal-detail")
+    Call<UserProfile> call_PersonalDetail(
+            @Part("id") RequestBody id,
+            @Part("first_name") RequestBody first_name,
+            @Part("last_name") RequestBody last_name,
+            @Part("email") RequestBody email,
+            @Part("mobile") RequestBody mobile,
+            @Part("nursing_license_state") RequestBody nursing_license_state,
+            @Part("nursing_license_number") RequestBody nursing_license_number,
+            @Part("specialty") RequestBody specialty,
+            @Part("address") RequestBody address,
+            @Part("city") RequestBody city,
+            @Part("state") RequestBody state,
+            @Part("postcode") RequestBody postcode,
+            @Part("country") RequestBody country,
+            @Part MultipartBody.Part image
+    );
 
     @Multipart
     @POST("personal-detail")
@@ -120,12 +167,11 @@ public interface RetrofitApi {
     Observable<DegreeModel> call_nursing_degrees_options();
 
     @POST("get-cerner-medtech-epic-options")
-    Observable<CernersModel> call_cerner_medtech_epic_options();
+    Observable<DegreeModel> call_cerner_medtech_epic_options();
 
     @Multipart
     @POST("experience")
-    Call<WorkHistorysModel> call_send_WorkHistory_Experience(
-
+    Call<UserProfile> call_send_WorkHistory_Experience(
             @Part("highest_nursing_degree") RequestBody highest_nursing_degree,
             @Part("college_uni_name") RequestBody college_uni_name,
             @Part("college_uni_city") RequestBody college_uni_city,
@@ -167,13 +213,35 @@ public interface RetrofitApi {
       );*/
     @Multipart
     @POST("add-credentials")
-    Call<AddCredentialModel> call_send_WorkHistory_Certificate(
+    Call<AddCredentialModel> call_send_WorkHistory_Certificate_add(
             @Part("id") RequestBody id,
             @Part("type") RequestBody highest_nursing_degree,
             @Part("effective_date") RequestBody college_uni_name,
             @Part("expiration_date") RequestBody college_uni_city,
-            @Part MultipartBody.Part certificate_image,
-            @Part MultipartBody.Part uploadResume
+            @Part MultipartBody.Part certificate_image
+
+    );
+
+    @Multipart
+    @POST("edit-credentials")
+    Call<AddCredentialModel> call_send_WorkHistory_Certificate(
+            @Part("user_id") RequestBody id,
+            @Part("certificate_id") RequestBody certificate_id,
+            @Part("type") RequestBody highest_nursing_degree,
+            @Part("effective_date") RequestBody college_uni_name,
+            @Part("expiration_date") RequestBody college_uni_city,
+            @Part MultipartBody.Part certificate_image
+
+    );
+
+    @Multipart
+    @POST("edit-credentials")
+    Call<AddCredentialModel> call_send_WorkHistory_Certificate(
+            @Part("user_id") RequestBody id,
+            @Part("certificate_id") RequestBody certificate_id,
+            @Part("type") RequestBody highest_nursing_degree,
+            @Part("effective_date") RequestBody college_uni_name,
+            @Part("expiration_date") RequestBody college_uni_city
 
     );
 
@@ -205,7 +273,7 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("role-and-interest/page-2")
-    Call<RoleModel> call_role_interest_2(
+    Call<RoleModel2> call_role_interest_2(
             @Part("id") RequestBody id,
             @Part("summary") RequestBody serving_preceptor,
             @Part("nu_video") RequestBody serving_interim_nurse_leader,
@@ -219,19 +287,26 @@ public interface RetrofitApi {
                                            @Part("open_assignment_type") RequestBody open_assignment_type,
                                            @Part("facility_type") RequestBody facility_type,
                                            @Part("electronic_medical_records") RequestBody electronic_medical_records,
-                                           @Part("user_id") RequestBody user_id
-
+                                           @Part("user_id") RequestBody user_id,
+                                           @Part("hourly_range") RequestBody range
     );
 
     @Multipart
     @POST("browse-jobs")
-    Call<JobModel> call_browser_filter_job(@Query("page") String page);
+    Call<JobModel> call_browser_job(@Query("page") String page, @Part("user_id") RequestBody user_id);
 
     @Multipart
     @POST("job-like")
-    Call<LikeModel> call_like_job(@Part("user_id") RequestBody user_id, @Part("job_id") RequestBody job_id,
-                                  @Part("like") RequestBody like);
+    Call<ResponseModel> call_like_job(@Part("user_id") RequestBody user_id, @Part("job_id") RequestBody job_id,
+                                      @Part("like") RequestBody like);
 
+    @Multipart
+    @POST("job-applied")
+    Call<ResponseModel> call_job_applied(
+            @Part("user_id") RequestBody user_id,
+            @Part("job_id") RequestBody job_id,
+            @Part("type") RequestBody type
+    );
 
     @Multipart
     @POST("browse-facility")
@@ -240,9 +315,10 @@ public interface RetrofitApi {
             @Part("user_id") RequestBody user_id
     );
 
+
     @Multipart
     @POST("facility-follow")
-    Call<FollowFacilityModel> call_follow_facility(
+    Call<ResponseModel> call_follow_facility(
             @Part("user_id") RequestBody user_id,
             @Part("facility_id") RequestBody facility_id,
             @Part("type") RequestBody type
@@ -250,7 +326,7 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("facility-like")
-    Call<FollowFacilityModel> call_like_facility(
+    Call<ResponseModel> call_like_facility(
             @Part("user_id") RequestBody user_id,
             @Part("facility_id") RequestBody facility_id,
             @Part("like") RequestBody like
@@ -265,28 +341,28 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("job-accept")
-    Call<ResponseModel> call_offered_job_accept(
+    Call<PrivacyPolicyModel> call_offered_job_accept(
             @Part("user_id") RequestBody user_id,
             @Part("job_id") RequestBody job_id
     );
 
     @Multipart
     @POST("job-reject")
-    Call<ResponseModel> call_offered_job_reject(
+    Call<PrivacyPolicyModel> call_offered_job_reject(
             @Part("user_id") RequestBody user_id,
             @Part("job_id") RequestBody job_id
     );
 
     @Multipart
     @POST("job-active")
-    Call<OfferedJobModel> call_active_job(
+    Call<ActiveModel> call_active_job(
             @Query("page") String page,
             @Part("user_id") RequestBody user_id
     );
 
     @Multipart
     @POST("job-completed")
-    Call<OfferedJobModel> call_completed_job(
+    Call<CompletedJobModel> call_completed_job(
             @Query("page") String page,
             @Part("user_id") RequestBody user_id
     );
@@ -305,16 +381,124 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("get-nurse-profile")
-    Call<NurseProfileModel> call_nurse_profile(
+    Call<UserProfile> call_nurse_profile(
             @Part("user_id") RequestBody user_id
     );
 
     @Multipart
     @POST("remove-credentials-image")
-    Call<ResponseModel> call_remove_image(
+    Call<ResponseModel> call_remove_certificate_image(
             @Part("user_id") RequestBody user_id,
-            @Part("certificate_image") RequestBody certificate_image,
             @Part("certificate_id") RequestBody certificate_id
     );
 
+    @Multipart
+    @POST("remove-role-interest-doc")
+    Call<ResponseModel> call_remove_Asset_image(
+            @Part("user_id") RequestBody user_id,
+            @Part("asset_id") RequestBody certificate_id
+    );
+
+    @POST("facility-types")
+    Observable<SpecialtyModel> call_facility_types();
+
+    @POST("get-emedical-records")
+    Observable<SpecialtyModel> call_get_medica_records();
+
+    @Multipart
+    @POST("update-profile-picture")
+    Call<UserProfile> call_Profile_Photos(@Part("user_id") RequestBody user_id,
+                                          @Part MultipartBody.Part image);
+
+    @Multipart
+    @POST("nurse-resume")
+    Call<UserProfile> call_Resume_upload(@Part("user_id") RequestBody user_id,
+                                         @Part MultipartBody.Part image);
+
+    @Multipart
+    @POST("update-role-interest")
+    Call<UserProfile> call_EDIT_role_interest(
+            @Part("user_id") RequestBody id,
+            @Part("serving_preceptor") RequestBody serving_preceptor,
+            @Part("serving_interim_nurse_leader") RequestBody serving_interim_nurse_leader,
+            @Part("leadership_roles") RequestBody leadership_roles,
+            @Part("linical_educator") RequestBody linical_educator,
+            @Part("is_daisy_award_winner") RequestBody is_daisy_award_winner,
+            @Part("employee_of_the_mth_qtr_yr") RequestBody employee_of_the_mth_qtr_yr,
+            @Part("other_nursing_awards") RequestBody other_nursing_awards,
+            @Part("is_professional_practice_council") RequestBody is_professional_practice_council,
+            @Part("is_research_publications") RequestBody is_research_publications,
+            @Part("languages") RequestBody languages,
+            @Part("summary") RequestBody serving_preceptor1,
+            @Part("nu_video") RequestBody serving_interim_nurse_leader1,
+            @Part MultipartBody.Part[] leadership_roles1,
+            @Part MultipartBody.Part[] linical_educator1
+
+    );
+
+    @Multipart
+    @POST("update-role-interest")
+    Call<UserProfile> call_EDIT_role_interest(
+            @Part("user_id") RequestBody id,
+            @Part("serving_preceptor") RequestBody serving_preceptor,
+            @Part("serving_interim_nurse_leader") RequestBody serving_interim_nurse_leader,
+            @Part("leadership_roles") RequestBody leadership_roles,
+            @Part("linical_educator") RequestBody linical_educator,
+            @Part("is_daisy_award_winner") RequestBody is_daisy_award_winner,
+            @Part("employee_of_the_mth_qtr_yr") RequestBody employee_of_the_mth_qtr_yr,
+            @Part("other_nursing_awards") RequestBody other_nursing_awards,
+            @Part("is_professional_practice_council") RequestBody is_professional_practice_council,
+            @Part("is_research_publications") RequestBody is_research_publications,
+            @Part("languages") RequestBody languages,
+            @Part("summary") RequestBody serving_preceptor1,
+            @Part("nu_video") RequestBody serving_interim_nurse_leader1,
+            @Part MultipartBody.Part[] leadership_roles1
+    );
+
+    @Multipart
+    @POST("update-role-interest")
+    Call<UserProfile> call_EDIT_role_interest(
+            @Part("user_id") RequestBody id,
+            @Part("serving_preceptor") RequestBody serving_preceptor,
+            @Part("serving_interim_nurse_leader") RequestBody serving_interim_nurse_leader,
+            @Part("leadership_roles") RequestBody leadership_roles,
+            @Part("linical_educator") RequestBody linical_educator,
+            @Part("is_daisy_award_winner") RequestBody is_daisy_award_winner,
+            @Part("employee_of_the_mth_qtr_yr") RequestBody employee_of_the_mth_qtr_yr,
+            @Part("other_nursing_awards") RequestBody other_nursing_awards,
+            @Part("is_professional_practice_council") RequestBody is_professional_practice_council,
+            @Part("is_research_publications") RequestBody is_research_publications,
+            @Part("languages") RequestBody languages,
+            @Part("summary") RequestBody serving_preceptor1,
+            @Part("nu_video") RequestBody serving_interim_nurse_leader1
+    );
+
+    @POST("privacy-policy")
+    Call<PrivacyPolicyModel> call_privacy_policy();
+
+    @POST("terms-conditions")
+    Call<PrivacyPolicyModel> call_terms_conditions();
+
+    @POST("about-app")
+    Call<PrivacyPolicyModel> call_about_app();
+
+    @Multipart
+    @POST("forgot-password")
+    Call<ResponseModel> call_forget_password(@Part("email") RequestBody email_id);
+
+    @Multipart
+    @POST("view-job-detail")
+    Call<MyJobModel> call_view_job_detail(@Part("user_id") RequestBody user_id, @Part("offer_id") RequestBody offer_id);
+
+    @Multipart
+    @POST("facility-rating")
+    Call<ResponseModel> call_facility_rating(@Part("user_id") RequestBody user_id,
+                                             @Part("facility_id") RequestBody offer_id,
+                                             @Part("overall") RequestBody overall,
+                                             @Part("on_board") RequestBody on_board,
+                                             @Part("nurse_team_work") RequestBody nurse_team_work,
+                                             @Part("leadership_support") RequestBody leadership_support,
+                                             @Part("tools_todo_my_job") RequestBody tools_todo_my_job,
+                                             @Part("experience") RequestBody experience
+    );
 }

@@ -82,12 +82,12 @@ public class FileUtils {
                         };
                         for (String contentUriPrefix : contentUriPrefixesToTry) {
                             try {
-                                final Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
+//                                final Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
 
                          /*   final Uri contentUri = ContentUris.withAppendedId(
                                     Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));*/
 
-                                return getDataColumn(context, contentUri, null, null);
+                                return getDataColumn(context, uri, null, null);
                             } catch (NumberFormatException e) {
                                 //In Android 8 and Android P the id is not a number
                                 return uri.getPath().replaceFirst("^/document/raw:", "").replaceFirst("^raw:", "");
@@ -131,9 +131,11 @@ public class FileUtils {
                     contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                } else {
+                    contentUri = MediaStore.Files.getContentUri("external");
                 }
-                  selection = "_id=?";
-                 selectionArgs = new String[]{split[1]};
+                selection = "_id=?";
+                selectionArgs = new String[]{split[1]};
 
 
                 return getDataColumn(context, contentUri, selection,
@@ -154,16 +156,14 @@ public class FileUtils {
             if (isGoogleDriveUri(uri)) {
                 return getDriveFilePath(uri, context);
             }
-             if( Build.VERSION.SDK_INT == Build.VERSION_CODES.N)
-             {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
                 // return getFilePathFromURI(context,uri);
-                 return getMediaFilePathForN(uri, context);
+                return getMediaFilePathForN(uri, context);
                 // return getRealPathFromURI(context,uri);
-             }else
-             {
+            } else {
 
-                 return getDataColumn(context, uri, null, null);
-             }
+                return getDataColumn(context, uri, null, null);
+            }
 
 
         }

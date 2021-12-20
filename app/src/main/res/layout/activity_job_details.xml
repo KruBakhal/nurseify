@@ -123,124 +123,130 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="35dp"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="17dp"
-                            android:layout_height="17dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/peroid" />
-
-                        <TextView
-                            android:id="@+id/tv_assignment_duration_definition"
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/sf_400"
-                            android:text="10 Week"
-                            android:textColor="@color/black"
-                            android:textSize="13dp" />
+                            android:layout_marginLeft="35dp"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:layout_width="17dp"
+                                android:layout_height="17dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/peroid" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="35dp"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/tv_assignment_duration_definition"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/sf_400"
+                                android:text="10 Week"
+                                android:textColor="@color/black"
+                                android:textSize="13dp" />
 
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_location" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="35dp"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_location" />
+
+                            <TextView
+                                android:id="@+id/tv_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="9dp"
+                                android:fontFamily="@font/sf_400"
+                                android:text="National Traveler (anywhere in the US)"
+                                android:textColor="@color/black"
+                                android:textSize="13dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="35dp"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_calendar_black" />
+
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="9dp"
+                                android:fontFamily="@font/sf_400"
+                                android:text="Start Date"
+                                android:textColor="@color/black"
+                                android:textSize="13dp" />
+
+                            <TextView
+                                android:id="@+id/tv_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_corner_secondary"
+                                android:fontFamily="@font/sf_600"
+                                android:paddingHorizontal="11dp"
+                                android:paddingVertical="4dp"
+                                android:text="27 July 2021"
+                                android:textColor="@color/white"
+                                android:textSize="13dp" />
+
+                            <TextView
+                                android:id="@+id/tv_hourly_rate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/sf_600"
+                                android:gravity="right"
+                                android:text="$ 20.00/Hr"
+                                android:textColor="@color/black"
+                                android:textSize="18dp" />
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tv_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="9dp"
-                            android:fontFamily="@font/sf_400"
-                            android:text="National Traveler (anywhere in the US)"
-                            android:textColor="@color/black"
-                            android:textSize="13dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="35dp"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_calendar_black" />
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="9dp"
-                            android:fontFamily="@font/sf_400"
-                            android:text="Start Date"
-                            android:textColor="@color/black"
-                            android:textSize="13dp" />
-
-                        <TextView
-                            android:id="@+id/tv_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:background="@drawable/btn_corner_secondary"
+                            android:layout_marginLeft="21dp"
+                            android:layout_marginTop="30dp"
                             android:fontFamily="@font/sf_600"
-                            android:paddingHorizontal="11dp"
-                            android:paddingVertical="4dp"
-                            android:text="27 July 2021"
-                            android:textColor="@color/white"
-                            android:textSize="13dp" />
+                            android:text="Description"
+                            android:textColor="@color/black"
+                            android:textSize="17dp" />
 
                         <TextView
-                            android:id="@+id/tv_hourly_rate"
+                            android:id="@+id/tv_descriptions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/sf_600"
-                            android:gravity="right"
-                            android:text="$ 20.00/Hr"
+                            android:layout_marginHorizontal="21dp"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="@font/sf_500"
+                            android:text="This position is accountable and responsible for nursing care administered under the direction of a Registered Nurse (Nurse Manager, Charge Nurse, and/or Staff Nurse). This position demonstrates clinical knowledge and skills to carry out delegated tasks for age-specific populations described in the department(s) scope of service. The Student Nurse Intern demonstrates appropriate communication skills and interpersonal relationships. The Nurse Intern must be able to utilize standard office equipment, diagnostic equipment, and patient care equipment. Nurse interns must utilize personal protective equipment such as gloves, gown, mask, etc. The Nurse Manager, Charge Nurse, and/or Staff Nurse providing direction to the Nurse Intern will be available to attest to the clinical support provided by the Nurse Intern."
                             android:textColor="@color/black"
-                            android:textSize="18dp" />
+                            android:textSize="15dp" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="21dp"
-                        android:layout_marginTop="30dp"
-                        android:fontFamily="@font/sf_600"
-                        android:text="Description"
-                        android:textColor="@color/black"
-                        android:textSize="17dp" />
-
-                    <TextView
-                        android:id="@+id/tv_descriptions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="21dp"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/sf_500"
-                        android:text="This position is accountable and responsible for nursing care administered under the direction of a Registered Nurse (Nurse Manager, Charge Nurse, and/or Staff Nurse). This position demonstrates clinical knowledge and skills to carry out delegated tasks for age-specific populations described in the department(s) scope of service. The Student Nurse Intern demonstrates appropriate communication skills and interpersonal relationships. The Nurse Intern must be able to utilize standard office equipment, diagnostic equipment, and patient care equipment. Nurse interns must utilize personal protective equipment such as gloves, gown, mask, etc. The Nurse Manager, Charge Nurse, and/or Staff Nurse providing direction to the Nurse Intern will be available to attest to the clinical support provided by the Nurse Intern."
-                        android:textColor="@color/black"
-                        android:textSize="15dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -249,180 +255,187 @@
                         android:background="@color/white"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="21dp"
-                            android:layout_marginTop="20dp"
-                            android:fontFamily="@font/sf_600"
-                            android:text="About Job"
-                            android:textColor="@color/black"
-                            android:textSize="17dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="35dp"
-                            android:layout_marginTop="17dp"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Seniority Level"
-                                android:textColor="#A4ABB2"
-                                android:textSize="13dp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Preferred Shift Duration"
-                                android:textColor="#A4ABB2"
-                                android:textSize="13dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="35dp"
-                            android:layout_marginTop="17dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tv_seniority"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="ACNO"
+                                android:layout_marginLeft="21dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/sf_600"
+                                android:text="About Job"
                                 android:textColor="@color/black"
-                                android:textSize="13dp" />
+                                android:textSize="17dp" />
 
-                            <TextView
-                                android:id="@+id/tv_shift_duration"
-                                android:layout_width="0dp"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="8 hour"
-                                android:textColor="@color/black"
-                                android:textSize="13dp" />
-                        </LinearLayout>
+                                android:layout_marginHorizontal="35dp"
+                                android:layout_marginTop="17dp"
+                                android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="35dp"
-                            android:layout_marginTop="26dp"
-                            android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Seniority Level"
+                                    android:textColor="#A4ABB2"
+                                    android:textSize="13dp" />
 
-                            <TextView
-                                android:layout_width="0dp"
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Preferred Shift Duration"
+                                    android:textColor="#A4ABB2"
+                                    android:textSize="13dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Preferred Experience"
-                                android:textColor="#A4ABB2"
-                                android:textSize="13dp" />
+                                android:layout_marginHorizontal="35dp"
+                                android:layout_marginTop="17dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="0dp"
+                                <TextView
+                                    android:id="@+id/tv_seniority"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="ACNO"
+                                    android:textColor="@color/black"
+                                    android:textSize="13dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_shift_duration"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="8 hour"
+                                    android:textColor="@color/black"
+                                    android:textSize="13dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Cerner"
-                                android:textColor="#A4ABB2"
-                                android:textSize="13dp" />
-                        </LinearLayout>
+                                android:layout_marginHorizontal="35dp"
+                                android:layout_marginTop="26dp"
+                                android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="35dp"
-                            android:layout_marginTop="17dp"
-                            android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Preferred Experience"
+                                    android:textColor="#A4ABB2"
+                                    android:textSize="13dp" />
 
-                            <TextView
-                                android:id="@+id/tv_preffered_exp"
-                                android:layout_width="0dp"
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Cerner"
+                                    android:textColor="#A4ABB2"
+                                    android:textSize="13dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="3 Years"
-                                android:textColor="@color/black"
-                                android:textSize="13dp" />
+                                android:layout_marginHorizontal="35dp"
+                                android:layout_marginTop="17dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tv_cerner"
-                                android:layout_width="0dp"
+                                <TextView
+                                    android:id="@+id/tv_preffered_exp"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="3 Years"
+                                    android:textColor="@color/black"
+                                    android:textSize="13dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_cerner"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Advanced (5+ year's experience)"
+                                    android:textColor="@color/black"
+                                    android:textSize="13dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Advanced (5+ year's experience)"
-                                android:textColor="@color/black"
-                                android:textSize="13dp" />
-                        </LinearLayout>
+                                android:layout_marginHorizontal="35dp"
+                                android:layout_marginTop="17dp"
+                                android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="35dp"
-                            android:layout_marginTop="17dp"
-                            android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Meditech"
+                                    android:textColor="#A4ABB2"
+                                    android:textSize="13dp" />
 
-                            <TextView
-                                android:layout_width="0dp"
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Epic"
+                                    android:textColor="#A4ABB2"
+                                    android:textSize="13dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Meditech"
-                                android:textColor="#A4ABB2"
-                                android:textSize="13dp" />
+                                android:layout_marginHorizontal="35dp"
+                                android:layout_marginTop="17dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Epic"
-                                android:textColor="#A4ABB2"
-                                android:textSize="13dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="35dp"
-                            android:layout_marginTop="17dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tv_Meditech"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Beginner(1 years
+                                <TextView
+                                    android:id="@+id/tv_Meditech"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Beginner(1 years
 experience)"
-                                android:textColor="@color/black"
-                                android:textSize="13dp" />
+                                    android:textColor="@color/black"
+                                    android:textSize="13dp" />
 
-                            <TextView
-                                android:id="@+id/tv_epic"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/sf_500"
-                                android:text="Advanced (5+ year's experience)"
-                                android:textColor="@color/black"
-                                android:textSize="13dp" />
+                                <TextView
+                                    android:id="@+id/tv_epic"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Advanced (5+ year's experience)"
+                                    android:textColor="@color/black"
+                                    android:textSize="13dp" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/layout_likeShare"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="21dp"
@@ -441,7 +454,7 @@ experience)"
 
                                 <TextView
                                     android:id="@+id/tv_applied"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:fontFamily="@font/sf_600"
@@ -453,8 +466,8 @@ experience)"
                             </LinearLayout>
 
                             <androidx.cardview.widget.CardView
-                                android:layout_width="47dp"
                                 android:id="@+id/lay_like"
+                                android:layout_width="47dp"
                                 android:layout_height="47dp"
                                 android:layout_marginLeft="30dp"
                                 android:layout_marginRight="20dp"
@@ -464,10 +477,18 @@ experience)"
 
                                 <ImageView
                                     android:id="@+id/img_heart"
-                                    android:layout_width="26dp"
-                                    android:layout_height="26dp"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/heart" />
+
+                                <ImageView
+                                    android:id="@+id/img_heart1"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/heart_press"
+                                    android:visibility="gone" />
                             </androidx.cardview.widget.CardView>
 
                             <androidx.cardview.widget.CardView
@@ -485,6 +506,44 @@ experience)"
                             </androidx.cardview.widget.CardView>
 
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_accept"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginHorizontal="21dp"
+                            android:layout_marginTop="60dp"
+                            android:layout_marginBottom="20dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/text_accept"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@drawable/btn_corner_secondary"
+                                android:fontFamily="@font/sf_600"
+                                android:gravity="center"
+                                android:text="Accept"
+                                android:textColor="@color/white"
+                                android:textSize="16dp" />
+
+                            <TextView
+                                android:id="@+id/text_reject"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="24dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/btn_back"
+                                android:fontFamily="@font/sf_600"
+                                android:gravity="center"
+                                android:text="Reject"
+                                android:textColor="@color/white"
+                                android:textSize="16dp" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

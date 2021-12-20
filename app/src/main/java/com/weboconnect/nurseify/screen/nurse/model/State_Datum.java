@@ -5,16 +5,49 @@ import com.google.gson.annotations.SerializedName;
 
 public class State_Datum {
 
-@SerializedName("state")
-@Expose
-private String state;
+    @SerializedName("state")
+    @Expose
+    private String state;
+    @SerializedName("state_id")
+    @Expose
+    private String state_id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("iso_name")
+    @Expose
+    private String iso_name;
 
-public String getState() {
-return state;
-}
+    public String getIso_name() {
+        return iso_name;
+    }
 
-public void setState(String state) {
-this.state = state;
-}
+    public void setIso_name(String iso_name) {
+        this.iso_name = iso_name;
+    }
+
+    public String getState_id() {
+        return state_id;
+    }
+
+    public void setState_id(String state_id) {
+        this.state_id = state_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNames() {
+        return name;
+    }
+
+//    public void setState(String state) {
+//        this.state = state;
+//    }
 
 }

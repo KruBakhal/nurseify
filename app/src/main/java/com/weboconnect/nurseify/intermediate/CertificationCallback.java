@@ -1,5 +1,10 @@
 package com.weboconnect.nurseify.intermediate;
 
+import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
+
 public interface CertificationCallback {
-    void onRemove(String url, String id);
+
+    void onEdit(int position);
+
+    void onRemove(int position, UserProfileData.Certitficate certitficate);
 }

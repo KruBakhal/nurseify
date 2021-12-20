@@ -29,15 +29,17 @@ import java.util.List;
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.QuestionMyViewHolder> {
 
     private final List<LeaderRolesData> list_LeaderShipRole;
+    private final boolean edit_mode;
     public List<QuestionModel> list_QuestionModels = new ArrayList<>();
     RegisterActivity context;
 
     public QuestionAdapter(RegisterActivity context, List<QuestionModel> list_QuestionModels,
-                           List<LeaderRolesData> list_LeaderShipRole, QuestionInterface parentInterface) {
+                           List<LeaderRolesData> list_LeaderShipRole, boolean edit_mode, QuestionInterface parentInterface) {
         this.list_QuestionModels = list_QuestionModels;
         this.context = context;
         this.list_LeaderShipRole = list_LeaderShipRole;
         this.parentInterface = parentInterface;
+        this.edit_mode = edit_mode;
     }
 
     QuestionInterface parentInterface;

@@ -8,16 +8,32 @@
     android:background="@drawable/secondary_gradient"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="17dp"
-        android:fontFamily="@font/sf_600"
-        android:gravity="top"
-        android:text="Experience"
-        android:textColor="@color/white"
-        android:textSize="22dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="17dp"
+            android:fontFamily="@font/sf_600"
+            android:gravity="top"
+            android:text="Experience"
+            android:textColor="@color/white"
+            android:textSize="22dp" />
+
+        <ImageView
+            android:id="@+id/imgClose"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_close"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -150,7 +166,6 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
                         android:background="@color/trans"
                         android:fontFamily="@font/sf_500"
@@ -158,98 +173,7 @@
                         android:hint="College / University Name"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingLeft="17dp"
-                        android:singleLine="true"
-                        android:textColor="@color/black"
-                        android:textColorHint="#A4ADBB"
-                        android:textCursorDrawable="@drawable/effect_cursor_color"
-                        android:textSize="16dp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="8dp"
-                    android:background="#8A4999" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginHorizontal="9dp"
-                    android:layout_marginTop="17dp"
-                    android:fontFamily="@font/sf_500"
-                    android:gravity="left"
-                    android:text="City"
-                    android:textColor="#595094"
-                    android:textSize="15dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/ed_city"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:background="@color/trans"
-                        android:fontFamily="@font/sf_500"
-                        android:gravity="center_vertical"
-                        android:hint="Enter City Name"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingLeft="17dp"
-                        android:singleLine="true"
-                        android:textColor="@color/black"
-                        android:textColorHint="#A4ADBB"
-                        android:textCursorDrawable="@drawable/effect_cursor_color"
-                        android:textSize="16dp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="8dp"
-                    android:background="#8A4999" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginHorizontal="9dp"
-                    android:layout_marginTop="17dp"
-                    android:fontFamily="@font/sf_500"
-                    android:gravity="left"
-                    android:text="State"
-                    android:textColor="#595094"
-                    android:textSize="15dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/ed_state"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:background="@color/trans"
-                        android:fontFamily="@font/sf_500"
-                        android:gravity="center_vertical"
-                        android:hint="Enter State Name"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
+                        android:maxLength="255"
                         android:maxLines="1"
                         android:paddingLeft="17dp"
                         android:singleLine="true"
@@ -279,21 +203,83 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
+
                     android:layout_marginTop="10dp"
+
                     android:orientation="horizontal">
 
-                    <EditText
+                    <TextView
                         android:id="@+id/ed_country"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
                         android:background="@color/trans"
                         android:fontFamily="@font/sf_500"
                         android:gravity="center_vertical"
-                        android:hint="Enter Country Name"
+                        android:hint="Select Country"
+                        android:maxLines="1"
+                        android:paddingLeft="17dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="#A4ADBB"
+                        android:textSize="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/lay_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/img5"
+                            android:layout_width="17dp"
+                            android:layout_height="10dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/dropdown" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#8A4999" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_marginTop="17dp"
+                    android:fontFamily="@font/sf_500"
+                    android:gravity="left"
+                    android:text="State"
+                    android:textColor="#595094"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/ed_state"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@color/trans"
+                        android:fontFamily="@font/sf_500"
+                        android:gravity="center_vertical"
+                        android:hint="Select State"
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLines="1"
@@ -303,13 +289,91 @@
                         android:textColorHint="#A4ADBB"
                         android:textCursorDrawable="@drawable/effect_cursor_color"
                         android:textSize="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/lay_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/img6"
+                            android:layout_width="17dp"
+                            android:layout_height="10dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/dropdown" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/view6"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginTop="8dp"
                     android:background="#8A4999" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_marginTop="17dp"
+                    android:fontFamily="@font/sf_500"
+                    android:gravity="left"
+                    android:text="City"
+                    android:textColor="#595094"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <EditText
+                        android:id="@+id/ed_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@color/trans"
+                        android:fontFamily="@font/sf_500"
+                        android:gravity="center_vertical"
+                        android:hint="City"
+                        android:maxLines="1"
+                        android:paddingLeft="17dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="#A4ADBB"
+                        android:textSize="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/lay_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/img7"
+                            android:layout_width="17dp"
+                            android:layout_height="10dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/dropdown" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view7"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#8A4999" />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -334,14 +398,14 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
                         android:background="@color/trans"
                         android:fontFamily="@font/sf_500"
                         android:gravity="center_vertical"
-                        android:hint="Ex. 2Years"
+                        android:hint="Ex. 2 Years"
                         android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
+                        android:maxLength="2"
                         android:maxLines="1"
                         android:paddingLeft="17dp"
                         android:singleLine="true"
@@ -380,14 +444,14 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
                         android:background="@color/trans"
                         android:fontFamily="@font/sf_500"
                         android:gravity="center_vertical"
-                        android:hint="Ex. 2Years"
+                        android:hint="Ex. 2 Years"
                         android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
+                        android:maxLength="2"
                         android:maxLines="1"
                         android:paddingLeft="17dp"
                         android:singleLine="true"
@@ -633,13 +697,13 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
                         android:background="@color/trans"
                         android:fontFamily="@font/sf_500"
                         android:gravity="center_vertical"
                         android:imeOptions="actionDone"
                         android:inputType="text"
+                        android:maxLength="50"
                         android:maxLines="1"
                         android:paddingLeft="17dp"
                         android:singleLine="true"

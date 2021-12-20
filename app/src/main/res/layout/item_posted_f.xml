@@ -31,7 +31,7 @@
                 android:layout_marginLeft="19dp"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -40,18 +40,40 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
                         android:fontFamily="@font/sf_500"
-                        android:text="Nurseify Facility"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="Nurseify Facility "
+                        android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@color/black"
-                        android:textSize="19dp" />
+                        android:textSize="16dp"
+                        android:visibility="visible"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/sds"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
 
                     <ImageView
+                        android:id="@+id/sds"
                         android:layout_width="17dp"
                         android:layout_height="17dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:src="@drawable/verified" />
-                </LinearLayout>
+                        android:src="@drawable/verified"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toEndOf="@+id/tv_name"
+                        app:layout_constraintTop_toTopOf="@+id/tv_name" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/tv_specialty"
@@ -61,7 +83,7 @@
                     android:fontFamily="@font/sf_600"
                     android:text="infection Prevention"
                     android:textColor="@color/black"
-                    android:textSize="22dp" />
+                    android:textSize="19dp" />
 
                 <TextView
                     android:id="@+id/tv_created_at_definition"
@@ -195,7 +217,7 @@
 
             <LinearLayout
                 android:id="@+id/lay_apply"
-                android:layout_width="153dp"
+                android:layout_width="140dp"
                 android:layout_height="40dp"
                 android:background="@drawable/btn_back"
                 android:backgroundTint="@color/grad1"
@@ -214,9 +236,8 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/lay_heart"
-
-                android:layout_width="47dp"
-                android:layout_height="47dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginBottom="2dp"
                 app:cardBackgroundColor="#F4F3F9"
@@ -224,30 +245,35 @@
 
                 <ImageView
                     android:id="@+id/img_heart"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_gravity="center"
-                    android:fontFamily="@font/sf_600"
-                    android:src="@drawable/heart"
-                    android:text="Apply"
-                    android:textColor="@color/white"
-                    android:textSize="16dp" />
+                    android:src="@drawable/heart" />
+
+                <ImageView
+                    android:id="@+id/img_heart1"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:src="@drawable/heart_press" />
+
 
             </androidx.cardview.widget.CardView>
 
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/lay_share"
-                android:layout_width="47dp"
-                android:layout_height="47dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="2dp"
                 app:cardBackgroundColor="#F4F3F9"
                 app:cardCornerRadius="40dp">
 
                 <ImageView
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_gravity="center"
                     android:fontFamily="@font/sf_600"
                     android:src="@drawable/share"

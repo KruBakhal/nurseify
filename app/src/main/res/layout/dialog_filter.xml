@@ -6,362 +6,416 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="556dp"
         android:layout_marginHorizontal="16dp"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:elevation="24dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="16dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="22dp"
-                android:fontFamily="@font/sf_600"
-                android:gravity="center"
-                android:text="Filter"
-                android:textColor="@color/black"
-                android:textSize="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/close_dialog"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="30dp"
-                android:src="@drawable/close"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/black" />
-
-        </RelativeLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="29dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sf_500"
-                        android:text="Location"
-                        android:textColor="@color/grad1"
-                        android:textSize="15dp" />
-
-                </LinearLayout>
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/sf_500"
-                    android:hint="State or City Or ZipCode"
-                    android:textColor="#5B6268"
-                    android:textColorHint="@color/black"
-                    android:textSize="16dp" />
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="22dp"
+                    android:fontFamily="@font/sf_600"
+                    android:gravity="center"
+                    android:text="Filter"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="9dp"
-                    android:background="@color/grad1" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/close_dialog"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:layout_marginRight="30dp"
+                    android:src="@drawable/close"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sf_500"
-                        android:text="Open assignment type"
-                        android:textColor="@color/grad1"
-                        android:textSize="15dp" />
-                </LinearLayout>
+            </RelativeLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:scrollbars="none">
 
                 <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/spinner_assignment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_weight="1"
-                        android:background="@color/trans"
-                        android:fontFamily="@font/sf_500"
-                        android:gravity="left|center"
-                        android:hint="Select assignment type"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
-                        android:paddingLeft="10dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
-                        android:textSize="16dp" />
+                    android:layout_marginHorizontal="29dp"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/lay_assignment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="22dp"
-                        android:layout_marginRight="15dp"
-                        android:gravity="center"
-                        android:visibility="visible">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:id="@+id/img1"
-                            android:layout_width="17dp"
-                            android:layout_height="10dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="7dp"
-                            android:layout_marginRight="8dp"
-                            android:src="@drawable/dropdown" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/sf_500"
+                            android:text="Location"
+                            android:textColor="@color/grad1"
+                            android:textSize="15dp" />
+
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="9dp"
-                    android:background="@color/grad1" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sf_500"
-                        android:text="Facility type"
-                        android:textColor="@color/grad1"
-                        android:textSize="15dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="22dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/spinner_facility"
+                    <EditText
+                        android:id="@+id/tv_zip"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_weight="1"
-                        android:background="@color/trans"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
                         android:fontFamily="@font/sf_500"
-                        android:gravity="left|center"
-                        android:hint="Select facility type"
-                        android:imeOptions="actionNext"
+                        android:hint="State or City Or ZipCode"
+                        android:imeOptions="actionDone"
                         android:inputType="text"
-                        android:paddingLeft="10dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/gray"
+                        android:textColorHint="@color/gray"
                         android:textSize="16dp" />
 
-                    <LinearLayout
-                        android:id="@+id/lay_facility"
-                        android:layout_width="wrap_content"
-                        android:layout_height="22dp"
-                        android:layout_marginRight="15dp"
-                        android:gravity="center"
-                        android:visibility="visible">
-
-                        <ImageView
-                            android:id="@+id/img2"
-                            android:layout_width="17dp"
-                            android:layout_height="10dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="7dp"
-                            android:layout_marginRight="8dp"
-                            android:src="@drawable/dropdown" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="9dp"
-                    android:background="@color/grad1" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sf_500"
-                        android:text="Electronic medical records"
-                        android:textColor="@color/grad1"
-                        android:textSize="15dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="22dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/spinner_electric"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_weight="1"
-                        android:background="@color/trans"
-                        android:fontFamily="@font/sf_500"
-                        android:gravity="left|center"
-                        android:hint="Select electronic medical records"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
-                        android:paddingLeft="10dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
-                        android:textSize="16dp" />
+                        android:layout_height="2dp"
+                        android:layout_marginTop="9dp"
+                        android:background="@color/grad1" />
 
                     <LinearLayout
-                        android:id="@+id/lay_electric"
-                        android:layout_width="wrap_content"
-                        android:layout_height="22dp"
-                        android:layout_marginRight="15dp"
-                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal"
                         android:visibility="visible">
 
-                        <ImageView
-                            android:id="@+id/img3"
-                            android:layout_width="17dp"
-                            android:layout_height="10dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="7dp"
-                            android:layout_marginRight="8dp"
-                            android:src="@drawable/dropdown" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/sf_500"
+                            android:text="Open assignment type"
+                            android:textColor="@color/grad1"
+                            android:textSize="15dp" />
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="9dp"
-                    android:background="@color/grad1" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sf_500"
-                        android:text="Hourly Range"
-                        android:textColor="@color/grad1"
-                        android:textSize="15dp" />
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/spinner_assignment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_weight="1"
+                            android:background="@color/trans"
+                            android:fontFamily="@font/sf_500"
+                            android:gravity="left|center"
+                            android:hint="Select assignment type"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="16dp" />
+
+                        <LinearLayout
+                            android:id="@+id/lay_assignment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_marginRight="15dp"
+                            android:gravity="center"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:id="@+id/img1"
+                                android:layout_width="17dp"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="7dp"
+                                android:layout_marginRight="8dp"
+                                android:src="@drawable/dropdown" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view1"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="9dp"
+                        android:background="@color/grad1" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/sf_600"
-                        android:gravity="left"
-                        android:text="$04/hr - $05/hr"
-                        android:textColor="#2B3A37"
-                        android:textSize="18dp" />
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
 
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/sf_500"
+                            android:text="Facility type"
+                            android:textColor="@color/grad1"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/spinner_facility"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_weight="1"
+                            android:background="@color/trans"
+                            android:fontFamily="@font/sf_500"
+                            android:gravity="left|center"
+                            android:hint="Select facility type"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="16dp" />
+
+                        <LinearLayout
+                            android:id="@+id/lay_facility"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_marginRight="15dp"
+                            android:gravity="center"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:id="@+id/img2"
+                                android:layout_width="17dp"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="7dp"
+                                android:layout_marginRight="8dp"
+                                android:src="@drawable/dropdown" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view2"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="9dp"
+                        android:background="@color/grad1" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/sf_500"
+                            android:text="Electronic medical records"
+                            android:textColor="@color/grad1"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/spinner_electric"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_weight="1"
+                            android:background="@color/trans"
+                            android:fontFamily="@font/sf_500"
+                            android:gravity="left|center"
+                            android:hint="Select electronic medical records"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="16dp" />
+
+                        <LinearLayout
+                            android:id="@+id/lay_electric"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_marginRight="15dp"
+                            android:gravity="center"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:id="@+id/img3"
+                                android:layout_width="17dp"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="7dp"
+                                android:layout_marginRight="8dp"
+                                android:src="@drawable/dropdown" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view3"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="9dp"
+                        android:background="@color/grad1" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/sf_500"
+                            android:text="Hourly Range"
+                            android:textColor="@color/grad1"
+                            android:textSize="15dp" />
+
+                        <TextView
+                            android:id="@+id/tv_hour_rate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="@font/sf_600"
+                            android:gravity="left"
+                            android:text="$01/hr - $01/hr"
+                            android:textColor="#2B3A37"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.slider.RangeSlider
+                        android:id="@+id/distanceSlider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:theme="@style/Rslider"
+                        android:value="30.0"
+                        android:valueFrom="1.0"
+                        android:valueTo="100.0"
+                        android:visibility="gone"
+                        app:labelBehavior="gone"
+                        app:thumbColor="@color/secondary_till"
+                        app:tickColor="@color/secondary_till"
+                        app:tickColorActive="@color/secondary_till"
+                        app:tickColorInactive="@color/secondary_till" />
+
+                    <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                        android:id="@+id/rangeSeekbar3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="15dp"
+                        app:bar_color="#DDDCE4"
+                        app:bar_highlight_color="@color/secondary_till"
+                        app:corner_radius="10"
+                        app:data_type="_integer"
+                        app:gap="1"
+                        app:left_thumb_color="@color/secondary_till"
+                        app:left_thumb_color_pressed="@color/secondary_till"
+                        app:max_value="100"
+                        app:min_value="1"
+                        app:right_thumb_color="@color/secondary_till"
+                        app:right_thumb_color_pressed="@color/secondary_till" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="22dp"
+                        android:gravity="center_horizontal">
+
+                        <TextView
+                            android:id="@+id/text_reset"
+                            android:layout_width="130dp"
+                            android:layout_height="51dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/reset"
+                            android:fontFamily="@font/sf_600"
+                            android:gravity="center"
+                            android:text="Reset"
+                            android:textColor="@color/black"
+                            android:textSize="17dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/text_apply"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/text_apply"
+                            android:layout_width="130dp"
+                            android:layout_height="51dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/apply"
+                            android:fontFamily="@font/sf_600"
+                            android:gravity="center"
+                            android:text="Apply"
+                            android:textColor="@color/white"
+                            android:textSize="17dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/text_reset"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
 
-                <com.google.android.material.slider.RangeSlider
-                    android:id="@+id/distanceSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:value="1.0"
-                    android:valueFrom="1.0"
-                    android:valueTo="500.0"
-                    app:labelBehavior="gone" />
+    </androidx.cardview.widget.CardView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="22dp"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/text_reset"
-                        android:layout_width="138dp"
-                        android:layout_height="51dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="6dp"
-                        android:background="@drawable/reset"
-                        android:fontFamily="@font/sf_600"
-                        android:gravity="center"
-                        android:text="Reset"
-                        android:textColor="@color/black"
-                        android:textSize="17dp" />
-
-                    <TextView
-                        android:id="@+id/text_apply"
-                        android:layout_width="138dp"
-                        android:layout_height="51dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/apply"
-                        android:fontFamily="@font/sf_600"
-                        android:gravity="center"
-                        android:text="Apply"
-                        android:textColor="@color/white"
-                        android:textSize="17dp" />
-
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 </LinearLayout>

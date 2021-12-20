@@ -40,16 +40,19 @@ public class NotificationFragment extends Fragment {
     NotificationAdapter notificationAdapter;
     List<NotificationModel.Notification> notificationList = new ArrayList<>();
 
-    public NotificationFragment(){ }
+    public NotificationFragment() {
+    }
+
     public NotificationFragment(String id) {
         this.id = id;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding  = DataBindingUtil.inflate(inflater, R.layout.fragment_notification, null, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notification, null, false);
 
-        notificationAdapter = new NotificationAdapter(getActivity(),notificationList);
+        notificationAdapter = new NotificationAdapter(getActivity(), notificationList);
 
         binding.recyclerViewJobs.setAdapter(notificationAdapter);
 
@@ -59,7 +62,7 @@ public class NotificationFragment extends Fragment {
         return view = binding.getRoot();
     }
 
-    private void getNotification(){
+    private void getNotification() {
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
@@ -72,22 +75,27 @@ public class NotificationFragment extends Fragment {
         call.enqueue(new Callback<NotificationModel>() {
             @Override
             public void onResponse(Call<NotificationModel> call, Response<NotificationModel> response) {
-                Log.d(TAG+"getNotification ResCode",response.code()+"");
-                if (response.isSuccessful()){
-
+                Log.d(TAG + "getNotification ResCode", response.code() + "");
+                if (response.isSuccessful()) {
                     try {
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.tvMsg.setVisibility(View.GONE);
                         NotificationModel notificationModel = response.body();
                         notificationList.addAll(notificationModel.getNotification());
+                        binding.recyclerViewJobs.setAdapter(notificationAdapter);
                         notificationAdapter.notifyDataSetChanged();
-
+                    } catch (Exception e) {
+                        Log.e(TAG + "getNotification", e.toString());
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.tvMsg.setVisibility(View.VISIBLE);
+                        binding.tvMsg.setText("Yet, No Notification Found !");
                     }
-                    catch (Exception e){
-                        Log.e(TAG+"getNotification",e.toString());
-                    }
 
-                }else {
-                    Log.e(TAG+"getNotification",response.message());
-                    return;
+                } else {
+                    Log.e(TAG + "getNotification", response.message());
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.tvMsg.setVisibility(View.VISIBLE);
+                    binding.tvMsg.setText("Yet, No Notification Found !");
                 }
                 binding.progressBar.setVisibility(View.GONE);
             }
@@ -95,7 +103,9 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onFailure(Call<NotificationModel> call, Throwable t) {
                 binding.progressBar.setVisibility(View.GONE);
-                Log.e(TAG+"getNotification",t.toString());
+                binding.tvMsg.setVisibility(View.VISIBLE);
+                binding.tvMsg.setText("Yet, No Notification Found !");
+                Log.e(TAG + "getNotification", t.toString());
             }
         });
 

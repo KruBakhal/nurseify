@@ -13,16 +13,32 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="17dp"
-            android:fontFamily="@font/sf_600"
-            android:gravity="top"
-            android:text="Hourly Rate &amp; Availability"
-            android:textColor="@color/white"
-            android:textSize="22dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="17dp"
+                android:fontFamily="@font/sf_600"
+                android:gravity="top"
+                android:text="Hourly Rate &amp; Availability"
+                android:textColor="@color/white"
+                android:textSize="22dp" />
+
+            <ImageView
+                android:id="@+id/imgClose"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_close"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -80,7 +96,7 @@
                         android:layout_marginTop="26dp"
                         android:fontFamily="@font/sf_600"
                         android:gravity="left"
-                        android:text="$ 1"
+                        android:text="$ 5"
                         android:textColor="#2B3A37"
                         android:textSize="24dp" />
 
@@ -90,7 +106,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
                         android:layout_marginTop="10dp"
+                        android:max="150"
                         android:paddingLeft="27dp"
+                        android:progress="5"
+                        android:min="5"
                         android:progressDrawable="@drawable/slider_custom_seekbar"
                         android:thumb="@drawable/slider_custom_thumb"
                         android:value="1.0"
@@ -492,7 +511,7 @@
                             android:background="@color/trans"
                             android:fontFamily="@font/sf_500"
                             android:gravity="center_vertical"
-                            android:hint="DD/MM/YYYY"
+                            android:hint="MM/DD/YYYY"
                             android:paddingLeft="17dp"
                             android:textColor="@color/black"
                             android:textColorHint="#A4ADBB"

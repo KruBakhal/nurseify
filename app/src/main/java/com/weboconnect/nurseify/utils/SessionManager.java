@@ -110,4 +110,12 @@ public class SessionManager {
         return false;
     }
 
+    public void saveRoleDialog(boolean b) {
+        editor.putBoolean(Constant.Role_Interest1, b);
+        editor.apply();
+    }
+
+    public boolean get_RoleDialogStatus() {
+        return sharedPreferences.getBoolean(Constant.Role_Interest1, false);
+    }
 }

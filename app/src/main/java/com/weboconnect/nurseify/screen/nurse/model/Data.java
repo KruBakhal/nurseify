@@ -3,36 +3,64 @@ package com.weboconnect.nurseify.screen.nurse.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Data {
+import java.util.List;
 
+public class Data {
 
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("user_id")
+    @SerializedName("nurse_id")
     @Expose
-    private String userId;
-    @SerializedName("specialty")
+    private String nurseId;
+    @SerializedName("role")
     @Expose
-    private String specialty;
+    private String role;
+    @SerializedName("fcm_token")
+    @Expose
+    private String fcmToken;
+    @SerializedName("fullName")
+    @Expose
+    private String fullName;
+    @SerializedName("date_of_birth")
+    @Expose
+    private String dateOfBirth;
+    @SerializedName("email_notification")
+    @Expose
+    private Integer emailNotification;
+    @SerializedName("sms_notification")
+    @Expose
+    private Integer smsNotification;
+    @SerializedName("first_name")
+    @Expose
+    private String firstName;
+    @SerializedName("last_name")
+    @Expose
+    private String lastName;
+    @SerializedName("email")
+    @Expose
+    private String email;
+    @SerializedName("image")
+    @Expose
+    private String image;
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
     @SerializedName("nursing_license_state")
     @Expose
     private String nursingLicenseState;
     @SerializedName("nursing_license_number")
     @Expose
     private String nursingLicenseNumber;
-    @SerializedName("highest_nursing_degree")
+    @SerializedName("specialty")
     @Expose
-    private String highestNursingDegree;
-    @SerializedName("serving_preceptor")
+    private List<Specialty> specialty = null;
+    @SerializedName("work_location")
     @Expose
-    private Integer servingPreceptor;
-    @SerializedName("serving_interim_nurse_leader")
+    private Integer workLocation;
+    @SerializedName("work_location_definition")
     @Expose
-    private Integer servingInterimNurseLeader;
-    @SerializedName("leadership_roles")
-    @Expose
-    private Object leadershipRoles;
+    private String workLocationDefinition;
     @SerializedName("address")
     @Expose
     private String address;
@@ -51,147 +79,42 @@ public class Data {
     @SerializedName("hourly_pay_rate")
     @Expose
     private String hourlyPayRate;
-    @SerializedName("experience_as_acute_care_facility")
+    @SerializedName("shift_duration")
     @Expose
-    private String experienceAsAcuteCareFacility;
-    @SerializedName("experience_as_ambulatory_care_facility")
+    private String shiftDuration;
+    @SerializedName("shift_duration_definition")
     @Expose
-    private String experienceAsAmbulatoryCareFacility;
-    @SerializedName("active")
+    private String shiftDurationDefinition;
+    @SerializedName("assignment_duration")
     @Expose
-    private Integer active;
-    @SerializedName("deleted_at")
+    private String assignmentDuration;
+    @SerializedName("assignment_duration_definition")
     @Expose
-    private Object deletedAt;
-    @SerializedName("created_at")
+    private String assignmentDurationDefinition;
+    @SerializedName("preferred_shift")
     @Expose
-    private String createdAt;
-    @SerializedName("updated_at")
+    private String preferredShift;
+    @SerializedName("days_of_the_week")
     @Expose
-    private String updatedAt;
-    @SerializedName("ehr_proficiency_cerner")
+    private List<String> daysOfTheWeek = null;
+    @SerializedName("earliest_start_date")
     @Expose
-    private String ehrProficiencyCerner;
-    @SerializedName("ehr_proficiency_meditech")
+    private String earliestStartDate;
+    @SerializedName("profile_detail_flag")
     @Expose
-    private String ehrProficiencyMeditech;
-    @SerializedName("ehr_proficiency_epic")
+    private String profileDetailFlag;
+    @SerializedName("hourly_rate_and_avail_flag")
     @Expose
-    private String ehrProficiencyEpic;
-    @SerializedName("ehr_proficiency_other")
+    private String hourlyRateAndAvailFlag;
+    @SerializedName("experience")
     @Expose
-    private String ehrProficiencyOther;
-    @SerializedName("slug")
+    private Experience experience;
+    @SerializedName("certitficate")
     @Expose
-    private String slug;
-    @SerializedName("summary")
-    @Expose
-    private Object summary;
-    @SerializedName("nurses_video")
-    @Expose
-    private Object nursesVideo;
-    @SerializedName("nurses_facebook")
-    @Expose
-    private Object nursesFacebook;
-    @SerializedName("nurses_twitter")
-    @Expose
-    private Object nursesTwitter;
-    @SerializedName("nurses_linkedin")
-    @Expose
-    private Object nursesLinkedin;
-    @SerializedName("nurses_instagram")
-    @Expose
-    private Object nursesInstagram;
-    @SerializedName("nurses_pinterest")
-    @Expose
-    private Object nursesPinterest;
-    @SerializedName("nurses_tiktok")
-    @Expose
-    private Object nursesTiktok;
-    @SerializedName("nurses_sanpchat")
-    @Expose
-    private Object nursesSanpchat;
-    @SerializedName("nurses_youtube")
-    @Expose
-    private Object nursesYoutube;
-    @SerializedName("clinical_educator")
-    @Expose
-    private Integer clinicalEducator;
-    @SerializedName("is_daisy_award_winner")
-    @Expose
-    private Integer isDaisyAwardWinner;
-    @SerializedName("employee_of_the_mth_qtr_yr")
-    @Expose
-    private Integer employeeOfTheMthQtrYr;
-    @SerializedName("other_nursing_awards")
-    @Expose
-    private Integer otherNursingAwards;
-    @SerializedName("is_professional_practice_council")
-    @Expose
-    private Integer isProfessionalPracticeCouncil;
-    @SerializedName("is_research_publications")
-    @Expose
-    private Integer isResearchPublications;
-    @SerializedName("credential_title")
-    @Expose
-    private Object credentialTitle;
-    @SerializedName("mu_specialty")
-    @Expose
-    private Object muSpecialty;
-    @SerializedName("additional_photos")
-    @Expose
-    private Object additionalPhotos;
-    @SerializedName("languages")
-    @Expose
-    private String languages;
-    @SerializedName("additional_files")
-    @Expose
-    private Object additionalFiles;
-    @SerializedName("college_uni_name")
-    @Expose
-    private String collegeUniName;
-    @SerializedName("college_uni_city")
-    @Expose
-    private String collegeUniCity;
-    @SerializedName("college_uni_state")
-    @Expose
-    private String collegeUniState;
-    @SerializedName("college_uni_country")
-    @Expose
-    private String collegeUniCountry;
-    @SerializedName("facility_hourly_pay_rate")
-    @Expose
-    private String facilityHourlyPayRate;
-    @SerializedName("n_lat")
-    @Expose
-    private Object nLat;
-    @SerializedName("n_lang")
-    @Expose
-    private Object nLang;
+    private List<Object> certitficate = null;
     @SerializedName("resume")
     @Expose
-    private Object resume;
-    @SerializedName("nu_video")
-    @Expose
-    private Object nuVideo;
-    @SerializedName("nu_video_embed_url")
-    @Expose
-    private Object nuVideoEmbedUrl;
-    @SerializedName("is_verified")
-    @Expose
-    private Integer isVerified;
-    @SerializedName("gig_account_id")
-    @Expose
-    private Object gigAccountId;
-    @SerializedName("is_gig_invite")
-    @Expose
-    private Integer isGigInvite;
-    @SerializedName("gig_account_create_date")
-    @Expose
-    private Object gigAccountCreateDate;
-    @SerializedName("gig_account_invite_date")
-    @Expose
-    private Object gigAccountInviteDate;
+    private String resume;
 
     public String getId() {
         return id;
@@ -201,20 +124,100 @@ public class Data {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getNurseId() {
+        return nurseId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setNurseId(String nurseId) {
+        this.nurseId = nurseId;
     }
 
-    public String getSpecialty() {
-        return specialty;
+    public String getRole() {
+        return role;
     }
 
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Integer getEmailNotification() {
+        return emailNotification;
+    }
+
+    public void setEmailNotification(Integer emailNotification) {
+        this.emailNotification = emailNotification;
+    }
+
+    public Integer getSmsNotification() {
+        return smsNotification;
+    }
+
+    public void setSmsNotification(Integer smsNotification) {
+        this.smsNotification = smsNotification;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getNursingLicenseState() {
@@ -233,36 +236,28 @@ public class Data {
         this.nursingLicenseNumber = nursingLicenseNumber;
     }
 
-    public String getHighestNursingDegree() {
-        return highestNursingDegree;
+    public List<Specialty> getSpecialty() {
+        return specialty;
     }
 
-    public void setHighestNursingDegree(String highestNursingDegree) {
-        this.highestNursingDegree = highestNursingDegree;
+    public void setSpecialty(List<Specialty> specialty) {
+        this.specialty = specialty;
     }
 
-    public Integer getServingPreceptor() {
-        return servingPreceptor;
+    public Integer getWorkLocation() {
+        return workLocation;
     }
 
-    public void setServingPreceptor(Integer servingPreceptor) {
-        this.servingPreceptor = servingPreceptor;
+    public void setWorkLocation(Integer workLocation) {
+        this.workLocation = workLocation;
     }
 
-    public Integer getServingInterimNurseLeader() {
-        return servingInterimNurseLeader;
+    public String getWorkLocationDefinition() {
+        return workLocationDefinition;
     }
 
-    public void setServingInterimNurseLeader(Integer servingInterimNurseLeader) {
-        this.servingInterimNurseLeader = servingInterimNurseLeader;
-    }
-
-    public Object getLeadershipRoles() {
-        return leadershipRoles;
-    }
-
-    public void setLeadershipRoles(Object leadershipRoles) {
-        this.leadershipRoles = leadershipRoles;
+    public void setWorkLocationDefinition(String workLocationDefinition) {
+        this.workLocationDefinition = workLocationDefinition;
     }
 
     public String getAddress() {
@@ -313,380 +308,263 @@ public class Data {
         this.hourlyPayRate = hourlyPayRate;
     }
 
-    public String getExperienceAsAcuteCareFacility() {
-        return experienceAsAcuteCareFacility;
+    public String getShiftDuration() {
+        return shiftDuration;
     }
 
-    public void setExperienceAsAcuteCareFacility(String experienceAsAcuteCareFacility) {
-        this.experienceAsAcuteCareFacility = experienceAsAcuteCareFacility;
+    public void setShiftDuration(String shiftDuration) {
+        this.shiftDuration = shiftDuration;
     }
 
-    public String getExperienceAsAmbulatoryCareFacility() {
-        return experienceAsAmbulatoryCareFacility;
+    public String getShiftDurationDefinition() {
+        return shiftDurationDefinition;
     }
 
-    public void setExperienceAsAmbulatoryCareFacility(String experienceAsAmbulatoryCareFacility) {
-        this.experienceAsAmbulatoryCareFacility = experienceAsAmbulatoryCareFacility;
+    public void setShiftDurationDefinition(String shiftDurationDefinition) {
+        this.shiftDurationDefinition = shiftDurationDefinition;
     }
 
-    public Integer getActive() {
-        return active;
+    public String getAssignmentDuration() {
+        return assignmentDuration;
     }
 
-    public void setActive(Integer active) {
-        this.active = active;
+    public void setAssignmentDuration(String assignmentDuration) {
+        this.assignmentDuration = assignmentDuration;
     }
 
-    public Object getDeletedAt() {
-        return deletedAt;
+    public String getAssignmentDurationDefinition() {
+        return assignmentDurationDefinition;
     }
 
-    public void setDeletedAt(Object deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setAssignmentDurationDefinition(String assignmentDurationDefinition) {
+        this.assignmentDurationDefinition = assignmentDurationDefinition;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getPreferredShift() {
+        return preferredShift;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setPreferredShift(String preferredShift) {
+        this.preferredShift = preferredShift;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public List<String> getDaysOfTheWeek() {
+        return daysOfTheWeek;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setDaysOfTheWeek(List<String> daysOfTheWeek) {
+        this.daysOfTheWeek = daysOfTheWeek;
     }
 
-    public String getEhrProficiencyCerner() {
-        return ehrProficiencyCerner;
+    public String getEarliestStartDate() {
+        return earliestStartDate;
     }
 
-    public void setEhrProficiencyCerner(String ehrProficiencyCerner) {
-        this.ehrProficiencyCerner = ehrProficiencyCerner;
+    public void setEarliestStartDate(String earliestStartDate) {
+        this.earliestStartDate = earliestStartDate;
     }
 
-    public String getEhrProficiencyMeditech() {
-        return ehrProficiencyMeditech;
+    public String getProfileDetailFlag() {
+        return profileDetailFlag;
     }
 
-    public void setEhrProficiencyMeditech(String ehrProficiencyMeditech) {
-        this.ehrProficiencyMeditech = ehrProficiencyMeditech;
+    public void setProfileDetailFlag(String profileDetailFlag) {
+        this.profileDetailFlag = profileDetailFlag;
     }
 
-    public String getEhrProficiencyEpic() {
-        return ehrProficiencyEpic;
+    public String getHourlyRateAndAvailFlag() {
+        return hourlyRateAndAvailFlag;
     }
 
-    public void setEhrProficiencyEpic(String ehrProficiencyEpic) {
-        this.ehrProficiencyEpic = ehrProficiencyEpic;
+    public void setHourlyRateAndAvailFlag(String hourlyRateAndAvailFlag) {
+        this.hourlyRateAndAvailFlag = hourlyRateAndAvailFlag;
     }
 
-    public String getEhrProficiencyOther() {
-        return ehrProficiencyOther;
+    public Experience getExperience() {
+        return experience;
     }
 
-    public void setEhrProficiencyOther(String ehrProficiencyOther) {
-        this.ehrProficiencyOther = ehrProficiencyOther;
+    public void setExperience(Experience experience) {
+        this.experience = experience;
     }
 
-    public String getSlug() {
-        return slug;
+    public List<Object> getCertitficate() {
+        return certitficate;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setCertitficate(List<Object> certitficate) {
+        this.certitficate = certitficate;
     }
 
-    public Object getSummary() {
-        return summary;
-    }
-
-    public void setSummary(Object summary) {
-        this.summary = summary;
-    }
-
-    public Object getNursesVideo() {
-        return nursesVideo;
-    }
-
-    public void setNursesVideo(Object nursesVideo) {
-        this.nursesVideo = nursesVideo;
-    }
-
-    public Object getNursesFacebook() {
-        return nursesFacebook;
-    }
-
-    public void setNursesFacebook(Object nursesFacebook) {
-        this.nursesFacebook = nursesFacebook;
-    }
-
-    public Object getNursesTwitter() {
-        return nursesTwitter;
-    }
-
-    public void setNursesTwitter(Object nursesTwitter) {
-        this.nursesTwitter = nursesTwitter;
-    }
-
-    public Object getNursesLinkedin() {
-        return nursesLinkedin;
-    }
-
-    public void setNursesLinkedin(Object nursesLinkedin) {
-        this.nursesLinkedin = nursesLinkedin;
-    }
-
-    public Object getNursesInstagram() {
-        return nursesInstagram;
-    }
-
-    public void setNursesInstagram(Object nursesInstagram) {
-        this.nursesInstagram = nursesInstagram;
-    }
-
-    public Object getNursesPinterest() {
-        return nursesPinterest;
-    }
-
-    public void setNursesPinterest(Object nursesPinterest) {
-        this.nursesPinterest = nursesPinterest;
-    }
-
-    public Object getNursesTiktok() {
-        return nursesTiktok;
-    }
-
-    public void setNursesTiktok(Object nursesTiktok) {
-        this.nursesTiktok = nursesTiktok;
-    }
-
-    public Object getNursesSanpchat() {
-        return nursesSanpchat;
-    }
-
-    public void setNursesSanpchat(Object nursesSanpchat) {
-        this.nursesSanpchat = nursesSanpchat;
-    }
-
-    public Object getNursesYoutube() {
-        return nursesYoutube;
-    }
-
-    public void setNursesYoutube(Object nursesYoutube) {
-        this.nursesYoutube = nursesYoutube;
-    }
-
-    public Integer getClinicalEducator() {
-        return clinicalEducator;
-    }
-
-    public void setClinicalEducator(Integer clinicalEducator) {
-        this.clinicalEducator = clinicalEducator;
-    }
-
-    public Integer getIsDaisyAwardWinner() {
-        return isDaisyAwardWinner;
-    }
-
-    public void setIsDaisyAwardWinner(Integer isDaisyAwardWinner) {
-        this.isDaisyAwardWinner = isDaisyAwardWinner;
-    }
-
-    public Integer getEmployeeOfTheMthQtrYr() {
-        return employeeOfTheMthQtrYr;
-    }
-
-    public void setEmployeeOfTheMthQtrYr(Integer employeeOfTheMthQtrYr) {
-        this.employeeOfTheMthQtrYr = employeeOfTheMthQtrYr;
-    }
-
-    public Integer getOtherNursingAwards() {
-        return otherNursingAwards;
-    }
-
-    public void setOtherNursingAwards(Integer otherNursingAwards) {
-        this.otherNursingAwards = otherNursingAwards;
-    }
-
-    public Integer getIsProfessionalPracticeCouncil() {
-        return isProfessionalPracticeCouncil;
-    }
-
-    public void setIsProfessionalPracticeCouncil(Integer isProfessionalPracticeCouncil) {
-        this.isProfessionalPracticeCouncil = isProfessionalPracticeCouncil;
-    }
-
-    public Integer getIsResearchPublications() {
-        return isResearchPublications;
-    }
-
-    public void setIsResearchPublications(Integer isResearchPublications) {
-        this.isResearchPublications = isResearchPublications;
-    }
-
-    public Object getCredentialTitle() {
-        return credentialTitle;
-    }
-
-    public void setCredentialTitle(Object credentialTitle) {
-        this.credentialTitle = credentialTitle;
-    }
-
-    public Object getMuSpecialty() {
-        return muSpecialty;
-    }
-
-    public void setMuSpecialty(Object muSpecialty) {
-        this.muSpecialty = muSpecialty;
-    }
-
-    public Object getAdditionalPhotos() {
-        return additionalPhotos;
-    }
-
-    public void setAdditionalPhotos(Object additionalPhotos) {
-        this.additionalPhotos = additionalPhotos;
-    }
-
-    public String getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(String languages) {
-        this.languages = languages;
-    }
-
-    public Object getAdditionalFiles() {
-        return additionalFiles;
-    }
-
-    public void setAdditionalFiles(Object additionalFiles) {
-        this.additionalFiles = additionalFiles;
-    }
-
-    public String getCollegeUniName() {
-        return collegeUniName;
-    }
-
-    public void setCollegeUniName(String collegeUniName) {
-        this.collegeUniName = collegeUniName;
-    }
-
-    public String getCollegeUniCity() {
-        return collegeUniCity;
-    }
-
-    public void setCollegeUniCity(String collegeUniCity) {
-        this.collegeUniCity = collegeUniCity;
-    }
-
-    public String getCollegeUniState() {
-        return collegeUniState;
-    }
-
-    public void setCollegeUniState(String collegeUniState) {
-        this.collegeUniState = collegeUniState;
-    }
-
-    public String getCollegeUniCountry() {
-        return collegeUniCountry;
-    }
-
-    public void setCollegeUniCountry(String collegeUniCountry) {
-        this.collegeUniCountry = collegeUniCountry;
-    }
-
-    public String getFacilityHourlyPayRate() {
-        return facilityHourlyPayRate;
-    }
-
-    public void setFacilityHourlyPayRate(String facilityHourlyPayRate) {
-        this.facilityHourlyPayRate = facilityHourlyPayRate;
-    }
-
-    public Object getnLat() {
-        return nLat;
-    }
-
-    public void setnLat(Object nLat) {
-        this.nLat = nLat;
-    }
-
-    public Object getnLang() {
-        return nLang;
-    }
-
-    public void setnLang(Object nLang) {
-        this.nLang = nLang;
-    }
-
-    public Object getResume() {
+    public String getResume() {
         return resume;
     }
 
-    public void setResume(Object resume) {
+    public void setResume(String resume) {
         this.resume = resume;
     }
 
-    public Object getNuVideo() {
-        return nuVideo;
+    public class Experience {
+
+        @SerializedName("highest_nursing_degree")
+        @Expose
+        private Integer highestNursingDegree;
+        @SerializedName("highest_nursing_degree_definition")
+        @Expose
+        private String highestNursingDegreeDefinition;
+        @SerializedName("college_uni_name")
+        @Expose
+        private String collegeUniName;
+        @SerializedName("college_uni_city")
+        @Expose
+        private String collegeUniCity;
+        @SerializedName("college_uni_state")
+        @Expose
+        private String collegeUniState;
+        @SerializedName("college_uni_country")
+        @Expose
+        private String collegeUniCountry;
+        @SerializedName("experience_as_acute_care_facility")
+        @Expose
+        private String experienceAsAcuteCareFacility;
+        @SerializedName("experience_as_ambulatory_care_facility")
+        @Expose
+        private String experienceAsAmbulatoryCareFacility;
+        @SerializedName("ehr_proficiency_cerner")
+        @Expose
+        private Integer ehrProficiencyCerner;
+        @SerializedName("ehr_proficiency_meditech")
+        @Expose
+        private Integer ehrProficiencyMeditech;
+        @SerializedName("ehr_proficiency_epic")
+        @Expose
+        private Integer ehrProficiencyEpic;
+        @SerializedName("ehr_proficiency_other")
+        @Expose
+        private String ehrProficiencyOther;
+
+        public Integer getHighestNursingDegree() {
+            return highestNursingDegree;
+        }
+
+        public void setHighestNursingDegree(Integer highestNursingDegree) {
+            this.highestNursingDegree = highestNursingDegree;
+        }
+
+        public String getHighestNursingDegreeDefinition() {
+            return highestNursingDegreeDefinition;
+        }
+
+        public void setHighestNursingDegreeDefinition(String highestNursingDegreeDefinition) {
+            this.highestNursingDegreeDefinition = highestNursingDegreeDefinition;
+        }
+
+        public String getCollegeUniName() {
+            return collegeUniName;
+        }
+
+        public void setCollegeUniName(String collegeUniName) {
+            this.collegeUniName = collegeUniName;
+        }
+
+        public String getCollegeUniCity() {
+            return collegeUniCity;
+        }
+
+        public void setCollegeUniCity(String collegeUniCity) {
+            this.collegeUniCity = collegeUniCity;
+        }
+
+        public String getCollegeUniState() {
+            return collegeUniState;
+        }
+
+        public void setCollegeUniState(String collegeUniState) {
+            this.collegeUniState = collegeUniState;
+        }
+
+        public String getCollegeUniCountry() {
+            return collegeUniCountry;
+        }
+
+        public void setCollegeUniCountry(String collegeUniCountry) {
+            this.collegeUniCountry = collegeUniCountry;
+        }
+
+        public String getExperienceAsAcuteCareFacility() {
+            return experienceAsAcuteCareFacility;
+        }
+
+        public void setExperienceAsAcuteCareFacility(String experienceAsAcuteCareFacility) {
+            this.experienceAsAcuteCareFacility = experienceAsAcuteCareFacility;
+        }
+
+        public String getExperienceAsAmbulatoryCareFacility() {
+            return experienceAsAmbulatoryCareFacility;
+        }
+
+        public void setExperienceAsAmbulatoryCareFacility(String experienceAsAmbulatoryCareFacility) {
+            this.experienceAsAmbulatoryCareFacility = experienceAsAmbulatoryCareFacility;
+        }
+
+        public Integer getEhrProficiencyCerner() {
+            return ehrProficiencyCerner;
+        }
+
+        public void setEhrProficiencyCerner(Integer ehrProficiencyCerner) {
+            this.ehrProficiencyCerner = ehrProficiencyCerner;
+        }
+
+        public Integer getEhrProficiencyMeditech() {
+            return ehrProficiencyMeditech;
+        }
+
+        public void setEhrProficiencyMeditech(Integer ehrProficiencyMeditech) {
+            this.ehrProficiencyMeditech = ehrProficiencyMeditech;
+        }
+
+        public Integer getEhrProficiencyEpic() {
+            return ehrProficiencyEpic;
+        }
+
+        public void setEhrProficiencyEpic(Integer ehrProficiencyEpic) {
+            this.ehrProficiencyEpic = ehrProficiencyEpic;
+        }
+
+        public String getEhrProficiencyOther() {
+            return ehrProficiencyOther;
+        }
+
+        public void setEhrProficiencyOther(String ehrProficiencyOther) {
+            this.ehrProficiencyOther = ehrProficiencyOther;
+        }
+
     }
 
-    public void setNuVideo(Object nuVideo) {
-        this.nuVideo = nuVideo;
-    }
+    public class Specialty {
 
-    public Object getNuVideoEmbedUrl() {
-        return nuVideoEmbedUrl;
-    }
+        @SerializedName("id")
+        @Expose
+        private String id;
+        @SerializedName("name")
+        @Expose
+        private String name;
 
-    public void setNuVideoEmbedUrl(Object nuVideoEmbedUrl) {
-        this.nuVideoEmbedUrl = nuVideoEmbedUrl;
-    }
+        public String getId() {
+            return id;
+        }
 
-    public Integer getIsVerified() {
-        return isVerified;
-    }
+        public void setId(String id) {
+            this.id = id;
+        }
 
-    public void setIsVerified(Integer isVerified) {
-        this.isVerified = isVerified;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public Object getGigAccountId() {
-        return gigAccountId;
-    }
+        public void setName(String name) {
+            this.name = name;
+        }
 
-    public void setGigAccountId(Object gigAccountId) {
-        this.gigAccountId = gigAccountId;
     }
-
-    public Integer getIsGigInvite() {
-        return isGigInvite;
-    }
-
-    public void setIsGigInvite(Integer isGigInvite) {
-        this.isGigInvite = isGigInvite;
-    }
-
-    public Object getGigAccountCreateDate() {
-        return gigAccountCreateDate;
-    }
-
-    public void setGigAccountCreateDate(Object gigAccountCreateDate) {
-        this.gigAccountCreateDate = gigAccountCreateDate;
-    }
-
-    public Object getGigAccountInviteDate() {
-        return gigAccountInviteDate;
-    }
-
-    public void setGigAccountInviteDate(Object gigAccountInviteDate) {
-        this.gigAccountInviteDate = gigAccountInviteDate;
-    }
-
 }

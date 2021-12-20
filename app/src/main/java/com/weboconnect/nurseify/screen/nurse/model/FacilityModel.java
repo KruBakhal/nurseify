@@ -41,6 +41,7 @@ public class FacilityModel {
         this.data = data;
     }
 
+
     public class Facility {
 
         @SerializedName("id")
@@ -153,10 +154,10 @@ public class FacilityModel {
         private String rating;
         @SerializedName("is_follow")
         @Expose
-        private boolean isFollow;
+        private Integer isFollow;
         @SerializedName("is_like")
         @Expose
-        private boolean isLike;
+        private Integer isLike;
 
         public String getId() {
             return id;
@@ -446,22 +447,21 @@ public class FacilityModel {
             this.rating = rating;
         }
 
-        public boolean getIsFollow() {
+        public Integer getIsFollow() {
             return isFollow;
         }
 
-        public void setIsFollow(boolean isFollow) {
+        public void setIsFollow(Integer isFollow) {
             this.isFollow = isFollow;
         }
 
-        public boolean getIsLike() {
+        public Integer getIsLike() {
             return isLike;
         }
 
-        public void setIsLike(boolean isLike) {
+        public void setIsLike(Integer isLike) {
             this.isLike = isLike;
         }
 
     }
-
 }

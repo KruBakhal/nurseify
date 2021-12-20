@@ -12,4 +12,7 @@
     <color name="page_bk">#F4F3F9</color>
     <color name="gray">#818A93</color>
     <color name="hint">#A4ADBB</color>
+
+    <color name="drak_green">#00A651</color>
+    <color name="drak_yellow">#FF9800</color>
 </resources>

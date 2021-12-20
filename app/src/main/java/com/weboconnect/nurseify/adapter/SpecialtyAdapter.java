@@ -1,5 +1,6 @@
 package com.weboconnect.nurseify.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionMo
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel.HourlyRate_DayOfWeek_OptionDatum;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageDatum;
 import com.weboconnect.nurseify.screen.nurse.model.QuestionModel;
+import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationDatum;
@@ -30,7 +32,7 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.View
     List<Integer> select_specialty;
     List<Integer> select_geography;
     List<Integer> select_daysofWeeks;
-    List<SpecialtyModel.SpecialtyDatum> list_Specialty;
+    List<SpecialtyDatum> list_Specialty;
     List<HourlyRate_DayOfWeek_OptionDatum> list_daysOfWeek;
     private long mLastClickTime = 0;
     List<WorkLocationDatum> list_geography;
@@ -75,7 +77,7 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.View
     SpecialtyListener specialtyListener;
 
     public SpecialtyAdapter(Context activity, List<Integer> select_specialty,
-                            List<SpecialtyModel.SpecialtyDatum> list_Specialty, SpecialtyListener specialtyListener) {
+                            List<SpecialtyDatum> list_Specialty, SpecialtyListener specialtyListener) {
         this.activity = activity;
         this.select_specialty = select_specialty;
         this.list_Specialty = list_Specialty;
@@ -92,11 +94,11 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         try {
             if (type == 1) {
-                SpecialtyModel.SpecialtyDatum model = list_Specialty.get(select_specialty.get(position));
+                SpecialtyDatum model = list_Specialty.get(select_specialty.get(position));
                 holder.tv_text.setText(model.getName());
             } else if (type == 2) {
                 WorkLocationDatum model = list_geography.get(select_geography.get(position));

@@ -46,6 +46,9 @@ public class OfferedJobModel {
         @SerializedName("offer_id")
         @Expose
         private String offerId;
+        @SerializedName("job_id")
+        @Expose
+        private String jobId;
         @SerializedName("facility_logo")
         @Expose
         private String facilityLogo;
@@ -83,6 +86,14 @@ public class OfferedJobModel {
 
         public void setOfferId(String offerId) {
             this.offerId = offerId;
+        }
+
+        public String getJobId() {
+            return jobId;
+        }
+
+        public void setJobId(String jobId) {
+            this.jobId = jobId;
         }
 
         public String getFacilityLogo() {

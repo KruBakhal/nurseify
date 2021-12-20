@@ -10,8 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,8 +26,9 @@ import com.weboconnect.nurseify.adapter.SpecialtyAdapter;
 import com.weboconnect.nurseify.adapter.PersonalDetailWindowAdapter;
 import com.weboconnect.nurseify.databinding.ActivitySignupDetailsBinding;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_PersonalDetail_DataModel;
+import com.weboconnect.nurseify.screen.nurse.model.RegisterModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
-import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel.SpecialtyDatum;
+import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationDatum;
@@ -36,6 +40,8 @@ import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -64,6 +70,11 @@ public class SignupDetailsActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private SpecialtyAdapter specialtyAdapter;
     private SessionManager sessionManger;
+    Pattern pattern = Pattern.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[\\[\\]\\{\\}\\';:\\.,#?!@$%^&*-]).{6,}$");
+    Pattern pattern2 = Pattern.compile("^[a-zA-Z]*$");
+    Pattern pattern3 = Pattern.compile("^[0-9]*$");
+    Pattern pattern4 = Pattern.compile("^[a-zA-Z0-9]*$");
+    Pattern patternLettersSpace = Pattern.compile("^[a-zA-Z ]*$");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +83,7 @@ public class SignupDetailsActivity extends AppCompatActivity {
         context = this;
         sessionManger = new SessionManager(context);
         fetchData();
-
         setData();
-
         click();
     }
 
@@ -184,6 +193,102 @@ public class SignupDetailsActivity extends AppCompatActivity {
     }
 
     private void click() {
+        binding.edPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    binding.edPassword.setError(null);
+                else if (!pattern.matcher(s.toString()).find()) {
+                    binding.edPassword.setError("Enter Password As Per Format Mentioned Below!");
+                } else {
+                    binding.edPassword.setError(null);
+                }
+            }
+        });
+
+        binding.edConfirmPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    binding.edConfirmPassword.setError(null);
+                else if (!pattern.matcher(s.toString()).find()) {
+                    binding.edConfirmPassword.setError("Enter Password As Per Format Mentioned Above!");
+                }
+                if (!binding.edPassword.getText().toString().equals(binding.edConfirmPassword.getText().toString())) {
+                    binding.edConfirmPassword.setError("Please Enter Same Password In Both Field !");
+                } else {
+                    binding.edConfirmPassword.setError(null);
+                }
+            }
+        });
+
+        binding.edState.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    binding.edState.setError(null);
+                else if (!pattern4.matcher(s.toString()).find() || s.toString().length() < 2) {
+                    binding.edState.setError("Nurse State in proper format only alphabet,numbers with no space and min length is 2 !");
+                } else {
+                    binding.edState.setError(null);
+                }
+            }
+        });
+
+        binding.edLicenseNos.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    binding.edLicenseNos.setError(null);
+                else if (!pattern4.matcher(s.toString()).find() || s.toString().length() < 5) {
+
+                    binding.edLicenseNos.setError("Enter Nurse License Number in proper format only alphabet,numbers with no space and min length is 5 !");
+                } else {
+                    binding.edLicenseNos.setError(null);
+                }
+            }
+        });
+
         binding.laySpec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,7 +329,6 @@ public class SignupDetailsActivity extends AppCompatActivity {
                 if (checkValidation()) {
                     performSignupProcess();
                 }
-
             }
         });
 
@@ -240,27 +344,33 @@ public class SignupDetailsActivity extends AppCompatActivity {
         }
         Utils.displayToast(context, null); // to cancel toast if showing on screen
         progressDialog.show();
+
+        String pass, state, lic, spec, key;
+        pass = binding.edPassword.getText().toString();
+        state = binding.edState.getText().toString();
+        lic = binding.edLicenseNos.getText().toString();
+        spec = "" + list_work_location.get(Integer.parseInt(select_prefer_geo)).getId();
+        key = Build.ID;
         RequestBody requestBody3 = RequestBody.create(MediaType.parse("multipart/form-data"), edFirstName);
         RequestBody requestBody32 = RequestBody.create(MediaType.parse("multipart/form-data"), edLastName);
-        RequestBody requestBody33 = RequestBody.create(MediaType.parse("multipart/form-data"), mobile);
         RequestBody requestBody34 = RequestBody.create(MediaType.parse("multipart/form-data"), email);
-        RequestBody requestBody35 = RequestBody.create(MediaType.parse("multipart/form-data"), binding.edPassword.getText().toString());
-        RequestBody requestBody36 = RequestBody.create(MediaType.parse("multipart/form-data"), binding.edState.getText().toString());
-        RequestBody requestBody37 = RequestBody.create(MediaType.parse("multipart/form-data"), binding.edLicenseNos.getText().toString());
+        RequestBody requestBody33 = RequestBody.create(MediaType.parse("multipart/form-data"), mobile);
+        RequestBody requestBody35 = RequestBody.create(MediaType.parse("multipart/form-data"), pass.toString());
+        RequestBody requestBody36 = RequestBody.create(MediaType.parse("multipart/form-data"), state.toString());
+        RequestBody requestBody37 = RequestBody.create(MediaType.parse("multipart/form-data"), lic.toString());
         String nos = "";
         for (int i = 0; i < select_specialty.size(); i++) {
             if (i == 0) {
-                nos = "" + list_Specialty.get(select_specialty.get(i));
+                nos = "" + list_Specialty.get(select_specialty.get(i)).getId();
             } else
-                nos = nos + "," + list_Specialty.get(select_specialty.get(i));
+                nos = nos + "," + list_Specialty.get(select_specialty.get(i)).getId();
         }
         RequestBody requestBody38 = RequestBody.create(MediaType.parse("multipart/form-data"), nos);
-        RequestBody requestBody39 = RequestBody.create(MediaType.parse("multipart/form-data"), select_prefer_geo);
-        RequestBody requestBody310 = RequestBody.create(MediaType.parse("multipart/form-data"), sessionManger.get_API_KEY());
-
+        RequestBody requestBody39 = RequestBody.create(MediaType.parse("multipart/form-data"), "" + spec);
+        RequestBody requestBody310 = RequestBody.create(MediaType.parse("multipart/form-data"), key);
 
         Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
-                .call_Signup(requestBody3, requestBody32, requestBody33, requestBody34,
+                .call_Signup(requestBody3, requestBody32, requestBody34, requestBody33,
                         requestBody35, requestBody36, requestBody37, requestBody38, requestBody39, requestBody310);
 
         call.enqueue(new Callback<UserProfile>() {
@@ -269,9 +379,9 @@ public class SignupDetailsActivity extends AppCompatActivity {
                 assert response.body() != null;
                 if (!response.body().getApiStatus().equals("1")) {
                     Utils.displayToast(context, "" + response.body().getMessage());
+                    progressDialog.dismiss();
                     return;
                 }
-
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
                     UserProfile UserProfile = response.body();
@@ -287,6 +397,7 @@ public class SignupDetailsActivity extends AppCompatActivity {
                     i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(UserProfile.getData()));
                     startActivity(i);
                     context.finish();
+
                 } else {
                     progressDialog.dismiss();
                     Utils.displayToast(context, "Signup Failed");
@@ -304,28 +415,28 @@ public class SignupDetailsActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private boolean checkValidation() {
-
         String pasas = binding.edPassword.getText().toString();
         String confirm_pass = binding.edConfirmPassword.getText().toString();
         String state = binding.edState.getText().toString();
         String edLicenseNos = binding.edLicenseNos.getText().toString();
 
+
         if (TextUtils.isEmpty(pasas)) {
             Utils.displayToast(context, "Enter Password");
             return false;
         }
-        if (TextUtils.isEmpty(pasas) && pasas.length() < 6) {
+        if (TextUtils.isEmpty(pasas) && pasas.length() <= 6) {
             Utils.displayToast(context, "Enter More 6 Character Long Password !");
             return false;
         }
-//        if (pasas.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$")) {
-//            Utils.displayToast(context, "Enter More 6 Character Long Password !");
-//            return false;
-//        }
+        Matcher matcher1 = pattern.matcher(pasas);
+        if (!matcher1.find()) {
+            Utils.displayToast(context, "Enter Password As Per Format Mentioned Above!");
+            return false;
+        }
         if (TextUtils.isEmpty(confirm_pass)) {
             Utils.displayToast(context, "Enter Confirm Password");
             return false;
@@ -335,15 +446,37 @@ public class SignupDetailsActivity extends AppCompatActivity {
             return false;
         }
         if (!confirm_pass.equals(pasas)) {
-            Utils.displayToast(context, "Please Same Password In Both Field !");
+            Utils.displayToast(context, "Please Enter Same Password In Both Field !");
             return false;
         }
         if (TextUtils.isEmpty(state)) {
-            Utils.displayToast(context, "Select Nurse License State First !");
+            Utils.displayToast(context, "Enter Nurse License State First !");
+            return false;
+        }
+        if (edLicenseNos.length() < 2) {
+            Utils.displayToast(context, "Nurse State required min length is 2 !");
+            return false;
+        }
+        matcher1 = pattern4.matcher(state);
+        if (!matcher1.find() || state.length() < 2) {
+            Utils.displayToast(context, "Nurse State can contain only alphabet & numbers with no space.!");
             return false;
         }
         if (TextUtils.isEmpty(edLicenseNos)) {
             Utils.displayToast(context, "Select Nurse License Number First !");
+            return false;
+        }
+        matcher1 = pattern4.matcher(edLicenseNos);
+        if (edLicenseNos.length() < 5) {
+            Utils.displayToast(context, "Nurse License Number required min length is 5 !");
+            return false;
+        }
+        if (!matcher1.find() || edLicenseNos.length() < 5) {
+            Utils.displayToast(context, "Nurse License Number can contain only alphabet & numbers with no space !");
+            return false;
+        }
+        if (edLicenseNos.length() > 20) {
+            Utils.displayToast(context, "Enter Nurse License Number max length is 20 !");
             return false;
         }
         if (select_specialty == null || select_specialty.size() == 0) {

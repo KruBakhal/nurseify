@@ -1,16 +1,34 @@
 package com.weboconnect.nurseify.screen.nurse;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
@@ -20,6 +38,9 @@ import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -43,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Please Wait");
         sessionManger = new SessionManager(context);
+
         binding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,10 +82,127 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(i);
+                startActivityForResult(i, 123);
                 Utils.onClickEvent(v);
             }
         });
+        binding.tvForget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = binding.editTextEmail.getText().toString();
+                if (TextUtils.isEmpty(email)) {
+                    Utils.displayToast(context, "Enter Email ID First");
+                    return;
+                }
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).find()) {
+                    Utils.displayToast(context, "Enter Email ID In Proper Format !");
+                    return;
+                }
+                Intent i = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                i.putExtra(Constant.EMAIL_ID, email);
+                startActivityForResult(i, 123);
+                Utils.onClickEvent(v);
+            }
+        });
+        binding.editTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null || s.length() == 0)
+                    binding.editTextEmail.setError(null);
+                else if (!Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches()) {
+                    binding.editTextEmail.setError("Enter Email Id In Proper Format !");
+                }
+            }
+        });
+
+    }
+
+    private void permissionSetup() {
+        if (!checkReadExternal()) {
+            requestPermission();
+            return;
+        }
+    }
+
+    private boolean checkReadExternal() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int result = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
+            int result1 = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 123:
+                if (grantResults.length > 0) {
+                    boolean READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+                    if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
+                        // perform action when allow permission success
+                        Utils.displayToast(context, "Permission Allowed");
+                    } else {
+                        Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                        permissionSetup();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void requestPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                startActivityForResult(intent, 229);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, 229);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{READ_EXTERNAL_STORAGE,
+                            WRITE_EXTERNAL_STORAGE},
+                    123);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123) {
+            binding.editTextEmail.setText("");
+            binding.editTextPassword.setText("");
+            binding.editTextEmail.clearFocus();
+            binding.editTextPassword.clearFocus();
+        } else if (requestCode == 229) {
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    Utils.displayToast(context, "Permission Allowed");
+                } else {
+                    Toast.makeText(this, "Please, Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                    permissionSetup();
+                }
+            }
+        }
     }
 
     private void peformLoginProcess() {
@@ -81,7 +220,7 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.show();
             RequestBody requestBody3 = RequestBody.create(MediaType.parse("multipart/form-data"), binding.editTextEmail.getText().toString());
             RequestBody requestBody13 = RequestBody.create(MediaType.parse("multipart/form-data"), binding.editTextPassword.getText().toString());
-            RequestBody requestBody131 = RequestBody.create(MediaType.parse("multipart/form-data"), sessionManger.get_API_KEY());
+            RequestBody requestBody131 = RequestBody.create(MediaType.parse("multipart/form-data"), "" + Build.ID);
 
 
             Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
@@ -139,6 +278,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onFailure(Call<UserProfile> call, Throwable t) {
                     if (progressDialog.isShowing())
                         progressDialog.dismiss();
+                    Log.d("TAG", "onFailure: " + t.getMessage());
                     Utils.displayToast(context, "Login Failed, please retry again ");
                 }
             });
@@ -147,6 +287,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
     private boolean checkValidation() {
         String email = binding.editTextEmail.getText().toString();
         String pasas = binding.editTextPassword.getText().toString();
@@ -154,13 +295,14 @@ public class LoginActivity extends AppCompatActivity {
             Utils.displayToast(context, "Enter Email ID");
             return false;
         }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            return false;
+        }
         if (TextUtils.isEmpty(pasas)) {
             Utils.displayToast(context, "Enter Password");
             return false;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return false;
-        }
+
         return true;
     }
 

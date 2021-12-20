@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/secondary_gradient"
@@ -7,6 +7,7 @@
     android:layout_gravity="top"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,210 +17,234 @@
         android:gravity="top"
         android:fontFamily="@font/sf_600"
         android:textSize="22dp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="30dp"
         android:scrollbars="none">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="14dp"
-        android:layout_marginTop="23dp"
-        android:background="#EFF3F6"
-        android:paddingTop="21dp"
-        android:paddingHorizontal="14dp"
-        android:orientation="vertical"
-        android:gravity="center">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="34dp"
-                android:layout_height="25dp"
-                android:src="@drawable/ic_personal_details"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Facility Details"
-            android:layout_marginLeft="12dp"
-            android:fontFamily="@font/sf_600"
-            android:textSize="20dp"
-            android:textColor="#8A4999"/>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="#8A4999"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Electronic Medical Records (EMR)"
-            android:fontFamily="@font/sf_500"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:textSize="15dp"
-            android:textColor="#595094"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-            <Spinner
-                android:id="@+id/spinner_degree"
-                style="@style/spinner"
-                android:layout_marginHorizontal="9dp"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginTop="23dp"
+            android:background="#EFF3F6"
+            android:paddingTop="21dp"
+            android:paddingHorizontal="14dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="5dp"
-                android:paddingTop="0dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="0dp" />
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
-            android:background="#8A4999"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Other Electronic Medical Records (EMR)"
-            android:fontFamily="@font/sf_500"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:textSize="15dp"
-            android:textColor="#595094"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="Nurseify"
-            android:background="@color/trans"
-            android:fontFamily="@font/sf_500"
-            android:layout_marginHorizontal="9dp"
-            android:paddingLeft="27dp"
-            android:layout_marginTop="10dp"
-            android:textColorHint="#A4ADBB"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:textSize="16dp"
-            android:textColor="@color/black"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
-            android:background="#8A4999"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Background Check Provider"
-            android:fontFamily="@font/sf_500"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:textSize="15dp"
-            android:textColor="#595094"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-            <Spinner
-                style="@style/spinner"
-                android:layout_marginHorizontal="9dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_personal_details" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Facility Details"
+                    android:layout_marginLeft="12dp"
+                    android:fontFamily="@font/sf_600"
+                    android:textSize="20dp"
+                    android:textColor="#8A4999" />
+            </LinearLayout>
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="5dp"
-                android:paddingTop="0dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="0dp" />
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
-            android:background="#8A4999"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Other Background Check Provider"
-            android:fontFamily="@font/sf_500"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:textSize="15dp"
-            android:textColor="#595094"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="PreCheck"
-            android:background="@color/trans"
-            android:fontFamily="@font/sf_500"
-            android:layout_marginHorizontal="9dp"
-            android:paddingLeft="27dp"
-            android:layout_marginTop="10dp"
-            android:textColorHint="#A4ADBB"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:textSize="16dp"
-            android:textColor="@color/black"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
-            android:background="#8A4999"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nurse Credentialing Software"
-            android:fontFamily="@font/sf_500"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:textSize="15dp"
-            android:textColor="#595094"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-            <Spinner
-                style="@style/spinner"
-                android:layout_marginHorizontal="9dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:background="#8A4999" />
+
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="5dp"
-                android:paddingTop="0dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="0dp" />
+                android:layout_height="wrap_content"
+                android:text="Electronic Medical Records (EMR)"
+                android:fontFamily="@font/sf_500"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:textSize="15dp"
+                android:textColor="#595094" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinner_degree"
+                    style="@style/spinner"
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="0dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp"
+                android:background="#8A4999" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Other Electronic Medical Records (EMR)"
+                android:fontFamily="@font/sf_500"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:textSize="15dp"
+                android:textColor="#595094" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Nurseify"
+                android:background="@color/trans"
+                android:fontFamily="@font/sf_500"
+                android:layout_marginHorizontal="9dp"
+                android:paddingLeft="27dp"
+                android:layout_marginTop="10dp"
+                android:textColorHint="#A4ADBB"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textSize="16dp"
+                android:textColor="@color/black" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp"
+                android:background="#8A4999" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Background Check Provider"
+                android:fontFamily="@font/sf_500"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:textSize="15dp"
+                android:textColor="#595094" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Spinner
+                    style="@style/spinner"
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="0dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp"
+                android:background="#8A4999" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Other Background Check Provider"
+                android:fontFamily="@font/sf_500"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:textSize="15dp"
+                android:textColor="#595094" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="PreCheck"
+                android:background="@color/trans"
+                android:fontFamily="@font/sf_500"
+                android:layout_marginHorizontal="9dp"
+                android:paddingLeft="27dp"
+                android:layout_marginTop="10dp"
+                android:textColorHint="#A4ADBB"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textSize="16dp"
+                android:textColor="@color/black" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp"
+                android:background="#8A4999" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nurse Credentialing Software"
+                android:fontFamily="@font/sf_500"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:textSize="15dp"
+                android:textColor="#595094" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Spinner
+                    style="@style/spinner"
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="0dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/next"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="33dp"
+                android:layout_marginBottom="30dp"
+                android:text="Next"
+                android:background="@drawable/btn_primary"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:textColor="@color/grad1"
+                android:fontFamily="@font/sf_600" />
         </LinearLayout>
-        <TextView
-            android:id="@+id/next"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="33dp"
-            android:layout_marginBottom="30dp"
-            android:text="Next"
-            android:background="@drawable/btn_primary"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="18dp"
-            android:textColor="@color/grad1"
-            android:fontFamily="@font/sf_600"/>
-    </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

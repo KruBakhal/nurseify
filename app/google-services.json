@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "977404252346",
+    "project_id": "nurseify-app",
+    "storage_bucket": "nurseify-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977404252346:android:d2a0d82b772a0491243283",
+        "android_client_info": {
+          "package_name": "com.weboconnect.nurseify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "977404252346-c9ahu4i3o9f23f4al9jriakr52lrp21m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.weboconnect.nurseify",
+            "certificate_hash": "35ccb39d2ef0c624e2de4456d523e2a747f4d13d"
+          }
+        },
+        {
+          "client_id": "977404252346-g580ufcd9oc7bvsk8pa2iald1pgh1nim.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwgWQADLcOwpe3hM-t-rMXuRwlNMx9244"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "977404252346-g580ufcd9oc7bvsk8pa2iald1pgh1nim.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
