@@ -3,11 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/WeboConnect/nursify-android/app/src/main/res/layout/activity_login_facility.xml" value="0.16018518518518518" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_home_f.xml" value="0.25416666666666665" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_login_facility.xml" value="0.25416666666666665" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_registration_f.xml" value="0.25416666666666665" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_profile_setup1.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

@@ -41,7 +41,7 @@ public class LoginFacilityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(LoginFacilityActivity.this,R.layout.activity_login_facility);
+        binding = DataBindingUtil.setContentView(LoginFacilityActivity.this, R.layout.activity_login_facility);
 
         progressDialog = new ProgressDialog(LoginFacilityActivity.this);
         progressDialog.setCancelable(false);
@@ -70,13 +70,11 @@ public class LoginFacilityActivity extends AppCompatActivity {
                 String email = binding.editTextEmail.getText().toString();
                 String password = binding.editTextPassword.getText().toString();
 
-                if (email.equals("")){
+                if (email.equals("")) {
                     binding.editTextEmail.setText("Enter Email");
-                }
-                else if (password.equals("")){
+                } else if (password.equals("")) {
                     binding.editTextPassword.setText("Enter Password");
-                }
-                else {
+                } else {
                     logIn();
                 }
 
@@ -85,7 +83,7 @@ public class LoginFacilityActivity extends AppCompatActivity {
 
     }
 
-    private void logIn(){
+    private void logIn() {
 
         progressDialog.show();
 
@@ -93,21 +91,19 @@ public class LoginFacilityActivity extends AppCompatActivity {
         RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), binding.editTextPassword.getText().toString());
         RequestBody fcm_token = RequestBody.create(MediaType.parse("multipart/form-data"), "" + Build.ID);
 
-        Call<FacilityLoginModel> call = RetrofitClient.getInstance().getFacilityApi().call_login_check_user(email,password,fcm_token);
+        Call<FacilityLoginModel> call = RetrofitClient.getInstance().getFacilityApi().call_login_check_user(email, password, fcm_token);
 
         call.enqueue(new Callback<FacilityLoginModel>() {
             @Override
             public void onResponse(Call<FacilityLoginModel> call, Response<FacilityLoginModel> response) {
 
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     FacilityLoginModel profile = response.body();
                     sessionManger.set_TYPE(Constant.CONST_FACULTY_TYPE);
-                    sessionManger.setSession_IN_facility(profile.getData().getUserId(),profile.getData().getFacilityId(),profile);
+                    sessionManger.setSession_IN_facility(profile.getData().getUserId(), profile.getData().getFacilityId(), profile);
 
 
-                    if (profile.getData().getProfileDetailFlag().equals("0") ||
-                            profile.getData().getHourlyRateAndAvailFlag().equals("0")) {
-
+                    if (profile.getData().getFacilityProfileFlag().equals("0")) {
                         Intent i = new Intent(LoginFacilityActivity.this, RegistrationFActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -116,7 +112,6 @@ public class LoginFacilityActivity extends AppCompatActivity {
                         startActivity(i);
 
                     } else {
-
                         Intent i = new Intent(LoginFacilityActivity.this, HomeFActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -124,18 +119,17 @@ public class LoginFacilityActivity extends AppCompatActivity {
                         startActivity(i);
                     }
 
-                }
-                else {
+                } else {
                     progressDialog.dismiss();
-                    Log.e(TAG+"LogIn code",response.code()+"");
-                    Log.e(TAG+"LogIn Msg",response.message());
+                    Log.e(TAG + "LogIn code", response.code() + "");
+                    Log.e(TAG + "LogIn Msg", response.message());
                 }
 
             }
 
             @Override
             public void onFailure(Call<FacilityLoginModel> call, Throwable t) {
-                Log.e(TAG+"LogIn",t.toString());
+                Log.e(TAG + "LogIn", t.toString());
                 progressDialog.dismiss();
             }
         });
