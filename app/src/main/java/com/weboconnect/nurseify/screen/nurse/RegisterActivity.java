@@ -262,7 +262,9 @@ public class RegisterActivity extends AppCompatActivity {
         String data = getIntent().getStringExtra(Constant.STR_RESPONSE_DATA);
         Type type = new TypeToken<UserProfileData>() {
         }.getType();
+
         model = new Gson().fromJson(data, type);
+
         if (!edit_mode) {
             chooseOption();
         } else {
@@ -494,6 +496,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }).into(personalDetailsBinding.imgProfile);
             personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
         }
+
         personalDetailsBinding.edFirstName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -517,6 +520,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         personalDetailsBinding.edLastName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -540,6 +544,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         personalDetailsBinding.edEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -562,6 +567,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         personalDetailsBinding.edPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -584,6 +590,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         personalDetailsBinding.edLicenseState.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -606,6 +613,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
         personalDetailsBinding.edLicenseNos.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -633,6 +641,7 @@ public class RegisterActivity extends AppCompatActivity {
             Glide.with(context).load(model.getImage()).into(personalDetailsBinding.imgProfile);
             personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
         }
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -728,6 +737,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         });
+
         personalDetailsBinding.imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -735,6 +745,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Utils.onClickEvent(v);
             }
         });
+
         personalDetailsBinding.layProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -769,6 +780,7 @@ public class RegisterActivity extends AppCompatActivity {
                     chooseOption();
             }
         });
+
         dialog.show();
     }
 
@@ -4532,7 +4544,6 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.show();
 
     }
-
 
     private void roleDialog2() {
         list_photos.clear();

@@ -1,27 +1,76 @@
 package com.weboconnect.nurseify.screen.facility;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityRegistrationFBinding;
+import com.weboconnect.nurseify.screen.facility.model.DropdownModel;
 import com.weboconnect.nurseify.screen.nurse.HomeActivity;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
+import com.weboconnect.nurseify.webService.RetrofitClient;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class RegistrationFActivity extends AppCompatActivity {
+
     ActivityRegistrationFBinding binding;
+
+    int count;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(RegistrationFActivity.this,R.layout.activity_registration_f);
         profileSetup1();
+
+        count=0;
+
+        Observer<DropdownModel> observer  = new Observer<DropdownModel>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull DropdownModel dropdownModel) {
+
+                Log.e("count",count+"");
+                count++;
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        Observable.merge(RetrofitClient.getInstance().getFacilityApi().call_dropdown_get_medical_records(), RetrofitClient.getInstance().getFacilityApi().call_dropdown_get_bcheck_provider() )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+
+
     }
 
     private void profileSetup1(){

@@ -3,6 +3,8 @@ package com.weboconnect.nurseify.utils;
 import static android.content.Context.MODE_PRIVATE;
 
 import static com.weboconnect.nurseify.utils.Constant.API_KEY;
+import static com.weboconnect.nurseify.utils.Constant.FACILITY_DATA;
+import static com.weboconnect.nurseify.utils.Constant.FACILITY_ID;
 import static com.weboconnect.nurseify.utils.Constant.STR_RESPONSE_DATA;
 import static com.weboconnect.nurseify.utils.Constant.TYPE;
 import static com.weboconnect.nurseify.utils.Constant.User_Register_ID;
@@ -14,6 +16,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 
 import java.lang.reflect.Type;
@@ -36,14 +39,27 @@ public class SessionManager {
         save_user(data);
     }
 
+    public void setSession_IN_facility(String userId, String facilityId, FacilityLoginModel data) {
+        save_user_register_id(userId);
+        save_facility_id(facilityId);
+        save_facility(data);
+    }
+
     public void setSession_OUT() {
         save_user_register_id(null);
+        save_facility_id(null);
         save_user(null);
+        save_facility(null);
         set_TYPE(null);
     }
 
 
     public void save_user(UserProfileData data) {
+        editor.putString(STR_RESPONSE_DATA, new Gson().toJson(data));
+        editor.apply();
+    }
+
+    public void save_facility(FacilityLoginModel data) {
         editor.putString(STR_RESPONSE_DATA, new Gson().toJson(data));
         editor.apply();
     }
@@ -58,6 +74,20 @@ public class SessionManager {
         }.getType();
 
         UserProfileData signupResponseModel = new Gson().fromJson(data, type);
+
+        return signupResponseModel;
+
+    }
+
+    public FacilityLoginModel get_facility() {
+        String data = sharedPreferences.getString(FACILITY_DATA, null);
+        if (TextUtils.isEmpty(data)) {
+            return null;
+        }
+        Type type = new TypeToken<FacilityLoginModel>() {
+        }.getType();
+
+        FacilityLoginModel signupResponseModel = new Gson().fromJson(data, type);
 
         return signupResponseModel;
 
@@ -79,7 +109,6 @@ public class SessionManager {
         editor.putString(TYPE, key).apply();
     }
 
-
     public boolean isUserLoginedIn() {
         if (TextUtils.isEmpty(get_user_register_Id())) {
             return false;
@@ -87,14 +116,22 @@ public class SessionManager {
         return true;
     }
 
-
     public void save_user_register_id(String id) {
         editor.putString(User_Register_ID, id);
         editor.apply();
     }
 
+    public void save_facility_id(String id) {
+        editor.putString(FACILITY_ID, id);
+        editor.apply();
+    }
+
     public String get_user_register_Id() {
         return sharedPreferences.getString(User_Register_ID, null);
+    }
+
+    public String get_facility_Id() {
+        return sharedPreferences.getString(FACILITY_ID, null);
     }
 
 

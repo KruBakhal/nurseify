@@ -287,7 +287,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     private boolean checkValidation() {
         String email = binding.editTextEmail.getText().toString();
         String pasas = binding.editTextPassword.getText().toString();

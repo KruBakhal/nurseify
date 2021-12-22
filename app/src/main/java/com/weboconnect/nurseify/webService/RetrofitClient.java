@@ -53,4 +53,9 @@ public class RetrofitClient {
     public RetrofitApi getRetrofitApi() {
         return retrofit.create(RetrofitApi.class);
     }
+
+    public FacilityAPI getFacilityApi() {
+        return retrofit.create(FacilityAPI.class);
+    }
+
 }

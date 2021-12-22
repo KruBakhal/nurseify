@@ -50,4 +50,8 @@ public class Constant {
 
 
     public static int REQUEST_Facility_FUNS = 457;
+
+    public static String  FACILITY_ID = "facility_id";
+    public static String  FACILITY_DATA = "facility_data";
+
 }
