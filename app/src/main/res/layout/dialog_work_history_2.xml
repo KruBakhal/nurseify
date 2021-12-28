@@ -280,9 +280,9 @@
                         android:id="@+id/imgCertificate"
                         android:layout_width="51dp"
                         android:layout_height="46dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="15dp"
                         android:scaleType="fitXY"
-                        android:layout_gravity="center_horizontal"
                         android:visibility="visible" />
                 </LinearLayout>
 

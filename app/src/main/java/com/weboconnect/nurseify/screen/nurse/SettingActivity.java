@@ -7,9 +7,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,14 +15,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivitySettingBinding;
 import com.weboconnect.nurseify.screen.AboutActivity;
+import com.weboconnect.nurseify.screen.LoginSelectActivity;
 import com.weboconnect.nurseify.screen.PrivacyActivity;
-import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.screen.nurse.sample.SampleModel;
-import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
@@ -91,7 +87,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new SessionManager(context).setSession_OUT();
-                startActivity(new Intent(SettingActivity.this, LoginActivity.class)
+                startActivity(new Intent(SettingActivity.this, LoginSelectActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 finish();
             }
@@ -119,7 +115,7 @@ public class SettingActivity extends AppCompatActivity {
         RequestBody requestBody3 = RequestBody.create(MediaType.parse("multipart/form-data"), id);
 
 
-        Call<SampleModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<SampleModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_test(requestBody3);
 
         call.enqueue(new Callback<SampleModel>() {

@@ -3,7 +3,9 @@ package com.weboconnect.nurseify.screen.nurse;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
-import static com.weboconnect.nurseify.utils.FileUtils.getPath;
+
+import static com.weboconnect.nurseify.utils.Utils.patternLettersNoSpace;
+import static com.weboconnect.nurseify.utils.Utils.*;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -84,7 +86,7 @@ import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.nurse.model.AddCredentialData;
 import com.weboconnect.nurseify.screen.nurse.model.AddCredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.CityModel;
-import com.weboconnect.nurseify.screen.nurse.model.CityModel.CityDatum;
+import com.weboconnect.nurseify.screen.nurse.model.CityDatum;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_HourlyRate_DataModel;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_PersonalDetail_2_DataModel;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_RoleIneterest_DataModel;
@@ -116,7 +118,6 @@ import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationDatum;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.FileUtils;
-import com.weboconnect.nurseify.utils.PathUtil;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitApi;
@@ -125,9 +126,7 @@ import com.weboconnect.nurseify.webService.RetrofitClient;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -232,20 +231,8 @@ public class RegisterActivity extends AppCompatActivity {
     private CertificateDialogAdapter certificateDialogAdapter;
     String date1, date2;
     private boolean isAdd = false;
-    DecimalFormat formatter = new DecimalFormat("00");
-    private int dayOfMonth2 = 0, monthOfYear2 = 0, year2 = 0;
-    private int dayOfMonth3 = 0, monthOfYear3 = 0, year3 = 0;
-    Pattern patternLettersNoSpace = Pattern.compile("^[A-z][A-z]*$");
-    Pattern patternLetters2 = Pattern.compile("^[a-zA-Z]*$");
-    Pattern patternLettersSpace = Pattern.compile("^[a-zA-Z ]*$");
-    Pattern patternNumbers = Pattern.compile("^[0-9]*$");
-    Pattern patternAlphabetNumbers = Pattern.compile("^[a-zA-Z0-9]*$");
-    FirebaseCrashlytics crashlytics;
-    private Pattern patternAddress = Pattern.compile("^[a-zA-Z 0-9,\\-\\/]+$");
-    private Pattern patternCity = Pattern.compile("^[a-zA-Z ]+$");
-    private Pattern patternCollege = Pattern.compile("^[a-zA-Z 0-9,\\-\\/]+$");
-    private Pattern patternExp = Pattern.compile("^[0-9.\\+]+$");
-    private Pattern patternOther = Pattern.compile("^[a-zA-Z 0-9]+$");
+    private FirebaseCrashlytics crashlytics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -723,7 +710,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 if (TextUtils.isEmpty(edLicenseNos)) {
-                    Utils.displayToast(context, "Select Nurse License Number First !");
+                    Utils.displayToast(context, "Enter Nurse License Number First !");
                     return false;
                 }
                 matcher1 = patternAlphabetNumbers.matcher(edLicenseNos);
@@ -881,28 +868,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-//        binding_personalDetail_2.edCity.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if (s == null || s.length() == 0)
-//                    binding_personalDetail_2.edCity.setError(null);
-//                else if (!patternCity.matcher(s.toString()).find() || s.toString().length() < 2) {
-//                    binding_personalDetail_2.edCity.setError("City Name Can Contain Only Alphabets And Min Length Required Is 2 !");
-//                } else {
-//                    binding_personalDetail_2.edCity.setError(null);
-//                }
-//            }
-//        });
         binding_personalDetail_2.edPostalCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1024,7 +989,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
 
                                             @Override
-                                            public void onFailed() {
+                                            public void onFailed(String s) {
                                                 binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                                             }
 
@@ -1034,7 +999,6 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
                                         });
                             }
-
                         } else {
                             selected_state = null;
                         }
@@ -1044,7 +1008,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailed() {
+                public void onFailed(String s) {
                     binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                 }
 
@@ -1192,7 +1156,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
 
                                             @Override
-                                            public void onFailed() {
+                                            public void onFailed(String s) {
                                                 binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                                             }
 
@@ -1257,7 +1221,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
 
                                             @Override
-                                            public void onFailed() {
+                                            public void onFailed(String s) {
                                                 binding_personalDetail_2.layProgress.setVisibility(View.GONE);
                                             }
 
@@ -1335,7 +1299,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             private void call_sendData_For_PersonalDetail() {
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"), new SessionManager(context).get_user_register_Id());
                 RequestBody request_firstName = RequestBody.create(MediaType.parse("multipart/form-data"),
                         edFirstName);
@@ -1460,7 +1424,7 @@ public class RegisterActivity extends AppCompatActivity {
                     return false;
                 }
                 if (TextUtils.isEmpty(selected_City)) {
-                    Utils.displayToast(context, "Enter City First !");
+                    Utils.displayToast(context, "Select City First !");
                     return false;
                 }
 
@@ -1562,7 +1526,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void fetch_state_by_City(String state_id, API_ResponseCallback apiResponseCallback) {
         apiResponseCallback.onShowProgress();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
                 "" + state_id);
         backendApi.call_city_ID(request_id)
@@ -1571,7 +1535,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(Call<CityModel> call, Response<CityModel> response) {
                         assert response.body() != null;
                         if (!response.body().getApiStatus().equals("1")) {
-                            apiResponseCallback.onFailed();
+                            apiResponseCallback.onFailed("No cities available for the city !");
                             Utils.displayToast(context, "No cities available for the city !");
                             return;
                         }
@@ -1581,7 +1545,7 @@ public class RegisterActivity extends AppCompatActivity {
                             apiResponseCallback.onSucces(credentialModel);
                         } else {
                             Utils.displayToast(context, "Data Not Found !");
-                            apiResponseCallback.onFailed();
+                            apiResponseCallback.onFailed("No cities available for the city !");
                         }
 
                     }
@@ -1599,7 +1563,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void fetch_state_by_States(String id, API_ResponseCallback apiResponseCallback) {
         apiResponseCallback.onShowProgress();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
                 "" + id);
         backendApi.call_state_ID(request_id)
@@ -1608,7 +1572,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(Call<StateModel> call, Response<StateModel> response) {
                         assert response.body() != null;
                         if (!response.body().getApiStatus().equals("1")) {
-                            apiResponseCallback.onFailed();
+                            apiResponseCallback.onFailed("No cities available for the city !");
                             Utils.displayToast(context, "No states available for the country !");
                             return;
                         }
@@ -1618,7 +1582,7 @@ public class RegisterActivity extends AppCompatActivity {
                             apiResponseCallback.onSucces(credentialModel);
                         } else {
                             Utils.displayToast(context, "Data has not been updated");
-                            apiResponseCallback.onFailed();
+                            apiResponseCallback.onFailed("No cities available for the city !");
                         }
 
                     }
@@ -1807,7 +1771,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                    progressDialog = new ProgressDialog(context);
 //                    progressDialog.setCancelable(false);
                     layProgress.setVisibility(View.VISIBLE);
-                    RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                    RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                     RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"), new SessionManager(context).get_user_register_Id());
                     RequestBody hourly_pay_rate = RequestBody.create(MediaType.parse("multipart/form-data"), hourlyRates_str);
                     RequestBody shift_duration = RequestBody.create(MediaType.parse("multipart/form-data"), shift_D_str);
@@ -2170,7 +2134,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailed() {
+                public void onFailed(String s) {
                     layProgress.setVisibility(View.GONE);
                 }
 
@@ -2427,7 +2391,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
 
                                             @Override
-                                            public void onFailed() {
+                                            public void onFailed(String s) {
                                                 workHistoryBinding.layProgress.setVisibility(View.GONE);
                                             }
 
@@ -2456,7 +2420,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailed() {
+                public void onFailed(String s) {
                     workHistoryBinding.layProgress.setVisibility(View.GONE);
                 }
 
@@ -2732,7 +2696,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
 
                                             @Override
-                                            public void onFailed() {
+                                            public void onFailed(String s) {
                                                 workHistoryBinding.layProgress.setVisibility(View.GONE);
                                             }
 
@@ -2797,7 +2761,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             }
 
                                             @Override
-                                            public void onFailed() {
+                                            public void onFailed(String s) {
                                                 workHistoryBinding.layProgress.setVisibility(View.GONE);
                                             }
 
@@ -2952,7 +2916,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             private void send_WorkHistoryDate_1() {
                 workHistoryBinding.layProgress.setVisibility(View.VISIBLE);
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
                         new SessionManager(context).get_user_register_Id());
@@ -3241,7 +3205,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailed() {
+                public void onFailed(String s) {
                     history2Binding.layProgress.setVisibility(View.GONE);
                 }
 
@@ -3478,7 +3442,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             private void add_Certificate() {
                 history2Binding.layProgress.setVisibility(View.VISIBLE);
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
                         new SessionManager(context).get_user_register_Id());
@@ -3543,7 +3507,7 @@ public class RegisterActivity extends AppCompatActivity {
             private void send_WorkHistoryDate_2() {
 
                 history2Binding.layProgress.setVisibility(View.VISIBLE);
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
                         new SessionManager(context).get_user_register_Id());
@@ -3566,7 +3530,9 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     RequestBody certificate_img = RequestBody.create(MediaType.parse("multipart/form-data"),
                             new File(uploadCertificate));
-                    MultipartBody.Part multipartBodyCertifcate = MultipartBody.Part.createFormData("certificate_image", new File(uploadCertificate).getName(), certificate_img);
+                    MultipartBody.Part multipartBodyCertifcate =
+                            MultipartBody.Part.createFormData("certificate_image",
+                                    new File(uploadCertificate).getName(), certificate_img);
                     call = backendApi.call_send_WorkHistory_Certificate(request_id, certif_id, type_sd, date11, date22,
                             multipartBodyCertifcate);
                 }
@@ -3736,7 +3702,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailed() {
+                public void onFailed(String s) {
                     history3Binding.layProgress.setVisibility(View.GONE);
                 }
 
@@ -3975,7 +3941,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             private void send_WorkHistoryDate_3() {
                 history3Binding.layProgress.setVisibility(View.VISIBLE);
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
                         new SessionManager(context).get_user_register_Id());
@@ -4122,7 +4088,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             private void send_certificateData() {
                 history3Binding.layProgress.setVisibility(View.VISIBLE);
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id
                         = RequestBody.create(MediaType.parse("multipart/form-data"),
                         new SessionManager(context).get_user_register_Id());
@@ -4340,7 +4306,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailed() {
+                public void onFailed(String s) {
                     roleInterestBinding.layProgress.setVisibility(View.GONE);
                 }
 
@@ -4444,7 +4410,7 @@ public class RegisterActivity extends AppCompatActivity {
                         lang = lang + "," + list_Language.get(select_Language.get(i)).getLanguage();
                 }
                 MediaType mediaType = MediaType.parse("multipart/form-data");
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id = RequestBody.create(mediaType, id);
                 RequestBody serving_preceptor = RequestBody.create(mediaType, ans1);
                 RequestBody serving_interim_nurse_leader = RequestBody.create(mediaType, ans2);
@@ -4713,7 +4679,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String links = roleInterest2Binding.edLinks.getText().toString();
 
                 MediaType mediaType = MediaType.parse("multipart/form-data");
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id = RequestBody.create(mediaType, id);
                 RequestBody serving_preceptor = RequestBody.create(mediaType, ans1);
                 RequestBody serving_interim_nurse_leader = RequestBody.create(mediaType, ans2);
@@ -4839,7 +4805,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 file.getName(), body);
                     }
                 MediaType mediaType = MediaType.parse("multipart/form-data");
-                RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+                RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
                 RequestBody request_id = RequestBody.create(mediaType, id);
                 RequestBody intro1 = RequestBody.create(mediaType, intro);
                 RequestBody link1 = RequestBody.create(mediaType, links);
@@ -4963,14 +4929,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void fetch_WorkHistory_2_Field_Data(API_ResponseCallback apiResponseCallback) {
         apiResponseCallback.onShowProgress();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         backendApi.call_search_for_credentials_list()
                 .enqueue(new Callback<CredentialModel>() {
                     @Override
                     public void onResponse(Call<CredentialModel> call, Response<CredentialModel> response) {
                         assert response.body() != null;
                         if (!response.body().getApiStatus().equals("1")) {
-                            apiResponseCallback.onFailed();
+                            apiResponseCallback.onFailed("No cities available for the city !");
                             Utils.displayToast(context, "" + response.body().getMessage());
                             return;
                         }
@@ -4980,7 +4946,7 @@ public class RegisterActivity extends AppCompatActivity {
                             apiResponseCallback.onSucces(credentialModel);
                         } else {
                             Utils.displayToast(context, "Data has not been updated");
-                            apiResponseCallback.onFailed();
+                            apiResponseCallback.onFailed("No cities available for the city !");
                         }
 
                     }
@@ -5018,7 +4984,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void fetch_Role_Of_Interset_1_Field_Data(API_ResponseCallback apiResponseCallback) {
 
         apiResponseCallback.onShowProgress();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         Observable<Combine_RoleIneterest_DataModel> listObservable
                 = Observable.zip(
                 backendApi.call_language()
@@ -5185,7 +5151,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void fetch_WorkHistory_Field_Data(API_ResponseCallback apiResponseCallback) {
         apiResponseCallback.onShowProgress();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
                 "233");
         Observable<Combine_WorkHistory_DataModel> listObservable
@@ -5400,7 +5366,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void fetch_PersonalDetail_2_Field_Data(API_ResponseCallback apiResponseCallback) {
 
         apiResponseCallback.onShowProgress();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data"),
                 "233");
         Observable<Combine_PersonalDetail_2_DataModel> listObservable
@@ -5492,7 +5458,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void fetch_HourlyRate_OptionsField_Data(API_ResponseCallback apiResponseCallback) {
         apiResponseCallback.onShowProgress();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
 
         Observable<Combine_HourlyRate_DataModel> listObservable
                 = Observable.zip(
@@ -5965,7 +5931,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             history3Binding.layProgress.setVisibility(View.VISIBLE);
         }
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         RequestBody request_id
                 = RequestBody.create(MediaType.parse("multipart/form-data"),
                 new SessionManager(context).get_user_register_Id());
@@ -6221,7 +6187,7 @@ public class RegisterActivity extends AppCompatActivity {
         String user_id = new SessionManager(getApplicationContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_nurse_profile(user_id1);
 
         call.enqueue(new Callback<UserProfile>() {

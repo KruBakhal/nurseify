@@ -12,14 +12,10 @@ import android.view.View;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityPrivacyBinding;
-import com.weboconnect.nurseify.screen.nurse.SettingActivity;
 import com.weboconnect.nurseify.screen.nurse.model.PrivacyPolicyModel;
-import com.weboconnect.nurseify.screen.nurse.sample.SampleModel;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,7 +43,7 @@ public class PrivacyActivity extends AppCompatActivity {
         progressDialog.show();
         String id = "";
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_privacy_policy();
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {

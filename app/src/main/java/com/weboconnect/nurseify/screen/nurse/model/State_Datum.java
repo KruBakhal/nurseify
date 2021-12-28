@@ -4,6 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class State_Datum {
+    public State_Datum(String state_id, String name) {
+        this.state_id = state_id;
+        this.name = name;
+    }
 
     @SerializedName("state")
     @Expose

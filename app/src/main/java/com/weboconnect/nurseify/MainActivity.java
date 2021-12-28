@@ -18,6 +18,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.weboconnect.nurseify.screen.LoginSelectActivity;
 import com.weboconnect.nurseify.screen.facility.HomeFActivity;
+import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 import com.weboconnect.nurseify.screen.nurse.HomeActivity;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
 import com.weboconnect.nurseify.utils.Constant;

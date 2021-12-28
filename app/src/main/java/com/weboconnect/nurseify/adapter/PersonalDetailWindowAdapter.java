@@ -15,9 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
 import com.weboconnect.nurseify.screen.nurse.SignupDetailsActivity;
-import com.weboconnect.nurseify.screen.nurse.model.CityModel;
+import com.weboconnect.nurseify.screen.nurse.model.CityDatum;
 import com.weboconnect.nurseify.screen.nurse.model.CountryModel.CountryDatum;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.screen.nurse.model.State_Datum;
@@ -31,12 +32,13 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
     private int type;
     private List<WorkLocationDatum> workLocationData;
     private List<SpecialtyDatum> specialtyData;
-    List<CityModel.CityDatum> cityData;
+    List<CityDatum> cityData;
     Activity context;
     List<State_Datum> list_state;
     List<CountryDatum> list_country;
     String selected_state;
     String selected_city;
+    String selected_city_int;
 
     public PersonalDetailWindowAdapter(Activity context, int type, List<WorkLocationDatum>
             workLocationData, List<SpecialtyDatum> specialtyData,
@@ -73,7 +75,7 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
 
     public PersonalDetailWindowAdapter(RegisterActivity registerActivity,
                                        int type, int type1, int type2
-            , List<CityModel.CityDatum> cityData, String selected_city,
+            , List<CityDatum> cityData, String selected_city,
                                        UserPopupWindowAdapterInterface userPopupWindowAdapterInterface) {
         this.context = registerActivity;
         this.type = type;
@@ -81,6 +83,44 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
         this.selected_city = selected_city;
         this.parentInterface = userPopupWindowAdapterInterface;
 
+    }
+
+    public PersonalDetailWindowAdapter(RegistrationFActivity registerActivity,
+                                       List<State_Datum> cityData, int selected_city,
+                                       UserPopupWindowAdapterInterface userPopupWindowAdapterInterface) {
+        this.context = registerActivity;
+        this.type = type;
+        this.list_state = cityData;
+        this.selected_state = "" + selected_city;
+        this.parentInterface = userPopupWindowAdapterInterface;
+
+    }
+
+    public PersonalDetailWindowAdapter(RegistrationFActivity registerActivity,int a,
+                                       List<CityDatum> cityData, int selected_city,
+                                       UserPopupWindowAdapterInterface userPopupWindowAdapterInterface) {
+        this.context = registerActivity;
+        this.type = a;
+        this.cityData = cityData;
+        this.selected_state = "" + selected_city;
+        this.parentInterface = userPopupWindowAdapterInterface;
+
+    }
+
+    public PersonalDetailWindowAdapter(RegistrationFActivity registerActivity,
+                                       UserPopupWindowAdapterInterface userPopupWindowAdapterInterface) {
+        this.context = registerActivity;
+        this.selected_state = "" + selected_city;
+        this.parentInterface = userPopupWindowAdapterInterface;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setCityList(List<CityDatum> list) {
+        this.cityData = list;
+        notifyDataSetChanged();
     }
 
 
@@ -181,8 +221,8 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
                 } else {
                     isNotSelected = true;
                 }
-            }else if (type == 7) {
-                CityModel.CityDatum movie = cityData.get(position);
+            } else if (type == 7) {
+                CityDatum movie = cityData.get(position);
                 holder.title.setText(movie.getName());
                 if (!TextUtils.isEmpty(activity.selected_City)) {
                     int select = Integer.parseInt(activity.selected_City);
@@ -223,6 +263,45 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
                 }
             });
 
+        } else if ((context instanceof RegistrationFActivity)) {
+            RegistrationFActivity activity = (RegistrationFActivity) context;
+            boolean isNotSelected = true;
+            if (type == 3) {
+                State_Datum movie = list_state.get(position);
+                holder.title.setText(movie.getNames());
+                int select = activity.viewModel.selected_state;
+                if (select == position) {
+                    isNotSelected = false;
+                } else {
+                    isNotSelected = true;
+                }
+
+            } else if (type == 7) {
+                CityDatum movie = cityData.get(position);
+                holder.title.setText(movie.getName());
+                int select = activity.viewModel.selected_City;
+                if (select == position) {
+                    isNotSelected = false;
+                } else {
+                    isNotSelected = true;
+                }
+            }
+
+            if (!isNotSelected) {
+                holder.lay_item.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.grad1));
+                holder.title.setTextColor(Color.WHITE);
+            } else {
+                holder.lay_item.setBackground(null);
+                holder.title.setTextColor(activity.getResources().getColor(R.color.gray));
+            }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentInterface.onCLickItem(position, type);
+                }
+            });
+
         }
 
     }
@@ -241,7 +320,7 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
             if (list_country == null || list_country.size() == 0)
                 return 0;
             return list_country.size();
-        }else if (type == 7) {
+        } else if (type == 7) {
             if (cityData == null || cityData.size() == 0)
                 return 0;
             return cityData.size();

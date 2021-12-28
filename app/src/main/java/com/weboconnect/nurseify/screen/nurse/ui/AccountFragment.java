@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 import static com.weboconnect.nurseify.utils.FileUtils.getPath;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,8 +28,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.FragmentAccountBinding;
 import com.weboconnect.nurseify.screen.nurse.HomeActivity;
@@ -50,7 +47,6 @@ import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -259,7 +255,7 @@ public class AccountFragment extends Fragment {
 
     private void upload_profile_photo(String user_profile) {
         progressDialog.show();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         RequestBody certificate_img = RequestBody.create(MediaType.parse("multipart/form-data"),
                 new File(user_profile));
         RequestBody request_id
@@ -316,7 +312,7 @@ public class AccountFragment extends Fragment {
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<SettingModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<SettingModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_setting(user_id1);
 
         call.enqueue(new Callback<SettingModel>() {
@@ -368,7 +364,7 @@ public class AccountFragment extends Fragment {
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_nurse_profile(user_id1);
 
         call.enqueue(new Callback<UserProfile>() {

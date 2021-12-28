@@ -34,8 +34,6 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.android.material.slider.RangeSlider;
 import com.google.gson.Gson;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.screen.nurse.adapters.FacilityAdapter;
 import com.weboconnect.nurseify.adapter.HourlyRateWindowAdapter;
@@ -47,7 +45,7 @@ import com.weboconnect.nurseify.databinding.FragmentBrowseBinding;
 import com.weboconnect.nurseify.intermediate.FacilityListCallback;
 import com.weboconnect.nurseify.screen.nurse.Browse_Facility_Offered_JobDetailsActivity;
 import com.weboconnect.nurseify.screen.nurse.adapters.BrowserJobsAdapter;
-import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.PrivacyPolicyModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
@@ -88,7 +86,7 @@ public class BrowseFragment extends Fragment {
     private String user_id = " ";
     boolean isJobType = true;
     private List<JobModel.JobDatum> list_jobs = new ArrayList<>();
-    private List<FacilityModel.Facility> list_facility = new ArrayList<>();
+    private List<FacilityJobModel.Facility> list_facility = new ArrayList<>();
     private BrowserJobsAdapter browserJobsAdapter;
     private FacilityAdapter facilityAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -403,7 +401,7 @@ public class BrowseFragment extends Fragment {
 
     private void fetch_the_filter_data(API_ResponseCallback apiResponseCallback) {
         progressDialog.show();
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
         List<Observable<SpecialtyModel>> requests = new ArrayList<>();
 
         requests.add(backendApi.call_specialty());
@@ -493,12 +491,12 @@ public class BrowseFragment extends Fragment {
             String range = s1 + "-" + s2;
             RequestBody rangeSLider = RequestBody.create(MediaType.parse("multipart/form-data"), range);
 
-            call = RetrofitClient.getInstance().getRetrofitApi()
+            call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_browser_filter_job(page, search_location1, open_assignment_type1,
                             facility_type1, electronic_medical_records1, user_id1, rangeSLider);
 
         } else
-            call = RetrofitClient.getInstance().getRetrofitApi()
+            call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_browser_job(page, user_id1);
 
         call.enqueue(new Callback<JobModel>() {
@@ -586,7 +584,7 @@ public class BrowseFragment extends Fragment {
     /*    Call<JobModel> call = RetrofitClient.getInstance().getRetrofitApi()
                 .call_browser_filter_job(page);*/
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_like_job(user_id1, jobId1, isLiked1);
 
         String finalIsLiked = isLiked;
@@ -654,12 +652,12 @@ public class BrowseFragment extends Fragment {
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
 
-        Call<FacilityModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<FacilityJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_browser_facility(page, user_id1);
 
-        call.enqueue(new Callback<FacilityModel>() {
+        call.enqueue(new Callback<FacilityJobModel>() {
             @Override
-            public void onResponse(Call<FacilityModel> call, Response<FacilityModel> response) {
+            public void onResponse(Call<FacilityJobModel> call, Response<FacilityJobModel> response) {
                 try {
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
@@ -669,7 +667,7 @@ public class BrowseFragment extends Fragment {
                     }
                     if (response.isSuccessful()) {
                         dismissProgress();
-                        FacilityModel facilityModel = response.body();
+                        FacilityJobModel facilityModel = response.body();
                         if (list_facility == null) {
                             list_facility = new ArrayList<>();
                         }
@@ -697,7 +695,7 @@ public class BrowseFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<FacilityModel> call, Throwable t) {
+            public void onFailure(Call<FacilityJobModel> call, Throwable t) {
 
                 dismissProgress();
 
@@ -710,17 +708,17 @@ public class BrowseFragment extends Fragment {
     private void setAdapter_Facility() {
         facilityAdapter = new FacilityAdapter(getActivity(), list_facility, new FacilityListCallback() {
             @Override
-            public void onFollow(int pos, String type, FacilityModel.Facility facility) {
+            public void onFollow(int pos, String type, FacilityJobModel.Facility facility) {
                 followFacility(pos, facility.getId(), type, facility);
             }
 
             @Override
-            public void onLike(int pos, String like, FacilityModel.Facility facility) {
+            public void onLike(int pos, String like, FacilityJobModel.Facility facility) {
                 likeFacility(pos, facility.getId(), like, facility);
             }
 
             @Override
-            public void onClick(int position, FacilityModel.Facility facility) {
+            public void onClick(int position, FacilityJobModel.Facility facility) {
 //                startActivityForResult(new Intent(getContext(), Browse_Facility_Offered_JobDetailsActivity.class)
 //                        , Constant.REQUEST_Facility_FUNS);
             }
@@ -728,7 +726,7 @@ public class BrowseFragment extends Fragment {
         binding.recyclerViewJobs.setAdapter(facilityAdapter);
     }
 
-    private void followFacility(int pos, String facilityId, String type, FacilityModel.Facility facility) {
+    private void followFacility(int pos, String facilityId, String type, FacilityJobModel.Facility facility) {
 
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
 
@@ -744,7 +742,7 @@ public class BrowseFragment extends Fragment {
         RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), type);
 
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_follow_facility(user_id1, facility_id, type_);
 
         call.enqueue(new Callback<ResponseModel>() {
@@ -778,7 +776,7 @@ public class BrowseFragment extends Fragment {
 
     }
 
-    private void likeFacility(int pos, String facilityId, String like, FacilityModel.Facility facility) {
+    private void likeFacility(int pos, String facilityId, String like, FacilityJobModel.Facility facility) {
 
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
 
@@ -794,7 +792,7 @@ public class BrowseFragment extends Fragment {
         RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), like);
 
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_like_facility(user_id1, facility_id, type_);
 
         call.enqueue(new Callback<ResponseModel>() {
@@ -866,7 +864,7 @@ public class BrowseFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailed() {
+                        public void onFailed(String s) {
 
                         }
 
@@ -990,7 +988,7 @@ public class BrowseFragment extends Fragment {
     private void fetch_terms_conditions(JobModel.JobDatum datum, int position) {
         progressDialog.show();
         String id = "";
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_terms_conditions();
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {
@@ -1085,7 +1083,7 @@ public class BrowseFragment extends Fragment {
         RequestBody isLiked1 = RequestBody.create(MediaType.parse("multipart/form-data"), isApplied);
 
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_job_applied(user_id1, jobId1, isLiked1);
 
         String finalIsApplied = isApplied;
@@ -1146,73 +1144,7 @@ public class BrowseFragment extends Fragment {
         binding.layProgress.setVisibility(View.VISIBLE);
     }
 
-    public class CommonData {
-        @SerializedName("api_status")
-        @Expose
-        private String apiStatus;
-        @SerializedName("message")
-        @Expose
-        private String message;
-        @SerializedName("data")
-        @Expose
-        private List<Datum> data = null;
 
-        public String getApiStatus() {
-            return apiStatus;
-        }
-
-        public void setApiStatus(String apiStatus) {
-            this.apiStatus = apiStatus;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public List<Datum> getData() {
-            return data;
-        }
-
-        public void setData(List<Datum> data) {
-            this.data = data;
-        }
-
-
-    }
-
-    public class Datum {
-        public Datum(Integer id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        @SerializedName("id")
-        @Expose
-        private Integer id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 
     public class CombineCommonData {
 
@@ -1253,7 +1185,7 @@ public class BrowseFragment extends Fragment {
         } else if (requestCode == Constant.REQUEST_Facility_FUNS) {
             if (resultCode == RESULT_OK) {
                 int pos = data.getIntExtra(Constant.POSITION, 0);
-                FacilityModel.Facility model = new Gson().fromJson(data.getStringExtra(Constant.STR_RESPONSE_DATA),
+                FacilityJobModel.Facility model = new Gson().fromJson(data.getStringExtra(Constant.STR_RESPONSE_DATA),
                         Utils.typeFacilityJob);
                 if (list_facility != null && list_facility.size() != 0 && pos < list_facility.size()) {
                     list_facility.set(pos, model);

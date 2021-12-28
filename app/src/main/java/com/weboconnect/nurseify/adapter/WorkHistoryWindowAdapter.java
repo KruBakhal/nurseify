@@ -14,15 +14,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
 import com.weboconnect.nurseify.screen.nurse.model.CernersDatum;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialDatum;
 import com.weboconnect.nurseify.screen.nurse.model.Degree_Datum;
-import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment;
-import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment.CommonData;
-import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment.Datum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,11 +44,11 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
             if (((List) list_nurse_degrees).size() > 0
                     && (((List) list_nurse_degrees.get(0)).get(0) instanceof Degree_Datum)) {
                 this.list_nurse_degrees = ((List<Degree_Datum>) list_nurse_degrees.get(0));
-            }  else if (((List) list_nurse_degrees).size() > 0
+            } else if (((List) list_nurse_degrees).size() > 0
                     && (((List) list_nurse_degrees.get(0)).get(0) instanceof CredentialDatum)) {
                 this.list_Credential = ((List<CredentialDatum>) list_nurse_degrees.get(0));
             } else if (((List) list_nurse_degrees).size() > 0
-                    && (((List) list_nurse_degrees.get(0)).get(0) instanceof Datum)) {
+                    && (((List) list_nurse_degrees.get(0)).get(0) instanceof SpecialtyDatum)) {
                 if (type == 6)
                     this.list_assignment = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
                 else if (type == 7)
@@ -157,6 +155,16 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
                 holder.title.setText(movie.getName());
                 selectedPos = activity.selected_Credential;
             }
+        } else if (activity instanceof RegistrationFActivity) {
+            SpecialtyDatum movie = null;
+            if (type == 7) {
+                movie = (SpecialtyDatum) list_facilty_type.get(position);
+                selectedPos = ((RegistrationFActivity) activity).viewModel.selected_facility_type;
+            }
+            if (movie == null)
+                return;
+            holder.title.setText(movie.getName());
+
         } else if (type == 6 || type == 7 || type == 8) {
             BrowseFragment activity = (BrowseFragment) context;
             SpecialtyDatum movie = null;

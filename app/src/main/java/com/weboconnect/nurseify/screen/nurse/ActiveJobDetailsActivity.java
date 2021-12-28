@@ -1,11 +1,9 @@
 package com.weboconnect.nurseify.screen.nurse;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,8 +11,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -80,7 +76,7 @@ public class ActiveJobDetailsActivity extends AppCompatActivity {
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody jobId1 = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<MyJobModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<MyJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_view_job_detail(user_id1, jobId1);
 
         call.enqueue(new Callback<MyJobModel>() {
@@ -231,7 +227,7 @@ public class ActiveJobDetailsActivity extends AppCompatActivity {
                 RequestBody user_id7 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onTool);
                 RequestBody user_id8 = RequestBody.create(MediaType.parse("multipart/form-data"), review);
 
-                Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+                Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                         .call_facility_rating(user_id1, user_id2, user_id3, user_id4, user_id5, user_id6, user_id7, user_id8);
 
                 call.enqueue(new Callback<ResponseModel>() {

@@ -16,7 +16,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.intermediate.API_ResponseCallback;
 import com.weboconnect.nurseify.screen.nurse.ActiveJobDetailsActivity;
 import com.weboconnect.nurseify.screen.nurse.CompletedJobDetailsActivity;
 import com.weboconnect.nurseify.screen.nurse.Browse_Facility_Offered_JobDetailsActivity;
@@ -29,7 +28,6 @@ import com.weboconnect.nurseify.screen.nurse.model.ActiveModel;
 import com.weboconnect.nurseify.screen.nurse.model.CompletedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.PrivacyPolicyModel;
-import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
@@ -193,7 +191,7 @@ public class MyJobFragment extends Fragment {
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<OfferedJobModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<OfferedJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job("1", user_id1);
 
         call.enqueue(new Callback<OfferedJobModel>() {
@@ -263,7 +261,7 @@ public class MyJobFragment extends Fragment {
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<ActiveModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ActiveModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_active_job("1", user_id1);
 
         call.enqueue(new Callback<ActiveModel>() {
@@ -325,7 +323,7 @@ public class MyJobFragment extends Fragment {
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<CompletedJobModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<CompletedJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_completed_job("1", user_id1);
 
         call.enqueue(new Callback<CompletedJobModel>() {
@@ -468,7 +466,7 @@ public class MyJobFragment extends Fragment {
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_accept(user_id1, job_id);
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {
@@ -514,7 +512,7 @@ public class MyJobFragment extends Fragment {
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_reject(user_id1, job_id);
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {

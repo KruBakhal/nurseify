@@ -294,7 +294,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
             RequestBody isLiked1 = RequestBody.create(MediaType.parse("multipart/form-data"), isLiked);
 
 
-            Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+            Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_like_job(user_id1, jobId1, isLiked1);
 
             String finalIsLiked = isLiked;

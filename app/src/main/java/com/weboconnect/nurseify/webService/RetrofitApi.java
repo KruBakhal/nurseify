@@ -1,18 +1,14 @@
 package com.weboconnect.nurseify.webService;
 
 
-import com.weboconnect.nurseify.adapter.LikeModel;
 import com.weboconnect.nurseify.screen.nurse.model.ActiveModel;
 import com.weboconnect.nurseify.screen.nurse.model.AddCredentialModel;
-import com.weboconnect.nurseify.screen.nurse.model.CernersModel;
 import com.weboconnect.nurseify.screen.nurse.model.CityModel;
 import com.weboconnect.nurseify.screen.nurse.model.CompletedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.CountryModel;
 import com.weboconnect.nurseify.screen.nurse.model.CredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
-import com.weboconnect.nurseify.screen.nurse.model.Degree_Datum;
-import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
-import com.weboconnect.nurseify.screen.nurse.model.FollowFacilityModel;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
@@ -20,7 +16,6 @@ import com.weboconnect.nurseify.screen.nurse.model.LanguageModel;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesModel;
 import com.weboconnect.nurseify.screen.nurse.model.MyJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
-import com.weboconnect.nurseify.screen.nurse.model.NurseProfileModel;
 import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.PrivacyPolicyModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
@@ -310,7 +305,7 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("browse-facility")
-    Call<FacilityModel> call_browser_facility(
+    Call<FacilityJobModel> call_browser_facility(
             @Query("page") String page,
             @Part("user_id") RequestBody user_id
     );

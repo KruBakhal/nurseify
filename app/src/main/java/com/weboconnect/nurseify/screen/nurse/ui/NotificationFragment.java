@@ -10,13 +10,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.adapter.MessageAdapter;
 import com.weboconnect.nurseify.adapter.NotificationAdapter;
-import com.weboconnect.nurseify.databinding.FragmentMessageBinding;
 import com.weboconnect.nurseify.databinding.FragmentNotificationBinding;
 import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
-import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
-import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.webService.RetrofitClient;
 
@@ -69,7 +65,7 @@ public class NotificationFragment extends Fragment {
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<NotificationModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<NotificationModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_notification(user_id1);
 
         call.enqueue(new Callback<NotificationModel>() {

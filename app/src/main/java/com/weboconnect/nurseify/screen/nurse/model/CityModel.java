@@ -41,30 +41,4 @@ public class CityModel {
         this.data = data;
     }
 
-    public class CityDatum {
-
-        @SerializedName("city_id")
-        @Expose
-        private String cityId;
-        @SerializedName("name")
-        @Expose
-        private String name;
-
-        public String getCityId() {
-            return cityId;
-        }
-
-        public void setCityId(String cityId) {
-            this.cityId = cityId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-    }
 }

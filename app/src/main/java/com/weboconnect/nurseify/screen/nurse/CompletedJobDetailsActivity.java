@@ -58,7 +58,7 @@ public class CompletedJobDetailsActivity extends AppCompatActivity {
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody jobId1 = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<MyJobModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<MyJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_view_job_detail(user_id1, jobId1);
 
         call.enqueue(new Callback<MyJobModel>() {

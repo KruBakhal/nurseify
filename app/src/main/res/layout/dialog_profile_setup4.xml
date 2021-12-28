@@ -1,393 +1,517 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/secondary_gradient"
-    android:orientation="vertical"
-    android:layout_gravity="top"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_gravity="top"
+    android:background="@drawable/secondary_gradient"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile Setup"
-        android:layout_marginTop="17dp"
-        android:layout_gravity="center"
-        android:gravity="top"
-        android:fontFamily="@font/sf_600"
-        android:textSize="22dp"
-        android:textColor="@color/white" />
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"
-        android:scrollbars="none">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/isdsd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="14dp"
-            android:layout_marginTop="23dp"
-            android:background="#EFF3F6"
-            android:paddingTop="21dp"
-            android:paddingHorizontal="14dp"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="38dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="13dp"
+                android:src="@drawable/back"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:fontFamily="@font/sf_600"
+                android:gravity="top"
+                android:text="Profile Setup"
+                android:textColor="@color/white"
+                android:textSize="22dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imgBack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imgBack"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/imgBack" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginHorizontal="14dp"
+                android:layout_marginTop="23dp"
+                android:background="#EFF3F6"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="14dp"
+                android:paddingTop="21dp">
 
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_personal_details" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="34dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_personal_details" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:fontFamily="@font/sf_600"
+                        android:text="Facility Details"
+                        android:textColor="#8A4999"
+                        android:textSize="20dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#8A4999" />
+
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Facility Details"
-                    android:layout_marginLeft="12dp"
+                    android:layout_gravity="left"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="35dp"
+                    android:fontFamily="@font/sf_500"
+                    android:gravity="left"
+                    android:text="Nurse Scheduling System"
+                    android:textColor="#595094"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_scheduling"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/trans"
+                            android:fontFamily="@font/sf_500"
+                            android:gravity="left|center"
+                            android:hint="Select Nurse Scheduling System"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:paddingLeft="17dp"
+                            android:textColor="@color/black"
+                            android:textSize="16dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_scheduling"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:background="#EFF3F6"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lay_scheduling"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/img1"
+                            android:layout_width="17dp"
+                            android:layout_height="10dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/dropdown" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#8A4999" />
+
+                <LinearLayout
+                    android:id="@+id/view_schd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/sf_500"
+                        android:gravity="left"
+                        android:text="Other Nurse Scheduling System"
+                        android:textColor="#595094"
+                        android:textSize="15dp" />
+
+                    <EditText
+                        android:id="@+id/ed_scheduling"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/trans"
+                        android:fontFamily="@font/sf_500"
+                        android:gravity="center_vertical"
+                        android:hint="Enter Other Nurse Scheduling System"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="255"
+                        android:maxLines="1"
+                        android:paddingLeft="17dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="#A4ADBB"
+                        android:textSize="16dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#8A4999" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/sf_500"
+                    android:gravity="left"
+                    android:text="Time &amp; Attendance System"
+                    android:textColor="#595094"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_attendance"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/trans"
+                            android:fontFamily="@font/sf_500"
+                            android:gravity="left|center"
+                            android:hint="Select Time &amp; Attendance System"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:paddingLeft="17dp"
+                            android:textColor="@color/black"
+                            android:textSize="16dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_attendance"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:background="#EFF3F6"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lay_attendance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/img2"
+                            android:layout_width="17dp"
+                            android:layout_height="10dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/dropdown" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#8A4999" />
+
+                <LinearLayout
+                    android:id="@+id/view_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/sf_500"
+                        android:gravity="left"
+                        android:text="Other Time &amp; Attendance System"
+                        android:textColor="#595094"
+                        android:textSize="15dp" />
+
+                    <EditText
+                        android:id="@+id/ed_attendance"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/trans"
+                        android:fontFamily="@font/sf_500"
+                        android:gravity="center_vertical"
+                        android:hint="Enter Other Time &amp; Attendance System"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="255"
+                        android:maxLines="1"
+                        android:paddingLeft="17dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="#A4ADBB"
+                        android:textSize="16dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#8A4999" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/sf_500"
+                    android:gravity="left"
+                    android:text="Licensed Beds"
+                    android:textColor="#595094"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:id="@+id/ed_license_bed"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/trans"
+                    android:fontFamily="@font/sf_500"
+                    android:gravity="center_vertical"
+                    android:hint="Enter Licensed Beds"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:paddingLeft="17dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#A4ADBB"
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#8A4999" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/sf_500"
+                    android:gravity="left"
+                    android:text="Trauma Designation"
+                    android:textColor="#595094"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_trauma"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/trans"
+                            android:fontFamily="@font/sf_500"
+                            android:gravity="left|center"
+                            android:hint="Select Trauma Designation"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:paddingLeft="17dp"
+                            android:textColor="@color/black"
+                            android:textSize="16dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_trauma"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:background="#EFF3F6"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lay_trauma"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/img3"
+                            android:layout_width="17dp"
+                            android:layout_height="10dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/dropdown" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <View
+                    android:id="@+id/view3"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#8A4999" />
+
+                <TextView
+                    android:id="@+id/next"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="33dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/btn_primary"
                     android:fontFamily="@font/sf_600"
-                    android:textSize="20dp"
-                    android:textColor="#8A4999" />
+                    android:gravity="center"
+                    android:text="Next"
+                    android:textColor="@color/grad1"
+                    android:textSize="18dp" />
+
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Other Nurse Credentialing Software"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
+    <LinearLayout
+        android:id="@+id/layProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="Healthstream"
-                android:background="@color/trans"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="9dp"
-                android:paddingLeft="27dp"
-                android:layout_marginTop="10dp"
-                android:textColorHint="#A4ADBB"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/black" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nurse Scheduling System"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/spinner_degree"
-                    style="@style/spinner"
-                    android:layout_marginHorizontal="9dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="0dp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Other Nurse Scheduling System"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="When I Work"
-                android:background="@color/trans"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="9dp"
-                android:paddingLeft="27dp"
-                android:layout_marginTop="10dp"
-                android:textColorHint="#A4ADBB"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/black" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Time &amp; Attendance System"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <Spinner
-                    style="@style/spinner"
-                    android:layout_marginHorizontal="9dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="0dp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Other Time &amp; Attendance System"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="When I Work"
-                android:background="@color/trans"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="9dp"
-                android:paddingLeft="27dp"
-                android:layout_marginTop="10dp"
-                android:textColorHint="#A4ADBB"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/black" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Licensed Beds"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="0"
-                android:background="@color/trans"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="9dp"
-                android:paddingLeft="27dp"
-                android:layout_marginTop="10dp"
-                android:textColorHint="#A4ADBB"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/black" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Trauma Designation"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <Spinner
-                    style="@style/spinner"
-                    android:layout_marginHorizontal="9dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="0dp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Senior Leader Message"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="Type"
-                android:background="@color/trans"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="9dp"
-                android:paddingLeft="27dp"
-                android:layout_marginTop="10dp"
-                android:textColorHint="#A4ADBB"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/black" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="About Facility"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:textSize="15dp"
-                android:textColor="#595094" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="Type"
-                android:background="@color/trans"
-                android:fontFamily="@font/sf_500"
-                android:layout_marginHorizontal="9dp"
-                android:paddingLeft="27dp"
-                android:layout_marginTop="10dp"
-                android:textColorHint="#A4ADBB"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/black" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                android:background="#8A4999" />
-
-            <TextView
-                android:id="@+id/next"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="33dp"
-                android:layout_marginBottom="30dp"
-                android:text="Next"
-                android:background="@drawable/btn_primary"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="18dp"
-                android:textColor="@color/grad1"
-                android:fontFamily="@font/sf_600" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/sf_600"
+            android:text="Please Wait"
+            android:textColor="@color/secondary_purple"
+            android:textSize="20dp" />
+    </LinearLayout>
+</FrameLayout>

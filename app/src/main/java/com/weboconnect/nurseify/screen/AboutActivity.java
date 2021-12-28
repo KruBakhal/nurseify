@@ -43,7 +43,7 @@ public class AboutActivity extends AppCompatActivity {
         progressDialog.show();
         String id = "";
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_about_app();
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {

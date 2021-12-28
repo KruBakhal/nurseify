@@ -19,6 +19,11 @@ public class Combine_WorkHistory_DataModel {
         this.countryModel = countryModel;
     }
 
+    public Combine_WorkHistory_DataModel(StateModel stateModel, CountryModel countryModel) {
+        this.stateModel = stateModel;
+        this.countryModel = countryModel;
+    }
+
     public CountryModel getCountryModel() {
         return countryModel;
     }

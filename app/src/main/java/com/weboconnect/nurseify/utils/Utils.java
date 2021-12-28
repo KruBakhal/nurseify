@@ -11,8 +11,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.reflect.TypeToken;
-import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.QuestionModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
@@ -20,8 +21,8 @@ import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Utils {
     private static Toast toast;
@@ -29,8 +30,23 @@ public class Utils {
     }.getType();
     public static Type typeJob = new TypeToken<JobModel.JobDatum>() {
     }.getType();
-    public static Type typeFacilityJob = new TypeToken<FacilityModel.Facility>() {
+    public static Type typeFacilityJob = new TypeToken<FacilityJobModel.Facility>() {
     }.getType();
+    public static Pattern patternLettersSpace = Pattern.compile("^[a-zA-Z ]*$");
+    public static DecimalFormat formatter = new DecimalFormat("00");
+    public static int dayOfMonth2 = 0, monthOfYear2 = 0, year2 = 0;
+    public static int dayOfMonth3 = 0, monthOfYear3 = 0, year3 = 0;
+    public static Pattern patternLettersNoSpace = Pattern.compile("^[A-z][A-z]*$");
+    public static Pattern patternLetters2 = Pattern.compile("^[a-zA-Z]*$");
+    public static Pattern patternNumbers = Pattern.compile("^[0-9]*$");
+    public static Pattern patternAlphabetNumbers = Pattern.compile("^[a-zA-Z0-9]*$");
+    public static Pattern patternAddress = Pattern.compile("^[a-zA-Z 0-9,\\-\\/]+$");
+    public static Pattern patternCity = Pattern.compile("^[a-zA-Z ]+$");
+    public static Pattern patternCollege = Pattern.compile("^[a-zA-Z 0-9,\\-\\/]+$");
+    public static Pattern patternExp = Pattern.compile("^[0-9.\\+]+$");
+    public static Pattern patternOther = Pattern.compile("^[a-zA-Z 0-9]+$");
+    public static Pattern patternYoutubeURL = Pattern.compile("^(http:\\/\\/|https:\\/\\/)(vimeo\\.com|youtu\\.be|www\\.youtube\\.com)\\/([\\w\\/]+)([\\?].*)?$");
+    public static Pattern patternAlphabetNumbersSpace = Pattern.compile("^[a-zA-Z0-9\\s]*$");
 
     public static boolean isNetworkAvailable(Context mContext) {
         ConnectivityManager connectivityManager

@@ -16,7 +16,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
+import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 
 import java.lang.reflect.Type;
@@ -39,7 +39,7 @@ public class SessionManager {
         save_user(data);
     }
 
-    public void setSession_IN_facility(String userId, String facilityId, FacilityLoginModel data) {
+    public void setSession_IN_facility(String userId, String facilityId, FacilityProfile data) {
         save_user_register_id(userId);
         save_facility_id(facilityId);
         save_facility(data);
@@ -59,8 +59,8 @@ public class SessionManager {
         editor.apply();
     }
 
-    public void save_facility(FacilityLoginModel data) {
-        editor.putString(STR_RESPONSE_DATA, new Gson().toJson(data));
+    public void save_facility(FacilityProfile data) {
+        editor.putString(FACILITY_DATA, new Gson().toJson(data));
         editor.apply();
     }
 
@@ -79,15 +79,15 @@ public class SessionManager {
 
     }
 
-    public FacilityLoginModel get_facility() {
+    public FacilityProfile get_facility() {
         String data = sharedPreferences.getString(FACILITY_DATA, null);
         if (TextUtils.isEmpty(data)) {
             return null;
         }
-        Type type = new TypeToken<FacilityLoginModel>() {
+        Type type = new TypeToken<FacilityProfile>() {
         }.getType();
 
-        FacilityLoginModel signupResponseModel = new Gson().fromJson(data, type);
+        FacilityProfile signupResponseModel = new Gson().fromJson(data, type);
 
         return signupResponseModel;
 

@@ -21,8 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.intermediate.FacilityListCallback;
-import com.weboconnect.nurseify.screen.nurse.Browse_Facility_Offered_JobDetailsActivity;
-import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
@@ -41,12 +40,12 @@ import retrofit2.Response;
 public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHolder> implements Filterable {
 
     Activity activity;
-    List<FacilityModel.Facility> list;
-    List<FacilityModel.Facility> copy_contactList = new ArrayList<>();
+    List<FacilityJobModel.Facility> list;
+    List<FacilityJobModel.Facility> copy_contactList = new ArrayList<>();
     FacilityListCallback callback;
     private RecordFilter1 fRecords;
 
-    public FacilityAdapter(Activity activity, List<FacilityModel.Facility> list, FacilityListCallback callback) {
+    public FacilityAdapter(Activity activity, List<FacilityJobModel.Facility> list, FacilityListCallback callback) {
         this.activity = activity;
         this.list = list;
         this.copy_contactList = list;
@@ -163,7 +162,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
 
         }
 
-        private void likeFacility(int pos, String facilityId, String like, FacilityModel.Facility facility) {
+        private void likeFacility(int pos, String facilityId, String like, FacilityJobModel.Facility facility) {
 
             Utils.displayToast(itemView.getContext(), null); // to cancel toast if showing on screen
 
@@ -179,7 +178,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
             RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), like);
 
 
-            Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+            Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_like_facility(user_id1, facility_id, type_);
 
             call.enqueue(new Callback<ResponseModel>() {
@@ -212,7 +211,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
 
         }
 
-        public void bind(int position, FacilityModel.Facility facility) {
+        public void bind(int position, FacilityJobModel.Facility facility) {
             lay_heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -237,7 +236,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                 }
             });
         }
-        private void followFacility(int pos, String facilityId, String type, FacilityModel.Facility facility) {
+        private void followFacility(int pos, String facilityId, String type, FacilityJobModel.Facility facility) {
 
             Utils.displayToast(itemView.getContext(), null); // to cancel toast if showing on screen
 
@@ -252,7 +251,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
             RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), type);
 
 
-            Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+            Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_follow_facility(user_id1, facility_id, type_);
 
             call.enqueue(new Callback<ResponseModel>() {
@@ -298,12 +297,12 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             final FilterResults oReturn = new FilterResults();
-            final ArrayList<FacilityModel.Facility> results = new ArrayList<>();
+            final ArrayList<FacilityJobModel.Facility> results = new ArrayList<>();
             if (list != null)
 
                 if (constraint != null && !TextUtils.isEmpty(constraint)) {
                     if (copy_contactList != null && copy_contactList.size() > 0) {
-                        for (FacilityModel.Facility g : copy_contactList) {
+                        for (FacilityJobModel.Facility g : copy_contactList) {
 
                             if (g.getName().toLowerCase()
                                     .startsWith(constraint.toString().toLowerCase()))
@@ -324,7 +323,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            list = (List<FacilityModel.Facility>) filterResults.values;
+            list = (List<FacilityJobModel.Facility>) filterResults.values;
             notifyDataSetChanged();
         }
     }

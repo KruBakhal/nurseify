@@ -14,6 +14,7 @@ public class Constant {
     public static final String ADD = "Add";
     public static final String FLAG = "flag";
     public static final String DEVICE_INFO = "Device: " + Build.DEVICE + " Model: " + Build.MODEL + " Version: " + SDK_INT + "";
+
     // person session constant
     public static String CONST_NURSE_TYPE = "Nurse";
     public static String CONST_FACULTY_TYPE = "Faculty";
@@ -51,7 +52,10 @@ public class Constant {
 
     public static int REQUEST_Facility_FUNS = 457;
 
-    public static String  FACILITY_ID = "facility_id";
-    public static String  FACILITY_DATA = "facility_data";
-
+    public static String FACILITY_ID = "facility_id";
+    public static String FACILITY_DATA = "facility_data";
+    public static final String WHEM_WRONG = "When_WRONG";
+    public static String UnSuccessfull = "unsuccessfull";
+    public static final String API_STATUS = "apip_status";
+    public static final String UNITED_STATE_CODE = "233";
 }

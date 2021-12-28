@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -24,8 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityJobDetailsBinding;
-import com.weboconnect.nurseify.screen.nurse.model.FacilityModel;
-import com.weboconnect.nurseify.screen.nurse.model.FollowFacilityModel;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel.JobDatum;
 import com.weboconnect.nurseify.screen.nurse.model.MyJobModel;
@@ -48,7 +46,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
 
     ActivityJobDetailsBinding binding;
     private JobDatum model;
-    private FacilityModel.Facility facility;
+    private FacilityJobModel.Facility facility;
     private Context context;
     private ProgressDialog progressDialog;
     String user_id;
@@ -80,7 +78,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                 setJobData();
                 break;
             case 2:
-                Type type = new TypeToken<FacilityModel.Facility>() {
+                Type type = new TypeToken<FacilityJobModel.Facility>() {
                 }.getType();
                 facility = new Gson().fromJson(getIntent().getStringExtra("data"), type);
                 binding.tvApplied.setText("Follow");
@@ -119,7 +117,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody jobId1 = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<MyJobModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<MyJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_view_job_detail(user_id1, jobId1);
 
         call.enqueue(new Callback<MyJobModel>() {
@@ -213,7 +211,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
     private void fetch_terms_conditions(JobModel.JobDatum datum, int position) {
         progressDialog.show();
         String id = "";
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_terms_conditions();
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {
@@ -278,7 +276,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody isLiked1 = RequestBody.create(MediaType.parse("multipart/form-data"), isLiked);
 
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_like_job(user_id1, jobId1, isLiked1);
 
         String finalIsLiked = isLiked;
@@ -376,7 +374,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody isLiked1 = RequestBody.create(MediaType.parse("multipart/form-data"), isApplied);
 
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_job_applied(user_id1, jobId1, isLiked1);
 
         String finalIsApplied = isApplied;
@@ -570,7 +568,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), type);
 
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_follow_facility(user_id1, facility_id, type_);
 
         call.enqueue(new Callback<ResponseModel>() {
@@ -615,7 +613,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody type_ = RequestBody.create(MediaType.parse("multipart/form-data"), like);
 
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_like_facility(user_id1, facility_id, type_);
 
         call.enqueue(new Callback<ResponseModel>() {
@@ -653,7 +651,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_accept(user_id1, job_id);
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {
@@ -698,7 +696,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_reject(user_id1, job_id);
 
         call.enqueue(new Callback<PrivacyPolicyModel>() {

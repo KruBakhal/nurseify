@@ -1,7 +1,11 @@
 package com.weboconnect.nurseify.webService;
 
+import com.weboconnect.nurseify.common.CommonModel;
 import com.weboconnect.nurseify.screen.facility.model.DropdownModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
+import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
+import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
+import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 
 import io.reactivex.Observable;
@@ -25,7 +29,7 @@ public interface FacilityAPI {
 
     @Multipart
     @POST("facility-profile")
-    Call<UserProfile> call_facility_profile(
+    Call<FacilityLoginModel> call_facility_profile(
             @Part("user_id") RequestBody user_id,
             @Part("facility_id") RequestBody facility_id,
             @Part("name") RequestBody name,
@@ -56,27 +60,41 @@ public interface FacilityAPI {
             @Part("nurse_scheduling_sys_other") RequestBody nurse_scheduling_sys_other,
             @Part("time_attend_sys") RequestBody time_attend_sys,
             @Part("time_attend_sys_other") RequestBody time_attend_sys_other,
+            @Part("licensed_beds") RequestBody licensed_beds,
+            @Part("trauma") RequestBody trauma,
+            @Part("senior_leader_message") RequestBody senior_leader_message,
+            @Part("about_facility") RequestBody about_facility,
             @Part MultipartBody.Part facility_logo,
             @Part MultipartBody.Part cno_image
     );
 
-    @POST("facility-dropdown-getmedicalrecords")
-    Observable<DropdownModel> call_dropdown_get_medical_records();
-
-    @POST("facility-dropdown-getbcheckprovider")
-    Observable<DropdownModel> call_dropdown_get_bcheck_provider();
-
-    @POST("facility-dropdown-getncredentialingsoftware")
-    Observable<DropdownModel> call_dropdown_get_ncredentialingsoftware();
-
-    @POST("facility-dropdown-getnschedulingsystem")
-    Observable<DropdownModel> call_dropdown_get_nscheduling_system();
 
     @POST("facility-dropdown-gettimeattendancesystem")
-    Observable<DropdownModel> call_dropdown_get_time_attendance_system();
+    Observable<CommonModel> call_dropdown_get_time_attendance_system();
 
     @POST("facility-dropdown-gettraumadesignation")
-    Observable<DropdownModel> call_dropdown_get_traumadesignation();
+    Observable<CommonModel> call_dropdown_get_traumadesignation();
+
+    @POST("facility-dropdown-getnschedulingsystem")
+    Observable<CommonModel> call_dropdown_getnschedulingsystem();
+
+    @POST("facility-types")
+    Call<SpecialtyModel> call_facility_types();
+
+    @POST("facility-types")
+    Observable<CommonModel> call_facility_types_c();
+
+    @POST("facility-dropdown-getmedicalrecords")
+    Observable<CommonModel> call_facility_getmedicalrecords();
+
+    @POST("facility-dropdown-getbcheckprovider")
+    Observable<CommonModel> call_facility_getbcheckprovider();
+
+    @POST("facility-dropdown-getncredentialingsoftware")
+    Observable<CommonModel> call_facility_getncredentialingsoftware();
 
 
+    Call<UserProfile> call_Profile_Photos(@Part("api_key") RequestBody api_key,
+                                          @Part("facility_id") RequestBody facility_id,
+                                          @Part("facility_logo") MultipartBody.Part facility_logo);
 }

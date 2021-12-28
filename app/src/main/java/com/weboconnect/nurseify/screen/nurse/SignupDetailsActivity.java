@@ -26,7 +26,6 @@ import com.weboconnect.nurseify.adapter.SpecialtyAdapter;
 import com.weboconnect.nurseify.adapter.PersonalDetailWindowAdapter;
 import com.weboconnect.nurseify.databinding.ActivitySignupDetailsBinding;
 import com.weboconnect.nurseify.screen.nurse.model.Combine_PersonalDetail_DataModel;
-import com.weboconnect.nurseify.screen.nurse.model.RegisterModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
@@ -91,7 +90,7 @@ public class SignupDetailsActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Please Wait");
-        RetrofitApi backendApi = RetrofitClient.getInstance().getRetrofitApi();
+        RetrofitApi backendApi = RetrofitClient.getInstance().getNurseRetrofitApi();
 
         List<Observable> list = new ArrayList<Observable>();
 
@@ -369,7 +368,7 @@ public class SignupDetailsActivity extends AppCompatActivity {
         RequestBody requestBody39 = RequestBody.create(MediaType.parse("multipart/form-data"), "" + spec);
         RequestBody requestBody310 = RequestBody.create(MediaType.parse("multipart/form-data"), key);
 
-        Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_Signup(requestBody3, requestBody32, requestBody34, requestBody33,
                         requestBody35, requestBody36, requestBody37, requestBody38, requestBody39, requestBody310);
 

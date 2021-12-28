@@ -21,10 +21,11 @@ import java.util.ArrayList;
 public class HomeFActivity extends AppCompatActivity {
     ActivityHomeFBinding binding;
     ArrayList<Integer> mFragmentInt = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(HomeFActivity.this,R.layout.activity_home_f);
+        binding = DataBindingUtil.setContentView(HomeFActivity.this, R.layout.activity_home_f);
         resetBottomBar(1);
         binding.browse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,19 +59,19 @@ public class HomeFActivity extends AppCompatActivity {
         });
     }
 
-    void resetBottomBar(int position){
+    void resetBottomBar(int position) {
         resetNavigation();
         mFragmentInt.add(position);
-        switch (position){
+        switch (position) {
             case 1:
                 binding.browseText.setTextColor(Color.parseColor("#3493D3"));
                 binding.browseIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new BrowseFFragment(),"1");
+                changeView(new BrowseFFragment(), "1");
                 break;
             case 2:
                 binding.myJobsText.setTextColor(Color.parseColor("#3493D3"));
                 binding.myJobsIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new MyJobFFragment(),"1");
+                changeView(new MyJobFFragment(), "1");
                 break;
             case 3:
                 startActivity(new Intent(HomeFActivity.this, AddJobActivity1.class));
@@ -78,16 +79,17 @@ public class HomeFActivity extends AppCompatActivity {
             case 4:
                 binding.messageText.setTextColor(Color.parseColor("#3493D3"));
                 binding.messageIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new MessageFragment(),"1");
+                changeView(new MessageFragment(), "1");
                 break;
             case 5:
                 binding.accountText.setTextColor(Color.parseColor("#3493D3"));
                 binding.accountIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new AccountFFragment(),"1");
+                changeView(new AccountFFragment(), "1");
                 break;
         }
     }
-    void resetNavigation(){
+
+    void resetNavigation() {
         binding.browseText.setTextColor(Color.parseColor("#000000"));
         binding.myJobsText.setTextColor(Color.parseColor("#000000"));
         binding.messageText.setTextColor(Color.parseColor("#000000"));
@@ -96,22 +98,24 @@ public class HomeFActivity extends AppCompatActivity {
         binding.myJobsIcon.setColorFilter(Color.parseColor("#000000"));
         binding.messageIcon.setColorFilter(Color.parseColor("#000000"));
         binding.accountIcon.setColorFilter(Color.parseColor("#000000"));
-       }
-    void changeView(Fragment fragment, String tag){
+    }
+
+    void changeView(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .addToBackStack(null)
-                .replace(R.id.frame, fragment,tag)
+                .replace(R.id.frame, fragment, tag)
                 .commit();
 
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(mFragmentInt.size()>1){
-            mFragmentInt.remove(mFragmentInt.size()-1);
-            resetBottomBar(mFragmentInt.size()-1);
-        }else {
+        if (mFragmentInt.size() > 1) {
+            mFragmentInt.remove(mFragmentInt.size() - 1);
+            resetBottomBar(mFragmentInt.size() - 1);
+        } else {
             finish();
         }
     }

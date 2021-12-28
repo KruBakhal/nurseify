@@ -1,19 +1,15 @@
-package com.weboconnect.nurseify.screen.nurse;
+package com.weboconnect.nurseify.screen;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 
-import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityForgetPasswordBinding;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
@@ -92,7 +88,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         RequestBody requestBody131 = RequestBody.create(MediaType.parse("multipart/form-data"), new SessionManager(context).get_API_KEY());
         RequestBody email_id = RequestBody.create(MediaType.parse("multipart/form-data"), binding.editTextEmail.getText().toString());
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_forget_password(email_id);
 
         call.enqueue(new Callback<ResponseModel>() {

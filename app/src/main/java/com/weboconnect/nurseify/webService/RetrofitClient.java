@@ -50,7 +50,7 @@ public class RetrofitClient {
         return mInstance;
     }
 
-    public RetrofitApi getRetrofitApi() {
+    public RetrofitApi getNurseRetrofitApi() {
         return retrofit.create(RetrofitApi.class);
     }
 

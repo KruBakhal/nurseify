@@ -21,8 +21,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,14 +31,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityLoginBinding;
+import com.weboconnect.nurseify.screen.ForgetPasswordActivity;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -223,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
             RequestBody requestBody131 = RequestBody.create(MediaType.parse("multipart/form-data"), "" + Build.ID);
 
 
-            Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
+            Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_login_check_user(requestBody3, requestBody13, requestBody131);
 
             call.enqueue(new Callback<UserProfile>() {

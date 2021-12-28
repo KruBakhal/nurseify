@@ -114,7 +114,7 @@ public class WorkHistoryActivity extends AppCompatActivity {
         user_id = new SessionManager(getApplicationContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<UserProfile> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_nurse_profile(user_id1);
 
         call.enqueue(new Callback<UserProfile>() {
@@ -227,7 +227,7 @@ public class WorkHistoryActivity extends AppCompatActivity {
 //        RequestBody img_url = RequestBody.create(MediaType.parse("multipart/form-data"), url);
         RequestBody c_id = RequestBody.create(MediaType.parse("multipart/form-data"), id);
 
-        Call<ResponseModel> call = RetrofitClient.getInstance().getRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_remove_certificate_image(user_id1, c_id);
 
         call.enqueue(new Callback<ResponseModel>() {

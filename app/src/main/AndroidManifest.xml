@@ -21,7 +21,7 @@
         android:theme="@style/Theme.nurseify"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".screen.nurse.ForgetPasswordActivity"
+            android:name=".screen.ForgetPasswordActivity"
             android:exported="false" />
 
         <uses-library
