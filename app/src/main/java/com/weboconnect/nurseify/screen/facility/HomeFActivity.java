@@ -1,8 +1,10 @@
 package com.weboconnect.nurseify.screen.facility;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,17 +17,27 @@ import com.weboconnect.nurseify.screen.facility.ui.AccountFFragment;
 import com.weboconnect.nurseify.screen.facility.ui.BrowseFFragment;
 import com.weboconnect.nurseify.screen.facility.ui.MessageFragment;
 import com.weboconnect.nurseify.screen.facility.ui.MyJobFFragment;
+import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment;
+import com.weboconnect.nurseify.screen.nurse.ui.MyJobFragment;
 
 import java.util.ArrayList;
 
 public class HomeFActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_ADD_JOB = 656;
     ActivityHomeFBinding binding;
     ArrayList<Integer> mFragmentInt = new ArrayList<>();
+    public BrowseFFragment browseFFragment;
+    public MyJobFFragment myJobFFragment;
+    public MessageFragment messageFragment;
+    public AccountFFragment accountFFragment;
+    public FragmentManager fm = null;
+    private Fragment active;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(HomeFActivity.this, R.layout.activity_home_f);
+        fm = getSupportFragmentManager();
         resetBottomBar(1);
         binding.browse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,25 +78,43 @@ public class HomeFActivity extends AppCompatActivity {
             case 1:
                 binding.browseText.setTextColor(Color.parseColor("#3493D3"));
                 binding.browseIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new BrowseFFragment(), "1");
+                if (browseFFragment == null) {
+                    browseFFragment = new BrowseFFragment();
+                    fm.beginTransaction().add(R.id.frame, browseFFragment, "1").commit();
+                    active = browseFFragment;
+                }
+                changeView(browseFFragment, "1");
                 break;
             case 2:
                 binding.myJobsText.setTextColor(Color.parseColor("#3493D3"));
                 binding.myJobsIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new MyJobFFragment(), "1");
+                if (myJobFFragment == null) {
+                    myJobFFragment = new MyJobFFragment();
+                    fm.beginTransaction().add(R.id.frame, myJobFFragment, "2").hide(myJobFFragment).commit();
+
+                }
+                changeView(myJobFFragment, "2");
                 break;
             case 3:
-                startActivity(new Intent(HomeFActivity.this, AddJobActivity1.class));
+                startActivityForResult(new Intent(HomeFActivity.this, Add_Jobs_Activity.class), REQUEST_CODE_ADD_JOB);
                 break;
             case 4:
                 binding.messageText.setTextColor(Color.parseColor("#3493D3"));
                 binding.messageIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new MessageFragment(), "1");
+                if (messageFragment == null) {
+                    messageFragment = new MessageFragment();
+                    fm.beginTransaction().add(R.id.frame, messageFragment, "3").hide(messageFragment).commit();
+                }
+                changeView(messageFragment, "3");
                 break;
             case 5:
                 binding.accountText.setTextColor(Color.parseColor("#3493D3"));
                 binding.accountIcon.setColorFilter(Color.parseColor("#3493D3"));
-                changeView(new AccountFFragment(), "1");
+                if (accountFFragment == null) {
+                    accountFFragment = new AccountFFragment();
+                    fm.beginTransaction().add(R.id.frame, accountFFragment, "4").hide(accountFFragment).commit();
+                }
+                changeView(accountFFragment, "4");
                 break;
         }
     }
@@ -101,12 +131,8 @@ public class HomeFActivity extends AppCompatActivity {
     }
 
     void changeView(Fragment fragment, String tag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.frame, fragment, tag)
-                .commit();
-
+        fm.beginTransaction().hide(active).show(fragment).commit();
+        active = fragment;
     }
 
     @Override
@@ -117,6 +143,14 @@ public class HomeFActivity extends AppCompatActivity {
             resetBottomBar(mFragmentInt.size() - 1);
         } else {
             finish();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_JOB) {
+
         }
     }
 }

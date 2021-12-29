@@ -1,10 +1,5 @@
-package com.weboconnect.nurseify.screen.facility.dialog;
+package com.weboconnect.nurseify.screen.facility.profile_setup_dialog;
 
-import static com.weboconnect.nurseify.utils.Utils.patternAlphabetNumbers;
-
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,25 +10,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.adapter.CommonDropDownAdapter;
-import com.weboconnect.nurseify.common.CommonDatum;
-import com.weboconnect.nurseify.databinding.DialogProfileSetup4Binding;
 import com.weboconnect.nurseify.databinding.DialogProfileSetup5Binding;
-import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
@@ -41,10 +27,6 @@ import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
 import com.weboconnect.nurseify.screen.facility.viewModel.ProgressUIType;
 import com.weboconnect.nurseify.screen.facility.viewModel.RegistrationViewModel;
 import com.weboconnect.nurseify.utils.Utils;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.

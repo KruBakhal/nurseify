@@ -2,6 +2,7 @@ package com.weboconnect.nurseify.adapter;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
+import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionDatum;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
@@ -29,7 +32,7 @@ public class HourlyRateWindowAdapter extends RecyclerView.Adapter<HourlyRateWind
     private List<HourlyRate_DayOfWeek_OptionDatum> list_days_of_week;
     private int type;
     private List<HourlyRate_Common_OptionDatum> datumList;
-    RegisterActivity activity;
+    Activity activity;
     HourlyRateWindowInterface parentInterface;
 
 
@@ -50,6 +53,15 @@ public class HourlyRateWindowAdapter extends RecyclerView.Adapter<HourlyRateWind
     }
 
     public HourlyRateWindowAdapter(RegisterActivity registerActivity, int type, int type1, int type2,
+                                   List<HourlyRate_DayOfWeek_OptionDatum>
+                                           list_days_of_week, HourlyRateWindowInterface hourlyRateWindowInterface) {
+        this.type = type;
+        this.list_days_of_week = list_days_of_week;
+        this.activity = registerActivity;
+        this.parentInterface = hourlyRateWindowInterface;
+    }
+
+    public HourlyRateWindowAdapter(Activity registerActivity, int type, int type1, int type2,
                                    List<HourlyRate_DayOfWeek_OptionDatum>
                                            list_days_of_week, HourlyRateWindowInterface hourlyRateWindowInterface) {
         this.type = type;
@@ -85,69 +97,87 @@ public class HourlyRateWindowAdapter extends RecyclerView.Adapter<HourlyRateWind
     @Override
     public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         boolean isNotSelected = true;
-        if (type == 1) {
-            HourlyRate_Common_OptionDatum movie = datumList.get(position);
-            holder.title.setText(movie.getName());
-            if (!TextUtils.isEmpty(activity.selected_shift_duration)) {
-                int select = Integer.parseInt(activity.selected_shift_duration);
-                if (select == position) {
-                    isNotSelected = false;
+        if (activity instanceof RegisterActivity) {
+            RegisterActivity activity = ((RegisterActivity) HourlyRateWindowAdapter.this.activity);
+            if (type == 1) {
+                HourlyRate_Common_OptionDatum movie = datumList.get(position);
+                holder.title.setText(movie.getName());
+                if (!TextUtils.isEmpty(activity.selected_shift_duration)) {
+                    int select = Integer.parseInt(activity.selected_shift_duration);
+                    if (select == position) {
+                        isNotSelected = false;
+                    } else {
+                        isNotSelected = true;
+                    }
                 } else {
                     isNotSelected = true;
                 }
-            } else {
-                isNotSelected = true;
+            } else if (type == 2) {
+                HourlyRate_Common_OptionDatum movie = datumList.get(position);
+                holder.title.setText(movie.getName());
+                if (!TextUtils.isEmpty(activity.selected_assignment_duration)) {
+                    int select = Integer.parseInt(activity.selected_assignment_duration);
+                    if (select == position) {
+                        isNotSelected = false;
+                    } else {
+                        isNotSelected = true;
+                    }
+                } else {
+                    isNotSelected = true;
+                }
+            } else if (type == 3) {
+                HourlyRate_Common_OptionDatum movie = datumList.get(position);
+                holder.title.setText(movie.getName());
+                if (!TextUtils.isEmpty(activity.selected_preferred_shift)) {
+                    int select = Integer.parseInt(activity.selected_preferred_shift);
+                    if (select == position) {
+                        isNotSelected = false;
+                    } else {
+                        isNotSelected = true;
+                    }
+                } else {
+                    isNotSelected = true;
+                }
+            } else if (type == 5) {
+                WorkLocationDatum movie = list_geography.get(position);
+                holder.title.setText(movie.getName());
+                if (!TextUtils.isEmpty(activity.selected_geography)) {
+                    int select = Integer.parseInt(activity.selected_geography);
+                    if (select == position) {
+                        isNotSelected = false;
+                    } else {
+                        isNotSelected = true;
+                    }
+                } else {
+                    isNotSelected = true;
+                }
+            } else if (type == 4) {
+                HourlyRate_DayOfWeek_OptionDatum movie = list_days_of_week.get(position);
+                holder.title.setText(movie.getName());
+                if (activity.select_daysOfWeek != null && activity.select_daysOfWeek.size() != 0) {
+                    if (activity.select_daysOfWeek.contains(position)) {
+                        isNotSelected = false;
+                    } else {
+                        isNotSelected = true;
+                    }
+                } else {
+                    isNotSelected = true;
+                }
             }
-        } else if (type == 2) {
-            HourlyRate_Common_OptionDatum movie = datumList.get(position);
-            holder.title.setText(movie.getName());
-            if (!TextUtils.isEmpty(activity.selected_assignment_duration)) {
-                int select = Integer.parseInt(activity.selected_assignment_duration);
-                if (select == position) {
-                    isNotSelected = false;
+        } else if (activity instanceof Add_Jobs_Activity) {
+            Add_Jobs_Activity activity = ((Add_Jobs_Activity) HourlyRateWindowAdapter.this.activity);
+            if (type == 4) {
+                HourlyRate_DayOfWeek_OptionDatum movie = list_days_of_week.get(position);
+                holder.title.setText(movie.getName());
+                if (activity.viewModel.select_daysOfWeek != null && activity.viewModel.select_daysOfWeek.size() != 0) {
+                    if (activity.viewModel.select_daysOfWeek.contains(position)) {
+                        isNotSelected = false;
+                    } else {
+                        isNotSelected = true;
+                    }
                 } else {
                     isNotSelected = true;
                 }
-            } else {
-                isNotSelected = true;
-            }
-        } else if (type == 3) {
-            HourlyRate_Common_OptionDatum movie = datumList.get(position);
-            holder.title.setText(movie.getName());
-            if (!TextUtils.isEmpty(activity.selected_preferred_shift)) {
-                int select = Integer.parseInt(activity.selected_preferred_shift);
-                if (select == position) {
-                    isNotSelected = false;
-                } else {
-                    isNotSelected = true;
-                }
-            } else {
-                isNotSelected = true;
-            }
-        } else if (type == 5) {
-            WorkLocationDatum movie = list_geography.get(position);
-            holder.title.setText(movie.getName());
-            if (!TextUtils.isEmpty(activity.selected_geography)) {
-                int select = Integer.parseInt(activity.selected_geography);
-                if (select == position) {
-                    isNotSelected = false;
-                } else {
-                    isNotSelected = true;
-                }
-            } else {
-                isNotSelected = true;
-            }
-        } else if (type == 4) {
-            HourlyRate_DayOfWeek_OptionDatum movie = list_days_of_week.get(position);
-            holder.title.setText(movie.getName());
-            if (activity.select_daysOfWeek != null && activity.select_daysOfWeek.size() != 0) {
-                if (activity.select_daysOfWeek.contains(position)) {
-                    isNotSelected = false;
-                } else {
-                    isNotSelected = true;
-                }
-            } else {
-                isNotSelected = true;
             }
         }
 

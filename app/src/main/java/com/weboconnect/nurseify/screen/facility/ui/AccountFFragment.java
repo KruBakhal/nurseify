@@ -158,7 +158,7 @@ public class AccountFFragment extends Fragment {
                         }
                         double sis = Double.parseDouble(Utils.getFileSize_size(file.length()));
                         if ((sis > 1 && Utils.getFileSize_Unit(file.length()).equals("MB"))) {
-                            Utils.displayToast(getContext(), "Select File less than equal to 5 MB");
+                            Utils.displayToast(getContext(), "Select File less than equal to 1 MB");
                             return;
                         }
                     } catch (Exception e) {

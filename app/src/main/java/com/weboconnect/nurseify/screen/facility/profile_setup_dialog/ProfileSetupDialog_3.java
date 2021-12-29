@@ -1,6 +1,4 @@
-package com.weboconnect.nurseify.screen.facility.dialog;
-
-import static com.weboconnect.nurseify.utils.Utils.patternAlphabetNumbers;
+package com.weboconnect.nurseify.screen.facility.profile_setup_dialog;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -28,7 +26,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.CommonDropDownAdapter;
 import com.weboconnect.nurseify.common.CommonDatum;
-import com.weboconnect.nurseify.databinding.DialogProfileSetup4Binding;
+import com.weboconnect.nurseify.databinding.DialogProfileSetup3Binding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
@@ -39,15 +37,13 @@ import com.weboconnect.nurseify.screen.facility.viewModel.RegistrationViewModel;
 import com.weboconnect.nurseify.utils.Utils;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileSetupDialog_4#newInstance} factory method to
+ * Use the {@link ProfileSetupDialog_3#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileSetupDialog_4 extends DialogFragment {
+public class ProfileSetupDialog_3 extends DialogFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,13 +53,13 @@ public class ProfileSetupDialog_4 extends DialogFragment {
     // TODO: Rename and change types of parameters
     private int mParam1;
     private String mParam2;
-    private DialogProfileSetup4Binding setup1Binding;
+    private DialogProfileSetup3Binding setup1Binding;
     private RoundedImageView imgProfile;
     private RegistrationViewModel viewModel;
     private FacilityProfile model;
     private String facility_profile;
 
-    public ProfileSetupDialog_4() {
+    public ProfileSetupDialog_3() {
         // Required empty public constructor
     }
 
@@ -76,8 +72,8 @@ public class ProfileSetupDialog_4 extends DialogFragment {
      * @return A new instance of fragment ProfileSetupDialog_1.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProfileSetupDialog_4 newInstance(int param1, String param2) {
-        ProfileSetupDialog_4 fragment = new ProfileSetupDialog_4();
+    public static ProfileSetupDialog_3 newInstance(int param1, String param2) {
+        ProfileSetupDialog_3 fragment = new ProfileSetupDialog_3();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -109,7 +105,7 @@ public class ProfileSetupDialog_4 extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        setup1Binding = DialogProfileSetup4Binding.inflate(getLayoutInflater(), container, false);
+        setup1Binding = DialogProfileSetup3Binding.inflate(getLayoutInflater(), container, false);
         setCancelable(false);
         viewModel = new ViewModelProvider(requireActivity()).get(RegistrationViewModel.class);
         if (viewModel.isEditMode) {
@@ -125,7 +121,8 @@ public class ProfileSetupDialog_4 extends DialogFragment {
     }
 
     private void textChange_valid() {
-        setup1Binding.edAttendance.addTextChangedListener(new TextWatcher() {
+
+        setup1Binding.edBackground.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -139,15 +136,15 @@ public class ProfileSetupDialog_4 extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s == null || s.length() == 0)
-                    setup1Binding.edAttendance.setError(null);
+                    setup1Binding.edBackground.setError(null);
                 else if (!Utils.patternLettersSpace.matcher(s.toString()).find()) {
-                    setup1Binding.edAttendance.setError("Enter Other Time & Attendance System Proper Format Only Alphabets And Space Allowed !");
+                    setup1Binding.edBackground.setError("Enter Other Background Check Provider In Proper Format Only Alphabets And Space Allowed !");
                 } else {
-                    setup1Binding.edAttendance.setError(null);
+                    setup1Binding.edBackground.setError(null);
                 }
             }
         });
-        setup1Binding.edScheduling.addTextChangedListener(new TextWatcher() {
+        setup1Binding.edEmr.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -161,15 +158,15 @@ public class ProfileSetupDialog_4 extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s == null || s.length() == 0)
-                    setup1Binding.edScheduling.setError(null);
+                    setup1Binding.edEmr.setError(null);
                 else if (!Utils.patternLettersSpace.matcher(s.toString()).find()) {
-                    setup1Binding.edScheduling.setError("Enter Other Nurse Scheduling System In Proper Format Only Alphabets And Space Allowed !");
+                    setup1Binding.edEmr.setError("Enter Other Electronic Medical Records (EMR) In Proper Format Only Alphabets And Space Allowed !");
                 } else {
-                    setup1Binding.edScheduling.setError(null);
+                    setup1Binding.edEmr.setError(null);
                 }
             }
         });
-        setup1Binding.edLicenseBed.addTextChangedListener(new TextWatcher() {
+        setup1Binding.edOtherSoft.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -183,12 +180,11 @@ public class ProfileSetupDialog_4 extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s == null || s.length() == 0)
-                    setup1Binding.edLicenseBed.setError(null);
-                else if (!Utils.patternNumbers.matcher(s.toString()).find()) {
-                    setup1Binding.edLicenseBed.setError("Licensed Beds Can Contain Only" +
-                            "Numbers,No Space And Max Length Is 20 !");
+                    setup1Binding.edOtherSoft.setError(null);
+                else if (!Utils.patternLettersSpace.matcher(s.toString()).find()) {
+                    setup1Binding.edOtherSoft.setError("Enter Other Nurse Credentialing Software In Proper Format Only Alphabets And Space Allowed !");
                 } else {
-                    setup1Binding.edLicenseBed.setError(null);
+                    setup1Binding.edOtherSoft.setError(null);
                 }
             }
         });
@@ -196,30 +192,24 @@ public class ProfileSetupDialog_4 extends DialogFragment {
     }
 
     private void setData() {
-        if (viewModel.isEditMode && viewModel.option_call == 3) {
-            setup1Binding.next.setText("Submit");
-        }
         if (check_any_list_empty()) {
-            viewModel.fetch_profile_setup_4();
-            if (!TextUtils.isEmpty(model.getLicensedBeds()))
-                setup1Binding.edLicenseBed.setText(model.getLicensedBeds());
+            viewModel.fetch_profile_setup_3();
         } else {
-            set_scheduling(viewModel.getList_scheduling().getValue());
-            set_attendance(viewModel.getList_attendance().getValue());
-            set_trauma(viewModel.getList_software().getValue());
-            if (!TextUtils.isEmpty(model.getLicensedBeds()))
-                setup1Binding.edLicenseBed.setText(model.getLicensedBeds());
+            set_check(viewModel.getList_bg_check().getValue());
+            set_emr(viewModel.getList_emr().getValue());
+            set_soft(viewModel.getList_software().getValue());
+
         }
     }
 
     private boolean check_any_list_empty() {
 
-        if ((viewModel.getList_scheduling() == null || viewModel.getList_scheduling().getValue() == null
-                || viewModel.getList_scheduling().getValue().size() == 0) ||
-                (viewModel.getList_attendance() == null || viewModel.getList_attendance().getValue() == null
-                        || viewModel.getList_attendance().getValue().size() == 0) ||
-                (viewModel.getList_trauma() == null
-                        || viewModel.getList_trauma().getValue() == null || viewModel.getList_trauma().getValue().size() == 0)) {
+        if ((viewModel.getList_emr() == null || viewModel.getList_emr().getValue() == null
+                || viewModel.getList_emr().getValue().size() == 0) ||
+                (viewModel.getList_bg_check() == null || viewModel.getList_bg_check().getValue() == null
+                        || viewModel.getList_bg_check().getValue().size() == 0) ||
+                (viewModel.getList_software() == null
+                        || viewModel.getList_software().getValue() == null || viewModel.getList_software().getValue().size() == 0)) {
             return true;
         }
         return false;
@@ -233,55 +223,61 @@ public class ProfileSetupDialog_4 extends DialogFragment {
                 Utils.onClickEvent(v);
             }
         });
-        setup1Binding.layScheduling.setOnClickListener(new View.OnClickListener() {
+        setup1Binding.layEmr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showOptionPopup(getContext(), setup1Binding.view1, 4, setup1Binding.img1,
-                        setup1Binding.tvScheduling,
-                        viewModel.getList_scheduling().getValue(), viewModel.selected_scheduling, new ItemCallback() {
+                showOptionPopup(getContext(), setup1Binding.view1, 1, setup1Binding.img1,
+                        setup1Binding.tvEmr,
+                        viewModel.getList_emr().getValue(), viewModel.selected_emr, new ItemCallback() {
                             @Override
                             public void onClick(int position) {
-                                viewModel.selected_scheduling = position;
-                                if (viewModel.getList_scheduling().getValue().get(viewModel.selected_scheduling).getId().equals(0)) {
-                                    setup1Binding.edScheduling.setText("");
-                                    setup1Binding.viewSchd.setVisibility(View.VISIBLE);
+                                viewModel.selected_emr = position;
+                                if (viewModel.getList_emr().getValue().get(viewModel.selected_emr).getId().equals(0)) {
+                                    setup1Binding.edEmr.setText("");
+                                    setup1Binding.viewEmr.setVisibility(View.VISIBLE);
                                 } else {
-                                    setup1Binding.viewSchd.setVisibility(View.GONE);
+                                    setup1Binding.viewEmr.setVisibility(View.GONE);
                                 }
                             }
                         });
                 Utils.onClickEvent(v);
             }
         });
-        setup1Binding.layAttendance.setOnClickListener(new View.OnClickListener() {
+        setup1Binding.layBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showOptionPopup(getContext(), setup1Binding.view2, 5, setup1Binding.img2,
-                        setup1Binding.tvAttendance,
-                        viewModel.getList_attendance().getValue(), viewModel.selected_attendance, new ItemCallback() {
+                showOptionPopup(getContext(), setup1Binding.view2, 2, setup1Binding.img2,
+                        setup1Binding.tvBackground,
+                        viewModel.getList_bg_check().getValue(), viewModel.selected_bg_check, new ItemCallback() {
                             @Override
                             public void onClick(int position) {
-                                viewModel.selected_attendance = position;
-                                if (viewModel.getList_attendance().getValue().get(viewModel.selected_attendance).getId().equals(0)) {
-                                    setup1Binding.edAttendance.setText("");
-                                    setup1Binding.viewTime.setVisibility(View.VISIBLE);
+                                viewModel.selected_bg_check = position;
+                                if (viewModel.getList_bg_check().getValue().get(viewModel.selected_bg_check).getId().equals(0)) {
+                                    setup1Binding.edBackground.setText("");
+                                    setup1Binding.viewBg.setVisibility(View.VISIBLE);
                                 } else {
-                                    setup1Binding.viewTime.setVisibility(View.GONE);
+                                    setup1Binding.viewBg.setVisibility(View.GONE);
                                 }
                             }
                         });
                 Utils.onClickEvent(v);
             }
         });
-        setup1Binding.layTrauma.setOnClickListener(new View.OnClickListener() {
+        setup1Binding.layNurse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showOptionPopup(getContext(), setup1Binding.view3, 6, setup1Binding.img3,
-                        setup1Binding.tvTrauma,
-                        viewModel.getList_trauma().getValue(), viewModel.selected_trauma, new ItemCallback() {
+                showOptionPopup(getContext(), setup1Binding.view3, 3, setup1Binding.img3,
+                        setup1Binding.tvSoft,
+                        viewModel.getList_software().getValue(), viewModel.selected_soft, new ItemCallback() {
                             @Override
                             public void onClick(int position) {
-                                viewModel.selected_trauma = position;
+                                viewModel.selected_soft = position;
+                                if (viewModel.getList_software().getValue().get(viewModel.selected_soft).getId().equals(0)) {
+                                    setup1Binding.edOtherSoft.setText("");
+                                    setup1Binding.viewSoft.setVisibility(View.VISIBLE);
+                                } else {
+                                    setup1Binding.viewSoft.setVisibility(View.GONE);
+                                }
                             }
                         });
                 Utils.onClickEvent(v);
@@ -297,34 +293,32 @@ public class ProfileSetupDialog_4 extends DialogFragment {
                     facilityProfile = viewModel.new_facilityModel;
                 }
                 if (checkValidation()) {
-                    int Sch = viewModel.getList_scheduling().getValue().get(viewModel.selected_scheduling).getId();
-                    int Att = viewModel.getList_attendance().getValue().get(viewModel.selected_attendance).getId();
-                    int Trau = viewModel.getList_trauma().getValue().get(viewModel.selected_trauma).getId();
-                    String tvSch = viewModel.getList_scheduling().getValue().get(viewModel.selected_trauma).getName();
-                    String tvAtt = viewModel.getList_attendance().getValue().get(viewModel.selected_attendance).getName();
-                    String tvTra = viewModel.getList_trauma().getValue().get(viewModel.selected_trauma).getName();
-                    String edScheduling = setup1Binding.edScheduling.getText().toString();
-                    String edAttendance = setup1Binding.edAttendance.getText().toString();
-                    String edLicenseBed = setup1Binding.edLicenseBed.getText().toString();
+                    int EMR = viewModel.getList_emr().getValue().get(viewModel.selected_emr).getId();
+                    int BG = viewModel.getList_bg_check().getValue().get(viewModel.selected_bg_check).getId();
+                    int Soft = viewModel.getList_software().getValue().get(viewModel.selected_soft).getId();
+                    String tvEMR = viewModel.getList_emr().getValue().get(viewModel.selected_emr).getName();
+                    String tvBG = viewModel.getList_bg_check().getValue().get(viewModel.selected_bg_check).getName();
+                    String tvSoft = viewModel.getList_software().getValue().get(viewModel.selected_soft).getName();
+                    String edEMR = setup1Binding.edEmr.getText().toString();
+                    String edBG = setup1Binding.edBackground.getText().toString();
+                    String edSOFT = setup1Binding.edOtherSoft.getText().toString();
 
-                    facilityProfile.setNurseSchedulingSys(String.valueOf(Sch));
-                    facilityProfile.setNurseSchedulingSys_other(edScheduling);
-                    facilityProfile.setNurseSchedulingSysDefinition(tvSch);
-                    facilityProfile.setTimeAttendSys(String.valueOf(Att));
-                    facilityProfile.setTimeAttendSys_other(edAttendance);
-                    facilityProfile.setTimeAttendSysDefinition(tvAtt);
-                    facilityProfile.setTraumaDesignation(String.valueOf(Trau));
-                    facilityProfile.setTraumaDesignationDefinition(tvTra);
-                    facilityProfile.setLicensedBeds(edLicenseBed);
-
+                    facilityProfile.setFacilityEmr(String.valueOf(EMR));
+                    facilityProfile.setFacilityEmr_Other(edEMR);
+                    facilityProfile.setFacilityEmrDefinition(tvEMR);
+                    facilityProfile.setFacilityBcheckProvider(String.valueOf(BG));
+                    facilityProfile.setFacilityBcheckProvider_Other(edBG);
+                    facilityProfile.setFacilityBcheckProviderDefinition(tvBG);
+                    facilityProfile.setNurseCredSoft(String.valueOf(Soft));
+                    facilityProfile.setNurseCredSoft_other(edSOFT);
+                    facilityProfile.setNurseCredSoftDefinition(tvSoft);
+                    if (viewModel.isEditMode) {
+                        viewModel.main_model = facilityProfile;
+                    } else {
+                        viewModel.new_facilityModel = facilityProfile;
+                    }
                     if (Utils.isNetworkAvailable(getContext())) {
-                        if (viewModel.isEditMode) {
-                            viewModel.main_model = facilityProfile;
-                            viewModel.perform_profile_submission((RegistrationFActivity) getActivity(), mParam1);
-                        } else {
-                            viewModel.new_facilityModel = facilityProfile;
-                            viewModel.do_DismissDialog(new DialogStatusMessage(DialogStatus.Done, mParam1));
-                        }
+                        viewModel.do_DismissDialog(new DialogStatusMessage(DialogStatus.Done, mParam1));
                     } else {
                         Utils.displayToast(getContext(), getResources().getString(R.string.no_internet));
                     }
@@ -332,45 +326,45 @@ public class ProfileSetupDialog_4 extends DialogFragment {
             }
 
             private boolean checkValidation() {
-                String edLicenseNos = setup1Binding.edLicenseBed.getText().toString();
-                if (viewModel.selected_scheduling == 0) {
-                    Utils.displayToast(getContext(), "Select Nurse Scheduling System");
+
+                if (viewModel.selected_emr == 0) {
+                    Utils.displayToast(getContext(), "Select Electronic Medical Records");
                     return false;
                 }
-                if (viewModel.list_scheduling != null && viewModel.list_scheduling.getValue() != null && viewModel.list_scheduling.getValue().size() != 0 &&
-                        viewModel.selected_scheduling == (viewModel.list_scheduling.getValue().size() - 1)) {
-                    if (TextUtils.isEmpty(setup1Binding.edScheduling.getText().toString())) {
-                        Utils.displayToast(getContext(), "Enter Other Nurse Scheduling System !");
+                if (viewModel.list_emr != null && viewModel.list_emr.getValue() != null
+                        && viewModel.list_emr.getValue().size() != 0 &&
+                        viewModel.list_emr.getValue().get(viewModel.selected_emr).getId().equals(0)) {
+                    if (TextUtils.isEmpty(setup1Binding.edEmr.getText().toString())) {
+                        Utils.displayToast(getContext(), "Enter Other Electronic Medical Records In Proper Format Only Alphabets And Space Allowed !");
                         return false;
                     }
                 }
 
-                if (viewModel.selected_attendance == 0) {
-                    Utils.displayToast(getContext(), "Select Time & Attendance System");
+                if (viewModel.selected_bg_check == 0) {
+                    Utils.displayToast(getContext(), "Select Background Check Provider");
                     return false;
                 }
 
-                if (viewModel.list_attendance != null && viewModel.list_attendance.getValue() != null && viewModel.list_attendance.getValue().size() != 0 &&
-                        viewModel.selected_attendance == (viewModel.list_attendance.getValue().size() - 1)) {
-                    if (TextUtils.isEmpty(setup1Binding.edAttendance.getText().toString())) {
-                        Utils.displayToast(getContext(), "Enter Other Time & Attendance System !");
+                if (viewModel.list_bg_check != null && viewModel.list_bg_check.getValue() != null
+                        && viewModel.list_bg_check.getValue().size() != 0 &&
+                        viewModel.list_bg_check.getValue().get(viewModel.selected_bg_check).getId().equals(0)) {
+                    if (TextUtils.isEmpty(setup1Binding.edBackground.getText().toString())) {
+                        Utils.displayToast(getContext(), "Enter Other Background Check Provider In Proper Format Only Alphabets And Space Allowed !");
                         return false;
                     }
                 }
-                if (TextUtils.isEmpty(edLicenseNos)) {
-                    Utils.displayToast(getContext(), "Enter Licensed Beds First !");
+                if (viewModel.selected_soft == 0) {
+                    Utils.displayToast(getContext(), "Select Nurse Credentialing Software");
                     return false;
                 }
-                Matcher matcher1 = patternAlphabetNumbers.matcher(edLicenseNos);
-                if (!matcher1.find()) {
-                    Utils.displayToast(getContext(), "Enter Licensed Beds in proper format only alphabet,no space and numbers are allowed !");
-                    return false;
+                if (viewModel.list_nurse_credentialing != null && viewModel.list_nurse_credentialing.getValue() != null
+                        && viewModel.list_nurse_credentialing.getValue().size() != 0 &&
+                        viewModel.getList_software().getValue().get(viewModel.selected_soft).getId().equals(0)) {
+                    if (TextUtils.isEmpty(setup1Binding.edOtherSoft.getText().toString())) {
+                        Utils.displayToast(getContext(), "Enter Other Nurse Credentialing Software In Proper Format Only Alphabets And Space Allowed !");
+                        return false;
+                    }
                 }
-                if (viewModel.selected_trauma == 0) {
-                    Utils.displayToast(getContext(), "Select Trauma Designation");
-                    return false;
-                }
-
                 return true;
             }
         });
@@ -393,22 +387,22 @@ public class ProfileSetupDialog_4 extends DialogFragment {
             }
         });
 
-        viewModel.getList_attendance().observe(this, new Observer<List<CommonDatum>>() {
+        viewModel.getList_emr().observe(this, new Observer<List<CommonDatum>>() {
             @Override
             public void onChanged(List<CommonDatum> fromList) {
-                set_attendance(fromList);
+                set_emr(fromList);
             }
         });
-        viewModel.getList_scheduling().observe(this, new Observer<List<CommonDatum>>() {
+        viewModel.getList_bg_check().observe(this, new Observer<List<CommonDatum>>() {
             @Override
             public void onChanged(List<CommonDatum> fromList) {
-                set_scheduling(fromList);
+                set_check(fromList);
             }
         });
-        viewModel.getList_trauma().observe(this, new Observer<List<CommonDatum>>() {
+        viewModel.getList_software().observe(this, new Observer<List<CommonDatum>>() {
             @Override
             public void onChanged(List<CommonDatum> fromList) {
-                set_trauma(fromList);
+                set_soft(fromList);
             }
         });
 
@@ -457,55 +451,59 @@ public class ProfileSetupDialog_4 extends DialogFragment {
         popup.showAsDropDown(v, 0, 0);
     }
 
-    private void set_trauma(List<CommonDatum> fromList) {
-        String value_id = model.getTraumaDesignation();
+    private void set_soft(List<CommonDatum> fromList) {
+        String value_id = model.getNurseCredSoft();
         if (!TextUtils.isEmpty(value_id) && fromList != null && fromList.size() != 0) {
             if (checkItemInList(value_id, fromList)) {
-                viewModel.selected_trauma = getIndexFromList(value_id, fromList);
-                setup1Binding.tvTrauma.setText("" + model.getTraumaDesignationDefinition());
-
-            } else {
-                viewModel.selected_trauma = 0;
-            }
-        } else {
-            viewModel.selected_trauma = 0;
-        }
-    }
-
-    private void set_scheduling(List<CommonDatum> fromList) {
-        String value_id = model.getNurseSchedulingSys();
-        if (!TextUtils.isEmpty(value_id) && fromList != null && fromList.size() != 0) {
-            if (checkItemInList(value_id, fromList)) {
-                viewModel.selected_scheduling = getIndexFromList(value_id, fromList);
-                setup1Binding.tvScheduling.setText("" + model.getNurseSchedulingSysDefinition());
-                if (viewModel.selected_scheduling == (fromList.size() - 1)) {
-                    setup1Binding.edScheduling.setText(model.getNurseSchedulingSys_other());
-                    setup1Binding.viewSchd.setVisibility(View.VISIBLE);
+                viewModel.selected_soft = getIndexFromList(value_id, fromList);
+                setup1Binding.tvSoft.setText("" + model.getNurseCredSoftDefinition());
+                if (viewModel.selected_soft == (fromList.size() - 1)) {
+                    setup1Binding.edOtherSoft.setText(model.getNurseCredSoft_other());
+                    setup1Binding.viewSoft.setVisibility(View.VISIBLE);
                 }
             } else {
-                viewModel.selected_scheduling = 0;
+                viewModel.selected_soft = 0;
             }
-
         } else {
-            viewModel.selected_scheduling = 0;
+            viewModel.selected_soft = 0;
         }
     }
 
-    private void set_attendance(List<CommonDatum> fromList) {
-        String value_id = model.getTimeAttendSys();
+    private void set_check(List<CommonDatum> fromList) {
+        String value_id = model.getFacilityBcheckProvider();
         if (!TextUtils.isEmpty(value_id) && fromList != null && fromList.size() != 0) {
             if (checkItemInList(value_id, fromList)) {
-                viewModel.selected_attendance = getIndexFromList(value_id, fromList);
-                setup1Binding.tvAttendance.setText("" + model.getTimeAttendSysDefinition());
+                viewModel.selected_bg_check = getIndexFromList(value_id, fromList);
+                setup1Binding.tvBackground.setText("" + model.getFacilityBcheckProviderDefinition());
+                if (viewModel.selected_bg_check == (fromList.size() - 1)) {
+                    setup1Binding.edBackground.setText(model.getFacilityBcheckProviderDefinition());
+                    setup1Binding.viewBg.setVisibility(View.VISIBLE);
+                }
+            } else {
+                viewModel.selected_bg_check = 0;
+            }
+
+        } else {
+            viewModel.selected_bg_check = 0;
+        }
+    }
+
+    private void set_emr(List<CommonDatum> fromList) {
+        String value_id = model.getFacilityEmr();
+        if (!TextUtils.isEmpty(value_id) && fromList != null && fromList.size() != 0) {
+            if (checkItemInList(value_id, fromList)) {
+                viewModel.selected_emr = getIndexFromList(value_id, fromList);
+                setup1Binding.tvEmr.setText("" + model.getFacilityEmrDefinition());
                 if (viewModel.selected_emr == (fromList.size() - 1)) {
-                    setup1Binding.edAttendance.setText(model.getTimeAttendSys_other());
-                    setup1Binding.viewTime.setVisibility(View.VISIBLE);
+                    setup1Binding.edEmr.setText(model.getFacilityEmr_Other());
+                    setup1Binding.viewEmr.setVisibility(View.VISIBLE);
                 }
             } else {
-                viewModel.selected_attendance = 0;
+                viewModel.selected_emr = 0;
             }
+
         } else {
-            viewModel.selected_attendance = 0;
+            viewModel.selected_emr = 0;
         }
     }
 

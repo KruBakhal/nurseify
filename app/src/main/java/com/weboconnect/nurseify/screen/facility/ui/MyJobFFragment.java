@@ -19,21 +19,25 @@ public class MyJobFFragment extends Fragment {
     String id;
     FragmentMyJobsFBinding binding;
     View view;
-    public MyJobFFragment(){ }
+
+    public MyJobFFragment() {
+    }
+
     public MyJobFFragment(String id) {
         this.id = id;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding  = DataBindingUtil.inflate(inflater, R.layout.fragment_my_jobs_f, null, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_jobs_f, null, false);
         binding.recyclerViewJobs.setAdapter(new PostedAdapter(getActivity()));
         binding.textOffered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.btn_tab));
-                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textCompleted.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
+                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
+                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textCompleted.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
                 binding.textOffered.setTextColor(Color.parseColor("#8A4999"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
                 binding.textCompleted.setTextColor(Color.parseColor("#000000"));
@@ -43,9 +47,9 @@ public class MyJobFFragment extends Fragment {
         binding.textActive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.btn_tab));
-                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textCompleted.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
+                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
+                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textCompleted.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
                 binding.textActive.setTextColor(Color.parseColor("#8A4999"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
                 binding.textCompleted.setTextColor(Color.parseColor("#000000"));
@@ -55,9 +59,9 @@ public class MyJobFFragment extends Fragment {
         binding.textCompleted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.textCompleted.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.btn_tab));
-                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
+                binding.textCompleted.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
+                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
                 binding.textCompleted.setTextColor(Color.parseColor("#8A4999"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));

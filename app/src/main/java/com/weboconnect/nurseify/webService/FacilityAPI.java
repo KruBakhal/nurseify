@@ -4,9 +4,12 @@ import com.weboconnect.nurseify.common.CommonModel;
 import com.weboconnect.nurseify.screen.facility.model.DropdownModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
+import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
+import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
+import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -97,4 +100,27 @@ public interface FacilityAPI {
     Call<UserProfile> call_Profile_Photos(@Part("api_key") RequestBody api_key,
                                           @Part("facility_id") RequestBody facility_id,
                                           @Part("facility_logo") MultipartBody.Part facility_logo);
+
+    @POST("get-work-location")
+    Observable<CommonModel> call_work_location();
+
+    @POST("get-specialities")
+    Observable<CommonModel> call_specialty();
+
+    @POST("shift-duration")
+    Observable<CommonModel> call_shift_duration();
+
+    @POST("assignment-duration")
+    Observable<CommonModel> call_assignment_duration();
+
+
+
+    @POST("get-weekdays")
+    Observable<HourlyRate_DayOfWeek_OptionModel> call_get_weekdays();
+
+    @POST("get-seniority-level")
+    Observable<CommonModel> call_get_seniority_level();
+
+    @POST("get-job-function")
+    Observable<CommonModel> call_get_job_function();
 }

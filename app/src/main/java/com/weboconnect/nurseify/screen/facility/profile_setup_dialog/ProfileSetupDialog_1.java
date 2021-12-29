@@ -1,4 +1,4 @@
-package com.weboconnect.nurseify.screen.facility.dialog;
+package com.weboconnect.nurseify.screen.facility.profile_setup_dialog;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -46,7 +46,6 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.HourlyRateWindowAdapter;
 import com.weboconnect.nurseify.adapter.WorkHistoryWindowAdapter;
-import com.weboconnect.nurseify.common.CommonDatum;
 import com.weboconnect.nurseify.databinding.DialogProfileSetup1Binding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;

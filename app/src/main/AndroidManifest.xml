@@ -7,10 +7,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
     <meta-data
         android:name="firebase_crashlytics_collection_enabled"
         android:value="true" />
+
     <application
+        android:name=".AppController"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
@@ -20,6 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.nurseify"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".screen.facility.Add_Jobs_Activity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".screen.ForgetPasswordActivity"
             android:exported="false" />

@@ -2,6 +2,7 @@ package com.weboconnect.nurseify.adapter;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -27,7 +28,7 @@ public class CommonDropDownAdapter extends RecyclerView.Adapter<CommonDropDownAd
     private List<CommonDatum> datumList;
     CommonDropDownInterface parentInterface;
 
-    public CommonDropDownAdapter(Context context, int type, int selected_city_int, List<CommonDatum> workLocationData, CommonDropDownInterface parentInterface) {
+    public CommonDropDownAdapter(Activity context, int type, int selected_city_int, List<CommonDatum> workLocationData, CommonDropDownInterface parentInterface) {
         this.context = context;
         this.type = type;
         this.selected_city_int = selected_city_int;
@@ -61,12 +62,12 @@ public class CommonDropDownAdapter extends RecyclerView.Adapter<CommonDropDownAd
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        int select = 0;
+        boolean isNotSelected = true;
         if ((context instanceof RegistrationFActivity)) {
             RegistrationFActivity activity = (RegistrationFActivity) context;
             CommonDatum movie = datumList.get(position);
             holder.title.setText(movie.getName());
-            boolean isNotSelected = true;
-            int select = 0;
             if (type == 1) {
                 select = activity.viewModel.selected_emr;
             } else if (type == 2) {
@@ -80,27 +81,28 @@ public class CommonDropDownAdapter extends RecyclerView.Adapter<CommonDropDownAd
             } else if (type == 6) {
                 select = activity.viewModel.selected_trauma;
             }
-
-            if (select == position) {
-                isNotSelected = false;
-            } else {
-                isNotSelected = true;
-            }
-            if (!isNotSelected) {
-                holder.lay_item.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.grad1));
-                holder.title.setTextColor(Color.WHITE);
-            } else {
-                holder.lay_item.setBackground(null);
-                holder.title.setTextColor(activity.getResources().getColor(R.color.gray));
-            }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    parentInterface.onCLickItem(position, type);
-                }
-            });
+        } else {
 
         }
+
+        if (select == position) {
+            isNotSelected = false;
+        } else {
+            isNotSelected = true;
+        }
+        if (!isNotSelected) {
+            holder.lay_item.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.grad1));
+            holder.title.setTextColor(Color.WHITE);
+        } else {
+            holder.lay_item.setBackground(null);
+            holder.title.setTextColor(context.getResources().getColor(R.color.gray));
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parentInterface.onCLickItem(position, type);
+            }
+        });
 
     }
 
