@@ -82,6 +82,7 @@
                     android:layout_marginHorizontal="26dp">
 
                     <TextView
+                        android:id="@+id/ed_location"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

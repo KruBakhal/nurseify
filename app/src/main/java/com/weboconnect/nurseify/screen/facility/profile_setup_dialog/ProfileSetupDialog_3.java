@@ -476,7 +476,7 @@ public class ProfileSetupDialog_3 extends DialogFragment {
                 viewModel.selected_bg_check = getIndexFromList(value_id, fromList);
                 setup1Binding.tvBackground.setText("" + model.getFacilityBcheckProviderDefinition());
                 if (viewModel.selected_bg_check == (fromList.size() - 1)) {
-                    setup1Binding.edBackground.setText(model.getFacilityBcheckProviderDefinition());
+                    setup1Binding.edBackground.setText(model.getFacilityBcheckProvider_Other());
                     setup1Binding.viewBg.setVisibility(View.VISIBLE);
                 }
             } else {

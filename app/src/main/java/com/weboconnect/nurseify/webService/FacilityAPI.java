@@ -1,9 +1,12 @@
 package com.weboconnect.nurseify.webService;
 
 import com.weboconnect.nurseify.common.CommonModel;
+import com.weboconnect.nurseify.screen.facility.model.AddJobModel;
 import com.weboconnect.nurseify.screen.facility.model.DropdownModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
+import com.weboconnect.nurseify.screen.facility.model.NurseModel;
+import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
@@ -114,7 +117,6 @@ public interface FacilityAPI {
     Observable<CommonModel> call_assignment_duration();
 
 
-
     @POST("get-weekdays")
     Observable<HourlyRate_DayOfWeek_OptionModel> call_get_weekdays();
 
@@ -123,4 +125,63 @@ public interface FacilityAPI {
 
     @POST("get-job-function")
     Observable<CommonModel> call_get_job_function();
+
+    @POST("get-cerner-medtech-epic-options")
+    Observable<CommonModel> call_cerner_medtech_epic_options();
+
+
+    @Multipart
+    @POST("job-create")
+    Call<AddJobModel> call_create_add_job(
+            @Part("user_id") RequestBody user_id,
+            @Part("facility_id") RequestBody facility_id,
+            @Part("preferred_assignment_duration") RequestBody facility_id1,
+            @Part("seniority_level") RequestBody name,
+            @Part("job_function") RequestBody type,
+            @Part("preferred_specialty") RequestBody facility_email,
+            @Part("preferred_shift_duration") RequestBody facility_phone,
+            @Part("preferred_work_location") RequestBody address,
+            @Part("preferred_days_of_the_week") RequestBody city,
+            @Part("preferred_experience") RequestBody state,
+            @Part("preferred_hourly_pay_rate") RequestBody postcode,
+            @Part("job_cerner_exp") RequestBody video_link,
+            @Part("job_meditech_exp") RequestBody facebook,
+            @Part("job_epic_exp") RequestBody twitter,
+            @Part("job_other_exp") RequestBody linkedin,
+            @Part("description") RequestBody instagram,
+            @Part("responsibilities") RequestBody pinterest,
+            @Part("qualifications") RequestBody tiktok,
+            @Part("job_video") RequestBody sanpchat,
+            @Part("active") RequestBody active,
+            @Part MultipartBody.Part[] job_photos
+
+    );
+
+    @Multipart
+    @POST("job-create")
+    Call<AddJobModel> call_create_add_job(
+            @Part("user_id") RequestBody user_id,
+            @Part("facility_id") RequestBody facility_id1,
+            @Part("preferred_assignment_duration") RequestBody facility_id,
+            @Part("seniority_level") RequestBody name,
+            @Part("job_function") RequestBody type,
+            @Part("preferred_specialty") RequestBody facility_email,
+            @Part("preferred_shift_duration") RequestBody facility_phone,
+            @Part("preferred_work_location") RequestBody address,
+            @Part("preferred_days_of_the_week") RequestBody city,
+            @Part("preferred_experience") RequestBody state,
+            @Part("preferred_hourly_pay_rate") RequestBody postcode,
+            @Part("job_cerner_exp") RequestBody video_link,
+            @Part("job_meditech_exp") RequestBody facebook,
+            @Part("job_epic_exp") RequestBody twitter,
+            @Part("job_other_exp") RequestBody linkedin,
+            @Part("description") RequestBody instagram,
+            @Part("responsibilities") RequestBody pinterest,
+            @Part("qualifications") RequestBody tiktok,
+            @Part("job_video") RequestBody sanpchat,
+            @Part("active") RequestBody active
+    );
+    @Multipart
+    @POST("browse-nurses")
+    Call<NurseModel> call_browse_nurse(@Part("page") RequestBody current_page1);
 }

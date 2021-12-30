@@ -422,7 +422,7 @@ public class ProfileSetupDialog_2 extends DialogFragment {
                         setup1Binding.edYoutube.setError("Enter Website URL In Proper Format !");
                         return false;
                     }
-                    if (!TextUtils.isEmpty(youtube) && !(Utils.patternYoutubeURL.matcher(website).find())) {
+                    if (!TextUtils.isEmpty(youtube) && !(Utils.patternYoutubeURL.matcher(youtube).find())) {
                         setup1Binding.edYoutube.setError("Enter Youtube/Vinmo URL In Proper Format !");
                         return false;
                     }

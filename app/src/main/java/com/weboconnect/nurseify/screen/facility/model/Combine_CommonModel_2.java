@@ -16,7 +16,10 @@ public class Combine_CommonModel_2 {
     }
 
     public Combine_CommonModel_2(CommonModel commonModel_assign, CommonModel commonModel_senior,
-                                 CommonModel commonModel_jobs_funcs, CommonModel commonModel_speciality, CommonModel commonModel_shift, CommonModel commonModel_workLoc, HourlyRate_DayOfWeek_OptionModel commonModel_week) {
+                                 CommonModel commonModel_jobs_funcs, CommonModel commonModel_speciality,
+                                 CommonModel commonModel_shift, CommonModel commonModel_workLoc,
+                                 HourlyRate_DayOfWeek_OptionModel commonModel_week,
+                                 CommonModel commonModel_epic) {
         this.commonModel_assign = commonModel_assign;
         this.commonModel_senior = commonModel_senior;
         this.commonModel_jobs_funcs = commonModel_jobs_funcs;
@@ -24,6 +27,7 @@ public class Combine_CommonModel_2 {
         this.commonModel_shift = commonModel_shift;
         this.commonModel_workLoc = commonModel_workLoc;
         this.commonModel_week = commonModel_week;
+        commonModel_epic_medtech = commonModel_epic;
     }
 
     CommonModel commonModel_jobs_funcs;
@@ -31,6 +35,15 @@ public class Combine_CommonModel_2 {
     CommonModel commonModel_shift;
     CommonModel commonModel_workLoc;
     HourlyRate_DayOfWeek_OptionModel commonModel_week;
+    CommonModel commonModel_epic_medtech;
+
+    public CommonModel getCommonModel_epic_medtech() {
+        return commonModel_epic_medtech;
+    }
+
+    public void setCommonModel_epic_medtech(CommonModel commonModel_epic_medtech) {
+        this.commonModel_epic_medtech = commonModel_epic_medtech;
+    }
 
     public CommonModel getCommonModel_assign() {
         return commonModel_assign;

@@ -54,7 +54,7 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-        if (type == 1 ) {
+        if (type == 1) {
             Glide.with(holder.itemView.getContext())
                     .load(list.get(position)).into(holder.img);
             holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -120,7 +120,10 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
 
     @Override
     public int getItemCount() {
-        return list.size();
+        if (list == null || list.size() == 0)
+            return 0;
+        else
+            return list.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {

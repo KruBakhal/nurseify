@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.common.CommonDatum;
+import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
 import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 
 import java.util.List;
@@ -82,7 +83,22 @@ public class CommonDropDownAdapter extends RecyclerView.Adapter<CommonDropDownAd
                 select = activity.viewModel.selected_trauma;
             }
         } else {
-
+            Add_Jobs_Activity activity = (Add_Jobs_Activity) context;
+            CommonDatum movie = datumList.get(position);
+            holder.title.setText(movie.getName());
+            if (type == 1) {
+                select = activity.viewModel.selected_assignment_duration;
+            } else if (type == 2) {
+                select = activity.viewModel.selected_senior_level;
+            } else if (type == 3) {
+                select = activity.viewModel.selected_job_funcs;
+            } else if (type == 4) {
+                select = activity.viewModel.selected_speciality;
+            } else if (type == 5) {
+                select = activity.viewModel.selected_shift_duration;
+            } else if (type == 6) {
+                select = activity.viewModel.selected_work_loc;
+            }
         }
 
         if (select == position) {

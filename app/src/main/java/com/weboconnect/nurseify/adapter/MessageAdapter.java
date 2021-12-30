@@ -110,7 +110,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 int unread = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chatlist chat = snapshot.getValue(Chatlist.class);
-                    if (chat.getSender().equals(id) && chat.getReceiver().equals(user_id) && chat.getIs_seen() == 0) {
+                    if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(user_id)&& !TextUtils.isEmpty(chat.getReceiver())&& !TextUtils.isEmpty(chat.getSender())
+                            && chat.getSender().equals(id) && chat.getReceiver().equals(user_id) && chat.getIs_seen() == 0) {
                         unread++;
                     }
                 }
@@ -170,7 +171,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chatlist chat = snapshot.getValue(Chatlist.class);
                     if (firebaseUser != null && chat != null) {
-                        if ((chat.getReceiver().equals(firebaseUser) && chat.getSender().equals(userid)) ||
+                        if (!TextUtils.isEmpty(userid) && !TextUtils.isEmpty(firebaseUser)&& !TextUtils.isEmpty(chat.getSender()) && !TextUtils.isEmpty(chat.getReceiver())&&
+                                (chat.getReceiver().equals(firebaseUser) && chat.getSender().equals(userid)) ||
                                 (chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser))) {
                             theLastMessage = chat.getMessage();
                             try {

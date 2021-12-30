@@ -20,6 +20,9 @@ public class AppController extends Application {
     public List<CommonDatum> list_preferred_shift = new ArrayList<>();
     public List<CommonDatum> list_work_loc = new ArrayList<>();
     public List<HourlyRate_DayOfWeek_OptionDatum> list_days_of_week = new ArrayList<>();
+    private List<CommonDatum> list_cerner;
+    private List<CommonDatum> list_medtech;
+    private List<CommonDatum> list_epic;
 
     @Override
     public void onCreate() {
@@ -81,5 +84,29 @@ public class AppController extends Application {
 
     public void setList_days_of_week(List<HourlyRate_DayOfWeek_OptionDatum> list_days_of_week) {
         this.list_days_of_week = list_days_of_week;
+    }
+
+    public void setList_cerner(List<CommonDatum> list_cerner) {
+        this.list_cerner = list_cerner;
+    }
+
+    public List<CommonDatum> getList_cerner() {
+        return list_cerner;
+    }
+
+    public void setList_medtech(List<CommonDatum> list_medtech) {
+        this.list_medtech = list_medtech;
+    }
+
+    public List<CommonDatum> getList_medtech() {
+        return list_medtech;
+    }
+
+    public void setList_epic(List<CommonDatum> list_epic) {
+        this.list_epic = list_epic;
+    }
+
+    public List<CommonDatum> getList_epic() {
+        return list_epic;
     }
 }

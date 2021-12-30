@@ -73,6 +73,8 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+
+                if(!TextUtils.isEmpty(user.getFull_name()))
                 binding.tvTitle.setText(user.getFull_name());
                 if (TextUtils.isEmpty(user.getProfile_path())) {
                     binding.imgProfile.setImageResource(R.drawable.person);

@@ -46,6 +46,7 @@ public class Add_Jobs_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_jobs);
+        context=this;
         fragmentManager = getSupportFragmentManager();
         viewModel = new ViewModelProvider(this).get(Add_Job_ViewModel.class);
         observer_view();

@@ -1,10 +1,15 @@
 package com.weboconnect.nurseify.screen.facility.add_job_fragment;
 
+import static com.weboconnect.nurseify.utils.Utils.patternExp;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +32,7 @@ import com.weboconnect.nurseify.adapter.CommonDropDownAdapter;
 import com.weboconnect.nurseify.adapter.HourlyRateWindowAdapter;
 import com.weboconnect.nurseify.adapter.PostedAdapter;
 import com.weboconnect.nurseify.adapter.SpecialtyAdapter;
+import com.weboconnect.nurseify.adapter.WorkHistoryWindowAdapter;
 import com.weboconnect.nurseify.common.CommonDatum;
 import com.weboconnect.nurseify.databinding.ActivityAddJob1Binding;
 import com.weboconnect.nurseify.databinding.FragmentMyJobsFBinding;
@@ -46,6 +52,7 @@ import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionMo
 import com.weboconnect.nurseify.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.internal.Util;
@@ -92,8 +99,8 @@ public class Add_Job_1_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_add_job1, null, false);
         viewModel = new ViewModelProvider(requireActivity()).get(Add_Job_ViewModel.class);
-        setData();
         observer_view();
+        setData();
         click();
         return view = binding.getRoot();
     }
@@ -110,7 +117,16 @@ public class Add_Job_1_Fragment extends Fragment {
             viewModel.list_speciality.setValue(appController.getList_speciality());
             viewModel.list_work_loc.setValue(appController.getList_work_loc());
             viewModel.list_days_of_week.setValue(appController.getList_days_of_week());
+            viewModel.list_work_cerner.setValue(appController.getList_cerner());
+            viewModel.list_work_medtech.setValue(appController.getList_medtech());
+            viewModel.list_work_epic.setValue(appController.getList_epic());
+            binding.edExperience.setText(viewModel.experience_year);
+            binding.edOther.setText(viewModel.other_exp);
         }
+        setAdapter();
+    }
+
+    private void setAdapter() {
         daysOfWeekAdapter = new SpecialtyAdapter(getContext(), viewModel.select_daysOfWeek,
                 viewModel.list_days_of_week.getValue(), 3, 3, new SpecialtyAdapter.SpecialtyListener() {
             @Override
@@ -130,6 +146,7 @@ public class Add_Job_1_Fragment extends Fragment {
                 }
             }
         });
+        binding.rvWeeksDays.setAdapter(daysOfWeekAdapter);
 
     }
 
@@ -208,7 +225,19 @@ public class Add_Job_1_Fragment extends Fragment {
                 && appController.getList_days_of_week().size() != 0) {
             status++;
         }
-        if (status == 7) {
+        if (appController.getList_cerner() != null
+                && appController.getList_cerner().size() != 0) {
+            status++;
+        }
+        if (appController.getList_medtech() != null
+                && appController.getList_medtech().size() != 0) {
+            status++;
+        }
+        if (appController.getList_epic() != null
+                && appController.getList_epic().size() != 0) {
+            status++;
+        }
+        if (status == 10) {
             return true;
         } else
             return false;
@@ -222,6 +251,7 @@ public class Add_Job_1_Fragment extends Fragment {
                 if (progressUIType == ProgressUIType.SHOW) {
                     binding.layProgress.setVisibility(View.VISIBLE);
                 } else if (progressUIType == ProgressUIType.DIMISS) {
+                    setAdapter();
                     binding.layProgress.setVisibility(View.GONE);
                 } else if (progressUIType == ProgressUIType.CANCEL) {
                     binding.layProgress.setVisibility(View.GONE);
@@ -233,6 +263,29 @@ public class Add_Job_1_Fragment extends Fragment {
     }
 
     private void click() {
+        binding.edExperience.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s == null || s.length() == 0)
+                    binding.edExperience.setError(null);
+                else if (!patternExp.matcher(s.toString()).find()) {
+                    binding.edExperience.setError("Preferred Experience Can Contain Numbers And Max Length Is 5 !");
+                } else {
+                    binding.edExperience.setError(null);
+                }
+            }
+        });
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,9 +297,65 @@ public class Add_Job_1_Fragment extends Fragment {
         binding.next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (check_validation()) {
+                    viewModel.experience_year = binding.edExperience.getText().toString();
 
-                viewModel.do_DismissDialog(new DialogStatusMessage(DialogStatus.Dismiss, mParam1));
+                    if (!TextUtils.isEmpty(binding.edOther.getText().toString()))
+                        viewModel.other_exp = binding.edOther.getText().toString();
+                    else
+                        viewModel.other_exp = "";
 
+                    viewModel.do_DismissDialog(new DialogStatusMessage(DialogStatus.Dismiss, mParam1));
+                }
+            }
+
+            private boolean check_validation() {
+                if (viewModel.selected_assignment_duration == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Preferred Assignment Duration First !");
+                    return false;
+                }
+                if (viewModel.selected_senior_level == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Seniority Level First !");
+                    return false;
+                }
+
+                if (viewModel.selected_job_funcs == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Job Function !");
+                    return false;
+                }
+                if (viewModel.selected_speciality == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Preferred Specialty !");
+                    return false;
+                }
+                if (viewModel.selected_shift_duration == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Preferred Shift Duration !");
+                    return false;
+                }
+                if (viewModel.selected_work_loc == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Preferred Work Location !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(binding.edExperience.getText().toString())) {
+                    Utils.displayToast(getContext(), "Enter Experience Years First !");
+                    return false;
+                }
+                if (viewModel.select_daysOfWeek == null || viewModel.select_daysOfWeek.size() == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Preferred Day Of The Week First !");
+                    return false;
+                }
+                if (viewModel.selected_work_cerner == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Your Cerner Experience !");
+                    return false;
+                }
+                if (viewModel.selected_work_medtech == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Your Meditech Experience !");
+                    return false;
+                }
+                if (viewModel.selected_work_epic == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Your Epic Experience !");
+                    return false;
+                }
+                return true;
             }
         });
         binding.layAssignment.setOnClickListener(new View.OnClickListener() {
@@ -356,12 +465,125 @@ public class Add_Job_1_Fragment extends Fragment {
                                     viewModel.select_daysOfWeek.add(position);
                                 binding.tvWeeksDays.setVisibility(View.GONE);
                                 binding.rvWeeksDays.setVisibility(View.VISIBLE);
+
                                 daysOfWeekAdapter.notifyDataSetChanged();
                             }
                         });
                 Utils.onClickEvent(v);
             }
         });
+        binding.layCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Utils.hideKeyboardFrom(getContext(), v);
+
+                showOptionPopup_Degrees(getContext(), 2, binding.view9, binding.img9,
+                        Collections.singletonList(viewModel.list_work_cerner.getValue()),
+                        new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                viewModel.selected_work_cerner = position;
+                                if (position == 0) {
+                                    binding.tvCenter.setText("");
+                                } else
+                                    binding.tvCenter.setText("" + viewModel.list_work_cerner.getValue()
+                                            .get(position).getName());
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+        binding.layMeditech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Utils.hideKeyboardFrom(getContext(), v);
+
+                showOptionPopup_Degrees(getContext(), 3, binding.view10, binding.img10,
+                        Collections.singletonList(viewModel.list_work_medtech.getValue()),
+                        new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                viewModel.selected_work_medtech = position;
+                                if (position == 0) {
+                                    binding.tvMeditech.setText("");
+                                } else
+                                    binding.tvMeditech.setText("" + viewModel.list_work_medtech.getValue()
+                                            .get(position).getName());
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+
+        binding.layEpic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Utils.hideKeyboardFrom(getContext(), v);
+
+                showOptionPopup_Degrees(getContext(), 4, binding.view11, binding.img11,
+                        Collections.singletonList(viewModel.list_work_epic.getValue()),
+                        new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                viewModel.selected_work_epic = position;
+                                if (position == 0) {
+                                    binding.tvEpic.setText("");
+                                } else
+                                    binding.tvEpic.setText("" + viewModel.list_work_epic.getValue()
+                                            .get(position).getName());
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+    }
+
+    private void showOptionPopup_Degrees(Context context, int type, View view1, ImageView img1,
+                                         List<Object> list_nurse_degrees,
+                                         ItemCallback itemCallback) {
+        if (list_nurse_degrees == null || list_nurse_degrees.size() == 0) {
+            Utils.displayToast(context, "data empty");
+            return;
+        }
+        LayoutInflater layoutInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.popup_dropdown, null);
+
+        PopupWindow popup = new PopupWindow(context);
+        popup.setContentView(layout);
+        popup.setFocusable(true);
+        popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        int height = 193;
+        popup.setWidth(view1.getWidth());
+        popup.setHeight(getActivity().getWindowManager().getDefaultDisplay().getHeight() * height / 1080);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.rv_pop);
+        img1.setRotation(-180);
+        View finalImg = img1;
+        popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                finalImg.setRotation(0);
+            }
+        });
+
+        HourlyRateWindowAdapter parentChildAdapter = null;
+        WorkHistoryWindowAdapter adapter_degree;
+        adapter_degree = new WorkHistoryWindowAdapter((Add_Jobs_Activity) getActivity(), type,
+                list_nurse_degrees,
+                new WorkHistoryWindowAdapter.WorkHistoryWindowInterface() {
+                    @Override
+                    public void onCLickItem(int position, int type) {
+                        itemCallback.onClick(position);
+                        popup.dismiss();
+                    }
+                });
+
+
+        recyclerView.setAdapter(adapter_degree);
+        popup.showAsDropDown(view1, 0, 0);
     }
 
     private void showOptionPopup(Context context, View v, int type, ImageView img1,
@@ -392,7 +614,7 @@ public class Add_Job_1_Fragment extends Fragment {
         });
 
         CommonDropDownAdapter parentChildAdapter
-                = new CommonDropDownAdapter((Add_Jobs_Activity)getActivity()
+                = new CommonDropDownAdapter((Add_Jobs_Activity) getActivity()
                 , type
                 , selected_City, cityData, new CommonDropDownAdapter.CommonDropDownInterface() {
             @Override

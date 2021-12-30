@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.common.CommonDatum;
+import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
 import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
 import com.weboconnect.nurseify.screen.nurse.model.CernersDatum;
@@ -28,6 +30,7 @@ import java.util.List;
 
 public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWindowAdapter.WorkHistoryWindowMyViewHolder> {
 
+    private List<CommonDatum> list_Epic;
     private BrowseFragment context;
     private int type;
     public List<Degree_Datum> list_nurse_degrees = new ArrayList<>();
@@ -55,6 +58,16 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
                     this.list_facilty_type = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
                 else if (type == 8)
                     this.list_media = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
+
+
+            } else if (((List) list_nurse_degrees).size() > 0
+                    && (((List) list_nurse_degrees.get(0)).get(0) instanceof CommonDatum)) {
+                if (type == 2)
+                    this.list_Epic = (List<CommonDatum>) list_nurse_degrees.get(0);
+                else if (type == 3)
+                    this.list_Epic = ((List<CommonDatum>) list_nurse_degrees.get(0));
+                else if (type == 4)
+                    this.list_Epic = ((List<CommonDatum>) list_nurse_degrees.get(0));
 
 
             }
@@ -132,28 +145,46 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
         boolean isNotSelected = true;
         int selectedPos = 0;
         if (type >= 1 && type <= 5) {
-            RegisterActivity activity = (RegisterActivity) this.activity;
-            context1 = activity;
-            if (type == 1) {
-                Degree_Datum movie = list_nurse_degrees.get(position);
-                holder.title.setText(movie.getName());
-                selectedPos = activity.selected_nurse_degree;
-            } else if (type == 2) {
-                Degree_Datum movie = list_nurse_degrees.get(position);
-                holder.title.setText(movie.getName());
-                selectedPos = activity.selected_nurse_cerner;
-            } else if (type == 3) {
-                Degree_Datum movie = list_nurse_degrees.get(position);
-                holder.title.setText(movie.getName());
-                selectedPos = activity.selected_nurse_meditech;
-            } else if (type == 4) {
-                Degree_Datum movie = list_nurse_degrees.get(position);
-                holder.title.setText(movie.getName());
-                selectedPos = activity.selected_nurse_epic;
-            } else if (type == 5) {
-                CredentialDatum movie = list_Credential.get(position);
-                holder.title.setText(movie.getName());
-                selectedPos = activity.selected_Credential;
+            if (activity instanceof RegisterActivity) {
+                RegisterActivity activity = (RegisterActivity) this.activity;
+                context1 = activity;
+                if (type == 1) {
+                    Degree_Datum movie = list_nurse_degrees.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.selected_nurse_degree;
+                } else if (type == 2) {
+                    Degree_Datum movie = list_nurse_degrees.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.selected_nurse_cerner;
+                } else if (type == 3) {
+                    Degree_Datum movie = list_nurse_degrees.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.selected_nurse_meditech;
+                } else if (type == 4) {
+                    Degree_Datum movie = list_nurse_degrees.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.selected_nurse_epic;
+                } else if (type == 5) {
+                    CredentialDatum movie = list_Credential.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.selected_Credential;
+                }
+            } else {
+                Add_Jobs_Activity activity = (Add_Jobs_Activity) this.activity;
+                context1 = activity;
+                if (type == 2) {
+                    CommonDatum movie = list_Epic.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.viewModel.selected_work_cerner;
+                } else if (type == 3) {
+                    CommonDatum movie = list_Epic.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.viewModel.selected_work_medtech;
+                } else if (type == 4) {
+                    CommonDatum movie = list_Epic.get(position);
+                    holder.title.setText(movie.getName());
+                    selectedPos = activity.viewModel.selected_work_epic;
+                }
             }
         } else if (activity instanceof RegistrationFActivity) {
             SpecialtyDatum movie = null;
@@ -211,7 +242,13 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
 
     @Override
     public int getItemCount() {
-        if (type == 1) {
+        if (activity instanceof Add_Jobs_Activity) {
+            Add_Jobs_Activity activity = (Add_Jobs_Activity) this.activity;
+            if (list_Epic != null && list_Epic.size() != 0) {
+                return list_Epic.size();
+            }
+
+        } else if (type == 1) {
             if (list_nurse_degrees == null || list_nurse_degrees.size() == 0)
                 return 0;
             return list_nurse_degrees.size();

@@ -12,9 +12,15 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.ActiveFAdapter;
+import com.weboconnect.nurseify.adapter.TabAdapter;
+import com.weboconnect.nurseify.screen.facility.browse.Active_Browse_Fragment;
+import com.weboconnect.nurseify.screen.facility.browse.Nurse_Browse_Fragment;
+import com.weboconnect.nurseify.screen.facility.browse.Offered_Browse_Fragment;
+import com.weboconnect.nurseify.screen.facility.browse.Past_Browse_Fragment;
 import com.weboconnect.nurseify.screen.nurse.adapters.JobAdapter;
 import com.weboconnect.nurseify.adapter.NursesAdapter;
 import com.weboconnect.nurseify.adapter.OfferedFAdapter;
@@ -26,22 +32,29 @@ public class BrowseFFragment extends Fragment {
     String id;
     FragmentBrowseFBinding binding;
     View view;
-    public BrowseFFragment(){ }
+    private TabAdapter adapter;
+
+    public BrowseFFragment() {
+    }
+
     public BrowseFFragment(String id) {
         this.id = id;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding  = DataBindingUtil.inflate(inflater, R.layout.fragment_browse_f, null, false);
-        binding.recyclerViewJobs.setAdapter(new JobAdapter(getActivity(), 1));
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_browse_f, null, false);
+
+        getTabList();
+
         binding.filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final View loc = getLayoutInflater().from(getContext()).inflate(R.layout.dialog_filter_f, null);
-                final Dialog dialog = new Dialog(getContext(),R.style.AlertDialog);
+                final Dialog dialog = new Dialog(getContext(), R.style.AlertDialog);
                 dialog.setContentView(loc);
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 dialog.setCancelable(true);
                 dialog.show();
                 ImageView close = dialog.findViewById(R.id.close_dialog);
@@ -63,63 +76,113 @@ public class BrowseFFragment extends Fragment {
         binding.textNurses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.filter.setVisibility(View.VISIBLE);
-                binding.textNurses.setTextColor(Color.parseColor("#8A4999"));
-                binding.textOffered.setTextColor(Color.parseColor("#000000"));
-                binding.textActive.setTextColor(Color.parseColor("#000000"));
-                binding.textPast.setTextColor(Color.parseColor("#000000"));
-                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.btn_tab));
-                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.recyclerViewJobs.setAdapter(new NursesAdapter(getActivity()));
+                change_tab(0);
+//                binding.recyclerViewJobs.setAdapter(new NursesAdapter(getActivity()));
             }
         });
         binding.textOffered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.filter.setVisibility(View.GONE);
-                binding.textOffered.setTextColor(Color.parseColor("#8A4999"));
-                binding.textNurses.setTextColor(Color.parseColor("#000000"));
-                binding.textActive.setTextColor(Color.parseColor("#000000"));
-                binding.textPast.setTextColor(Color.parseColor("#000000"));
-                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.btn_tab));
-                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.recyclerViewJobs.setAdapter(new OfferedFAdapter(getActivity()));
+                change_tab(1);
+//                binding.recyclerViewJobs.setAdapter(new OfferedFAdapter(getActivity()));
             }
         });
         binding.textActive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.filter.setVisibility(View.GONE);
-                binding.textActive.setTextColor(Color.parseColor("#8A4999"));
-                binding.textNurses.setTextColor(Color.parseColor("#000000"));
-                binding.textOffered.setTextColor(Color.parseColor("#000000"));
-                binding.textPast.setTextColor(Color.parseColor("#000000"));
-                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.btn_tab));
-                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.recyclerViewJobs.setAdapter(new ActiveFAdapter(getActivity()));
+                change_tab(2);
+//                binding.recyclerViewJobs.setAdapter(new ActiveFAdapter(getActivity()));
             }
         });
         binding.textPast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                change_tab(3);
+            }
+        });
+
+        return view = binding.getRoot();
+    }
+
+    private void change_tab(int i) {
+
+        switch (i) {
+
+            case 0:
+                binding.filter.setVisibility(View.VISIBLE);
+                binding.textNurses.setTextColor(Color.parseColor("#8A4999"));
+                binding.textOffered.setTextColor(Color.parseColor("#000000"));
+                binding.textActive.setTextColor(Color.parseColor("#000000"));
+                binding.textPast.setTextColor(Color.parseColor("#000000"));
+                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
+                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.viewPager.setCurrentItem(0);
+                break;
+            case 1:
+                binding.filter.setVisibility(View.GONE);
+                binding.textOffered.setTextColor(Color.parseColor("#8A4999"));
+                binding.textNurses.setTextColor(Color.parseColor("#000000"));
+                binding.textActive.setTextColor(Color.parseColor("#000000"));
+                binding.textPast.setTextColor(Color.parseColor("#000000"));
+                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
+                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.viewPager.setCurrentItem(1);
+                break;
+            case 2:
+                binding.filter.setVisibility(View.GONE);
+                binding.textActive.setTextColor(Color.parseColor("#8A4999"));
+                binding.textNurses.setTextColor(Color.parseColor("#000000"));
+                binding.textOffered.setTextColor(Color.parseColor("#000000"));
+                binding.textPast.setTextColor(Color.parseColor("#000000"));
+                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
+                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.viewPager.setCurrentItem(2);
+                break;
+            case 3:
                 binding.filter.setVisibility(View.GONE);
                 binding.textPast.setTextColor(Color.parseColor("#8A4999"));
                 binding.textNurses.setTextColor(Color.parseColor("#000000"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
-                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.btn_tab));
-                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.bg_trans));
-                binding.recyclerViewJobs.setAdapter(new PastAdapter(getActivity()));
+                binding.textPast.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
+                binding.textNurses.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
+                binding.viewPager.setCurrentItem(3);
+                break;
+        }
+    }
+
+    private void getTabList() {
+        adapter = new TabAdapter(getChildFragmentManager());
+        adapter.addFragment(new Nurse_Browse_Fragment(), "Nurse");
+        adapter.addFragment(new Offered_Browse_Fragment(), "Offered");
+        adapter.addFragment(new Active_Browse_Fragment(), "Active");
+        adapter.addFragment(new Past_Browse_Fragment(), "Past");
+        binding.viewPager.setAdapter(adapter);
+        binding.viewPager.setOffscreenPageLimit(1);
+        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                change_tab(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
-        return view = binding.getRoot();
     }
 }

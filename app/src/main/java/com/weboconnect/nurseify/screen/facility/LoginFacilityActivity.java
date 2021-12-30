@@ -146,21 +146,21 @@ public class LoginFacilityActivity extends AppCompatActivity {
                     sessionManger.setSession_IN_facility(profile.getData().getUserId(),
                             profile.getData().getFacilityId(), profile.getData());
 
-//                    if (profile.getData().getFacilityProfileFlag().equals("0")) {
-                    Intent i = new Intent(context, RegistrationFActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(profile.getData()));
-                    startActivity(i);
+                    if (profile.getData().getFacilityProfileFlag().equals("0")) {
+                        Intent i = new Intent(context, RegistrationFActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(profile.getData()));
+                        startActivity(i);
 
-                  /*  } else {
+                    } else {
                         Intent i = new Intent(context, HomeFActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(i);
-                    }*/
+                    }
 
                 } else {
                     progressDialog.dismiss();
