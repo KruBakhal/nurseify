@@ -3,7 +3,6 @@ package com.weboconnect.nurseify.screen.facility.add_job_fragment;
 import static com.weboconnect.nurseify.utils.Utils.patternExp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -27,35 +25,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.AppController;
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.adapter.ActiveFAdapter;
 import com.weboconnect.nurseify.adapter.CommonDropDownAdapter;
 import com.weboconnect.nurseify.adapter.HourlyRateWindowAdapter;
-import com.weboconnect.nurseify.adapter.PostedAdapter;
 import com.weboconnect.nurseify.adapter.SpecialtyAdapter;
 import com.weboconnect.nurseify.adapter.WorkHistoryWindowAdapter;
 import com.weboconnect.nurseify.common.CommonDatum;
 import com.weboconnect.nurseify.databinding.ActivityAddJob1Binding;
-import com.weboconnect.nurseify.databinding.FragmentMyJobsFBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
-import com.weboconnect.nurseify.screen.facility.AddJob2Activity;
-import com.weboconnect.nurseify.screen.facility.AddJobActivity1;
 import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
-import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
-import com.weboconnect.nurseify.screen.facility.profile_setup_dialog.ProfileSetupDialog_1;
 import com.weboconnect.nurseify.screen.facility.viewModel.Add_Job_ViewModel;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
 import com.weboconnect.nurseify.screen.facility.viewModel.ProgressUIType;
-import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel.HourlyRate_DayOfWeek_OptionDatum;
+import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
 import com.weboconnect.nurseify.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import okhttp3.internal.Util;
 
 public class Add_Job_1_Fragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match

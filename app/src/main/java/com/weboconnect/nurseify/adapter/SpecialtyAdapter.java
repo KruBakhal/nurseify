@@ -1,6 +1,7 @@
 package com.weboconnect.nurseify.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
@@ -14,19 +15,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel.HourlyRate_DayOfWeek_OptionDatum;
+import com.weboconnect.nurseify.common.CommonDatum;
+import com.weboconnect.nurseify.screen.facility.browse.Nurse_Browse_Fragment;
+import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageDatum;
-import com.weboconnect.nurseify.screen.nurse.model.QuestionModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
-import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
-import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 import com.weboconnect.nurseify.screen.nurse.model.WorkLocationDatum;
 
 import java.util.List;
 
 public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.ViewHolder> {
 
+    private Nurse_Browse_Fragment fragment;
+    private List<CommonDatum> list_Specialty_CD;
     private int type = 1;
     Context activity;
     List<Integer> select_specialty;
@@ -85,6 +86,16 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.View
         this.specialtyListener = specialtyListener;
     }
 
+    public SpecialtyAdapter(Activity activity, Nurse_Browse_Fragment fragment, List<Integer> select_specialty,
+                            List<CommonDatum> list_Specialty, SpecialtyListener specialtyListener) {
+        this.activity = activity;
+        this.fragment = fragment;
+        this.list_Specialty_CD = list_Specialty;
+        this.select_specialty = select_specialty;
+        this.type = 11;
+        this.specialtyListener = specialtyListener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -106,6 +117,9 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.View
             } else if (type == 7) {
                 LanguageDatum model = listLang.get(selected_Lang.get(position));
                 holder.tv_text.setText(model.getLanguage());
+            } else if (type == 11 && list_Specialty_CD != null && list_Specialty_CD.size() != 0) {
+                CommonDatum model = list_Specialty_CD.get(select_specialty.get(position));
+                holder.tv_text.setText(model.getName());
             } else {
                 HourlyRate_DayOfWeek_OptionDatum model = list_daysOfWeek.get(select_daysofWeeks.get(position));
                 holder.tv_text.setText(model.getName());
@@ -131,21 +145,30 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.View
     @Override
     public int getItemCount() {
         if (type == 1) {
-            if (select_specialty == null || select_specialty.size() == 0)
+            if (select_specialty == null || select_specialty.size() == 0) {
                 return 0;
-            return select_specialty.size();
+            } else
+                return list_Specialty.size();
         } else if (type == 2) {
             if (select_specialty == null || select_specialty.size() == 0)
                 return 0;
-            return select_specialty.size();
+            else
+                return select_specialty.size();
         } else if (type == 3) {
             if (select_daysofWeeks == null || select_daysofWeeks.size() == 0)
                 return 0;
-            return select_daysofWeeks.size();
+            else
+                return select_daysofWeeks.size();
         } else if (type == 7) {
             if (selected_Lang == null || selected_Lang.size() == 0)
                 return 0;
-            return selected_Lang.size();
+            else
+                return selected_Lang.size();
+        } else if (type == 11) {
+            if (select_specialty != null && select_specialty.size() != 0) {
+                return select_specialty.size();
+            } else
+                return 0;
         } else
             return 0;
     }

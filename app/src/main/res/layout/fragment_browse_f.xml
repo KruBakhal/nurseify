@@ -104,30 +104,6 @@
                     android:textSize="17dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/filter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:orientation="horizontal"
-                android:paddingLeft="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="15dp">
-
-                <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:src="@drawable/ic_filter_black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:fontFamily="@font/sf_500"
-                    android:text="Filter"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
-            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_jobs"

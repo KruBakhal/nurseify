@@ -7,12 +7,49 @@ import java.util.List;
 
 public class NurseDatum {
 
+
     @SerializedName("nurse_id")
     @Expose
     private String nurseId;
     @SerializedName("user_id")
     @Expose
     private String userId;
+    @SerializedName("role")
+    @Expose
+    private String role;
+    @SerializedName("first_name")
+    @Expose
+    private String firstName;
+    @SerializedName("last_name")
+    @Expose
+    private String lastName;
+    @SerializedName("nurse_logo")
+    @Expose
+    private String nurseLogo;
+    @SerializedName("nurse_email")
+    @Expose
+    private String nurseEmail;
+    @SerializedName("user_name")
+    @Expose
+    private String userName;
+    @SerializedName("fcm_token")
+    @Expose
+    private String fcmToken;
+    @SerializedName("date_of_birth")
+    @Expose
+    private String dateOfBirth;
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
+    @SerializedName("new_mobile")
+    @Expose
+    private String newMobile;
+    @SerializedName("email_notification")
+    @Expose
+    private String emailNotification;
+    @SerializedName("sms_notification")
+    @Expose
+    private String smsNotification;
     @SerializedName("specialty")
     @Expose
     private String specialty;
@@ -30,13 +67,13 @@ public class NurseDatum {
     private String highestNursingDegree;
     @SerializedName("serving_preceptor")
     @Expose
-    private Integer servingPreceptor;
+    private String servingPreceptor;
     @SerializedName("serving_interim_nurse_leader")
     @Expose
-    private Integer servingInterimNurseLeader;
+    private String servingInterimNurseLeader;
     @SerializedName("leadership_roles")
     @Expose
-    private Integer leadershipRoles;
+    private String leadershipRoles;
     @SerializedName("address")
     @Expose
     private String address;
@@ -117,19 +154,19 @@ public class NurseDatum {
     private String clinicalEducator;
     @SerializedName("is_daisy_award_winner")
     @Expose
-    private Integer isDaisyAwardWinner;
+    private String isDaisyAwardWinner;
     @SerializedName("employee_of_the_mth_qtr_yr")
     @Expose
-    private Integer employeeOfTheMthQtrYr;
+    private String employeeOfTheMthQtrYr;
     @SerializedName("other_nursing_awards")
     @Expose
     private String otherNursingAwards;
     @SerializedName("is_professional_practice_council")
     @Expose
-    private Integer isProfessionalPracticeCouncil;
+    private String isProfessionalPracticeCouncil;
     @SerializedName("is_research_publications")
     @Expose
-    private Integer isResearchPublications;
+    private String isResearchPublications;
     @SerializedName("credential_title")
     @Expose
     private String credentialTitle;
@@ -193,6 +230,12 @@ public class NurseDatum {
     @SerializedName("gig_account_invite_date")
     @Expose
     private String gigAccountInviteDate;
+    @SerializedName("rating")
+    @Expose
+    private Rating rating;
+    @SerializedName("work_experience")
+    @Expose
+    private String workExperience;
 
     public String getNurseId() {
         return nurseId;
@@ -208,6 +251,102 @@ public class NurseDatum {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getNurseLogo() {
+        return nurseLogo;
+    }
+
+    public void setNurseLogo(String nurseLogo) {
+        this.nurseLogo = nurseLogo;
+    }
+
+    public String getNurseEmail() {
+        return nurseEmail;
+    }
+
+    public void setNurseEmail(String nurseEmail) {
+        this.nurseEmail = nurseEmail;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getNewMobile() {
+        return newMobile;
+    }
+
+    public void setNewMobile(String newMobile) {
+        this.newMobile = newMobile;
+    }
+
+    public String getEmailNotification() {
+        return emailNotification;
+    }
+
+    public void setEmailNotification(String emailNotification) {
+        this.emailNotification = emailNotification;
+    }
+
+    public String getSmsNotification() {
+        return smsNotification;
+    }
+
+    public void setSmsNotification(String smsNotification) {
+        this.smsNotification = smsNotification;
     }
 
     public String getSpecialty() {
@@ -250,27 +389,27 @@ public class NurseDatum {
         this.highestNursingDegree = highestNursingDegree;
     }
 
-    public Integer getServingPreceptor() {
+    public String getServingPreceptor() {
         return servingPreceptor;
     }
 
-    public void setServingPreceptor(Integer servingPreceptor) {
+    public void setServingPreceptor(String servingPreceptor) {
         this.servingPreceptor = servingPreceptor;
     }
 
-    public Integer getServingInterimNurseLeader() {
+    public String getServingInterimNurseLeader() {
         return servingInterimNurseLeader;
     }
 
-    public void setServingInterimNurseLeader(Integer servingInterimNurseLeader) {
+    public void setServingInterimNurseLeader(String servingInterimNurseLeader) {
         this.servingInterimNurseLeader = servingInterimNurseLeader;
     }
 
-    public Integer getLeadershipRoles() {
+    public String getLeadershipRoles() {
         return leadershipRoles;
     }
 
-    public void setLeadershipRoles(Integer leadershipRoles) {
+    public void setLeadershipRoles(String leadershipRoles) {
         this.leadershipRoles = leadershipRoles;
     }
 
@@ -482,19 +621,19 @@ public class NurseDatum {
         this.clinicalEducator = clinicalEducator;
     }
 
-    public Integer getIsDaisyAwardWinner() {
+    public String getIsDaisyAwardWinner() {
         return isDaisyAwardWinner;
     }
 
-    public void setIsDaisyAwardWinner(Integer isDaisyAwardWinner) {
+    public void setIsDaisyAwardWinner(String isDaisyAwardWinner) {
         this.isDaisyAwardWinner = isDaisyAwardWinner;
     }
 
-    public Integer getEmployeeOfTheMthQtrYr() {
+    public String getEmployeeOfTheMthQtrYr() {
         return employeeOfTheMthQtrYr;
     }
 
-    public void setEmployeeOfTheMthQtrYr(Integer employeeOfTheMthQtrYr) {
+    public void setEmployeeOfTheMthQtrYr(String employeeOfTheMthQtrYr) {
         this.employeeOfTheMthQtrYr = employeeOfTheMthQtrYr;
     }
 
@@ -506,19 +645,19 @@ public class NurseDatum {
         this.otherNursingAwards = otherNursingAwards;
     }
 
-    public Integer getIsProfessionalPracticeCouncil() {
+    public String getIsProfessionalPracticeCouncil() {
         return isProfessionalPracticeCouncil;
     }
 
-    public void setIsProfessionalPracticeCouncil(Integer isProfessionalPracticeCouncil) {
+    public void setIsProfessionalPracticeCouncil(String isProfessionalPracticeCouncil) {
         this.isProfessionalPracticeCouncil = isProfessionalPracticeCouncil;
     }
 
-    public Integer getIsResearchPublications() {
+    public String getIsResearchPublications() {
         return isResearchPublications;
     }
 
-    public void setIsResearchPublications(Integer isResearchPublications) {
+    public void setIsResearchPublications(String isResearchPublications) {
         this.isResearchPublications = isResearchPublications;
     }
 
@@ -688,6 +827,84 @@ public class NurseDatum {
 
     public void setGigAccountInviteDate(String gigAccountInviteDate) {
         this.gigAccountInviteDate = gigAccountInviteDate;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public String getWorkExperience() {
+        return workExperience;
+    }
+
+    public void setWorkExperience(String workExperience) {
+        this.workExperience = workExperience;
+    }
+
+
+
+    public class Rating {
+
+        @SerializedName("over_all")
+        @Expose
+        private String overAll;
+        @SerializedName("clinical_skills")
+        @Expose
+        private String clinicalSkills;
+        @SerializedName("nurse_teamwork")
+        @Expose
+        private String nurseTeamwork;
+        @SerializedName("interpersonal_skills")
+        @Expose
+        private String interpersonalSkills;
+        @SerializedName("work_ethic")
+        @Expose
+        private String workEthic;
+
+        public String getOverAll() {
+            return overAll;
+        }
+
+        public void setOverAll(String overAll) {
+            this.overAll = overAll;
+        }
+
+        public String getClinicalSkills() {
+            return clinicalSkills;
+        }
+
+        public void setClinicalSkills(String clinicalSkills) {
+            this.clinicalSkills = clinicalSkills;
+        }
+
+        public String getNurseTeamwork() {
+            return nurseTeamwork;
+        }
+
+        public void setNurseTeamwork(String nurseTeamwork) {
+            this.nurseTeamwork = nurseTeamwork;
+        }
+
+        public String getInterpersonalSkills() {
+            return interpersonalSkills;
+        }
+
+        public void setInterpersonalSkills(String interpersonalSkills) {
+            this.interpersonalSkills = interpersonalSkills;
+        }
+
+        public String getWorkEthic() {
+            return workEthic;
+        }
+
+        public void setWorkEthic(String workEthic) {
+            this.workEthic = workEthic;
+        }
+
     }
 
     public class SpecialtyDefinition {

@@ -6,6 +6,8 @@ import com.weboconnect.nurseify.screen.facility.model.DropdownModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.screen.facility.model.NurseModel;
+import com.weboconnect.nurseify.screen.nurse.model.CityModel;
+import com.weboconnect.nurseify.screen.nurse.model.CredentialModel;
 import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
@@ -181,7 +183,36 @@ public interface FacilityAPI {
             @Part("job_video") RequestBody sanpchat,
             @Part("active") RequestBody active
     );
+
     @Multipart
     @POST("browse-nurses")
     Call<NurseModel> call_browse_nurse(@Part("page") RequestBody current_page1);
+
+    @Multipart
+    @POST("get-states")
+    Observable<StateModel> call_state_ID_2(@Part("country_id") RequestBody id);
+
+    @Multipart
+    @POST("get-cities")
+    Observable<CityModel> call_city_ID(@Part("state_id") RequestBody id);
+
+    @POST("search-for-credentials-list")
+    Observable<CommonModel> call_search_for_credentials_list();
+
+    @Multipart
+    @POST("browse-nurses")
+    Call<NurseModel> call_apply_filter(
+            @Part("specialty") RequestBody user_id,
+            @Part("availability") RequestBody facility_id1,
+            @Part("search_keyword") RequestBody facility_id,
+            @Part("search_bill_rate_from") RequestBody name,
+            @Part("search_bill_rate_to") RequestBody type,
+            @Part("search_tenure_from") RequestBody search_tenure_from,
+            @Part("search_tenure_to") RequestBody search_tenure_to,
+            @Part("certification") RequestBody certification,
+            @Part("page") RequestBody page,
+            @Part("state") RequestBody state,
+            @Part("city") RequestBody city,
+            @Part("zipcode") RequestBody zipcode
+    );
 }

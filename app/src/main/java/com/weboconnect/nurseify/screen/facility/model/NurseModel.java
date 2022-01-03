@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class NurseModel {
-
     @SerializedName("api_status")
     @Expose
     private String apiStatus;
@@ -15,7 +14,7 @@ public class NurseModel {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<NurseDatum> data = null;
+    private SubNurseData data;
 
     public String getApiStatus() {
         return apiStatus;
@@ -33,14 +32,61 @@ public class NurseModel {
         this.message = message;
     }
 
-    public List<NurseDatum> getData() {
+    public SubNurseData getData() {
         return data;
     }
 
-    public void setData(List<NurseDatum> data) {
+    public void setData(SubNurseData data) {
         this.data = data;
     }
 
+    public class SubNurseData {
 
+        @SerializedName("data")
+        @Expose
+        private List<NurseDatum> data = null;
+        @SerializedName("total_pages_available")
+        @Expose
+        private String totalPagesAvailable;
+        @SerializedName("current_page")
+        @Expose
+        private String currentPage;
+        @SerializedName("results_per_page")
+        @Expose
+        private String resultsPerPage;
+
+        public List<NurseDatum> getData() {
+            return data;
+        }
+
+        public void setData(List<NurseDatum> data) {
+            this.data = data;
+        }
+
+        public String getTotalPagesAvailable() {
+            return totalPagesAvailable;
+        }
+
+        public void setTotalPagesAvailable(String totalPagesAvailable) {
+            this.totalPagesAvailable = totalPagesAvailable;
+        }
+
+        public String getCurrentPage() {
+            return currentPage;
+        }
+
+        public void setCurrentPage(String currentPage) {
+            this.currentPage = currentPage;
+        }
+
+        public String getResultsPerPage() {
+            return resultsPerPage;
+        }
+
+        public void setResultsPerPage(String resultsPerPage) {
+            this.resultsPerPage = resultsPerPage;
+        }
+
+    }
 
 }

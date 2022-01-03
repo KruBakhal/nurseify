@@ -2,11 +2,8 @@ package com.weboconnect.nurseify;
 
 import android.app.Application;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.weboconnect.nurseify.common.CommonDatum;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel.HourlyRate_DayOfWeek_OptionDatum;
+import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -133,5 +133,4 @@ public class Add_Jobs_Activity extends AppCompatActivity {
             finish();
         }
     }
-
 }

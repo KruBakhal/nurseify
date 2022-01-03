@@ -139,7 +139,6 @@ public class AccountFragment extends Fragment {
                 startActivity(new Intent(getContext(), SettingActivity.class));
             }
         });
-
         return view = binding.getRoot();
 
     }

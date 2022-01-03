@@ -100,7 +100,7 @@ import com.weboconnect.nurseify.screen.nurse.model.Degree_Datum;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionDatum;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel.HourlyRate_DayOfWeek_OptionDatum;
+import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageDatum;
 import com.weboconnect.nurseify.screen.nurse.model.LanguageModel;
 import com.weboconnect.nurseify.screen.nurse.model.LeaderRolesData;

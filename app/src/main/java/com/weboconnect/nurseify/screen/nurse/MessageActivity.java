@@ -47,7 +47,8 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        nurse_id = new SessionManager(MessageActivity.this).get_User().getId();
+        nurse_id = new SessionManager(MessageActivity.this).get_user_register_Id();
+
         Intent intent = getIntent();
         chat_user_id = intent.getStringExtra("sender_id");
 

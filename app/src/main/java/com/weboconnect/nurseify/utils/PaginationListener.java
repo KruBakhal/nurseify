@@ -31,7 +31,7 @@ public abstract class PaginationListener extends RecyclerView.OnScrollListener {
         int totalItemCount = layoutManager.getItemCount();
         int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-        if (!isLoading() && !isLastPage()) {
+        if (!isFilter() && !isLoading() && !isLastPage()) {
             if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0
                     && totalItemCount >= PAGE_SIZE) {
@@ -46,7 +46,6 @@ public abstract class PaginationListener extends RecyclerView.OnScrollListener {
 
     public abstract boolean isLoading();
 
-    public abstract void fetchData();
+    public abstract boolean isFilter();
 
-    public abstract void refreshData();
 }

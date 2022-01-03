@@ -3,6 +3,8 @@ package com.weboconnect.nurseify.screen.facility.ui;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,7 @@ import com.weboconnect.nurseify.databinding.FragmentBrowseFBinding;
 
 public class BrowseFFragment extends Fragment {
     String id;
-    FragmentBrowseFBinding binding;
+    public FragmentBrowseFBinding binding;
     View view;
     private TabAdapter adapter;
 
@@ -48,31 +50,7 @@ public class BrowseFFragment extends Fragment {
 
         getTabList();
 
-        binding.filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final View loc = getLayoutInflater().from(getContext()).inflate(R.layout.dialog_filter_f, null);
-                final Dialog dialog = new Dialog(getContext(), R.style.AlertDialog);
-                dialog.setContentView(loc);
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                dialog.setCancelable(true);
-                dialog.show();
-                ImageView close = dialog.findViewById(R.id.close_dialog);
-                close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                TextView text_apply = dialog.findViewById(R.id.text_apply);
-                text_apply.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });
+
         binding.textNurses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +88,7 @@ public class BrowseFFragment extends Fragment {
         switch (i) {
 
             case 0:
-                binding.filter.setVisibility(View.VISIBLE);
+//                binding.filter.setVisibility(View.VISIBLE);
                 binding.textNurses.setTextColor(Color.parseColor("#8A4999"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
@@ -122,7 +100,7 @@ public class BrowseFFragment extends Fragment {
                 binding.viewPager.setCurrentItem(0);
                 break;
             case 1:
-                binding.filter.setVisibility(View.GONE);
+//                binding.filter.setVisibility(View.GONE);
                 binding.textOffered.setTextColor(Color.parseColor("#8A4999"));
                 binding.textNurses.setTextColor(Color.parseColor("#000000"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
@@ -134,7 +112,7 @@ public class BrowseFFragment extends Fragment {
                 binding.viewPager.setCurrentItem(1);
                 break;
             case 2:
-                binding.filter.setVisibility(View.GONE);
+//                binding.filter.setVisibility(View.GONE);
                 binding.textActive.setTextColor(Color.parseColor("#8A4999"));
                 binding.textNurses.setTextColor(Color.parseColor("#000000"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
@@ -146,7 +124,7 @@ public class BrowseFFragment extends Fragment {
                 binding.viewPager.setCurrentItem(2);
                 break;
             case 3:
-                binding.filter.setVisibility(View.GONE);
+//                binding.filter.setVisibility(View.GONE);
                 binding.textPast.setTextColor(Color.parseColor("#8A4999"));
                 binding.textNurses.setTextColor(Color.parseColor("#000000"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));

@@ -68,6 +68,7 @@
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/sf_600"
                 android:text="1 m"
+                android:visibility="gone"
                 android:textColor="#C3C9D0"
                 android:textSize="14dp" />
         </LinearLayout>
@@ -160,7 +161,7 @@
                     android:background="@drawable/btn_accept"
                     android:fontFamily="@font/sf_600"
                     android:gravity="center"
-                    android:text="Hire"
+                    android:text="Invite"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
 
@@ -168,6 +169,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/lay_like"
+                android:visibility="gone"
                 android:layout_width="47dp"
                 android:layout_height="47dp"
                 android:layout_marginLeft="30dp"

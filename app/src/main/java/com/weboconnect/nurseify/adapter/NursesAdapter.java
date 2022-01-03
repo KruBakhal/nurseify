@@ -1,7 +1,10 @@
 package com.weboconnect.nurseify.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ItemNursesBinding;
+import com.weboconnect.nurseify.screen.facility.NurseDetailsActivity;
 import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
 
 import java.util.ArrayList;
@@ -25,12 +29,12 @@ import java.util.List;
 
 public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implements Filterable {
     private List<NurseDatum> listPostedJob;
-    private List<NurseDatum> copy_contactList;
+    private List<NurseDatum> copy_contactList = new ArrayList<>();
     private static final int VIEW_TYPE_LOADING = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private boolean isLoaderVisible = false;
     Activity activity;
-
+    private long mLastClickTime = 0;
 
     public interface NurseListener {
         void onClick_Msg(NurseDatum model, int position);
@@ -46,7 +50,7 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
         this.activity = activity;
         this.listPostedJob = listPostedJob;
         this.postedListener = postedListener;
-        this.copy_contactList = copy_contactList;
+        this.copy_contactList = listPostedJob;
     }
 
     @NonNull
@@ -133,10 +137,28 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
 
         @Override
         public void onBind(int position) {
-            NurseDatum model = listPostedJob.get(position);/*
-            Glide.with(itemView.imgProfile.getContext()).load().placeholder(R.drawable.place_holder_img)
-                    .error(R.drawable.place_holder_img).into(itemView.imgProfile);
-*/
+            NurseDatum model = listPostedJob.get(position);
+            Glide.with(itemView.imgProfile.getContext()).load(model.getNurseLogo()).placeholder(R.drawable.person)
+                    .error(R.drawable.person).into(itemView.imgProfile);
+            itemView.tvName.setText(model.getFirstName() + " " + model.getLastName());
+            itemView.tvDescription.setText(model.getSummary());
+//            itemView.tvTitle.setText(model.ge() );
+            itemView.tvRating.setText(model.getRating().getOverAll());
+            String rate = model.getHourlyPayRate();
+            if (TextUtils.isEmpty(rate))
+                rate = "0";
+            itemView.tvRate.setText("$ " + rate + "/Hr");
+
+            itemView.layItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    activity.startActivity(new Intent(activity, NurseDetailsActivity.class));
+                }
+            });
         }
 
         @Override
@@ -167,14 +189,17 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
             final FilterResults oReturn = new FilterResults();
             final ArrayList<NurseDatum> results = new ArrayList<>();
             if (listPostedJob != null)
-
                 if (constraint != null && !TextUtils.isEmpty(constraint)) {
                     if (copy_contactList != null && copy_contactList.size() > 0) {
                         for (NurseDatum g : copy_contactList) {
 
-                            if (g.getSpecialty().toLowerCase()
-                                    .startsWith(constraint.toString().toLowerCase())) {
-                                results.add(g);
+                            try{
+                                if (g.getFirstName().toLowerCase()
+                                        .startsWith(constraint.toString().toLowerCase())) {
+                                    results.add(g);
+                                }
+                            }catch (Exception exception){
+                                Log.d("TAG", "performFiltering: "+exception.getMessage());
                             }
                         }
                     }

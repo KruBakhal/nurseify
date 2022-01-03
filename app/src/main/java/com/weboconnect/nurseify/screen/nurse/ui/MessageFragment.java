@@ -54,8 +54,7 @@ public class MessageFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_message, null, false);
         binding.recyclerViewJobs.setAdapter(new MessageAdapter(getActivity(), true));
 
-        String user_id = new SessionManager(getContext())
-                .get_User().getId().toString();
+        String user_id = new SessionManager(getContext()).get_user_register_Id().toString();
         usersList = new ArrayList<String>();
         reference = FirebaseDatabase.getInstance().getReference("chats");
         reference.addValueEventListener(new ValueEventListener() {

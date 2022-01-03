@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.screen.facility.HomeFActivity;
 import com.weboconnect.nurseify.screen.facility.RegistrationFActivity;
+import com.weboconnect.nurseify.screen.facility.browse.Nurse_Browse_Fragment;
 import com.weboconnect.nurseify.screen.nurse.RegisterActivity;
 import com.weboconnect.nurseify.screen.nurse.SignupDetailsActivity;
 import com.weboconnect.nurseify.screen.nurse.model.CityDatum;
@@ -34,6 +36,7 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
     private List<SpecialtyDatum> specialtyData;
     List<CityDatum> cityData;
     Activity context;
+    Nurse_Browse_Fragment fragment;
     List<State_Datum> list_state;
     List<CountryDatum> list_country;
     String selected_state;
@@ -96,10 +99,22 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
 
     }
 
-    public PersonalDetailWindowAdapter(RegistrationFActivity registerActivity,int a,
+    public PersonalDetailWindowAdapter(RegistrationFActivity registerActivity, int a,
                                        List<CityDatum> cityData, int selected_city,
                                        UserPopupWindowAdapterInterface userPopupWindowAdapterInterface) {
         this.context = registerActivity;
+        this.type = a;
+        this.cityData = cityData;
+        this.selected_state = "" + selected_city;
+        this.parentInterface = userPopupWindowAdapterInterface;
+
+    }
+
+    public PersonalDetailWindowAdapter(HomeFActivity registerActivity, Nurse_Browse_Fragment fragment, int a,
+                                       List<CityDatum> cityData, int selected_city,
+                                       UserPopupWindowAdapterInterface userPopupWindowAdapterInterface) {
+        this.context = registerActivity;
+        this.fragment = fragment;
         this.type = a;
         this.cityData = cityData;
         this.selected_state = "" + selected_city;
@@ -113,6 +128,18 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
         this.selected_state = "" + selected_city;
         this.parentInterface = userPopupWindowAdapterInterface;
     }
+
+    public PersonalDetailWindowAdapter(HomeFActivity activity, Nurse_Browse_Fragment nurse_browse_fragment,
+                                       List<State_Datum> value, int selected_state,
+                                       UserPopupWindowAdapterInterface userPopupWindowAdapterInterface) {
+        this.context = activity;
+        this.fragment = nurse_browse_fragment;
+        this.type = type;
+        this.list_state = value;
+        this.selected_state = "" + selected_state;
+        this.parentInterface = userPopupWindowAdapterInterface;
+    }
+
 
     public void setType(int type) {
         this.type = type;
@@ -265,6 +292,45 @@ public class PersonalDetailWindowAdapter extends RecyclerView.Adapter<PersonalDe
 
         } else if ((context instanceof RegistrationFActivity)) {
             RegistrationFActivity activity = (RegistrationFActivity) context;
+            boolean isNotSelected = true;
+            if (type == 3) {
+                State_Datum movie = list_state.get(position);
+                holder.title.setText(movie.getNames());
+                int select = activity.viewModel.selected_state;
+                if (select == position) {
+                    isNotSelected = false;
+                } else {
+                    isNotSelected = true;
+                }
+
+            } else if (type == 7) {
+                CityDatum movie = cityData.get(position);
+                holder.title.setText(movie.getName());
+                int select = activity.viewModel.selected_City;
+                if (select == position) {
+                    isNotSelected = false;
+                } else {
+                    isNotSelected = true;
+                }
+            }
+
+            if (!isNotSelected) {
+                holder.lay_item.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.grad1));
+                holder.title.setTextColor(Color.WHITE);
+            } else {
+                holder.lay_item.setBackground(null);
+                holder.title.setTextColor(activity.getResources().getColor(R.color.gray));
+            }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentInterface.onCLickItem(position, type);
+                }
+            });
+
+        } else if ((context instanceof HomeFActivity)) {
+            Nurse_Browse_Fragment activity = (Nurse_Browse_Fragment) fragment;
             boolean isNotSelected = true;
             if (type == 3) {
                 State_Datum movie = list_state.get(position);
