@@ -373,7 +373,6 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody jobId1 = RequestBody.create(MediaType.parse("multipart/form-data"), datum.getJobId());
         RequestBody isLiked1 = RequestBody.create(MediaType.parse("multipart/form-data"), isApplied);
 
-
         Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_job_applied(user_id1, jobId1, isLiked1);
 

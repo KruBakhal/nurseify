@@ -1,14 +1,12 @@
-package com.weboconnect.nurseify.screen.nurse.adapters;
+package com.weboconnect.nurseify.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,24 +19,20 @@ import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAdapter.ViewHolder> {
+public class Nurse_CertificationsAdapter extends RecyclerView.Adapter<Nurse_CertificationsAdapter.ViewHolder> {
 
     Activity activity;
     List<UserProfileData.Certitficate> list;
-    CertificationCallback callback;
 
-    public CertificationsAdapter(Activity activity, List<UserProfileData.Certitficate> list, CertificationCallback callback) {
+    public Nurse_CertificationsAdapter(Activity activity, List<UserProfileData.Certitficate> list) {
         this.activity = activity;
         this.list = list;
-        this.callback = callback;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_certifications, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_credential, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -56,20 +50,6 @@ public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAd
 
             Glide.with(holder.imageView.getContext()).load(list.get(pp).getCertificateImage())
                     .placeholder(R.drawable.place_holder_img).into(holder.imageView);
-
-            holder.lay_Delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.onRemove(position, list.get(position));
-                }
-            });
-            holder.edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    callback.onEdit(position);
-                }
-            });
 
 
         } catch (Exception e) {
@@ -91,15 +71,12 @@ public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAd
         TextView tv_name;
         TextView tv_date;
         TextView tv_eDate;
-        View edit, lay_Delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
 
-            lay_Delete = itemView.findViewById(R.id.layDelete);
-            imageView = itemView.findViewById(R.id.imageView);
-            edit = itemView.findViewById(R.id.edit);
+            imageView = itemView.findViewById(R.id.imgCertificate);
             delete = itemView.findViewById(R.id.delete);
             tv_name = itemView.findViewById(R.id.tv_search_credential);
             tv_date = itemView.findViewById(R.id.tvEffectiveDate);

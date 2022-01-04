@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.reflect.TypeToken;
+import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
+import com.weboconnect.nurseify.screen.facility.model.NurseModel;
 import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.QuestionModel;
@@ -31,6 +33,8 @@ public class Utils {
     public static Type typeJob = new TypeToken<JobModel.JobDatum>() {
     }.getType();
     public static Type typeFacilityJob = new TypeToken<FacilityJobModel.Facility>() {
+    }.getType();
+    public static Type typeNurse = new TypeToken<NurseDatum>() {
     }.getType();
     public static Pattern patternLettersSpace = Pattern.compile("^[a-zA-Z ]*$");
     public static DecimalFormat formatter = new DecimalFormat("00");

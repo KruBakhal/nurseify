@@ -143,6 +143,7 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
             itemView.tvName.setText(model.getFirstName() + " " + model.getLastName());
             itemView.tvDescription.setText(model.getSummary());
 //            itemView.tvTitle.setText(model.ge() );
+            if(model.getRating()!=null && !TextUtils.isEmpty(model.getRating().getOverAll()))
             itemView.tvRating.setText(model.getRating().getOverAll());
             String rate = model.getHourlyPayRate();
             if (TextUtils.isEmpty(rate))
@@ -156,7 +157,7 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                         return;
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
-                    activity.startActivity(new Intent(activity, NurseDetailsActivity.class));
+                    postedListener.onClick_Hire(model,position);
                 }
             });
         }

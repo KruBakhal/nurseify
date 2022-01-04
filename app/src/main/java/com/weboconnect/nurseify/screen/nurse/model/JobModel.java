@@ -45,6 +45,7 @@ public class JobModel {
 
     public class JobDatum {
 
+
         @SerializedName("job_id")
         @Expose
         private String jobId;
@@ -153,9 +154,6 @@ public class JobModel {
         @SerializedName("job_other_exp")
         @Expose
         private String jobOtherExp;
-        @SerializedName("job_photos")
-        @Expose
-        private String jobPhotos;
         @SerializedName("video_embed_url")
         @Expose
         private String videoEmbedUrl;
@@ -551,14 +549,6 @@ public class JobModel {
 
         public void setJobOtherExp(String jobOtherExp) {
             this.jobOtherExp = jobOtherExp;
-        }
-
-        public String getJobPhotos() {
-            return jobPhotos;
-        }
-
-        public void setJobPhotos(String jobPhotos) {
-            this.jobPhotos = jobPhotos;
         }
 
         public String getVideoEmbedUrl() {

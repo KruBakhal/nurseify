@@ -33,7 +33,7 @@ public class Active_Jobs_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_nurse, null, false);
 
-        binding.recyclerView.setAdapter(new ActiveFAdapter(getActivity()));
+//        binding.recyclerView.setAdapter(new ActiveFAdapter(getActivity()));
         return view = binding.getRoot();
     }
 

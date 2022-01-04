@@ -4,6 +4,7 @@ import static com.weboconnect.nurseify.utils.PaginationListener.PAGE_START;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -28,7 +29,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.CommonDropDownAdapter;
@@ -44,6 +47,7 @@ import com.weboconnect.nurseify.intermediate.API_ResponseCallback;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
 import com.weboconnect.nurseify.screen.facility.HomeFActivity;
+import com.weboconnect.nurseify.screen.facility.NurseDetailsActivity;
 import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
 import com.weboconnect.nurseify.screen.facility.model.NurseModel;
 import com.weboconnect.nurseify.screen.facility.ui.BrowseFFragment;
@@ -55,6 +59,7 @@ import com.weboconnect.nurseify.screen.nurse.model.CityDatum;
 import com.weboconnect.nurseify.screen.nurse.model.CityModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
 import com.weboconnect.nurseify.screen.nurse.model.State_Datum;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.PaginationListener;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
@@ -90,7 +95,8 @@ public class Nurse_Browse_Fragment extends Fragment {
     private SpecialtyAdapter daysOfWeekAdapter;
     private SpecialtyAdapter specialtyAdapter;
     private SpecialtyAdapter certificateAdapter;
-    String state = "", city = "", zipcode = "", speciality = "", availability = "", keywords = "", bill_from = "", bill_to = "",
+    String state = "", city = "", zipcode = "", speciality = "", availability = "",
+            keywords = "", bill_from = "", bill_to = "",
             certificate = "", tenure_from = "", tenure_to = "";
     private boolean isFragActive = false;
     private boolean isFilterApply = false;
@@ -186,6 +192,19 @@ public class Nurse_Browse_Fragment extends Fragment {
         } catch (Exception e) {
 
         }
+       /* binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!Utils.isNetworkAvailable(getContext())) {
+                    Utils.displayToast(getContext(), getContext().getString(R.string.no_internet));
+                    if (listPostedJob != null && listPostedJob.size() != 0)
+                        binding.tvMsg.setText(getContext().getString(R.string.no_internet));
+                    binding.swipeRefresh.setRefreshing(false);
+                    return;
+                }
+                refreshData(true);
+            }
+        });*/
         binding.filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,49 +217,15 @@ public class Nurse_Browse_Fragment extends Fragment {
                 Utils.onClickEvent(v);
             }
 
-            private boolean check_Any_is_empty() {
-
-                if (getEmptyCall(viewModel.list_State) && getEmptyCall1(viewModel.list_speciality)
-                        && getEmptyCall2(viewModel.list_days_of_week) && getEmptyCall1(viewModel.list_Certificate)) {
-                    return true;
-                }
-                return false;
-            }
-
-            private boolean getEmptyCall2(MutableLiveData<List<HourlyRate_DayOfWeek_OptionDatum>> list_State) {
-                if (list_State == null || list_State.getValue() == null || list_State.getValue().size() == 0) {
-                    return true;
-                }
-                return false;
-            }
-
-            private boolean getEmptyCall1(MutableLiveData<List<CommonDatum>> list_State) {
-                if (list_State == null || list_State.getValue() == null || list_State.getValue().size() == 0) {
-                    return true;
-                }
-                return false;
-            }
-
-            private boolean getEmptyCall(MutableLiveData<List<State_Datum>> list_State) {
-                if (list_State == null || list_State.getValue() == null || list_State.getValue().size() == 0) {
-                    return true;
-                }
-                return false;
-            }
         });
         pagination = new PaginationListener((LinearLayoutManager) binding.recyclerView.getLayoutManager()) {
             @Override
             protected void loadMoreItems() {
-                if (!isFilterApply)
-                    if (isOpenFIlter) {
-                        isLoading = true;
-                        currentPage++;
-                        apply_filter();
-                    } else {
-                        isLoading = true;
-                        currentPage++;
-                        fetchData();
-                    }
+
+                isLoading = true;
+                currentPage++;
+                fetchData();
+
             }
 
             @Override
@@ -476,8 +461,9 @@ public class Nurse_Browse_Fragment extends Fragment {
                 tenure_from = String.valueOf(filterBinding.sliderTenure.getValues().get(0));
                 tenure_to = String.valueOf(filterBinding.sliderTenure.getValues().get(1));
 
-
-                apply_filter();
+                isOpenFIlter = true;
+//                apply_filter();
+                refreshData(true);
                 dialog.dismiss();
             }
 
@@ -487,9 +473,38 @@ public class Nurse_Browse_Fragment extends Fragment {
     }
 
     void apply_filter() {
-        String state = "", city = "", zipcode = "", speciality = "",
-                availability = "", keywords = "", bill_from = "", bill_to = "",
-                certificate = "", tenure_from = "", tenure_to = "", page = "1";
+        reset_params();
+        Call<NurseModel> call = getFilterParams();
+        call.enqueue(new Callback<NurseModel>() {
+            @Override
+            public void onResponse(Call<NurseModel> call, Response<NurseModel> response) {
+                if (response == null || response.body() == null) {
+                    init_Data(null, false);
+                    return;
+                }
+                if (response.isSuccessful()) {
+                    NurseModel jobPostedModel = response.body();
+                    if (!jobPostedModel.getApiStatus().equals("1")) {
+                        init_Data(jobPostedModel, false);
+                    } else {
+
+                        init_Data(jobPostedModel, false);
+                    }
+                } else {
+                    init_Data(null, false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NurseModel> call, Throwable t) {
+                init_Data(null, false);
+                Log.d("TAG", getContext().getClass().getSimpleName() + " onFailure: " + t.getMessage());
+            }
+        });
+
+    }
+
+    private Call<NurseModel> getFilterParams() {
         int status = 0;
         if (viewModel.selected_state != 0) {
             state = viewModel.list_State.getValue().get(viewModel.selected_state).getIso_name();
@@ -508,7 +523,7 @@ public class Nurse_Browse_Fragment extends Fragment {
                 jsonArray.put("" + viewModel.list_speciality.getValue().get(pos).getId());
             }
             Log.d("TAG", "check_validation: " + jsonArray.toString());
-
+            speciality = jsonArray.toString();
             status++;
         }
         if (viewModel.select_daysOfWeek != null && viewModel.select_daysOfWeek.size() != 0) {
@@ -518,7 +533,7 @@ public class Nurse_Browse_Fragment extends Fragment {
                 jsonArray.put("" + viewModel.list_days_of_week.getValue().get(pos).getId());
             }
             Log.d("TAG", "check_validation: " + jsonArray.toString());
-
+            availability = jsonArray.toString();
             status++;
         }
         if (viewModel.selected_certificate != null && viewModel.selected_certificate.size() != 0) {
@@ -528,13 +543,13 @@ public class Nurse_Browse_Fragment extends Fragment {
                 jsonArray.put("" + viewModel.list_Certificate.getValue().get(pos).getId());
             }
             Log.d("TAG", "check_validation: " + jsonArray.toString());
-
+            certificate = jsonArray.toString();
             status++;
         }
 
         if (!Utils.isNetworkAvailable(getContext())) {
             init_Data(null, true);
-            return;
+            return null;
         }
         try {
             ProgressHolder holder = (ProgressHolder) binding.recyclerView.findViewHolderForAdapterPosition(nursesAdapter.getItemCount() - 1);
@@ -546,7 +561,7 @@ public class Nurse_Browse_Fragment extends Fragment {
         }
 
         isOpenFIlter = true;
-        showProgress();
+//        showProgress();
 
         MediaType mediatTypeStr = MediaType.parse("multipart/form-data");
         RequestBody request_1 = RequestBody.create(mediatTypeStr, "" + speciality);
@@ -557,44 +572,18 @@ public class Nurse_Browse_Fragment extends Fragment {
         RequestBody request_6 = RequestBody.create(mediatTypeStr, "" + tenure_from);
         RequestBody request_7 = RequestBody.create(mediatTypeStr, "" + tenure_to);
         RequestBody request_8 = RequestBody.create(mediatTypeStr, "" + certificate);
-        RequestBody request_9 = RequestBody.create(mediatTypeStr, "" + page);
+        RequestBody request_9 = RequestBody.create(mediatTypeStr, "" + currentPage);
         RequestBody request_10 = RequestBody.create(mediatTypeStr, "" + state);
         RequestBody request_11 = RequestBody.create(mediatTypeStr, "" + city);
         RequestBody request_12 = RequestBody.create(mediatTypeStr, "" + zipcode);
 
         Call<NurseModel> call = viewModel.backendApi.call_apply_filter(request_1, request_2, request_3, request_4, request_5, request_6, request_7, request_8
                 , request_9, request_10, request_11, request_12);
-        call.enqueue(new Callback<NurseModel>() {
-            @Override
-            public void onResponse(Call<NurseModel> call, Response<NurseModel> response) {
-                if (response == null || response.body() == null) {
-                    init_Data(null, false);
-                    return;
-                }
-                if (response.isSuccessful()) {
-                    NurseModel jobPostedModel = response.body();
-                    if (!jobPostedModel.getApiStatus().equals("1")) {
-                        init_Data(jobPostedModel, false);
-                    } else {
-                        reset_params();
-                        init_Data(jobPostedModel, false);
-                    }
-                } else {
-                    init_Data(null, false);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<NurseModel> call, Throwable t) {
-                init_Data(null, false);
-                Log.d("TAG", getContext().getClass().getSimpleName() + " onFailure: " + t.getMessage());
-            }
-        });
-
+        return call;
     }
 
     private void reset_filter_params() {
-
+        isOpenFIlter = false;
         viewModel.selected_state = 0;
         viewModel.selected_City = 0;
         viewModel.select_speciality = new ArrayList<>();
@@ -820,6 +809,8 @@ public class Nurse_Browse_Fragment extends Fragment {
 
             @Override
             public void onClick_Hire(NurseDatum model, int position) {
+                startActivity(new Intent(getContext(), NurseDetailsActivity.class)
+                        .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));
 
             }
         });
@@ -1022,15 +1013,12 @@ public class Nurse_Browse_Fragment extends Fragment {
             isFirstTime = false;
         }
 
-        String user_id = new SessionManager(getContext()).get_user_register_Id();
-        RequestBody api_key = RequestBody.create(MediaType.parse("multipart/form-data"), new SessionManager(getContext()).get_API_KEY());
-        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
-        RequestBody current_Page1 = RequestBody.create(MediaType.parse("multipart/form-data"), ""
-                + currentPage);
 
-
-        Call<NurseModel> call = RetrofitClient.getInstance().getFacilityApi()
-                .call_browse_nurse(current_Page1);
+        Call<NurseModel> call = null;
+        if (isOpenFIlter) {
+            call = getFilterParams();
+        } else
+            call = get_base_params();
 
         call.enqueue(new Callback<NurseModel>() {
             @Override
@@ -1058,6 +1046,20 @@ public class Nurse_Browse_Fragment extends Fragment {
             }
         });
 
+    }
+
+    private Call<NurseModel> get_base_params() {
+        String user_id = new SessionManager(getContext()).get_user_register_Id();
+        RequestBody api_key = RequestBody.create(MediaType.parse("multipart/form-data"), new SessionManager(getContext()).get_API_KEY());
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+        RequestBody current_Page1 = RequestBody.create(MediaType.parse("multipart/form-data"), ""
+                + currentPage);
+
+
+        Call<NurseModel> call = RetrofitClient.getInstance().getFacilityApi()
+                .call_browse_nurse(current_Page1);
+
+        return call;
     }
 
     private void init_Data(NurseModel jobPostedModel, boolean isNetwork) {
@@ -1092,17 +1094,29 @@ public class Nurse_Browse_Fragment extends Fragment {
             }
         } else {
             dismissProgress();
-            if (currentPage != PAGE_START) nursesAdapter.removeLoading();
-            nursesAdapter.addItems(jobPostedModel.getData().getData());
-//            binding.swipeRefresh.setRefreshing(false);
+            if (currentPage != PAGE_START)
+                nursesAdapter.removeLoading();
+
             currentPage = Integer.parseInt(jobPostedModel.getData().getCurrentPage());
             totalPage = Integer.parseInt(jobPostedModel.getData().getTotalPagesAvailable());
             PaginationListener.PAGE_SIZE = Integer.parseInt(jobPostedModel.getData().getResultsPerPage());
+
+            if (currentPage == totalPage) {
+                isLastPage = true;
+                nursesAdapter.removeLoading();
+            }
+
+            nursesAdapter.addItems(jobPostedModel.getData().getData());
+//            binding.swipeRefresh.setRefreshing(false);
+
+
             if (currentPage < totalPage) {
                 nursesAdapter.addLoading();
             } else {
                 isLastPage = true;
+//                nursesAdapter.removeLoading();
             }
+
             isLoading = false;
         }
     }
@@ -1162,5 +1176,35 @@ public class Nurse_Browse_Fragment extends Fragment {
     public void onPause() {
         super.onPause();
         isFragActive = false;
+    }
+
+    private boolean check_Any_is_empty() {
+
+        if (getEmptyCall(viewModel.list_State) && getEmptyCall1(viewModel.list_speciality)
+                && getEmptyCall2(viewModel.list_days_of_week) && getEmptyCall1(viewModel.list_Certificate)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean getEmptyCall2(MutableLiveData<List<HourlyRate_DayOfWeek_OptionDatum>> list_State) {
+        if (list_State == null || list_State.getValue() == null || list_State.getValue().size() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean getEmptyCall1(MutableLiveData<List<CommonDatum>> list_State) {
+        if (list_State == null || list_State.getValue() == null || list_State.getValue().size() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean getEmptyCall(MutableLiveData<List<State_Datum>> list_State) {
+        if (list_State == null || list_State.getValue() == null || list_State.getValue().size() == 0) {
+            return true;
+        }
+        return false;
     }
 }

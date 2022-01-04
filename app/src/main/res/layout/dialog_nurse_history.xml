@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,16 +22,16 @@
             android:layout_marginBottom="20dp"
             android:src="@drawable/ic_close" />
 
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bk_card_dialog"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="15dp"
-                android:background="@drawable/bk_card_dialog"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -48,448 +48,322 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@color/black"
+                    android:layout_marginHorizontal="27dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginHorizontal="27dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="24dp"
-                    android:visibility="visible"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Highest Nursing Degree"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Bachelor's or BSN"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="College / University Name"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="California Institute of Technology"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="17dp"
-                    android:visibility="visible"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Acute Care Facility
-Experience"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3 Years"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Non-Acute Care Nursing
-Experience"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2 Years"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cerner"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TuAdvanced (5+ year's experience)"
-                    android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/sf_500"
-                    android:textSize="16dp"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Earliest Start Date"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="26/07/2021"
-                    android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/sf_500"
-                    android:textSize="16dp"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Meditech"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Basic (1-2year's experience)"
-                    android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/sf_500"
-                    android:textSize="16dp"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Epic"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Basic (1-2year's experience)"
-                    android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/sf_500"
-                    android:textSize="16dp"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Other"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="University of California, Berkeley"
-                    android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/sf_500"
-                    android:textSize="16dp"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Search For Credential"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Acute Care Nurse Practitioner(ACNP-BC)"
-                    android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/sf_500"
-                    android:textSize="16dp"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="24dp"
-                    android:visibility="visible"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Effective Date"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="03/08/2021"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Expiration Date"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20/08/2021"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Your Uploaded File"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="15dp"
-                    android:textSize="15dp"
-                    android:textColor="#848297"
-                    android:fontFamily="@font/sf_500" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="17dp"
-                    android:layout_marginHorizontal="24dp"
-                    android:visibility="visible"
-                    android:src="@drawable/test3" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nurseify-Desktop-UI_Design.pdf"
-                    android:layout_marginTop="12dp"
-                    android:layout_gravity="center"
-                    android:textSize="15dp"
-                    android:textColor="#848297"
-                    android:fontFamily="@font/sf_500" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_marginTop="24dp"
-                    android:visibility="visible"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Start Date"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="05/08/2021"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="End Date"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="14dp"
-                            android:textColor="#8A9B9B" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="18/08/2021"
-                            android:fontFamily="@font/sf_500"
-                            android:textSize="16dp"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Description of Job Duties"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla a felis at libero vehicula porta sit amet vel velit. Pellentesque lacinia sem in mi malesuada porttitor. Vestibulum congue finibus justo. Sed eleifend quam quis vestibulum consequat. Aliquam congue, nibh et mollis vehicula, nisl augue posuere felis, tempus lobortis nisi nisl id orci."
-                    android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/sf_500"
-                    android:visibility="visible"
-                    android:textSize="16dp"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Resume"
-                    android:fontFamily="@font/sf_500"
-                    android:layout_marginHorizontal="24dp"
-                    android:textSize="14dp"
-                    android:layout_marginTop="17dp"
-                    android:textColor="#8A9B9B" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="200dp"
-                    android:visibility="visible"
-                    android:layout_marginTop="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/test7" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="30dp"
-                    android:gravity="center"
-                    android:layout_marginTop="30dp">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_file"
-                        android:layout_marginRight="20dp" />
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_download"
-                        android:layout_marginRight="20dp" />
-                </LinearLayout>
+                    android:background="@color/black" />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="24dp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/sf_500"
+                                android:text="Highest Nursing Degree"
+                                android:textColor="#8A9B9B"
+                                android:textSize="14dp" />
+
+                            <TextView
+                                android:id="@+id/tvHighestNurseDegree"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="@font/sf_500"
+                                android:maxLines="2"
+                                android:text="Bachelor's or BSN"
+                                android:textColor="@color/black"
+                                android:textSize="16dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/sf_500"
+                                android:text="College / University Name"
+                                android:textColor="#8A9B9B"
+                                android:textSize="14dp" />
+
+                            <TextView
+                                android:id="@+id/tvCollageName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="@font/sf_500"
+                                android:maxLines="2"
+                                android:text="California Institute of Technology"
+                                android:textColor="@color/black"
+                                android:textSize="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="17dp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/sf_500"
+                                android:text="Acute Care Facility
+Experience"
+                                android:textColor="#8A9B9B"
+                                android:textSize="14dp" />
+
+                            <TextView
+                                android:id="@+id/tvFacilityExperience"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="@font/sf_500"
+                                android:maxLines="2"
+                                android:text="3 Years"
+                                android:textColor="@color/black"
+                                android:textSize="16dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/sf_500"
+                                android:text="Non-Acute Care Nursing
+Experience"
+                                android:textColor="#8A9B9B"
+                                android:textSize="14dp" />
+
+                            <TextView
+                                android:id="@+id/tvNursingExperience"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="@font/sf_500"
+                                android:maxLines="2"
+                                android:text="2 Years"
+                                android:textColor="@color/black"
+                                android:textSize="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="17dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="Cerner"
+                        android:textColor="#8A9B9B"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/tv_cerner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="TuAdvanced (5+ year's experience)"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="17dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="Earliest Start Date"
+                        android:textColor="#8A9B9B"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/tvEarliestStartDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="26/07/2021"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="17dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="Meditech"
+                        android:textColor="#8A9B9B"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/tvMeditech"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="Basic (1-2year's experience)"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="17dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="Epic"
+                        android:textColor="#8A9B9B"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/tvEpic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="Basic (1-2year's experience)"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="17dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="Other"
+                        android:textColor="#8A9B9B"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/tvOther"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="University of California, Berkeley"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="17dp"
+                        android:fontFamily="@font/sf_500"
+                        android:text="National Certifications"
+                        android:textColor="#8A9B9B"
+                        android:textSize="14dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    <LinearLayout
+                        android:id="@+id/lay_resume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="24dp"
+                            android:layout_marginTop="17dp"
+                            android:fontFamily="@font/sf_500"
+                            android:text="Resume"
+                            android:textColor="#8A9B9B"
+                            android:textSize="14dp" />
+
+                        <ImageView
+                            android:id="@+id/imgResume"
+                            android:layout_width="wrap_content"
+                            android:layout_height="200dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/test7"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="30dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/imgSearchViewFile"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/ic_file" />
+
+                            <ImageView
+                                android:id="@+id/imgDownload"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/ic_download" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

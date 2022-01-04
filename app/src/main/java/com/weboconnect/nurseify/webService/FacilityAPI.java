@@ -215,4 +215,24 @@ public interface FacilityAPI {
             @Part("city") RequestBody city,
             @Part("zipcode") RequestBody zipcode
     );
+
+    @Multipart
+    @POST("get-nurse-profile")
+    Call<UserProfile> call_nurse_profile(
+            @Part("user_id") RequestBody user_id
+    );
+
+    @Multipart
+    @POST("job-offered-list")
+    Call<NurseModel> call_job_offered_list(@Part("user_id") RequestBody user_id,
+                                           @Part("page") RequestBody current_page1);
+    @Multipart
+    @POST("job-offered-active")
+    Call<NurseModel> call_job_active_list(@Part("user_id") RequestBody user_id,
+                                           @Part("page") RequestBody current_page1);
+
+    @Multipart
+    @POST("job-offered-completed")
+    Call<NurseModel> call_job_past_list(@Part("user_id") RequestBody user_id,
+                                           @Part("page") RequestBody current_page1);
 }

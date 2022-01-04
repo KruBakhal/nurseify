@@ -198,8 +198,8 @@ public class MyJobFragment extends Fragment {
             @Override
             public void onResponse(Call<OfferedJobModel> call, Response<OfferedJobModel> response) {
 //                Log.d(TAG + "getOfferedJob ResCode", response.code() + "");
-                assert response.body() != null;
-                if (!response.body().getApiStatus().equals("1")) {
+//                assert response.body() != null;
+                if (response!=null && response.body()!=null && !response.body().getApiStatus().equals("1")) {
                     dismissProgress();
                     binding.layProgress.setVisibility(View.VISIBLE);
                     binding.pg.setVisibility(View.GONE);

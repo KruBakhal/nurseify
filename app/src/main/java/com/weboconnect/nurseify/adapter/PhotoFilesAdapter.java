@@ -32,6 +32,7 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
         this.type = type;
     }
 
+
     public PhotoFilesAdapter(List<String> list, int type, ItemCallback itemCallback) {
         this.list = list;
         this.type = type;
@@ -45,9 +46,9 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View itemView = null;
+        itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_photos_files, parent, false);
-
         return new MyHolder(itemView);
 
     }
@@ -65,7 +66,6 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
             int height = dm.widthPixels * 400 / 1080;
             holder.img.getLayoutParams().width = width;
             holder.img.getLayoutParams().height = height;
-
             width = dm.widthPixels * 90 / 1080;
             height = dm.widthPixels * 90 / 1080;
             holder.imgDelete.getLayoutParams().width = width;
@@ -74,6 +74,20 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
                     .load(list.get(position)).into(holder.img);
             holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.imgDelete.setVisibility(View.VISIBLE);
+        } else if (type == 11) {
+            DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
+            int width = dm.widthPixels * 400 / 1080;
+            int height = dm.widthPixels * 400 / 1080;
+            holder.img.getLayoutParams().width = width;
+            holder.img.getLayoutParams().height = height;
+            width = dm.widthPixels * 90 / 1080;
+            height = dm.widthPixels * 90 / 1080;
+            holder.imgDelete.getLayoutParams().width = width;
+            holder.imgDelete.getLayoutParams().height = height;
+            Glide.with(holder.itemView.getContext())
+                    .load(list.get(position)).into(holder.img);
+            holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.imgDelete.setVisibility(View.GONE);
         } else if (type == 4) {
 //                Bitmap bitmap = generateImageFromPdf(holder.img.getContext(), )
             DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
@@ -99,24 +113,6 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
         });
     }
 
-//    Bitmap generateImageFromPdf(Context context, Uri pdfUri) {
-//        int pageNumber = 0;
-//        PdfiumCore pdfiumCore = new PdfiumCore(context);
-//        try {
-//            ParcelFileDescriptor fd = context.getContentResolver().openFileDescriptor(pdfUri, "r");
-//            PdfDocument pdfDocument = pdfiumCore.newDocument(fd);
-//            pdfiumCore.openPage(pdfDocument, pageNumber);
-//            int width = pdfiumCore.getPageWidthPoint(pdfDocument, pageNumber);
-//            int height = pdfiumCore.getPageHeightPoint(pdfDocument, pageNumber);
-//            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//            pdfiumCore.renderPageBitmap(pdfDocument, bmp, pageNumber, 0, 0, width, height);
-//            pdfiumCore.closeDocument(pdfDocument); // important!
-//            return bmp;
-//        } catch (Exception e) {
-//            //todo with exception
-//        }
-//        return null;
-//    }
 
     @Override
     public int getItemCount() {
@@ -133,7 +129,6 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
             super(itemView);
             img = itemView.findViewById(R.id.img);
             imgDelete = itemView.findViewById(R.id.imgDelete);
-
         }
     }
 }

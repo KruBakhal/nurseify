@@ -7,12 +7,11 @@
 
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical">
-
 
 
         <LinearLayout
@@ -41,22 +40,32 @@
                 android:textSize="16dp" />
         </LinearLayout>
 
+        <!-- <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+             android:id="@+id/swipeRefresh"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_below="@+id/filter">
+ -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/filter"
             android:layout_marginHorizontal="15dp"
             android:orientation="vertical"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_nurses" />
 
+        <!--        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
         <LinearLayout
             android:id="@+id/lay_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:background="#228A4999"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -78,5 +87,5 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>
