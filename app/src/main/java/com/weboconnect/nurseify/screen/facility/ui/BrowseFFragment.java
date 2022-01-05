@@ -84,9 +84,9 @@ public class BrowseFFragment extends Fragment {
     }
 
     private void change_tab(int i) {
-
+//        binding.editTextSearch.setText("");
+//        binding.editTextSearch.clearFocus();
         switch (i) {
-
             case 0:
 //                binding.filter.setVisibility(View.VISIBLE);
                 binding.textNurses.setTextColor(Color.parseColor("#8A4999"));

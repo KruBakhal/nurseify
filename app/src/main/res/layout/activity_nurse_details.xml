@@ -549,7 +549,7 @@
                                 android:background="@drawable/btn_accept"
                                 android:fontFamily="@font/sf_600"
                                 android:gravity="center"
-                                android:text="Hire"
+                                android:text="Invite"
                                 android:textColor="@color/white"
                                 android:textSize="16dp" />
                         </LinearLayout>
@@ -582,6 +582,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:layout_width="47dp"
+                                android:id="@+id/layMesg"
                                 android:layout_height="47dp"
                                 android:layout_marginBottom="2dp"
                                 app:cardBackgroundColor="@color/white"

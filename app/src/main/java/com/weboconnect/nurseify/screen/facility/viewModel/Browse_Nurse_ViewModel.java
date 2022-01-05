@@ -51,7 +51,8 @@ public class Browse_Nurse_ViewModel extends ViewModel {
     public FacilityAPI backendApi;
     public MutableLiveData<ProgressUIType> showProgressBar = new MutableLiveData<>(ProgressUIType.DIMISS);
     public MutableLiveData<ErrorMessage> showErrorMsg = new MutableLiveData<>();
-    public MutableLiveData<DialogStatusMessage> dialogStatus = new MutableLiveData<>(new DialogStatusMessage(DialogStatus.Dismiss, 0));
+    public MutableLiveData<DialogStatusMessage> dialogStatus =
+            new MutableLiveData<>();
     public MutableLiveData<String> toastMesssage = new MutableLiveData<>();
 
     //sads
@@ -313,7 +314,7 @@ public class Browse_Nurse_ViewModel extends ViewModel {
                     }
                 }
                 progressDialog.dismiss();
-                dialogStatus.postValue(new DialogStatusMessage(DialogStatus.Done, 1));
+                dialogStatus.setValue(new DialogStatusMessage(DialogStatus.Done, 1));
             }
 
             @Override

@@ -14,21 +14,20 @@ import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.adapter.OfferedFAdapter;
 import com.weboconnect.nurseify.adapter.PastAdapter;
 import com.weboconnect.nurseify.adapter.ProgressHolder;
 import com.weboconnect.nurseify.databinding.FragmentNurseBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
-import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
-import com.weboconnect.nurseify.screen.facility.model.NurseModel;
+import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_Datum;
+import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_F_Model;
 import com.weboconnect.nurseify.screen.facility.ui.BrowseFFragment;
+import com.weboconnect.nurseify.screen.facility.ui.MyJobFFragment;
 import com.weboconnect.nurseify.screen.facility.viewModel.Browse_Nurse_ViewModel;
-import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
-import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
-import com.weboconnect.nurseify.screen.facility.viewModel.ProgressUIType;
 import com.weboconnect.nurseify.utils.PaginationListener;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
@@ -58,7 +57,8 @@ public class Past_Browse_Fragment extends Fragment {
     private Browse_Nurse_ViewModel viewModel;
     private boolean isFragActive = false;
     private boolean isFilterApply = false;
-    private List<NurseDatum> listPostedJob= new ArrayList<>();
+    private List<OfferedNurse_Datum> listPostedJob= new ArrayList<>();
+    private PaginationListener pagination;
 
     public Past_Browse_Fragment() {
     }
@@ -102,11 +102,11 @@ public class Past_Browse_Fragment extends Fragment {
                         if (isFragActive) {
                             String text = browseFFragment.binding.editTextSearch.getText().toString().toLowerCase();
                             if (TextUtils.isEmpty(text)) {
-                                pastAdapter.removeLoading();
                                 pastAdapter.getFilter().filter(text);
-                                pastAdapter.addLoading();
-//                                binding.recyclerView.addOnScrollListener(pagination);
                                 isFilterApply = false;
+                                if (currentPage < totalPage) {
+                                    pastAdapter.addLoading();
+                                }
                             } else {
 //                                binding.recyclerView.addOnScrollListener(null);
                                 pastAdapter.removeLoading();
@@ -116,38 +116,41 @@ public class Past_Browse_Fragment extends Fragment {
                         }
                     }
                 });
+            pagination = new PaginationListener((LinearLayoutManager) binding.recyclerView.getLayoutManager()) {
+                @Override
+                protected void loadMoreItems() {
 
+                    isLoading = true;
+                    currentPage++;
+                    fetchData();
+
+                }
+
+                @Override
+                public boolean isLastPage() {
+                    return isLastPage;
+                }
+
+                @Override
+                public boolean isLoading() {
+                    return isLoading;
+                }
+
+                @Override
+                public boolean isFilter() {
+                    return isFilterApply;
+                }
+
+            };
+            binding.recyclerView.addOnScrollListener(pagination);
         } catch (Exception e) {
-
+            Log.d("tag", "setData: "+e.getMessage());
         }
     }
 
     private void observeer_View() {
         binding.layProgress.setOnTouchListener(touchListner);
-        viewModel.getProgressBar().observe(requireActivity(), new Observer<ProgressUIType>() {
-            @Override
-            public void onChanged(ProgressUIType progressUIType) {
-                if (progressUIType == ProgressUIType.SHOW) {
-                    binding.layProgress.setVisibility(View.VISIBLE);
-                } else if (progressUIType == ProgressUIType.DIMISS) {
-                    setAdapter();
-                    binding.layProgress.setVisibility(View.GONE);
-                } else if (progressUIType == ProgressUIType.CANCEL) {
-                    binding.layProgress.setVisibility(View.GONE);
-                } else if (progressUIType == ProgressUIType.DATA_ERROR) {
-                    binding.layProgress.setVisibility(View.GONE);
-                }
-            }
-        });
-        viewModel.getDialogStatus().observe(requireActivity(), new Observer<DialogStatusMessage>() {
-            @Override
-            public void onChanged(DialogStatusMessage dialogStatusMessage) {
-                if (dialogStatusMessage.getDialogStatus() == DialogStatus.Done
-                        && dialogStatusMessage.getDialogType() == 1) {
-//                    open_filter();
-                }
-            }
-        });
+
     }
 
     private void setAdapter() {
@@ -187,22 +190,22 @@ public class Past_Browse_Fragment extends Fragment {
                 + currentPage);
 
 
-        Call<NurseModel> call = RetrofitClient.getInstance().getFacilityApi()
+        Call<OfferedNurse_F_Model> call = RetrofitClient.getInstance().getFacilityApi()
                 .call_job_past_list(user_id1, current_Page1);
 
-        call.enqueue(new Callback<NurseModel>() {
+        call.enqueue(new Callback<OfferedNurse_F_Model>() {
             @Override
-            public void onResponse(Call<NurseModel> call, Response<NurseModel> response) {
+            public void onResponse(Call<OfferedNurse_F_Model> call, Response<OfferedNurse_F_Model> response) {
                 if (response == null || response.body() == null) {
                     init_Data(null, false);
                     return;
                 }
                 if (response.isSuccessful()) {
-                    NurseModel NurseModel = response.body();
-                    if (!NurseModel.getApiStatus().equals("1")) {
-                        init_Data(NurseModel, false);
+                    OfferedNurse_F_Model facilityJobModel = response.body();
+                    if (!facilityJobModel.getApiStatus().equals("1")) {
+                        init_Data(facilityJobModel, false);
                     } else {
-                        init_Data(NurseModel, false);
+                        init_Data(facilityJobModel, false);
                     }
                 } else {
                     init_Data(null, false);
@@ -210,7 +213,7 @@ public class Past_Browse_Fragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<NurseModel> call, Throwable t) {
+            public void onFailure(Call<OfferedNurse_F_Model> call, Throwable t) {
                 init_Data(null, false);
                 Log.d("TAG", getContext().getClass().getSimpleName() + " onFailure: " + t.getMessage());
             }
@@ -219,7 +222,7 @@ public class Past_Browse_Fragment extends Fragment {
     }
 
 
-    private void init_Data(NurseModel NurseModel, boolean isNetwork) {
+    private void init_Data(OfferedNurse_F_Model NurseModel, boolean isNetwork) {
         if (NurseModel == null ||
                 ((NurseModel.getData().getData() == null
                         || NurseModel.getData().getData().size() == 0))) {

@@ -21,6 +21,7 @@ import com.weboconnect.nurseify.databinding.ItemOfferedFBinding;
 import com.weboconnect.nurseify.databinding.ItemPastFBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
+import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_Datum;
 import com.weboconnect.nurseify.screen.nurse.ActiveJobDetailsActivity;
 
 import java.util.ArrayList;
@@ -29,8 +30,8 @@ import java.util.List;
 public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements Filterable {
 
     private final ItemCallback postedListener;
-    private List<NurseDatum> listPostedJob;
-    private List<NurseDatum> copy_contactList = new ArrayList<>();
+    private List<OfferedNurse_Datum> listPostedJob;
+    private List<OfferedNurse_Datum> copy_contactList = new ArrayList<>();
     private static final int VIEW_TYPE_LOADING = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private boolean isLoaderVisible = false;
@@ -38,7 +39,7 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     private long mLastClickTime = 0;
 
 
-    public PastAdapter(Activity activity, List<NurseDatum> listPostedJob, ItemCallback postedListener) {
+    public PastAdapter(Activity activity, List<OfferedNurse_Datum> listPostedJob, ItemCallback postedListener) {
         this.activity = activity;
         this.listPostedJob = listPostedJob;
         this.postedListener = postedListener;
@@ -78,21 +79,21 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         notifyItemRemoved(position);
     }
 
-    public void addItems(List<NurseDatum> postItems) {
+    public void addItems(List<OfferedNurse_Datum> postItems) {
         listPostedJob.addAll(postItems);
         notifyDataSetChanged();
     }
 
     public void addLoading() {
         isLoaderVisible = true;
-        listPostedJob.add(new NurseDatum());
+        listPostedJob.add(new OfferedNurse_Datum());
         notifyItemInserted(listPostedJob.size() - 1);
     }
 
     public void removeLoading() {
         isLoaderVisible = false;
         int position = listPostedJob.size() - 1;
-        NurseDatum item = getItem(position);
+        OfferedNurse_Datum item = getItem(position);
         if (item != null) {
             listPostedJob.remove(position);
             notifyItemRemoved(position);
@@ -105,7 +106,7 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         notifyDataSetChanged();
     }
 
-    NurseDatum getItem(int position) {
+    OfferedNurse_Datum getItem(int position) {
         if (listPostedJob == null || listPostedJob.size() == 0)
             return null;
         return listPostedJob.get(position);
@@ -129,16 +130,19 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
 
         @Override
         public void onBind(int position) {
-            NurseDatum model = listPostedJob.get(position);
-            Glide.with(itemView.imgProfile.getContext()).load(model.getNurseLogo()).placeholder(R.drawable.person)
+            OfferedNurse_Datum model = listPostedJob.get(position);
+            Glide.with(itemView.imgProfile.getContext()).load(model.getNurseImage()).placeholder(R.drawable.person)
                     .error(R.drawable.person).into(itemView.imgProfile);
-            itemView.tvName.setText(model.getFirstName() + " " + model.getLastName());
-            if (model.getRating() != null && !TextUtils.isEmpty(model.getRating().getOverAll()))
-                itemView.tvRating.setText(model.getRating().getOverAll());
-            String rate = model.getHourlyPayRate();
+            itemView.tvName.setText(model.getNurseFirstName() + " " + model.getNurseLastName());
+            if (model.getRating() != null && !TextUtils.isEmpty(model.getRating()))
+                itemView.tvRating.setText(model.getRating());
+            String rate = model.getPreferredHourlyPayRate();
             if (TextUtils.isEmpty(rate))
                 rate = "0";
             itemView.tvRate.setText("$ " + rate + "/Hr");
+            itemView.tvWeeksDaysCount.setText(model.getPreferredDaysOfTheWeekString());
+            itemView.tvTitle.setText(model.getPreferredSpecialtyDefinition());
+//            itemView.tvTime.setText(model.getOfferedAt());
 //            itemView.tvTitle.setText(model.get);
 
 
@@ -180,14 +184,14 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             final FilterResults oReturn = new FilterResults();
-            final ArrayList<NurseDatum> results = new ArrayList<>();
+            final ArrayList<OfferedNurse_Datum> results = new ArrayList<>();
             if (listPostedJob != null)
                 if (constraint != null && !TextUtils.isEmpty(constraint)) {
                     if (copy_contactList != null && copy_contactList.size() > 0) {
-                        for (NurseDatum g : copy_contactList) {
+                        for (OfferedNurse_Datum g : copy_contactList) {
 
                             try {
-                                if (g.getFirstName().toLowerCase()
+                                if (g.getNurseFirstName().toLowerCase()
                                         .startsWith(constraint.toString().toLowerCase())) {
                                     results.add(g);
                                 }
@@ -207,7 +211,7 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            listPostedJob = (ArrayList<NurseDatum>) filterResults.values;
+            listPostedJob = (ArrayList<OfferedNurse_Datum>) filterResults.values;
             notifyDataSetChanged();
         }
     }

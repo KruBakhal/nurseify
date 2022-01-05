@@ -49,7 +49,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
         this.list_jobs = list_jobs;
         this.copy_contactList = list_jobs;
         this.browseJobInteface = browseJobInteface;
-        setHasStableIds(true);
+
     }
 
     public void setList(JobModel.JobDatum datum, int position) {
@@ -65,18 +65,13 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
         void onClick_Job(JobModel.JobDatum datum, int position);
     }
 
-    BrowseJobInteface browseJobInteface;
+    public BrowseJobInteface browseJobInteface;
 
-    @Override
-    public long getItemId(int position) {
-
-        return position;
-    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_posted_f, parent, false);
+        View view = LayoutInflater.from(activity).inflate(R.layout.item_posted_f, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -86,17 +81,64 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
         try {
 
             JobModel.JobDatum datum = list_jobs.get(position);
+            holder.bind(datum, position);
+        } catch (Exception e) {
+            Log.e("Service_Adapter", e.toString());
+
+        }
+    }
+
+
+
+    @Override
+    public int getItemCount() {
+        return list_jobs.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public LinearLayout mainLayout;
+        public ImageView img, img_applied, img_heart, img_heart1;
+        public TextView tv_name, tv_specialty, tv_created_at_definition, tv_assignment_duration_definition,
+                tv_applied, tv_shift_duration, tv_hourly_rate, tv_weeks_days;
+        public LinearLayout lay_apply;
+        public TextView tv_applied1;
+        public View lay_share, lay_heart;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mainLayout = itemView.findViewById(R.id.mainLayout);
+            img = itemView.findViewById(R.id.img);
+            img_applied = itemView.findViewById(R.id.img_applied);
+            img_heart = itemView.findViewById(R.id.img_heart);
+            tv_specialty = itemView.findViewById(R.id.tv_specialty);
+            tv_created_at_definition = itemView.findViewById(R.id.tv_created_at_definition);
+            tv_assignment_duration_definition = itemView.findViewById(R.id.tv_assignment_duration_definition);
+            tv_applied = itemView.findViewById(R.id.tv_applied);
+            tv_shift_duration = itemView.findViewById(R.id.tv_shift_duration);
+            tv_weeks_days = itemView.findViewById(R.id.tv_weeks_days);
+            tv_hourly_rate = itemView.findViewById(R.id.tv_hourly_rate);
+            tv_name = itemView.findViewById(R.id.tv_name);
+            lay_apply = itemView.findViewById(R.id.lay_apply);
+            tv_applied1 = itemView.findViewById(R.id.tv_applied1);
+            lay_share = itemView.findViewById(R.id.lay_share);
+            img_heart1 = itemView.findViewById(R.id.img_heart1);
+            lay_heart = itemView.findViewById(R.id.lay_heart);
+
+
+        }
+
+        public void bind(JobModel.JobDatum datum, int position) {
             try {
-                Glide.with(holder.itemView.getContext()).load(datum.getFacilityLogo()).into(holder.img);
+                Glide.with(itemView.getContext()).load(datum.getFacilityLogo()).into(img);
             } catch (Exception e) {
 
             }
-            holder.tv_name.setText("" + datum.getName());
-            holder.tv_specialty.setText("" + datum.getPreferredSpecialtyDefinition());
-            holder.tv_created_at_definition.setText("" + datum.getCreatedAtDefinition());
-            holder.tv_assignment_duration_definition.setText("" + datum.getPreferredAssignmentDurationDefinition());
-            holder.tv_shift_duration.setText("" + datum.getPreferredShiftDurationDefinition());
-            holder.tv_applied.setText("" + datum.getTotalApplied());
+            tv_name.setText("" + datum.getName());
+            tv_specialty.setText("" + datum.getPreferredSpecialtyDefinition());
+            tv_created_at_definition.setText("" + datum.getCreatedAtDefinition());
+            tv_assignment_duration_definition.setText("" + datum.getPreferredAssignmentDurationDefinition());
+            tv_shift_duration.setText("" + datum.getPreferredShiftDurationDefinition());
+            tv_applied.setText("" + datum.getTotalApplied());
             String days = null;
             for (int i = 0; i < datum.getPreferredDaysOfTheWeek().size(); i++) {
                 String str = datum.getPreferredDaysOfTheWeek().get(i);
@@ -145,38 +187,38 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                     }*/
                 }
             }
-            holder.tv_weeks_days.setText("" + days);
-            holder.tv_hourly_rate.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
+            tv_weeks_days.setText("" + days);
+            tv_hourly_rate.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
 
             if (datum.getIsLiked().equals("0")) {
-                holder.img_heart.setVisibility(View.VISIBLE);
-                holder.img_heart1.setVisibility(View.GONE);
+                img_heart.setVisibility(View.VISIBLE);
+                img_heart1.setVisibility(View.GONE);
             } else {
-                holder.img_heart1.setVisibility(View.VISIBLE);
-                holder.img_heart.setVisibility(View.GONE);
+                img_heart1.setVisibility(View.VISIBLE);
+                img_heart.setVisibility(View.GONE);
             }
 
             if (datum.getIsApplied().equals("0")) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    holder.lay_apply.setBackgroundTintList(ContextCompat.getColorStateList(
+                    lay_apply.setBackgroundTintList(ContextCompat.getColorStateList(
                             activity, R.color.grad1));
                 }
-                holder.tv_applied1.setText("Apply");
+                tv_applied1.setText("Apply");
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    holder.lay_apply.setBackgroundTintList(ContextCompat.getColorStateList(
+                    lay_apply.setBackgroundTintList(ContextCompat.getColorStateList(
                             activity, R.color.secondary_till));
                 }
-                holder.tv_applied1.setText("Applied");
+                tv_applied1.setText("Applied");
             }
 
-            holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+            mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     browseJobInteface.onClick_Job(datum, position);
                 }
             });
-            holder.lay_apply.setOnClickListener(new View.OnClickListener() {
+            lay_apply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (datum.getIsApplied().equals("0")) {
@@ -186,7 +228,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                     }
                 }
             });
-         /*   holder.lay_heart.setOnClickListener(new View.OnClickListener() {
+         /*   lay_heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (datum.getIsLiked().equals("0")) {
@@ -197,7 +239,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                 }
             });*/
 
-            holder.lay_share.setOnClickListener(new View.OnClickListener() {
+            lay_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (SystemClock.elapsedRealtime() - mLastClickTime < 300) {
@@ -213,55 +255,6 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                     activity.startActivity(Intent.createChooser(intent, "Share"));
                 }
             });
-            holder.bind(datum, position);
-        } catch (Exception e) {
-            Log.e("Service_Adapter", e.toString());
-
-        }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
-
-    @Override
-    public int getItemCount() {
-        return list_jobs.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout mainLayout;
-        public ImageView img, img_applied, img_heart, img_heart1;
-        public TextView tv_name, tv_specialty, tv_created_at_definition, tv_assignment_duration_definition, tv_applied, tv_shift_duration, tv_hourly_rate, tv_weeks_days;
-        public LinearLayout lay_apply;
-        public TextView tv_applied1;
-        public View lay_share, lay_heart;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mainLayout = itemView.findViewById(R.id.mainLayout);
-            img = itemView.findViewById(R.id.img);
-            img_applied = itemView.findViewById(R.id.img_applied);
-            img_heart = itemView.findViewById(R.id.img_heart);
-            tv_specialty = itemView.findViewById(R.id.tv_specialty);
-            tv_created_at_definition = itemView.findViewById(R.id.tv_created_at_definition);
-            tv_assignment_duration_definition = itemView.findViewById(R.id.tv_assignment_duration_definition);
-            tv_applied = itemView.findViewById(R.id.tv_applied);
-            tv_shift_duration = itemView.findViewById(R.id.tv_shift_duration);
-            tv_weeks_days = itemView.findViewById(R.id.tv_weeks_days);
-            tv_hourly_rate = itemView.findViewById(R.id.tv_hourly_rate);
-            tv_name = itemView.findViewById(R.id.tv_name);
-            lay_apply = itemView.findViewById(R.id.lay_apply);
-            tv_applied1 = itemView.findViewById(R.id.tv_applied1);
-            lay_share = itemView.findViewById(R.id.lay_share);
-            img_heart1 = itemView.findViewById(R.id.img_heart1);
-            lay_heart = itemView.findViewById(R.id.lay_heart);
-
-
-        }
-
-        public void bind(JobModel.JobDatum datum, int position) {
             lay_heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

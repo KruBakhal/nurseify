@@ -47,6 +47,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="43dp"
                 android:layout_marginBottom="30dp"
                 android:scrollbars="none">
 
@@ -54,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="14dp"
-                    android:layout_marginTop="43dp"
+
                     android:background="#EFF3F6"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -107,9 +108,9 @@
                         android:layout_marginHorizontal="9dp"
                         android:layout_marginTop="10dp"
                         android:max="150"
+                        android:min="5"
                         android:paddingLeft="27dp"
                         android:progress="5"
-                        android:min="5"
                         android:progressDrawable="@drawable/slider_custom_seekbar"
                         android:thumb="@drawable/slider_custom_thumb"
                         android:value="1.0"

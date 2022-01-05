@@ -39,6 +39,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="14dp"
             android:layout_marginTop="64dp"
+            android:layout_marginBottom="14dp"
             android:background="#F5F7F9"
             android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"

@@ -139,6 +139,12 @@ public class LoginFacilityActivity extends AppCompatActivity {
         call.enqueue(new Callback<FacilityLoginModel>() {
             @Override
             public void onResponse(Call<FacilityLoginModel> call, Response<FacilityLoginModel> response) {
+                assert response.body() != null;
+                if (!response.body().getApiStatus().equals("1")) {
+                    progressDialog.dismiss();
+                    Utils.displayToast(context, "" + response.body().getMessage());
+                    return;
+                }
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
                     FacilityLoginModel profile = response.body();

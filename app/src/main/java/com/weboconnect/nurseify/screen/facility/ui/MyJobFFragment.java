@@ -26,7 +26,7 @@ import com.weboconnect.nurseify.screen.facility.my_jobs.Posted_Jobs_Fragment;
 
 public class MyJobFFragment extends Fragment {
     String id;
-    FragmentMyJobsFBinding binding;
+  public   FragmentMyJobsFBinding binding;
     View view;
     private TabAdapter adapter;
 

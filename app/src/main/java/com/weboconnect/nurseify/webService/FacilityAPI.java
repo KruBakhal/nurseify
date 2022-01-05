@@ -2,19 +2,16 @@ package com.weboconnect.nurseify.webService;
 
 import com.weboconnect.nurseify.common.CommonModel;
 import com.weboconnect.nurseify.screen.facility.model.AddJobModel;
-import com.weboconnect.nurseify.screen.facility.model.DropdownModel;
+import com.weboconnect.nurseify.screen.facility.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
-import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.screen.facility.model.NurseModel;
+import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_F_Model;
+import com.weboconnect.nurseify.screen.facility.model.Offered_Job_F_Model;
 import com.weboconnect.nurseify.screen.nurse.model.CityModel;
-import com.weboconnect.nurseify.screen.nurse.model.CredentialModel;
-import com.weboconnect.nurseify.screen.nurse.model.DegreeModel;
-import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
-import com.weboconnect.nurseify.screen.nurse.model.WorkLocationModel;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -224,15 +221,37 @@ public interface FacilityAPI {
 
     @Multipart
     @POST("job-offered-list")
-    Call<NurseModel> call_job_offered_list(@Part("user_id") RequestBody user_id,
-                                           @Part("page") RequestBody current_page1);
+    Call<OfferedNurse_F_Model> call_job_offered_list(@Part("user_id") RequestBody user_id,
+                                                     @Part("page") RequestBody current_page1);
+
     @Multipart
     @POST("job-offered-active")
-    Call<NurseModel> call_job_active_list(@Part("user_id") RequestBody user_id,
-                                           @Part("page") RequestBody current_page1);
+    Call<OfferedNurse_F_Model> call_job_active_list(@Part("user_id") RequestBody user_id,
+                                          @Part("page") RequestBody current_page1);
 
     @Multipart
     @POST("job-offered-completed")
-    Call<NurseModel> call_job_past_list(@Part("user_id") RequestBody user_id,
-                                           @Part("page") RequestBody current_page1);
+    Call<OfferedNurse_F_Model> call_job_past_list(@Part("user_id") RequestBody user_id,
+                                        @Part("page") RequestBody current_page1);
+
+    @Multipart
+    @POST("my-jobs-posted")
+    Call<FacilityJobModel> call_my_jobs_posted(@Part("user_id") RequestBody user_id,
+                                               @Part("page") RequestBody current_page1);
+
+    @Multipart
+    @POST("my-jobs-active")
+    Call<FacilityJobModel> call_my_jobs_active(@Part("user_id") RequestBody user_id,
+                                               @Part("page") RequestBody current_page1);
+
+    @Multipart
+    @POST("my-jobs-completed")
+    Call<FacilityJobModel> call_my_jobs_completed(@Part("user_id") RequestBody user_id,
+                                                  @Part("page") RequestBody current_page1);
+
+    @Multipart
+    @POST("send-offer")
+    Call<Offered_Job_F_Model> call_send_offer(@Part("nurse_id") RequestBody user_id,
+                                              @Part("facility_id") RequestBody current_page1,
+                                              @Part("job_id") RequestBody job_id);
 }

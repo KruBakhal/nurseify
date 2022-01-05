@@ -120,6 +120,7 @@
                         android:hint="xxxxxxxxxxx@gmail.com"
                         android:imeOptions="actionNext"
                         android:inputType="text"
+                        android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textSize="16dp" />
@@ -148,7 +149,8 @@
                         android:fontFamily="@font/sf_500"
                         android:hint="*************"
                         android:imeOptions="actionDone"
-                        android:inputType="text"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textSize="16dp" />

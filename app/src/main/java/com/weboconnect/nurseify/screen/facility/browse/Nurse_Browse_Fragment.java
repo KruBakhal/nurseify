@@ -114,7 +114,7 @@ public class Nurse_Browse_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_nurse, null, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(Browse_Nurse_ViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(Browse_Nurse_ViewModel.class);
         binding.filter.setVisibility(View.VISIBLE);
         setAdapter_Nurse();
         observeer_View();
@@ -141,7 +141,7 @@ public class Nurse_Browse_Fragment extends Fragment {
                 }
             }
         });
-        viewModel.getDialogStatus().observe(requireActivity(), new Observer<DialogStatusMessage>() {
+        viewModel.getDialogStatus().observe(getViewLifecycleOwner(), new Observer<DialogStatusMessage>() {
             @Override
             public void onChanged(DialogStatusMessage dialogStatusMessage) {
                 if (dialogStatusMessage.getDialogStatus() == DialogStatus.Done
@@ -174,11 +174,11 @@ public class Nurse_Browse_Fragment extends Fragment {
                         if (isFragActive) {
                             String text = browseFFragment.binding.editTextSearch.getText().toString().toLowerCase();
                             if (TextUtils.isEmpty(text)) {
-                                nursesAdapter.removeLoading();
                                 nursesAdapter.getFilter().filter(text);
-                                nursesAdapter.addLoading();
-//                                binding.recyclerView.addOnScrollListener(pagination);
                                 isFilterApply = false;
+                                if (currentPage < totalPage) {
+                                    nursesAdapter.addLoading();
+                                }
                             } else {
 //                                binding.recyclerView.addOnScrollListener(null);
                                 nursesAdapter.removeLoading();
@@ -577,8 +577,10 @@ public class Nurse_Browse_Fragment extends Fragment {
         RequestBody request_11 = RequestBody.create(mediatTypeStr, "" + city);
         RequestBody request_12 = RequestBody.create(mediatTypeStr, "" + zipcode);
 
-        Call<NurseModel> call = viewModel.backendApi.call_apply_filter(request_1, request_2, request_3, request_4, request_5, request_6, request_7, request_8
-                , request_9, request_10, request_11, request_12);
+        Call<NurseModel> call = null;
+        if (viewModel != null)
+            call = viewModel.backendApi.call_apply_filter(request_1, request_2, request_3, request_4, request_5, request_6, request_7, request_8
+                    , request_9, request_10, request_11, request_12);
         return call;
     }
 
@@ -1020,31 +1022,32 @@ public class Nurse_Browse_Fragment extends Fragment {
         } else
             call = get_base_params();
 
-        call.enqueue(new Callback<NurseModel>() {
-            @Override
-            public void onResponse(Call<NurseModel> call, Response<NurseModel> response) {
-                if (response == null || response.body() == null) {
-                    init_Data(null, false);
-                    return;
-                }
-                if (response.isSuccessful()) {
-                    NurseModel jobPostedModel = response.body();
-                    if (!jobPostedModel.getApiStatus().equals("1")) {
-                        init_Data(jobPostedModel, false);
-                    } else {
-                        init_Data(jobPostedModel, false);
+        if (call != null)
+            call.enqueue(new Callback<NurseModel>() {
+                @Override
+                public void onResponse(Call<NurseModel> call, Response<NurseModel> response) {
+                    if (response == null || response.body() == null) {
+                        init_Data(null, false);
+                        return;
                     }
-                } else {
-                    init_Data(null, false);
+                    if (response.isSuccessful()) {
+                        NurseModel jobPostedModel = response.body();
+                        if (!jobPostedModel.getApiStatus().equals("1")) {
+                            init_Data(jobPostedModel, false);
+                        } else {
+                            init_Data(jobPostedModel, false);
+                        }
+                    } else {
+                        init_Data(null, false);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<NurseModel> call, Throwable t) {
-                init_Data(null, false);
-                Log.d("TAG", getContext().getClass().getSimpleName() + " onFailure: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<NurseModel> call, Throwable t) {
+                    init_Data(null, false);
+                    Log.d("TAG", getContext().getClass().getSimpleName() + " onFailure: " + t.getMessage());
+                }
+            });
 
     }
 

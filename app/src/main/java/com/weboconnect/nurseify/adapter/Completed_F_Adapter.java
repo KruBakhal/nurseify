@@ -1,7 +1,6 @@
 package com.weboconnect.nurseify.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,21 +17,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ItemActiveFBinding;
-import com.weboconnect.nurseify.databinding.ItemPastFBinding;
+import com.weboconnect.nurseify.databinding.ItemCompletedBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
-import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
-import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_Datum;
-import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_F_Model;
-import com.weboconnect.nurseify.screen.nurse.ActiveJobDetailsActivity;
+import com.weboconnect.nurseify.intermediate.OfferedJobCallback;
+import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
+import com.weboconnect.nurseify.screen.nurse.model.CompletedJobModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> implements Filterable {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class Completed_F_Adapter extends RecyclerView.Adapter<BaseViewHolder> implements Filterable {
+
 
     private final ItemCallback postedListener;
-    private List<OfferedNurse_Datum> listPostedJob;
-    private List<OfferedNurse_Datum> copy_contactList = new ArrayList<>();
+    private List<Facility_JobDatum> listPostedJob;
+    private List<Facility_JobDatum> copy_contactList = new ArrayList<>();
     private static final int VIEW_TYPE_LOADING = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private boolean isLoaderVisible = false;
@@ -39,7 +41,7 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
     private long mLastClickTime = 0;
 
 
-    public ActiveFAdapter(Activity activity, List<OfferedNurse_Datum> listPostedJob, ItemCallback postedListener) {
+    public Completed_F_Adapter(Activity activity, List<Facility_JobDatum> listPostedJob, ItemCallback postedListener) {
         this.activity = activity;
         this.listPostedJob = listPostedJob;
         this.postedListener = postedListener;
@@ -52,7 +54,7 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
 
-                return new ActiveFAdapter.ViewHolder(ItemActiveFBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+                return new ViewHolder(ItemCompletedBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
             case VIEW_TYPE_LOADING:
                 return new ProgressHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false));
             default:
@@ -79,21 +81,21 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
         notifyItemRemoved(position);
     }
 
-    public void addItems(List<OfferedNurse_Datum> postItems) {
+    public void addItems(List<Facility_JobDatum> postItems) {
         listPostedJob.addAll(postItems);
         notifyDataSetChanged();
     }
 
     public void addLoading() {
         isLoaderVisible = true;
-        listPostedJob.add(new OfferedNurse_Datum());
+        listPostedJob.add(new Facility_JobDatum());
         notifyItemInserted(listPostedJob.size() - 1);
     }
 
     public void removeLoading() {
         isLoaderVisible = false;
         int position = listPostedJob.size() - 1;
-        OfferedNurse_Datum item = getItem(position);
+        Facility_JobDatum item = getItem(position);
         if (item != null) {
             listPostedJob.remove(position);
             notifyItemRemoved(position);
@@ -106,7 +108,7 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
         notifyDataSetChanged();
     }
 
-    OfferedNurse_Datum getItem(int position) {
+    Facility_JobDatum getItem(int position) {
         if (listPostedJob == null || listPostedJob.size() == 0)
             return null;
         return listPostedJob.get(position);
@@ -121,42 +123,31 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
     }
 
     class ViewHolder extends BaseViewHolder {
-        ItemActiveFBinding itemView;
+        ItemCompletedBinding itemView;
 
-        public ViewHolder( @NonNull ItemActiveFBinding itemView) {
+        public ViewHolder(@NonNull ItemCompletedBinding itemView) {
             super(itemView.getRoot());
             this.itemView = itemView;
         }
 
         @Override
         public void onBind(int position) {
-            OfferedNurse_Datum model = listPostedJob.get(position);
-            Glide.with(itemView.imgProfile.getContext()).load(model.getNurseImage()).placeholder(R.drawable.person)
-                    .error(R.drawable.person).into(itemView.imgProfile);
-            itemView.tvName.setText(model.getNurseFirstName() + " " + model.getNurseLastName());
-            if (model.getRating() != null && !TextUtils.isEmpty(model.getRating()))
-                itemView.tvRating.setText(model.getRating());
-            String rate = model.getPreferredHourlyPayRate();
-            if (TextUtils.isEmpty(rate))
-                rate = "0";
-            itemView.tvRate.setText("$ " + rate + "/Hr");
-            itemView.tvWeeksDaysCount.setText(model.getPreferredDaysOfTheWeekString());
-            itemView.tvTitle.setText(model.getPreferredSpecialtyDefinition());
-            itemView.tvTime.setText(model.getOfferedAt());
-//            itemView.tvWeeksDays.setText(model.getPreferredSpecialty());
-//            itemView.tvTitle.setText(model.get);
+            Facility_JobDatum datum = listPostedJob.get(position);
 
+            try {
+                Glide.with(activity).load(datum.getFacilityImage()).placeholder(R.drawable.test1)
+                        .error(R.drawable.test1).into(itemView.imageView);
+            } catch (Exception e) {
 
-          /*  itemView.layItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-//                    postedListener.onClick_Hire(model,position);
-                }
-            });*/
+            }
+            itemView.tvName.setText("" + datum.getFacilityFirstName() + " " + datum.getFacilityLastName());
+            itemView.tvTitle.setText("" + datum.getPreferredSpecialtyDefinition());
+            itemView.tvDuration.setText("" + datum.getPreferredAssignmentDurationDefinition());
+//            tv_shift.setText("" + datum.getShiftDefinition());
+            itemView.tvWorkingDay.setText("" + datum.getPreferredDaysOfTheWeekString());
+            itemView.tvAmount.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
+            itemView.tvStartDate.setText("" + datum.getStartDate());
+            itemView.tvEndDate.setText("" + datum.getEndDate());
         }
 
         @Override
@@ -176,7 +167,7 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
     public Filter getFilter() {
 
         if (fRecords == null) {
-            fRecords = new ActiveFAdapter.RecordFilter1();
+            fRecords = new RecordFilter1();
         }
         return fRecords;
     }
@@ -185,14 +176,14 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             final FilterResults oReturn = new FilterResults();
-            final ArrayList<OfferedNurse_Datum> results = new ArrayList<>();
+            final ArrayList<Facility_JobDatum> results = new ArrayList<>();
             if (listPostedJob != null)
                 if (constraint != null && !TextUtils.isEmpty(constraint)) {
                     if (copy_contactList != null && copy_contactList.size() > 0) {
-                        for (OfferedNurse_Datum g : copy_contactList) {
+                        for (Facility_JobDatum g : copy_contactList) {
 
                             try {
-                                if (g.getNurseFirstName().toLowerCase()
+                                if (g.getPreferredSpecialtyDefinition().toLowerCase()
                                         .startsWith(constraint.toString().toLowerCase())) {
                                     results.add(g);
                                 }
@@ -212,7 +203,7 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            listPostedJob = (ArrayList<OfferedNurse_Datum>) filterResults.values;
+            listPostedJob = (ArrayList<Facility_JobDatum>) filterResults.values;
             notifyDataSetChanged();
         }
     }

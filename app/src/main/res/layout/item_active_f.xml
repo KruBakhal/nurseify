@@ -48,6 +48,7 @@
                         android:textSize="20dp" />
 
                     <LinearLayout
+                        android:id="@+id/lay_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -201,6 +202,7 @@
                 android:textSize="13dp" />
 
             <TextView
+                android:id="@+id/tv_start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
