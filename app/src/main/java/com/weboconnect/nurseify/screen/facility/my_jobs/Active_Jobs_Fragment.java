@@ -108,8 +108,9 @@ public class Active_Jobs_Fragment extends Fragment {
                                     pastAdapter.addLoading();
                                 }
                             } else {
-//                                binding.recyclerView.addOnScrollListener(null);
-                                pastAdapter.removeLoading();
+                                if (pastAdapter.isLoaderVisible) {
+                                    pastAdapter.removeLoading();
+                                }
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = true;
                             }
@@ -144,7 +145,7 @@ public class Active_Jobs_Fragment extends Fragment {
             };
             binding.recyclerView.addOnScrollListener(pagination);
         } catch (Exception e) {
-            Log.d("tag", "setData: "+e.getMessage());
+            Log.d("tag", "setData: " + e.getMessage());
         }
     }
 

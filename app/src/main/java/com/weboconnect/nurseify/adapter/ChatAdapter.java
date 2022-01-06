@@ -56,8 +56,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         try {
 
             Chatlist chatlist = mChat.get(position);
-            Log.d("TAG", "onBindViewHolder: "+chatlist.getSender()+"  "+new SessionManager(mContext).get_User().getId());
-            if (chatlist.getSender().equals("" + new SessionManager(mContext).get_User().getId())) {
+//            Log.d("TAG", "onBindViewHolder: "+chatlist.getSender()+"  "+new SessionManager(mContext).get_User().getId());
+            if (chatlist.getSender().equals("" + new SessionManager(mContext).get_user_register_Id())) {
                 holder.tv2.setText("" + chatlist.getMessage());
                 try {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm aa");

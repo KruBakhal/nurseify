@@ -79,7 +79,7 @@ public class SessionManager {
 
     }
 
-    public FacilityProfile get_facility() {
+    public FacilityProfile get_facilityProfile() {
         String data = sharedPreferences.getString(FACILITY_DATA, null);
         if (TextUtils.isEmpty(data)) {
             return null;

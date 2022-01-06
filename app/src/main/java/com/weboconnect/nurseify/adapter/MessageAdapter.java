@@ -73,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         try {
             User user = mUsers.get(position);
             holder.tv_name.setText("" + user.getFull_name());
-            holder.tv_title.setText("" + user.getSpecialty());
+            holder.tv_title.setText("" + (TextUtils.isEmpty(user.getSpecialty()) ? "" : user.getSpecialty()));
             if (TextUtils.isEmpty(user.getProfile_path())) {
                 holder.circleImageView.setImageResource(R.drawable.person);
             } else {
@@ -102,7 +102,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void unreadMessageCount(String id, TextView tv_count, View lay_count) {
-        String user_id = new SessionManager(mContext).get_User().getId();
+        String user_id = new SessionManager(mContext).get_user_register_Id();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -110,7 +110,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 int unread = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chatlist chat = snapshot.getValue(Chatlist.class);
-                    if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(user_id)&& !TextUtils.isEmpty(chat.getReceiver())&& !TextUtils.isEmpty(chat.getSender())
+                    if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(user_id) && !TextUtils.isEmpty(chat.getReceiver()) && !TextUtils.isEmpty(chat.getSender())
                             && chat.getSender().equals(id) && chat.getReceiver().equals(user_id) && chat.getIs_seen() == 0) {
                         unread++;
                     }
@@ -163,7 +163,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private void lastMessage(final String userid, TextView tv_last_msg, final TextView last_msg_time) {
 
-        String firebaseUser = new SessionManager(mContext).get_User().getId();
+        String firebaseUser = new SessionManager(mContext).get_user_register_Id();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -171,7 +171,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chatlist chat = snapshot.getValue(Chatlist.class);
                     if (firebaseUser != null && chat != null) {
-                        if (!TextUtils.isEmpty(userid) && !TextUtils.isEmpty(firebaseUser)&& !TextUtils.isEmpty(chat.getSender()) && !TextUtils.isEmpty(chat.getReceiver())&&
+                        if (!TextUtils.isEmpty(userid) && !TextUtils.isEmpty(firebaseUser) && !TextUtils.isEmpty(chat.getSender()) && !TextUtils.isEmpty(chat.getReceiver()) &&
                                 (chat.getReceiver().equals(firebaseUser) && chat.getSender().equals(userid)) ||
                                 (chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser))) {
                             theLastMessage = chat.getMessage();

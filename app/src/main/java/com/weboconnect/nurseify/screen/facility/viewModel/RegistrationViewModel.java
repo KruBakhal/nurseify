@@ -1,10 +1,5 @@
 package com.weboconnect.nurseify.screen.facility.viewModel;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -12,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.gson.Gson;
 import com.weboconnect.nurseify.common.CommonDatum;
 import com.weboconnect.nurseify.common.CommonModel;
 import com.weboconnect.nurseify.intermediate.API_ResponseCallback;
@@ -490,7 +484,7 @@ public class RegistrationViewModel extends ViewModel {
         }
         MediaType mediatTypeStr = MediaType.parse("multipart/form-data");
         RequestBody request_1 = RequestBody.create(mediatTypeStr, "" + new SessionManager(context).get_user_register_Id());
-        RequestBody request_2 = RequestBody.create(mediatTypeStr, "" + new SessionManager(context).get_facility().getFacilityId());
+        RequestBody request_2 = RequestBody.create(mediatTypeStr, "" + new SessionManager(context).get_facilityProfile().getFacilityId());
         RequestBody request_3 = RequestBody.create(mediatTypeStr, "" + new_facilityModel.getFacilityName());
         RequestBody request_4 = RequestBody.create(mediatTypeStr, "" + new_facilityModel.getFacilityType());
         RequestBody request_5 = RequestBody.create(mediatTypeStr, "" + new_facilityModel.getFacilityEmail());

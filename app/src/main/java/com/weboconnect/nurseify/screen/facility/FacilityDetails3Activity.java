@@ -13,7 +13,6 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.databinding.ActivityFacilityDetails2Binding;
 import com.weboconnect.nurseify.databinding.ActivityFacilityDetails3Binding;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.utils.Constant;
@@ -21,8 +20,6 @@ import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 
 import java.lang.reflect.Type;
-
-import okhttp3.internal.Util;
 
 public class FacilityDetails3Activity extends AppCompatActivity {
 
@@ -36,7 +33,7 @@ public class FacilityDetails3Activity extends AppCompatActivity {
         setContentView(R.layout.activity_facility_details3);
         binding = DataBindingUtil.setContentView(FacilityDetails3Activity.this, R.layout.activity_facility_details3);
         context = this;
-        model = new SessionManager(context).get_facility();
+        model = new SessionManager(context).get_facilityProfile();
         setData();
         click();
     }

@@ -62,7 +62,7 @@ public class RegistrationFActivity extends AppCompatActivity {
         }.getType();
         model = new Gson().fromJson(data, type);
         if (model == null) {
-            model = new SessionManager(context).get_facility();
+            model = new SessionManager(context).get_facilityProfile();
         }
         viewModel.main_model = model;
         viewModel.new_facilityModel = model;

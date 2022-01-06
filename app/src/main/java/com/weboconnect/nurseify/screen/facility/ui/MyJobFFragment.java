@@ -26,7 +26,7 @@ import com.weboconnect.nurseify.screen.facility.my_jobs.Posted_Jobs_Fragment;
 
 public class MyJobFFragment extends Fragment {
     String id;
-  public   FragmentMyJobsFBinding binding;
+    public FragmentMyJobsFBinding binding;
     View view;
     private TabAdapter adapter;
 
@@ -66,9 +66,10 @@ public class MyJobFFragment extends Fragment {
     }
 
     private void change_tab(int i) {
+        binding.editTextSearch.setText("");
+        binding.editTextSearch.clearFocus();
 
         switch (i) {
-
             case 0:
                 binding.textOffered.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
                 binding.textActive.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));

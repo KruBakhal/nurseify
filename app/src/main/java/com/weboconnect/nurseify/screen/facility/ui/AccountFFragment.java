@@ -7,7 +7,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,17 +22,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.FragmentAccountFBinding;
 import com.weboconnect.nurseify.screen.facility.FacilityDetails1Activity;
 import com.weboconnect.nurseify.screen.facility.HomeFActivity;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
-import com.weboconnect.nurseify.screen.nurse.HomeActivity;
 import com.weboconnect.nurseify.screen.nurse.SettingActivity;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.utils.Constant;
@@ -43,7 +37,6 @@ import com.weboconnect.nurseify.webService.FacilityAPI;
 import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.io.File;
-import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -75,7 +68,7 @@ public class AccountFFragment extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
-        facilityProfile = new SessionManager(getContext()).get_facility();
+        facilityProfile = new SessionManager(getContext()).get_facilityProfile();
 
         binding.facilityName.setText(facilityProfile.getFacilityName());
         binding.layFacilityType.setText(facilityProfile.getFacilityTypeDefinition());
@@ -350,7 +343,7 @@ public class AccountFFragment extends Fragment {
 //                Type type = new TypeToken<UserProfileData>() {
 //                }.getType();
 //                userProfileData = new Gson().fromJson(data1, type);
-                facilityProfile = new SessionManager(getContext()).get_facility();
+                facilityProfile = new SessionManager(getContext()).get_facilityProfile();
                 if (facilityProfile != null) {
                     binding.facilityName.setText(facilityProfile.getFacilityName());
                     binding.layFacilityType.setText(facilityProfile.getFacilityTypeDefinition());

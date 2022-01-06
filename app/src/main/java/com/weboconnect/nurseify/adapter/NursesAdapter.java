@@ -32,7 +32,7 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
     private List<NurseDatum> copy_contactList = new ArrayList<>();
     private static final int VIEW_TYPE_LOADING = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
-    private boolean isLoaderVisible = false;
+    public boolean isLoaderVisible = false;
     Activity activity;
     private long mLastClickTime = 0;
 

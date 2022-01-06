@@ -1,5 +1,7 @@
 package com.weboconnect.nurseify.screen.facility.model;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,6 +26,15 @@ public class Facility_JobDatum {
     @SerializedName("facility_first_name")
     @Expose
     private String facilityFirstName;
+
+    public Facility_JobDatum(String job_id, String facilityFirstName) {
+        this.job_id = job_id;
+        this.facilityFirstName = facilityFirstName;
+    }
+
+    public Facility_JobDatum() {
+    }
+
     @SerializedName("facility_last_name")
     @Expose
     private String facilityLastName;
@@ -79,7 +90,10 @@ public class Facility_JobDatum {
     }
 
     public String getFacilityLastName() {
+        if (TextUtils.isEmpty(facilityLastName))
+            facilityLastName = "";
         return facilityLastName;
+
     }
 
     public void setFacilityLastName(String facilityLastName) {
@@ -103,6 +117,8 @@ public class Facility_JobDatum {
     }
 
     public String getPreferredSpecialtyDefinition() {
+        if (TextUtils.isEmpty(preferredSpecialtyDefinition))
+            preferredSpecialtyDefinition = "";
         return preferredSpecialtyDefinition;
     }
 

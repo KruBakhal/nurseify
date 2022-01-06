@@ -57,7 +57,7 @@ public class Past_Browse_Fragment extends Fragment {
     private Browse_Nurse_ViewModel viewModel;
     private boolean isFragActive = false;
     private boolean isFilterApply = false;
-    private List<OfferedNurse_Datum> listPostedJob= new ArrayList<>();
+    private List<OfferedNurse_Datum> listPostedJob = new ArrayList<>();
     private PaginationListener pagination;
 
     public Past_Browse_Fragment() {
@@ -109,7 +109,9 @@ public class Past_Browse_Fragment extends Fragment {
                                 }
                             } else {
 //                                binding.recyclerView.addOnScrollListener(null);
-                                pastAdapter.removeLoading();
+                                if (pastAdapter.isLoaderVisible) {
+                                    pastAdapter.removeLoading();
+                                }
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = true;
                             }
@@ -144,7 +146,7 @@ public class Past_Browse_Fragment extends Fragment {
             };
             binding.recyclerView.addOnScrollListener(pagination);
         } catch (Exception e) {
-            Log.d("tag", "setData: "+e.getMessage());
+            Log.d("tag", "setData: " + e.getMessage());
         }
     }
 
@@ -315,11 +317,13 @@ public class Past_Browse_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        Log.d("TAG", "onResume: pa ");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         isFragActive = false;
+        Log.d("TAG", "onPause: pa");
     }
 }

@@ -77,6 +77,8 @@ public class Offered_Browse_Fragment extends Fragment {
         return view = binding.getRoot();
     }
 
+
+
     private void setData() {
         try {
             BrowseFFragment browseFFragment = (BrowseFFragment) getParentFragment();
@@ -105,7 +107,10 @@ public class Offered_Browse_Fragment extends Fragment {
                                 }
                             } else {
 //                                binding.recyclerView.addOnScrollListener(null);
-                                offeredFAdapter.removeLoading();
+//                                offeredFAdapter.removeLoading();
+                                if (offeredFAdapter.isLoaderVisible) {
+                                    offeredFAdapter.removeLoading();
+                                }
                                 offeredFAdapter.getFilter().filter(text);
                                 isFilterApply = true;
                             }
@@ -313,13 +318,14 @@ public class Offered_Browse_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
-
+        Log.d("TAG", "onResume: Of ");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         isFragActive = false;
+        Log.d("TAG", "onPause: Of ");
     }
 
 }

@@ -181,7 +181,9 @@ public class Nurse_Browse_Fragment extends Fragment {
                                 }
                             } else {
 //                                binding.recyclerView.addOnScrollListener(null);
-                                nursesAdapter.removeLoading();
+                                if (nursesAdapter.isLoaderVisible) {
+                                    nursesAdapter.removeLoading();
+                                }
                                 nursesAdapter.getFilter().filter(text);
                                 isFilterApply = true;
                             }
@@ -1173,12 +1175,14 @@ public class Nurse_Browse_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        Log.d("TAG", "onResume: nb ");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         isFragActive = false;
+        Log.d("TAG", "onPause: nb");
     }
 
     private boolean check_Any_is_empty() {

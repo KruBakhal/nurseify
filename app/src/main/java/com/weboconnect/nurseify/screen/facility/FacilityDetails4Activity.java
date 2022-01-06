@@ -13,7 +13,6 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.databinding.ActivityFacilityDetails1Binding;
 import com.weboconnect.nurseify.databinding.ActivityFacilityDetails4Binding;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.utils.Constant;
@@ -33,7 +32,7 @@ public class FacilityDetails4Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(FacilityDetails4Activity.this, R.layout.activity_facility_details4);
         context = this;
-        model = new SessionManager(context).get_facility();
+        model = new SessionManager(context).get_facilityProfile();
         setData();
         click();
     }

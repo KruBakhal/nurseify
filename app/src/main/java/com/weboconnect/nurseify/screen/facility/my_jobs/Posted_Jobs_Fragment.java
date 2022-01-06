@@ -114,7 +114,9 @@ public class Posted_Jobs_Fragment extends Fragment {
                                 }
                             } else {
 //                                binding.recyclerView.addOnScrollListener(null);
-                                pastAdapter.removeLoading();
+                                if (pastAdapter.isLoaderVisible) {
+                                    pastAdapter.removeLoading();
+                                }
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = true;
                             }

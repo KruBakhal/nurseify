@@ -15,10 +15,8 @@ import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityHomeFBinding;
 import com.weboconnect.nurseify.screen.facility.ui.AccountFFragment;
 import com.weboconnect.nurseify.screen.facility.ui.BrowseFFragment;
-import com.weboconnect.nurseify.screen.facility.ui.MessageFragment;
+import com.weboconnect.nurseify.screen.facility.ui.MessageFacilityFragment;
 import com.weboconnect.nurseify.screen.facility.ui.MyJobFFragment;
-import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment;
-import com.weboconnect.nurseify.screen.nurse.ui.MyJobFragment;
 
 import java.util.ArrayList;
 
@@ -28,7 +26,7 @@ public class HomeFActivity extends AppCompatActivity {
     ArrayList<Integer> mFragmentInt = new ArrayList<>();
     public BrowseFFragment browseFFragment;
     public MyJobFFragment myJobFFragment;
-    public MessageFragment messageFragment;
+    public MessageFacilityFragment messageFragment;
     public AccountFFragment accountFFragment;
     public FragmentManager fm = null;
     private Fragment active;
@@ -102,7 +100,7 @@ public class HomeFActivity extends AppCompatActivity {
                 binding.messageText.setTextColor(Color.parseColor("#3493D3"));
                 binding.messageIcon.setColorFilter(Color.parseColor("#3493D3"));
                 if (messageFragment == null) {
-                    messageFragment = new MessageFragment();
+                    messageFragment = new MessageFacilityFragment();
                     fm.beginTransaction().add(R.id.frame, messageFragment, "3").hide(messageFragment).commit();
                 }
                 changeView(messageFragment, "3");

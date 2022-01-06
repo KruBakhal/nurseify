@@ -6,32 +6,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
-import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.screen.facility.add_job_fragment.Add_Job_1_Fragment;
 import com.weboconnect.nurseify.screen.facility.add_job_fragment.Add_Job_2_Fragment;
-import com.weboconnect.nurseify.screen.facility.ui.AccountFFragment;
-import com.weboconnect.nurseify.screen.facility.ui.BrowseFFragment;
-import com.weboconnect.nurseify.screen.facility.ui.MessageFragment;
-import com.weboconnect.nurseify.screen.facility.ui.MyJobFFragment;
 import com.weboconnect.nurseify.screen.facility.viewModel.Add_Job_ViewModel;
-import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
-import com.weboconnect.nurseify.screen.facility.viewModel.RegistrationViewModel;
-import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.disposables.CompositeDisposable;
 
 public class Add_Jobs_Activity extends AppCompatActivity {
     Context context;

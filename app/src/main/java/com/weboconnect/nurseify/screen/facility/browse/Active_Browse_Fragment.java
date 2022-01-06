@@ -86,7 +86,15 @@ public class Active_Browse_Fragment extends Fragment {
         refreshData();
         return view = binding.getRoot();
     }
-
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible) {
+            Log.d("TAG", "setMenuVisibility: ac " + menuVisible);
+        } else {
+            Log.d("TAG", "setMenuVisibility:ac  " + menuVisible);
+        }
+    }
     private void setData() {
         try {
             BrowseFFragment browseFFragment = (BrowseFFragment) getParentFragment();
@@ -115,7 +123,9 @@ public class Active_Browse_Fragment extends Fragment {
                                 }
                             } else {
 //                                binding.recyclerView.addOnScrollListener(null);
-                                offeredFAdapter.removeLoading();
+                                if (offeredFAdapter.isLoaderVisible) {
+                                    offeredFAdapter.removeLoading();
+                                }
                                 offeredFAdapter.getFilter().filter(text);
                                 isFilterApply = true;
                             }
@@ -321,11 +331,13 @@ public class Active_Browse_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        Log.d("TAG", "onResume: Ac ");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         isFragActive = false;
+        Log.d("TAG", "onPause: ac");
     }
 }

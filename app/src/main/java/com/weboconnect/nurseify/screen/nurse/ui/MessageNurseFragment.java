@@ -29,7 +29,7 @@ import com.weboconnect.nurseify.utils.SessionManager;
 
 import java.util.ArrayList;
 
-public class MessageFragment extends Fragment {
+public class MessageNurseFragment extends Fragment {
     String id;
     FragmentMessageBinding binding;
     View view;
@@ -40,11 +40,11 @@ public class MessageFragment extends Fragment {
     MessageAdapter messageAdapter;
     private OnItemClick onItemClick;
 
-    public MessageFragment() {
+    public MessageNurseFragment() {
 
     }
 
-    public MessageFragment(String id) {
+    public MessageNurseFragment(String id) {
         this.id = id;
     }
 

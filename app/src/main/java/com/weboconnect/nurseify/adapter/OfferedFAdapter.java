@@ -31,7 +31,7 @@ public class OfferedFAdapter extends RecyclerView.Adapter<BaseViewHolder> implem
     private List<OfferedNurse_Datum> copy_contactList = new ArrayList<>();
     private static final int VIEW_TYPE_LOADING = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
-    private boolean isLoaderVisible = false;
+    public boolean isLoaderVisible = false;
     private long mLastClickTime=0;
 
 

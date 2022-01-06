@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class BrowseFFragment extends Fragment {
     public BrowseFFragment(String id) {
         this.id = id;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,8 +86,8 @@ public class BrowseFFragment extends Fragment {
     }
 
     private void change_tab(int i) {
-//        binding.editTextSearch.setText("");
-//        binding.editTextSearch.clearFocus();
+        binding.editTextSearch.setText("");
+        binding.editTextSearch.clearFocus();
         switch (i) {
             case 0:
 //                binding.filter.setVisibility(View.VISIBLE);
@@ -139,6 +141,7 @@ public class BrowseFFragment extends Fragment {
     }
 
     private void getTabList() {
+
         adapter = new TabAdapter(getChildFragmentManager());
         adapter.addFragment(new Nurse_Browse_Fragment(), "Nurse");
         adapter.addFragment(new Offered_Browse_Fragment(), "Offered");

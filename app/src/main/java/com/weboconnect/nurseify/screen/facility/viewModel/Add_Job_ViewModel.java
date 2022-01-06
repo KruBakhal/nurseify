@@ -374,7 +374,7 @@ public class Add_Job_ViewModel extends ViewModel {
 
         MediaType mediatTypeStr = MediaType.parse("multipart/form-data");
         RequestBody request_1 = RequestBody.create(mediatTypeStr, "" + new SessionManager(context).get_user_register_Id());
-        RequestBody request_2 = RequestBody.create(mediatTypeStr, "" + new SessionManager(context).get_facility().getFacilityId());
+        RequestBody request_2 = RequestBody.create(mediatTypeStr, "" + new SessionManager(context).get_facilityProfile().getFacilityId());
         RequestBody request_3 = RequestBody.create(mediatTypeStr, "" + addJobData.getPreferredAssignmentDuration());
         RequestBody request_4 = RequestBody.create(mediatTypeStr, "" + addJobData.getSeniorityLevel());
         RequestBody request_5 = RequestBody.create(mediatTypeStr, "" + addJobData.getJobFunction());

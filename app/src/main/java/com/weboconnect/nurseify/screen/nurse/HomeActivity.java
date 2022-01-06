@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -20,19 +19,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.firebase.database.FirebaseDatabase;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityHomeBinding;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 import com.weboconnect.nurseify.screen.nurse.ui.AccountFragment;
 import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment;
-import com.weboconnect.nurseify.screen.nurse.ui.MessageFragment;
+import com.weboconnect.nurseify.screen.nurse.ui.MessageNurseFragment;
 import com.weboconnect.nurseify.screen.nurse.ui.MyJobFragment;
 import com.weboconnect.nurseify.screen.nurse.ui.NotificationFragment;
 import com.weboconnect.nurseify.utils.SessionManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -40,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     ArrayList<Integer> mFragmentInt = new ArrayList<>();
     BrowseFragment browseFragment;// = new BrowseFragment();
     MyJobFragment myJobFragment;// = new MyJobFragment();
-    MessageFragment messageFragment;//= new MessageFragment();
+    MessageNurseFragment messageFragment;//= new MessageFragment();
     NotificationFragment notificationFragment;//= new NotificationFragment();
     AccountFragment accountFragment;//= new AccountFragment();
     final FragmentManager fm = getSupportFragmentManager();
@@ -133,7 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                 binding.messageText.setTextColor(Color.parseColor("#3493D3"));
                 binding.messageIcon.setColorFilter(Color.parseColor("#3493D3"));
                 if (messageFragment == null) {
-                    messageFragment = new MessageFragment();
+                    messageFragment = new MessageNurseFragment();
                     fm.beginTransaction().add(R.id.frame, messageFragment, "3").hide(messageFragment).commit();
 
                 }

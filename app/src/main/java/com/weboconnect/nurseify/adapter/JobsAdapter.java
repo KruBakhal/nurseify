@@ -4,6 +4,7 @@ package com.weboconnect.nurseify.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.MyViewHolder> 
                 .setText("" + movie.getFacilityFirstName() + " "
                         + movie.getFacilityLastName()
                         + " - " + movie.getPreferredSpecialtyDefinition());
-
+        holder.title.setGravity(Gravity.LEFT | Gravity.CENTER);
         select = activity.selected_job;
         if (select == position) {
             isNotSelected = false;

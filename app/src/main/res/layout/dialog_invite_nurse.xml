@@ -8,8 +8,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lay_box"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginVertical="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="32dp"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingHorizontal="14dp"
@@ -27,7 +29,7 @@
             android:paddingLeft="25dp"
             android:paddingTop="14dp"
             android:paddingRight="14dp"
-            android:paddingBottom="26dp"
+            android:paddingBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +53,6 @@
                 android:text="Make an offer to  "
                 android:textColor="#444B53"
                 android:textSize="22dp" />
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -172,47 +173,247 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lay_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp"
+                        android:visibility="gone">
 
-                <RelativeLayout
-                    android:id="@+id/lay_Done"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/btn_square_secondary"
-                    android:backgroundTint="#2AE2BC"
-                    android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/sf_600"
+                                android:maxLines="2"
+                                android:text="Hello Name"
+                                android:textColor="#444B53"
+                                android:textSize="12dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="15dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_facility_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:lineHeight="20dp"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                                <TextView
+                                    android:id="@+id/tvlocation"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                                <TextView
+                                    android:id="@+id/tvSpecialty"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_start_date"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                                <TextView
+                                    android:id="@+id/tvAssignmentDuration"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                                <TextView
+                                    android:id="@+id/tvShiftDuration"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_work_days"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:maxLines="2"
+                                    android:text="Venkat Clinic would like to book you for the assignment below"
+                                    android:textColor="#444B53"
+                                    android:textSize="12dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/sf_600"
+                                android:maxLines="2"
+                                android:text="TERMS ACKNOWLEDGMENT"
+                                android:textColor="#444B53"
+                                android:textSize="12dp" />
+
+                            <TextView
+                                android:id="@+id/tv5"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/sf_500"
+                                android:text="By clicking on the “Make an Offer” your facility agrees to pay the hourly bill rate reflected on the nurse’s profile page per the terms established in the Nurseify vendor agreement"
+                                android:textColor="#444B53"
+                                android:textSize="12dp" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/sf_600"
+                                android:maxLines="2"
+                                android:text="NEXT STEPS"
+                                android:textColor="#444B53"
+                                android:textSize="12dp" />
+
+                            <TextView
+                                android:id="@+id/tv6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/sf_500"
+                                android:text="Dhruvaygj Solanki will have 48 hours to accept your booking request\n
+You will receive an email notice after the nurse accepts or rejects the request\n
+Assuming the nurse accepts, a Nurseify Consultant will contact you to coordinate onboarding logistics\n
+If the nurse rejects, we will provide additional nurses that may meet your need
+Contact us anytime at info@nurseify.app"
+                                android:textColor="#444B53"
+                                android:textSize="12dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tv_msg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/sf_500"
+                        android:id="@+id/tvSucces"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sf_600"
+                        android:text="Your offer has successfully been submitted for this assignment."
+                        android:textSize="12dp"
                         android:gravity="center"
-                        android:text="Done"
-                        android:textColor="#595094"
-                        android:textSize="18dp" />
+                        android:visibility="visible" />
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                    <RelativeLayout
+                        android:id="@+id/lay_Done"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_gravity="center"
-                        android:layout_marginRight="20dp"
-                        android:visibility="gone" />
-                </RelativeLayout>
+                        android:background="@drawable/btn_square_secondary2"
+                        android:backgroundTint="#2AE2BC"
+                        android:orientation="horizontal">
 
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_msg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/sf_500"
+                            android:gravity="center"
+                            android:text="Make an Offer"
+                            android:textColor="#595094"
+                            android:textSize="18dp" />
 
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="20dp"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
