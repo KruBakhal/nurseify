@@ -1,6 +1,8 @@
 package com.weboconnect.nurseify.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,12 +15,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ItemPastFBinding;
 import com.weboconnect.nurseify.databinding.ItemPostedFBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
+import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_Datum;
+import com.weboconnect.nurseify.utils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +146,18 @@ public class PostedAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
             itemView.tvWeeksDays.setText(datum.getPreferredDaysOfTheWeekString());
             itemView.layHide.setVisibility(View.GONE);
             itemView.tvCreatedAtDefinition.setVisibility(View.GONE);
+            itemView.edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    activity.startActivity(new Intent(activity, Add_Jobs_Activity.class)
+                            .putExtra(Constant.EDIT_MODE, true)
+                    .putExtra(Constant.STR_RESPONSE_DATA,new Gson().toJson(datum)));
+                }
+            });
         }
 
         @Override

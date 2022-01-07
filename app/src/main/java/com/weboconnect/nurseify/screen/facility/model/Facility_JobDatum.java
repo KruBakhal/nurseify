@@ -14,6 +14,17 @@ public class Facility_JobDatum {
     @SerializedName("applied")
     @Expose
     private String applied;
+    private String seniority;
+    private String jobFunctions;
+    private String shiftDuration;
+    private String workLocation;
+    private String experience;
+    private CharSequence description;
+    private CharSequence responsibility;
+    private CharSequence qualifications;
+    private CharSequence youtube;
+    private List<String> uploadPhotos;
+    private boolean active=false;
 
     public String getJob_id() {
         return job_id;
@@ -188,5 +199,93 @@ public class Facility_JobDatum {
 
     public void setApplied(String applied) {
         this.applied = applied;
+    }
+
+    public String getSeniority() {
+        return seniority;
+    }
+
+    public void setSeniority(String seniority) {
+        this.seniority = seniority;
+    }
+
+    public String getJobFunctions() {
+        return jobFunctions;
+    }
+
+    public void setJobFunctions(String jobFunctions) {
+        this.jobFunctions = jobFunctions;
+    }
+
+    public String getShiftDuration() {
+        return shiftDuration;
+    }
+
+    public void setShiftDuration(String shiftDuration) {
+        this.shiftDuration = shiftDuration;
+    }
+
+    public String getWorkLocation() {
+        return workLocation;
+    }
+
+    public void setWorkLocation(String workLocation) {
+        this.workLocation = workLocation;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public CharSequence getDescription() {
+        return description;
+    }
+
+    public void setDescription(CharSequence description) {
+        this.description = description;
+    }
+
+    public CharSequence getResponsibility() {
+        return responsibility;
+    }
+
+    public void setResponsibility(CharSequence responsibility) {
+        this.responsibility = responsibility;
+    }
+
+    public CharSequence getQualifications() {
+        return qualifications;
+    }
+
+    public void setQualifications(CharSequence qualifications) {
+        this.qualifications = qualifications;
+    }
+
+    public CharSequence getYoutube() {
+        return youtube;
+    }
+
+    public void setYoutube(CharSequence youtube) {
+        this.youtube = youtube;
+    }
+
+    public List<String> getUploadPhotos() {
+        return uploadPhotos;
+    }
+
+    public void setUploadPhotos(List<String> uploadPhotos) {
+        this.uploadPhotos = uploadPhotos;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

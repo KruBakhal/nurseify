@@ -142,7 +142,6 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                     .error(R.drawable.person).into(itemView.imgProfile);
             itemView.tvName.setText(model.getFirstName() + " " + model.getLastName());
             itemView.tvDescription.setText(model.getSummary());
-//            itemView.tvTitle.setText(model.ge() );
             if(model.getRating()!=null && !TextUtils.isEmpty(model.getRating().getOverAll()))
             itemView.tvRating.setText(model.getRating().getOverAll());
             String rate = model.getHourlyPayRate();

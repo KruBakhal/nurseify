@@ -30,6 +30,7 @@
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_register.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_registration_f.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_role.xml" value="0.20854700854700856" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_setting.xml" value="0.38125" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_signup_details.xml" value="0.264" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_work_history.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_filter.xml" value="0.20854700854700856" />
@@ -70,7 +71,7 @@
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_past_f.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_photos_files.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_popup_dropdown.xml" value="0.38125" />
-        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_posted_f.xml" value="0.16052631578947368" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_posted_f.xml" value="0.4" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/popup_dropdown.xml" value="0.13020833333333334" />
       </map>
     </option>

@@ -163,7 +163,7 @@ public class MessageNurseFragment extends Fragment {
             binding.progressBar.setVisibility(View.GONE);
             return;
         }
-        final String fuser = new SessionManager(getContext()).get_User().getId();
+        final String fuser = new SessionManager(getContext()).get_user_register_Id();
         Query query = FirebaseDatabase.getInstance().getReference("users").orderByChild("full_name")
                 .startAt(s).endAt(s + "\uf8ff");
         binding.progressBar.setVisibility(View.VISIBLE);

@@ -162,7 +162,6 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.layoutApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                finish();
                 check_open_inviteBox();
                 Utils.onClickEvent(v);
             }
@@ -170,9 +169,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.layMesg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                finish();
-
-                startActivity(new Intent(context, MessageActivity.class)
+                startActivity(new Intent(context, MessageFacilityActivity.class)
                         .putExtra("sender_id", model.getUserId())
                         .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));
 

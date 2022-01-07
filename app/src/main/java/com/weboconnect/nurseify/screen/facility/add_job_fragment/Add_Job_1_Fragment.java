@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,7 +38,9 @@ import com.weboconnect.nurseify.screen.facility.viewModel.Add_Job_ViewModel;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
 import com.weboconnect.nurseify.screen.facility.viewModel.ProgressUIType;
+import com.weboconnect.nurseify.screen.nurse.model.Degree_Datum;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
+import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.utils.Utils;
 
 import java.util.ArrayList;
@@ -109,8 +112,165 @@ public class Add_Job_1_Fragment extends Fragment {
             viewModel.list_work_epic.setValue(appController.getList_epic());
             binding.edExperience.setText(viewModel.experience_year);
             binding.edOther.setText(viewModel.other_exp);
+            edit_portion();
         }
         setAdapter();
+
+
+    }
+
+    private void edit_portion() {
+        try {
+            if (viewModel.isEdit) {
+                binding.textView3.setText("Edit Job");
+                if (checkItemInList(viewModel.jobDatum.getPreferredAssignmentDuration(), Collections.singletonList(viewModel.getList_assignment_durations()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getPreferredAssignmentDuration(), Collections.singletonList(viewModel.getList_assignment_durations()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredAssignmentDurationDefinition());
+                }
+                if (checkItemInList(viewModel.jobDatum.getSeniority(), Collections.singletonList(viewModel.getList_senior_level()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getSeniority(), Collections.singletonList(viewModel.getList_senior_level()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredAssignmentDurationDefinition());
+                }
+                if (checkItemInList(viewModel.jobDatum.getJobFunctions(), Collections.singletonList(viewModel.getList_job_funcs()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getSeniority(), Collections.singletonList(viewModel.getList_job_funcs()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredAssignmentDurationDefinition());
+                }
+                if (checkItemInList(viewModel.jobDatum.getPreferredSpecialty(), Collections.singletonList(viewModel.getList_speciality()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getPreferredSpecialty(), Collections.singletonList(viewModel.getList_speciality()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                }
+                if (checkItemInList(viewModel.jobDatum.getShiftDuration(), Collections.singletonList(viewModel.getList_preferred_shift()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getShiftDuration(), Collections.singletonList(viewModel.getList_preferred_shift()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                }
+                if (checkItemInList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                }
+                binding.edExperience.setText("" + viewModel.jobDatum.getExperience());
+
+                if (checkItemInList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                }
+            /*if (checkItemInList_W(viewModel.jobDatum.getWorkLocation(), viewModel.getList_days_of_week())) {
+                viewModel.selected_assignment_duration = getIndexFromList_W(viewModel.jobDatum.getWorkLocation(), viewModel.getList_days_of_week());
+                binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+            }*/
+
+                setupSelection_DaysOfWeeks_ByModelData(viewModel.jobDatum.getPreferredDaysOfTheWeekArray());
+                daysOfWeekAdapter.notifyDataSetChanged();
+
+                if (viewModel.select_daysOfWeek != null && viewModel.select_daysOfWeek.size() != 0) {
+                    binding.tvWeeksDays.setVisibility(View.GONE);
+                    binding.rvWeeksDays.setVisibility(View.VISIBLE);
+                } else {
+                    binding.tvWeeksDays.setVisibility(View.VISIBLE);
+                    binding.rvWeeksDays.setVisibility(View.GONE);
+                }
+                if (checkItemInList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_cerner()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_cerner()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                }
+                if (checkItemInList(viewModel.jobDatum.getWorkLocation(),
+                        Collections.singletonList(viewModel.getList_work_cerner()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(),
+                            Collections.singletonList(viewModel.getList_work_cerner()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                }
+                if (checkItemInList(viewModel.jobDatum.getWorkLocation(),
+                        Collections.singletonList(viewModel.getList_work_medtech()))) {
+                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(),
+                            Collections.singletonList(viewModel.getList_work_medtech()));
+                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                }
+
+
+            }
+        } catch (Exception exception) {
+            Log.d("TAG", "setData: " + exception.getMessage());
+        }
+    }
+
+    private void setupSelection_DaysOfWeeks_ByModelData(List<String> specialty) {
+        viewModel.select_daysOfWeek.clear();
+        for (int i = 0; i < viewModel.list_days_of_week.getValue().size(); i++) {
+            HourlyRate_DayOfWeek_OptionDatum data = viewModel.list_days_of_week.getValue().get(i);
+            for (int j = 0; j < specialty.size(); j++) {
+                Log.d("TAG1", "setupSelectionSpecialtyByModelData: " + "" + data.getId() +
+                        " " + ((String) specialty.get(j)));
+                if (("" + data.getId()).equals(((String) specialty.get(j)))) {
+                    viewModel.select_daysOfWeek.add(i);
+                }
+            }
+        }
+    }
+
+
+    private int getIndexFromList(String id, List<Object> list1) {
+        int pos = 0;
+        if (list1 instanceof List) {
+            if (((List) list1).size() > 0 && (((List) list1.get(0)).get(0) instanceof CommonDatum)) {
+                List<CommonDatum> list;
+                list = ((List<CommonDatum>) list1.get(0));
+                for (int i = 0; i < list.size(); i++) {
+                    CommonDatum specialtyDatum = list.get(i);
+                    if (specialtyDatum.getId().toString().equals(id)) {
+                        pos = i;
+                    }
+                }
+            } else if (((List) list1).size() > 0 && (((List) list1.get(0)).get(0) instanceof HourlyRate_DayOfWeek_OptionDatum)) {
+                List<HourlyRate_DayOfWeek_OptionDatum> list;
+                list = ((List<HourlyRate_DayOfWeek_OptionDatum>) list1.get(0));
+                for (int i = 0; i < list.size(); i++) {
+                    HourlyRate_DayOfWeek_OptionDatum specialtyDatum = list.get(i);
+                    HourlyRate_DayOfWeek_OptionDatum sdas = (HourlyRate_DayOfWeek_OptionDatum) specialtyDatum;
+                    if (sdas.getId().toString().equals(id)) {
+                        pos = i;
+                    }
+                }
+            }
+        }
+        return pos;
+    }
+
+    private boolean checkItemInList(String id, List<Object> list1) {
+        if (list1 instanceof List) {
+            if (((List) list1).size() > 0 && (((List) list1.get(0)).get(0) instanceof CommonDatum)) {
+                List<CommonDatum> list;
+                list = ((List<CommonDatum>) list1.get(0));
+                for (int i = 0; i < list.size(); i++) {
+                    CommonDatum specialtyDatum = list.get(i);
+                    if (specialtyDatum.getId().toString().equals(id)) {
+                        return true;
+                    }
+                }
+            } else if (((List) list1).size() > 0 && (((List) list1.get(0)).get(0) instanceof HourlyRate_DayOfWeek_OptionDatum)) {
+                List<HourlyRate_DayOfWeek_OptionDatum> list;
+                list = ((List<HourlyRate_DayOfWeek_OptionDatum>) list1.get(0));
+                for (int i = 0; i < list.size(); i++) {
+                    HourlyRate_DayOfWeek_OptionDatum specialtyDatum = list.get(i);
+                    HourlyRate_DayOfWeek_OptionDatum sdas = (HourlyRate_DayOfWeek_OptionDatum) specialtyDatum;
+                    if (sdas.getId().toString().equals(id)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        /*for (Object specialtyDatum : list) {
+            if (specialtyDatum instanceof CommonDatum) {
+                CommonDatum sdas = (CommonDatum) specialtyDatum;
+                if (sdas.getId().toString().equals(id)) {
+                    return true;
+                }
+            } else if (specialtyDatum instanceof HourlyRate_DayOfWeek_OptionDatum) {
+                HourlyRate_DayOfWeek_OptionDatum sdas = (HourlyRate_DayOfWeek_OptionDatum) specialtyDatum;
+                if (sdas.getId().toString().equals(id)) {
+                    return true;
+                }
+            }
+        }*/
+        return false;
     }
 
     private void setAdapter() {
@@ -240,6 +400,7 @@ public class Add_Job_1_Fragment extends Fragment {
                 } else if (progressUIType == ProgressUIType.DIMISS) {
                     setAdapter();
                     binding.layProgress.setVisibility(View.GONE);
+                    edit_portion();
                 } else if (progressUIType == ProgressUIType.CANCEL) {
                     binding.layProgress.setVisibility(View.GONE);
                 } else if (progressUIType == ProgressUIType.DATA_ERROR) {
@@ -529,9 +690,9 @@ public class Add_Job_1_Fragment extends Fragment {
     }
 
     private void showOptionPopup_Degrees(Context context, int type, View view1, ImageView img1,
-                                         List<Object> list_nurse_degrees,
+                                         List<Object> list,
                                          ItemCallback itemCallback) {
-        if (list_nurse_degrees == null || list_nurse_degrees.size() == 0) {
+        if (list == null || list.size() == 0) {
             Utils.displayToast(context, "data empty");
             return;
         }
@@ -559,7 +720,7 @@ public class Add_Job_1_Fragment extends Fragment {
         HourlyRateWindowAdapter parentChildAdapter = null;
         WorkHistoryWindowAdapter adapter_degree;
         adapter_degree = new WorkHistoryWindowAdapter((Add_Jobs_Activity) getActivity(), type,
-                list_nurse_degrees,
+                list,
                 new WorkHistoryWindowAdapter.WorkHistoryWindowInterface() {
                     @Override
                     public void onCLickItem(int position, int type) {
@@ -574,7 +735,8 @@ public class Add_Job_1_Fragment extends Fragment {
     }
 
     private void showOptionPopup(Context context, View v, int type, ImageView img1,
-                                 TextView tvEmr, List<CommonDatum> cityData, int selected_City, ItemCallback itemCallback) {
+                                 TextView tvEmr, List<CommonDatum> cityData, int selected_City, ItemCallback
+                                         itemCallback) {
         if (cityData == null || cityData.size() == 0) {
             Utils.displayToast(context, "dropdown list is empty");
             return;

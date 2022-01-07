@@ -13,6 +13,7 @@ import com.weboconnect.nurseify.common.CommonModel;
 import com.weboconnect.nurseify.screen.facility.model.AddJobData;
 import com.weboconnect.nurseify.screen.facility.model.AddJobModel;
 import com.weboconnect.nurseify.screen.facility.model.Combine_CommonModel_2;
+import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
 import com.weboconnect.nurseify.utils.Constant;
@@ -62,6 +63,19 @@ public class Add_Job_ViewModel extends ViewModel {
     public int selected_senior_level = 0;
     public int selected_job_funcs = 0;
     public int selected_speciality = 0;
+
+    public List<CommonDatum> getList_work_cerner() {
+        return list_work_cerner.getValue();
+    }
+
+    public List<CommonDatum> getList_work_medtech() {
+        return list_work_medtech.getValue();
+    }
+
+    public List<CommonDatum> getList_work_epic() {
+        return list_work_epic.getValue();
+    }
+
     public int selected_shift_duration = 0;
     public int selected_work_loc = 0;
     public List<Integer> select_daysOfWeek = new ArrayList<>();
@@ -77,6 +91,8 @@ public class Add_Job_ViewModel extends ViewModel {
     public boolean isActive = false;
     public ArrayList<String> selected_list_photos;
     public int hrs_rate = 5;
+    public boolean isEdit = false;
+    public Facility_JobDatum jobDatum;
 
 
     public Add_Job_ViewModel() {
@@ -85,32 +101,32 @@ public class Add_Job_ViewModel extends ViewModel {
         }
     }
 
-    public MutableLiveData<List<CommonDatum>> getList_assignment_durations() {
-        return list_assignment_durations;
+    public List<CommonDatum> getList_assignment_durations() {
+        return list_assignment_durations.getValue();
     }
 
-    public MutableLiveData<List<CommonDatum>> getList_senior_level() {
-        return list_senior_level;
+    public List<CommonDatum> getList_senior_level() {
+        return list_senior_level.getValue();
     }
 
-    public MutableLiveData<List<CommonDatum>> getList_job_funcs() {
-        return list_job_funcs;
+    public List<CommonDatum> getList_job_funcs() {
+        return list_job_funcs.getValue();
     }
 
-    public MutableLiveData<List<CommonDatum>> getList_speciality() {
-        return list_speciality;
+    public List<CommonDatum> getList_speciality() {
+        return list_speciality.getValue();
     }
 
-    public MutableLiveData<List<CommonDatum>> getList_preferred_shift() {
-        return list_preferred_shift;
+    public List<CommonDatum> getList_preferred_shift() {
+        return list_preferred_shift.getValue();
     }
 
-    public MutableLiveData<List<CommonDatum>> getList_work_loc() {
-        return list_work_loc;
+    public List<CommonDatum> getList_work_loc() {
+        return list_work_loc.getValue();
     }
 
-    public MutableLiveData<List<HourlyRate_DayOfWeek_OptionDatum>> getList_days_of_week() {
-        return list_days_of_week;
+    public List<HourlyRate_DayOfWeek_OptionDatum> getList_days_of_week() {
+        return list_days_of_week.getValue();
     }
 
 

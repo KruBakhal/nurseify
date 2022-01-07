@@ -9,13 +9,18 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.screen.facility.add_job_fragment.Add_Job_1_Fragment;
 import com.weboconnect.nurseify.screen.facility.add_job_fragment.Add_Job_2_Fragment;
+import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 import com.weboconnect.nurseify.screen.facility.viewModel.Add_Job_ViewModel;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.Utils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Add_Jobs_Activity extends AppCompatActivity {
@@ -31,9 +36,14 @@ public class Add_Jobs_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_jobs);
-        context=this;
+        context = this;
         fragmentManager = getSupportFragmentManager();
         viewModel = new ViewModelProvider(this).get(Add_Job_ViewModel.class);
+        viewModel.isEdit = getIntent().getBooleanExtra(Constant.EDIT_MODE, false);
+        String str = getIntent().getStringExtra(Constant.STR_RESPONSE_DATA);
+        Type type = new TypeToken<Facility_JobDatum>() {
+        }.getType();
+        viewModel.jobDatum = new Gson().fromJson(str, type);
         observer_view();
         resetBottomBar(1);
     }

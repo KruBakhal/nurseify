@@ -106,6 +106,42 @@ public class Add_Job_2_Fragment extends Fragment {
         viewModel.selected_list_photos = new ArrayList<>();
         setAdapter();
         binding.rvPhotos.setVisibility(View.GONE);
+        try {
+            if (viewModel.isEdit) {
+                binding.textView3.setText("Edit Job");
+                binding.distanceSlider.setProgress(Integer.parseInt(viewModel.jobDatum.getPreferredHourlyPayRate()));
+                if (!TextUtils.isEmpty(viewModel.jobDatum.getDescription())) {
+                    binding.edDescription.setText(viewModel.jobDatum.getDescription());
+                }
+                if (!TextUtils.isEmpty(viewModel.jobDatum.getResponsibility())) {
+                    binding.edDescription.setText(viewModel.jobDatum.getResponsibility());
+                }
+                if (!TextUtils.isEmpty(viewModel.jobDatum.getQualifications())) {
+                    binding.edDescription.setText(viewModel.jobDatum.getResponsibility());
+                }
+                if (!TextUtils.isEmpty(viewModel.jobDatum.getYoutube())) {
+                    binding.edDescription.setText(viewModel.jobDatum.getResponsibility());
+                }
+                if (viewModel.jobDatum.getUploadPhotos() != null && viewModel.jobDatum.getUploadPhotos().size() != 0) {
+                    if (viewModel.selected_list_photos == null) {
+                        viewModel.selected_list_photos = new ArrayList<>();
+                        setAdapter();
+                    }
+                    viewModel.selected_list_photos.addAll(viewModel.jobDatum.getUploadPhotos());
+                    binding.rvPhotos.setVisibility(View.VISIBLE);
+                    if (photoFilesAdapter != null) {
+                        setAdapter();
+                        photoFilesAdapter.notifyDataSetChanged();
+                    }
+                }
+                if (viewModel.jobDatum.isActive()) {
+                    binding.checkBox.setChecked(viewModel.jobDatum.isActive());
+                }
+
+            }
+        } catch (Exception exception) {
+            Log.d("TAG", "setData: " + exception.getMessage());
+        }
     }
 
     private void addText_view() {
@@ -339,6 +375,7 @@ public class Add_Job_2_Fragment extends Fragment {
             return true;
         }
     };
+
     ActivityResultLauncher<Intent> resultLauncherPhotos = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -395,6 +432,7 @@ public class Add_Job_2_Fragment extends Fragment {
                         }
                     }
                 }
+
             });
 
     private void setAdapter() {

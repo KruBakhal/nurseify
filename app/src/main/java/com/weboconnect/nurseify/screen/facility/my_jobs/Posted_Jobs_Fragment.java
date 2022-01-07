@@ -78,9 +78,7 @@ public class Posted_Jobs_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_nurse, null, false);
 
-//        binding.recyclerView.setAdapter(new PostedAdapter(getActivity()));
         setAdapter();
-//        observeer_View();
         setData();
         refreshData();
         return view = binding.getRoot();

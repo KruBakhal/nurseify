@@ -21,11 +21,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.intermediate.OnItemClick;
+import com.weboconnect.nurseify.screen.facility.MessageFacilityActivity;
+import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
 import com.weboconnect.nurseify.screen.nurse.MessageActivity;
 import com.weboconnect.nurseify.screen.nurse.model.Chatlist;
 import com.weboconnect.nurseify.screen.nurse.model.User;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 
 import java.text.SimpleDateFormat;
@@ -91,8 +95,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(new Intent(mContext, MessageActivity.class)
-                            .putExtra("sender_id", user.getId()));
+                    if (isNurse)
+                        mContext.startActivity(new Intent(mContext, MessageActivity.class)
+                                .putExtra("sender_id", user.getId()));
+                    else {
+                        NurseDatum datum = new NurseDatum();
+                        datum.setUserId(user.getId());
+                        datum.setNurseEmail(user.getEmail());
+                        datum.setFirstName(user.getFull_name());
+                        datum.setSpecialty(user.getSpecialty());
+                        datum.setNurseLogo(user.getProfile_path());
+                        mContext.startActivity(new Intent(mContext, MessageFacilityActivity.class)
+                                .putExtra("sender_id", user.getId())
+                                .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(datum))
+                        );
+                    }
                 }
             });
 

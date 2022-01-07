@@ -1,5 +1,6 @@
 package com.weboconnect.nurseify.screen.facility;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -9,16 +10,26 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityHomeFBinding;
 import com.weboconnect.nurseify.screen.facility.ui.AccountFFragment;
 import com.weboconnect.nurseify.screen.facility.ui.BrowseFFragment;
 import com.weboconnect.nurseify.screen.facility.ui.MessageFacilityFragment;
 import com.weboconnect.nurseify.screen.facility.ui.MyJobFFragment;
+import com.weboconnect.nurseify.screen.nurse.HomeActivity;
+import com.weboconnect.nurseify.utils.Constant;
+import com.weboconnect.nurseify.utils.SessionManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeFActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_ADD_JOB = 656;
@@ -150,5 +161,61 @@ public class HomeFActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_ADD_JOB) {
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        update_user_status(true);
+    }
+
+    private void update_user_status(boolean status) {
+        /*try {
+            HashMap<String, Object> sdsd = new HashMap<>();
+            sdsd.put("status", status);
+            String userid = new SessionManager(HomeActivity.this).get_User().getId();
+            FirebaseDatabase.getInstance().getReference("users")
+                    .child(userid).child("status").setValue(status);
+        } catch (Exception e) {
+            Log.d("TAG", "update_user_status: " + e.getMessage());
+        }*/
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(Constant.USER_NODE)
+                .child(new SessionManager(HomeFActivity.this).get_user_register_Id());
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                try {
+                    if (snapshot.getValue() == null) {
+//                        create_user_inside_firebase(new SessionManager(getContext()).get_User());
+                    } else {
+                        try {
+                            HashMap<String, Object> sdsd = new HashMap<>();
+                            sdsd.put("status", status);
+                            String userid = new SessionManager(HomeFActivity.this).get_user_register_Id();
+                            FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
+                                    .child(userid).child(Constant.ONLINE_STATUS)
+                                    .setValue(status);
+                        } catch (Exception e) {
+                            Log.d("TAG", "update_user_status: " + e.getMessage());
+                        }
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG_check_User_exist", "onDataChange: " + exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        update_user_status(false);
     }
 }

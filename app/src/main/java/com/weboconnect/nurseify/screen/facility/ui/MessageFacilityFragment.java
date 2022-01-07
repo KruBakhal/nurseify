@@ -23,11 +23,14 @@ import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.MessageAdapter;
 import com.weboconnect.nurseify.databinding.FragmentMessageBinding;
 import com.weboconnect.nurseify.intermediate.OnItemClick;
+import com.weboconnect.nurseify.screen.facility.HomeFActivity;
 import com.weboconnect.nurseify.screen.nurse.model.Chatlist;
 import com.weboconnect.nurseify.screen.nurse.model.User;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MessageFacilityFragment extends Fragment {
     String id;
@@ -154,6 +157,7 @@ public class MessageFacilityFragment extends Fragment {
 
             }
         });
+
     }
 
     private void searchUsers(String s) {

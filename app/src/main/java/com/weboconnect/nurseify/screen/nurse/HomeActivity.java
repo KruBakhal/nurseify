@@ -1,5 +1,6 @@
 package com.weboconnect.nurseify.screen.nurse;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -19,6 +20,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityHomeBinding;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
@@ -27,9 +33,11 @@ import com.weboconnect.nurseify.screen.nurse.ui.BrowseFragment;
 import com.weboconnect.nurseify.screen.nurse.ui.MessageNurseFragment;
 import com.weboconnect.nurseify.screen.nurse.ui.MyJobFragment;
 import com.weboconnect.nurseify.screen.nurse.ui.NotificationFragment;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -41,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     NotificationFragment notificationFragment;//= new NotificationFragment();
     AccountFragment accountFragment;//= new AccountFragment();
     final FragmentManager fm = getSupportFragmentManager();
-    private Fragment active ;//= browseFragment;
+    private Fragment active;//= browseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +219,38 @@ public class HomeActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d("TAG", "update_user_status: " + e.getMessage());
         }*/
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(Constant.USER_NODE)
+                .child(new SessionManager(HomeActivity.this).get_user_register_Id());
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                try {
+                    if (snapshot.getValue() == null) {
+//                        create_user_inside_firebase(new SessionManager(getContext()).get_User());
+                    } else {
+                        try {
+                            HashMap<String, Object> sdsd = new HashMap<>();
+                            sdsd.put("status", status);
+                            String userid = new SessionManager(HomeActivity.this).get_user_register_Id();
+                            FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
+                                    .child(userid).child(Constant.ONLINE_STATUS)
+                                    .setValue(status);
+                        } catch (Exception e) {
+                            Log.d("TAG", "update_user_status: " + e.getMessage());
+                        }
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG_check_User_exist", "onDataChange: " + exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
