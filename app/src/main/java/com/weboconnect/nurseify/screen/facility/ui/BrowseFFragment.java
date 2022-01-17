@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -86,8 +87,10 @@ public class BrowseFFragment extends Fragment {
     }
 
     private void change_tab(int i) {
-        binding.editTextSearch.setText("");
-        binding.editTextSearch.clearFocus();
+//        if (!TextUtils.isEmpty(binding.editTextSearch.getText().toString())) {
+            binding.editTextSearch.setText("");
+            binding.editTextSearch.clearFocus();
+//        }
         switch (i) {
             case 0:
 //                binding.filter.setVisibility(View.VISIBLE);
@@ -166,4 +169,5 @@ public class BrowseFFragment extends Fragment {
             }
         });
     }
+
 }

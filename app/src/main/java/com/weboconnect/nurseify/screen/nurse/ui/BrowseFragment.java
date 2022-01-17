@@ -495,7 +495,8 @@ public class BrowseFragment extends Fragment {
                     .call_browser_filter_job(page, search_location1, open_assignment_type1,
                             facility_type1, electronic_medical_records1, user_id1, rangeSLider);
 
-        } else
+        }
+        else
             call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_browser_job(page, user_id1);
 

@@ -15,7 +15,7 @@ public class OfferedJobModel {
     private String message;
     @SerializedName("data")
     @Expose
-    public List<OfferedJob> offeredJob = null;
+    private OfferedSubData data;
 
     public String getApiStatus() {
         return apiStatus;
@@ -33,16 +33,67 @@ public class OfferedJobModel {
         this.message = message;
     }
 
-    public List<OfferedJob> getOfferedJob() {
-        return offeredJob;
+    public OfferedSubData getData() {
+        return data;
     }
 
-    public void setOfferedJob(List<OfferedJob> data) {
-        this.offeredJob = data;
+    public void setData(OfferedSubData data) {
+        this.data = data;
     }
 
-    public class OfferedJob{
+    public class OfferedSubData {
 
+        @SerializedName("offer")
+        @Expose
+        private List<OfferedJob> offer = null;
+        @SerializedName("total_pages_available")
+        @Expose
+        private String totalPagesAvailable;
+        @SerializedName("current_page")
+        @Expose
+        private String currentPage;
+        @SerializedName("results_per_page")
+        @Expose
+        private String resultsPerPage;
+
+        public List<OfferedJob> getOffer() {
+            return offer;
+        }
+
+        public void setOffer(List<OfferedJob> offer) {
+            this.offer = offer;
+        }
+
+        public String getTotalPagesAvailable() {
+            return totalPagesAvailable;
+        }
+
+        public void setTotalPagesAvailable(String totalPagesAvailable) {
+            this.totalPagesAvailable = totalPagesAvailable;
+        }
+
+        public String getCurrentPage() {
+            return currentPage;
+        }
+
+        public void setCurrentPage(String currentPage) {
+            this.currentPage = currentPage;
+        }
+
+        public String getResultsPerPage() {
+            return resultsPerPage;
+        }
+
+        public void setResultsPerPage(String resultsPerPage) {
+            this.resultsPerPage = resultsPerPage;
+        }
+
+    }
+
+    public class OfferedJob {
+        @SerializedName("offer_expiration")
+        @Expose
+        private String offerExpiration;
         @SerializedName("offer_id")
         @Expose
         private String offerId;
@@ -79,6 +130,14 @@ public class OfferedJobModel {
         @SerializedName("status")
         @Expose
         private String status;
+
+        public String getOfferExpiration() {
+            return offerExpiration;
+        }
+
+        public void setOfferExpiration(String offerExpiration) {
+            this.offerExpiration = offerExpiration;
+        }
 
         public String getOfferId() {
             return offerId;
@@ -175,7 +234,6 @@ public class OfferedJobModel {
         public void setStatus(String status) {
             this.status = status;
         }
-
     }
 
 }

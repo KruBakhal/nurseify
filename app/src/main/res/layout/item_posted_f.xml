@@ -133,6 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
             android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -152,30 +153,38 @@
                 android:textColor="@color/black"
                 android:textSize="13dp" />
 
-            <ImageView
-                android:id="@+id/img_applied"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/person" />
-
-            <TextView
-                android:id="@+id/tv_applied"
+            <LinearLayout
+                android:id="@+id/lay_applied"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:fontFamily="@font/sf_600"
-                android:text="21+ Applied"
-                android:textColor="@color/black"
-                android:textSize="11dp" />
+                android:gravity="center_vertical"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:id="@+id/img_applied"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/person" />
+
+                <TextView
+                    android:id="@+id/tv_applied"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:fontFamily="@font/sf_600"
+                    android:text="21+ Applied"
+                    android:textColor="@color/black"
+                    android:textSize="11dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
-            android:layout_marginTop="8dp"
+
             android:orientation="horizontal">
 
             <TextView

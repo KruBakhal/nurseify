@@ -126,7 +126,7 @@
                                 android:ellipsize="end"
                                 android:fontFamily="@font/sf_500"
                                 android:gravity="left|center"
-                                android:hint="Select State"
+                                android:hint="Select job/ assignment"
                                 android:imeOptions="actionNext"
                                 android:inputType="text"
                                 android:maxLines="2"
@@ -134,6 +134,7 @@
                                 android:paddingRight="3dp"
                                 android:text="Select job/ assignment"
                                 android:textColor="#8A4999"
+                                android:textColorHint="#8A4999"
                                 android:textSize="16dp" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -320,6 +321,7 @@
                                 android:layout_marginTop="15dp"
                                 android:fontFamily="@font/sf_600"
                                 android:maxLines="2"
+                                android:visibility="gone"
                                 android:text="TERMS ACKNOWLEDGMENT"
                                 android:textColor="#444B53"
                                 android:textSize="12dp" />
@@ -341,6 +343,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left|center"
+                            android:visibility="gone"
                             android:orientation="vertical">
 
                             <TextView

@@ -31,7 +31,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function8;
+import io.reactivex.functions.Function9;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -52,12 +52,24 @@ public class Add_Job_ViewModel extends ViewModel {
     public MutableLiveData<List<CommonDatum>> list_senior_level = new MutableLiveData<>();
     public MutableLiveData<List<CommonDatum>> list_job_funcs = new MutableLiveData<>();
     public MutableLiveData<List<CommonDatum>> list_speciality = new MutableLiveData<>();
-    public MutableLiveData<List<CommonDatum>> list_preferred_shift = new MutableLiveData<>();
+    public MutableLiveData<List<CommonDatum>> list_preferred_shift_duration = new MutableLiveData<>();
     public MutableLiveData<List<CommonDatum>> list_work_loc = new MutableLiveData<>();
     public MutableLiveData<List<HourlyRate_DayOfWeek_OptionDatum>> list_days_of_week = new MutableLiveData<>();
     public MutableLiveData<List<CommonDatum>> list_work_cerner = new MutableLiveData<>();
     public MutableLiveData<List<CommonDatum>> list_work_medtech = new MutableLiveData<>();
     public MutableLiveData<List<CommonDatum>> list_work_epic = new MutableLiveData<>();
+    public String date2;
+    public String date1;
+
+    public MutableLiveData<List<CommonDatum>> getList_preferred_shift() {
+        return list_preferred_shift;
+    }
+
+    public void setList_preferred_shift(MutableLiveData<List<CommonDatum>> list_preferred_shift) {
+        this.list_preferred_shift = list_preferred_shift;
+    }
+
+    public MutableLiveData<List<CommonDatum>> list_preferred_shift = new MutableLiveData<>();
 
     public int selected_assignment_duration = 0;
     public int selected_senior_level = 0;
@@ -77,6 +89,7 @@ public class Add_Job_ViewModel extends ViewModel {
     }
 
     public int selected_shift_duration = 0;
+    public int selected_preferred_shift = 0;
     public int selected_work_loc = 0;
     public List<Integer> select_daysOfWeek = new ArrayList<>();
     public String experience_year = "";
@@ -117,8 +130,8 @@ public class Add_Job_ViewModel extends ViewModel {
         return list_speciality.getValue();
     }
 
-    public List<CommonDatum> getList_preferred_shift() {
-        return list_preferred_shift.getValue();
+    public List<CommonDatum> getList_preferred_shift_duration() {
+        return list_preferred_shift_duration.getValue();
     }
 
     public List<CommonDatum> getList_work_loc() {
@@ -224,8 +237,16 @@ public class Add_Job_ViewModel extends ViewModel {
                                 return new CommonModel();
                             }
                         }),
-                new Function8<CommonModel, CommonModel, CommonModel, CommonModel,
-                        CommonModel, CommonModel, HourlyRate_DayOfWeek_OptionModel, CommonModel,
+                backendApi.call_preferred_shifts().subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread()).onErrorReturn(new Function<Throwable, CommonModel>() {
+                    @Override
+                    public CommonModel apply(@NonNull Throwable throwable) throws Exception {
+                        Log.d("TAG", "apply: " + throwable.getMessage());
+                        return new CommonModel();
+                    }
+                }),
+                new Function9<CommonModel, CommonModel, CommonModel, CommonModel,
+                        CommonModel, CommonModel, HourlyRate_DayOfWeek_OptionModel, CommonModel, CommonModel,
                         Combine_CommonModel_2>() {
                     @NonNull
                     @Override
@@ -236,11 +257,12 @@ public class Add_Job_ViewModel extends ViewModel {
                                                        @NonNull CommonModel stateModel5,
                                                        @NonNull CommonModel stateModel6,
                                                        @NonNull HourlyRate_DayOfWeek_OptionModel stateModel7,
-                                                       @NonNull CommonModel stateModel8
+                                                       @NonNull CommonModel stateModel8,
+                                                       @NonNull CommonModel stateModel9
                     ) throws Exception {
                         return new Combine_CommonModel_2(stateModel1, stateModel2, stateModel3,
                                 stateModel4, stateModel5,
-                                stateModel6, stateModel7, stateModel8);
+                                stateModel6, stateModel7, stateModel8, stateModel9);
                     }
                 });
 
@@ -258,7 +280,7 @@ public class Add_Job_ViewModel extends ViewModel {
                             combineData.getCommonModel_assign().getData() != null) {
                         List<CommonDatum> list = new ArrayList<>();
                         list.add(new CommonDatum(-1, "Select Preferred Assignment Duration"));
-                        list.addAll(combineData.getCommonModel_senior().getData());
+                        list.addAll(combineData.getCommonModel_assign().getData());
                         list_assignment_durations.setValue(list);
                         appController.setList_assignment_durations(list);
                     }
@@ -299,8 +321,8 @@ public class Add_Job_ViewModel extends ViewModel {
                         list.add(new CommonDatum(-1, "Select Preferred Shift Duration"));
                         list.addAll(combineData.getCommonModel_shift().getData());
 
-                        list_preferred_shift.setValue(list);
-                        appController.setList_preferred_shift(list);
+                        list_preferred_shift_duration.setValue(list);
+                        appController.setList_shift_duration(list);
 
                     }
 
@@ -338,6 +360,16 @@ public class Add_Job_ViewModel extends ViewModel {
                         appController.setList_medtech(list2);
                         appController.setList_epic(list2);
                     }
+                    if (combineData.getCommonModel_preferred_shift() != null &&
+                            combineData.getCommonModel_preferred_shift().getData() != null) {
+                        List<CommonDatum> list = new ArrayList<>();
+                        list.add(new CommonDatum(-1, "Select Preferred Shift "));
+                        list.addAll(combineData.getCommonModel_preferred_shift().getData());
+
+                        list_preferred_shift.setValue(list);
+                        appController.setList__preferred_shift(list);
+
+                    }
                 }
 
                 showProgressBar.setValue(ProgressUIType.DIMISS);
@@ -364,7 +396,8 @@ public class Add_Job_ViewModel extends ViewModel {
         addJobData.setSeniorityLevel("" + list_senior_level.getValue().get(selected_senior_level).getId());
         addJobData.setJobFunction("" + list_job_funcs.getValue().get(selected_job_funcs).getId());
         addJobData.setPreferredSpecialty("" + list_speciality.getValue().get(selected_speciality).getId());
-        addJobData.setPreferredShiftDuration("" + list_preferred_shift.getValue().get(selected_shift_duration).getId());
+        addJobData.setPreferredShiftDuration("" + list_preferred_shift_duration.getValue().get(selected_shift_duration).getId());
+        addJobData.setPreferredShift("" + list_preferred_shift.getValue().get(selected_preferred_shift).getId());
         addJobData.setPreferredWorkLocation("" + list_work_loc.getValue().get(selected_work_loc).getId());
         addJobData.setPreferredExperience("" + experience_year);
         addJobData.setJobOtherExp("" + other_exp);
@@ -409,6 +442,10 @@ public class Add_Job_ViewModel extends ViewModel {
         RequestBody request_18 = RequestBody.create(mediatTypeStr, "" + addJobData.getResponsibilities());
         RequestBody request_19 = RequestBody.create(mediatTypeStr, "" + addJobData.getJobVideo());
         RequestBody request_20 = RequestBody.create(mediatTypeStr, "" + addJobData.getActiveStatus());
+        RequestBody request_21 = RequestBody.create(mediatTypeStr, "" + addJobData.getPreferredShift());
+        RequestBody request_22 = RequestBody.create(mediatTypeStr, "" + date1);
+        RequestBody request_23 = RequestBody.create(mediatTypeStr, "" + date2);
+
         MultipartBody.Part[] multiPart_Pictures = null;
         Call<AddJobModel> call = null;
 
@@ -427,12 +464,12 @@ public class Add_Job_ViewModel extends ViewModel {
                     request_5, request_6, request_7, request_8
                     , request_9, request_10, request_11, request_12, request_13,
                     request_14, request_15, request_16, request_17,
-                    request_18, request_19, request_20, multiPart_Pictures);
+                    request_18, request_19, request_20, multiPart_Pictures, request_22, request_23, request_21);
 
         } else {
             call = backendApi.call_create_add_job(request_1, request_2, request_3, request_4, request_5, request_6, request_7, request_8
                     , request_9, request_10, request_11, request_12, request_13, request_14, request_15, request_16, request_17,
-                    request_18, request_19, request_20);
+                    request_18, request_19, request_20, request_22, request_23, request_21);
         }
 
         call.enqueue(new Callback<AddJobModel>() {

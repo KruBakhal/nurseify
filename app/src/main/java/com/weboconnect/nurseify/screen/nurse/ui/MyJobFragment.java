@@ -199,7 +199,7 @@ public class MyJobFragment extends Fragment {
             public void onResponse(Call<OfferedJobModel> call, Response<OfferedJobModel> response) {
 //                Log.d(TAG + "getOfferedJob ResCode", response.code() + "");
 //                assert response.body() != null;
-                if (response!=null && response.body()!=null && !response.body().getApiStatus().equals("1")) {
+                if (response != null && response.body() != null && !response.body().getApiStatus().equals("1")) {
                     dismissProgress();
                     binding.layProgress.setVisibility(View.VISIBLE);
                     binding.pg.setVisibility(View.GONE);
@@ -211,7 +211,7 @@ public class MyJobFragment extends Fragment {
                     try {
                         dismissProgress();
                         OfferedJobModel offeredJobModel = response.body();
-                        if (offeredJobModel.getOfferedJob() == null || offeredJobModel.getOfferedJob().size() == 0) {
+                        if (offeredJobModel.getData() == null || offeredJobModel.getData().getOffer() == null || offeredJobModel.getData().getOffer().size() == 0) {
                             Utils.displayToast(getContext(), "no data found");
                             return;
                         }
@@ -222,7 +222,7 @@ public class MyJobFragment extends Fragment {
                         if (isAcceptCall) {
                             list_Offered_Job.clear();
                         }
-                        list_Offered_Job.addAll(offeredJobModel.getOfferedJob());
+                        list_Offered_Job.addAll(offeredJobModel.getData().getOffer());
                         if (list_Offered_Job.size() > 0) {
                             if (offeredJobAdapter != null) {
                                 set_Offered_Adapter();
@@ -230,7 +230,7 @@ public class MyJobFragment extends Fragment {
                             } else
                                 set_Offered_Adapter();
                         } else {
-                            list_Offered_Job.addAll(offeredJobModel.getOfferedJob());
+                            list_Offered_Job.addAll(offeredJobModel.getData().getOffer());
                             set_Offered_Adapter();
                         }
                     } catch (Exception e) {

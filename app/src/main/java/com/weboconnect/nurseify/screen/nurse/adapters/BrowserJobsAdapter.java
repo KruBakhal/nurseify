@@ -102,7 +102,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                 tv_applied, tv_shift_duration, tv_hourly_rate, tv_weeks_days;
         public LinearLayout lay_apply;
         public TextView tv_applied1;
-        public View lay_share, lay_heart;
+        public View lay_share, lay_heart,edit;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -123,6 +123,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
             lay_share = itemView.findViewById(R.id.lay_share);
             img_heart1 = itemView.findViewById(R.id.img_heart1);
             lay_heart = itemView.findViewById(R.id.lay_heart);
+            edit = itemView.findViewById(R.id.edit);
 
 
         }
@@ -197,7 +198,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                 img_heart1.setVisibility(View.VISIBLE);
                 img_heart.setVisibility(View.GONE);
             }
-
+            edit.setVisibility(View.GONE);
             if (datum.getIsApplied().equals("0")) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     lay_apply.setBackgroundTintList(ContextCompat.getColorStateList(

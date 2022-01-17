@@ -3,7 +3,9 @@ package com.weboconnect.nurseify.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,24 +18,36 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.screen.facility.NurseDetailsActivity;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
+import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurse_Datum;
 
 import java.util.List;
 
 
 public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.MyViewHolder> {
 
+    private NursesAdapter.ViewHolder viewHolder;
     Activity activity;
     private int type;
-    List<Facility_JobDatum> datumList;
+    List<OfferedJobNurse_Datum> datumList;
     private int selected_city_int;
     JobsAdapterInterface parentInterface;
 
     public JobsAdapter(Activity context, int type, int selected_city_int,
-                       List<Facility_JobDatum> workLocationData, JobsAdapterInterface parentInterface) {
+                       List<OfferedJobNurse_Datum> workLocationData, JobsAdapterInterface parentInterface) {
         this.activity = context;
         this.type = type;
         this.selected_city_int = selected_city_int;
         this.datumList = workLocationData;
+        this.parentInterface = parentInterface;
+    }
+
+    public JobsAdapter(NursesAdapter.ViewHolder viewHolder, int type, int selected_city,
+                       List<OfferedJobNurse_Datum> cityData, JobsAdapterInterface parentInterface) {
+        this.activity = null;
+        this.viewHolder = viewHolder;
+        this.type = type;
+        this.selected_city_int = selected_city;
+        this.datumList = cityData;
         this.parentInterface = parentInterface;
     }
 
@@ -66,14 +80,19 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.MyViewHolder> 
     public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         int select = 0;
         boolean isNotSelected = true;
-        NurseDetailsActivity activity = (NurseDetailsActivity) this.activity;
-        Facility_JobDatum movie = datumList.get(position);
-        holder.title
-                .setText("" + movie.getFacilityFirstName() + " "
-                        + movie.getFacilityLastName()
-                        + " - " + movie.getPreferredSpecialtyDefinition());
+        if (activity != null && activity instanceof NurseDetailsActivity) {
+            NurseDetailsActivity activity = (NurseDetailsActivity) this.activity;
+            select = activity.selected_job;
+        } else {
+            select = viewHolder.selected_job;
+        }
+        OfferedJobNurse_Datum movie = datumList.get(position);
+        if (TextUtils.isEmpty(movie.getContent().getSpecialty()))
+            holder.title.setText("" + movie.getContent().getName());
+        else holder.title.setText("" + movie.getContent().getName()
+                + " - " + movie.getContent().getSpecialty());
         holder.title.setGravity(Gravity.LEFT | Gravity.CENTER);
-        select = activity.selected_job;
+
         if (select == position) {
             isNotSelected = false;
         } else {
@@ -84,7 +103,7 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.MyViewHolder> 
             holder.title.setTextColor(Color.WHITE);
         } else {
             holder.lay_item.setBackground(null);
-            holder.title.setTextColor(activity.getResources().getColor(R.color.gray));
+            holder.title.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.gray));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

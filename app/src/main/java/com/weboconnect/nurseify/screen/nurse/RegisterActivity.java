@@ -3690,7 +3690,6 @@ public class RegisterActivity extends AppCompatActivity {
                             list_Certificate.add(new AddCredentialData(certitficate.getCertificateId()
                                     , certitficate.getSearchForCredentialDefinition()));
                         }
-
                         certificateDialogAdapter = new CertificateDialogAdapter(RegisterActivity.this, list_Certificate);
                         history3Binding.rvCertificate.setAdapter(certificateDialogAdapter);
                         history3Binding.rvCertificate.setVisibility(View.VISIBLE);

@@ -58,8 +58,6 @@ public class WorkHistoryWindowAdapter extends RecyclerView.Adapter<WorkHistoryWi
                     this.list_facilty_type = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
                 else if (type == 8)
                     this.list_media = ((List<SpecialtyDatum>) list_nurse_degrees.get(0));
-
-
             } else if (((List) list_nurse_degrees).size() > 0
                     && (((List) list_nurse_degrees.get(0)).get(0) instanceof CommonDatum)) {
                 if (type == 2)

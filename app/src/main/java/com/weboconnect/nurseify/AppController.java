@@ -20,6 +20,7 @@ public class AppController extends Application {
     private List<CommonDatum> list_cerner;
     private List<CommonDatum> list_medtech;
     private List<CommonDatum> list_epic;
+    private List<CommonDatum> list__preferred_shift;
 
     @Override
     public void onCreate() {
@@ -63,7 +64,7 @@ public class AppController extends Application {
         return list_preferred_shift;
     }
 
-    public void setList_preferred_shift(List<CommonDatum> list_preferred_shift) {
+    public void setList_shift_duration(List<CommonDatum> list_preferred_shift) {
         this.list_preferred_shift = list_preferred_shift;
     }
 
@@ -105,5 +106,13 @@ public class AppController extends Application {
 
     public List<CommonDatum> getList_epic() {
         return list_epic;
+    }
+
+    public void setList__preferred_shift(List<CommonDatum> list__preferred_shift) {
+        this.list__preferred_shift = list__preferred_shift;
+    }
+
+    public List<CommonDatum> getList__preferred_shift() {
+        return list__preferred_shift;
     }
 }

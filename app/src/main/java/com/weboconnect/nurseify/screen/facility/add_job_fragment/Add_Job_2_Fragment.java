@@ -63,6 +63,7 @@ public class Add_Job_2_Fragment extends Fragment {
     private PhotoFilesAdapter photoFilesAdapter;
 
     public Add_Job_2_Fragment() {
+
     }
 
     public static Add_Job_2_Fragment newInstance(int param1, String param2) {
@@ -113,16 +114,16 @@ public class Add_Job_2_Fragment extends Fragment {
                 if (!TextUtils.isEmpty(viewModel.jobDatum.getDescription())) {
                     binding.edDescription.setText(viewModel.jobDatum.getDescription());
                 }
-                if (!TextUtils.isEmpty(viewModel.jobDatum.getResponsibility())) {
-                    binding.edDescription.setText(viewModel.jobDatum.getResponsibility());
+                if (!TextUtils.isEmpty(viewModel.jobDatum.getResponsibilities())) {
+                    binding.edDescription.setText(viewModel.jobDatum.getResponsibilities());
                 }
                 if (!TextUtils.isEmpty(viewModel.jobDatum.getQualifications())) {
-                    binding.edDescription.setText(viewModel.jobDatum.getResponsibility());
+                    binding.edDescription.setText(viewModel.jobDatum.getQualifications());
                 }
-                if (!TextUtils.isEmpty(viewModel.jobDatum.getYoutube())) {
-                    binding.edDescription.setText(viewModel.jobDatum.getResponsibility());
+                if (!TextUtils.isEmpty(viewModel.jobDatum.getJobVideo())) {
+                    binding.edDescription.setText(viewModel.jobDatum.getJobVideo());
                 }
-                if (viewModel.jobDatum.getUploadPhotos() != null && viewModel.jobDatum.getUploadPhotos().size() != 0) {
+               /* if (viewModel.jobDatum.getUploadPhotos() != null && viewModel.jobDatum.getUploadPhotos().size() != 0) {
                     if (viewModel.selected_list_photos == null) {
                         viewModel.selected_list_photos = new ArrayList<>();
                         setAdapter();
@@ -133,9 +134,11 @@ public class Add_Job_2_Fragment extends Fragment {
                         setAdapter();
                         photoFilesAdapter.notifyDataSetChanged();
                     }
-                }
-                if (viewModel.jobDatum.isActive()) {
-                    binding.checkBox.setChecked(viewModel.jobDatum.isActive());
+                }*/
+                if (viewModel.jobDatum.getActive().equals("1")) {
+                    binding.checkBox.setChecked(true);
+                }else{
+                    binding.checkBox.setChecked(false);
                 }
 
             }
@@ -176,13 +179,13 @@ public class Add_Job_2_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (s == null || s.length() == 0)
+                /*if (s == null || s.length() == 0)
                     binding.edDescription.setError(null);
                 else if (!Utils.patternAlphabetNumbersSpace.matcher(s.toString()).find()) {
                     binding.edDescription.setError("Description Can Contain Alphabets, Numbers, Space !");
                 } else {
                     binding.edDescription.setError(null);
-                }
+                }*/
             }
         });
         binding.edQualifications.addTextChangedListener(new TextWatcher() {
@@ -199,13 +202,13 @@ public class Add_Job_2_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (s == null || s.length() == 0)
+                /*if (s == null || s.length() == 0)
                     binding.edQualifications.setError(null);
                 else if (!Utils.patternAlphabetNumbersSpace.matcher(s.toString()).find()) {
                     binding.edQualifications.setError("Qualifications Can Contain Alphabets, Numbers, Space !");
                 } else {
                     binding.edQualifications.setError(null);
-                }
+                }*/
             }
         });
         binding.edResponsibilities.addTextChangedListener(new TextWatcher() {
@@ -222,13 +225,13 @@ public class Add_Job_2_Fragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (s == null || s.length() == 0)
+                /*if (s == null || s.length() == 0)
                     binding.edResponsibilities.setError(null);
                 else if (!Utils.patternAlphabetNumbersSpace.matcher(s.toString()).find()) {
                     binding.edResponsibilities.setError("Description Can Contain Alphabets, Numbers, Space !");
                 } else {
                     binding.edResponsibilities.setError(null);
-                }
+                }*/
             }
         });
         binding.edYoutube.addTextChangedListener(new TextWatcher() {

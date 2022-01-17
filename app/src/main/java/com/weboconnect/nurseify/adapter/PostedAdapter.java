@@ -21,6 +21,7 @@ import com.weboconnect.nurseify.databinding.ItemPastFBinding;
 import com.weboconnect.nurseify.databinding.ItemPostedFBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
+import com.weboconnect.nurseify.screen.facility.AppliedNursesActivity;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_Datum;
 import com.weboconnect.nurseify.utils.Constant;
@@ -140,11 +141,12 @@ public class PostedAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
             itemView.tvSpecialty.setText("" + datum.getPreferredSpecialtyDefinition());
 //            itemView.tvCreatedAtDefinition.setText("" + datum.());
             itemView.tvAssignmentDurationDefinition.setText("" + datum.getPreferredAssignmentDurationDefinition());
-//            itemView.tvShiftDuration.setText("" + datum.getPreferredShiftDurationDefinition());
+            itemView.tvShiftDuration.setText("" + datum.getPreferredShiftDurationDefinition());
             itemView.tvApplied.setText("" + datum.getApplied());
             itemView.tvHourlyRate.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
             itemView.tvWeeksDays.setText(datum.getPreferredDaysOfTheWeekString());
             itemView.layHide.setVisibility(View.GONE);
+            itemView.tvApplied.setText("" + datum.getApplied() + "+ Applied");
             itemView.tvCreatedAtDefinition.setVisibility(View.GONE);
             itemView.edit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,7 +157,19 @@ public class PostedAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                     mLastClickTime = SystemClock.elapsedRealtime();
                     activity.startActivity(new Intent(activity, Add_Jobs_Activity.class)
                             .putExtra(Constant.EDIT_MODE, true)
-                    .putExtra(Constant.STR_RESPONSE_DATA,new Gson().toJson(datum)));
+                            .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(datum)));
+                }
+            });
+            itemView.layApplied.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                    if (!TextUtils.isEmpty(datum.getApplied()) && !datum.getApplied().equals("0"))
+                        activity.startActivity(new Intent(activity, AppliedNursesActivity.class)
+                                .putExtra(Constant.JOB_ID, datum.getJobId()));
                 }
             });
         }

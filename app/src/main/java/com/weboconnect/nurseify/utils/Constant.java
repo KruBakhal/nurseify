@@ -16,6 +16,8 @@ public class Constant {
     public static final String DEVICE_INFO = "Device: " + Build.DEVICE + " Model: " + Build.MODEL + " Version: " + SDK_INT + "";
     public static final String USER_NODE = "users";
     public static final String ONLINE_STATUS = "status";
+    public static final String JOB_ID = "job_id";
+    public static final String ID = "id";
 
     // person session constant
     public static String CONST_NURSE_TYPE = "Nurse";

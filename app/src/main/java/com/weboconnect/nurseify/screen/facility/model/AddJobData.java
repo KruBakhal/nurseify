@@ -70,6 +70,7 @@ public class AddJobData {
     private String createdAt;
     private String jobVideo;
     private String activeStatus;
+    private String preferredShift;
 
     public String getFacilityId() {
         return facilityId;
@@ -253,5 +254,13 @@ public class AddJobData {
 
     public String getActiveStatus() {
         return activeStatus;
+    }
+
+    public void setPreferredShift(String preferredShift) {
+        this.preferredShift = preferredShift;
+    }
+
+    public String getPreferredShift() {
+        return preferredShift;
     }
 }

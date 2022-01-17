@@ -129,6 +129,8 @@ public class CommonDropDownAdapter extends RecyclerView.Adapter<CommonDropDownAd
                 select = activity.viewModel.selected_shift_duration;
             } else if (type == 6) {
                 select = activity.viewModel.selected_work_loc;
+            } else if (type == 15) {
+                select = activity.viewModel.selected_preferred_shift;
             }
             if (select == position) {
                 isNotSelected = false;
@@ -149,7 +151,8 @@ public class CommonDropDownAdapter extends RecyclerView.Adapter<CommonDropDownAd
                 } else {
                     isNotSelected = true;
                 }
-            }if (type == 11) {
+            }
+            if (type == 11) {
                 if (activity.viewModel.selected_certificate != null && activity.viewModel.selected_certificate.size() != 0) {
                     if (activity.viewModel.selected_certificate.contains(position)) {
                         isNotSelected = false;

@@ -32,7 +32,7 @@ public class Completed_F_Adapter extends RecyclerView.Adapter<BaseViewHolder> im
 
 
     private final ItemCallback postedListener;
-    private List<Facility_JobDatum> listPostedJob;
+    public List<Facility_JobDatum> listPostedJob;
     private List<Facility_JobDatum> copy_contactList = new ArrayList<>();
     private static final int VIEW_TYPE_LOADING = 0;
     private static final int VIEW_TYPE_NORMAL = 1;

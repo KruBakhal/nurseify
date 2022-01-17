@@ -1,7 +1,15 @@
 package com.weboconnect.nurseify.screen.facility.add_job_fragment;
 
+import static com.weboconnect.nurseify.utils.Utils.dayOfMonth2;
+import static com.weboconnect.nurseify.utils.Utils.dayOfMonth3;
+import static com.weboconnect.nurseify.utils.Utils.formatter;
+import static com.weboconnect.nurseify.utils.Utils.monthOfYear2;
+import static com.weboconnect.nurseify.utils.Utils.monthOfYear3;
 import static com.weboconnect.nurseify.utils.Utils.patternExp;
+import static com.weboconnect.nurseify.utils.Utils.year2;
+import static com.weboconnect.nurseify.utils.Utils.year3;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -38,14 +47,18 @@ import com.weboconnect.nurseify.screen.facility.viewModel.Add_Job_ViewModel;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
 import com.weboconnect.nurseify.screen.facility.viewModel.ProgressUIType;
-import com.weboconnect.nurseify.screen.nurse.model.Degree_Datum;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
-import com.weboconnect.nurseify.screen.nurse.model.SpecialtyDatum;
 import com.weboconnect.nurseify.utils.Utils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Add_Job_1_Fragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -61,6 +74,7 @@ public class Add_Job_1_Fragment extends Fragment {
     View view;
     Add_Job_ViewModel viewModel;
     private SpecialtyAdapter daysOfWeekAdapter;
+    private String date1;
 
     public Add_Job_1_Fragment() {
 
@@ -103,13 +117,14 @@ public class Add_Job_1_Fragment extends Fragment {
             viewModel.list_assignment_durations.setValue(appController.getList_assignment_durations());
             viewModel.list_senior_level.setValue(appController.getList_senior_level());
             viewModel.list_job_funcs.setValue(appController.getList_job_funcs());
-            viewModel.list_preferred_shift.setValue(appController.getList_preferred_shift());
+            viewModel.list_preferred_shift_duration.setValue(appController.getList_preferred_shift());
             viewModel.list_speciality.setValue(appController.getList_speciality());
             viewModel.list_work_loc.setValue(appController.getList_work_loc());
             viewModel.list_days_of_week.setValue(appController.getList_days_of_week());
             viewModel.list_work_cerner.setValue(appController.getList_cerner());
             viewModel.list_work_medtech.setValue(appController.getList_medtech());
             viewModel.list_work_epic.setValue(appController.getList_epic());
+            viewModel.list_preferred_shift.setValue(appController.getList__preferred_shift());
             binding.edExperience.setText(viewModel.experience_year);
             binding.edOther.setText(viewModel.other_exp);
             edit_portion();
@@ -123,43 +138,36 @@ public class Add_Job_1_Fragment extends Fragment {
         try {
             if (viewModel.isEdit) {
                 binding.textView3.setText("Edit Job");
-                if (checkItemInList(viewModel.jobDatum.getPreferredAssignmentDuration(), Collections.singletonList(viewModel.getList_assignment_durations()))) {
+                if (checkItemInList(viewModel.jobDatum.getPreferredAssignmentDuration(),
+                        Collections.singletonList(viewModel.getList_assignment_durations()))) {
                     viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getPreferredAssignmentDuration(), Collections.singletonList(viewModel.getList_assignment_durations()));
                     binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredAssignmentDurationDefinition());
                 }
-                if (checkItemInList(viewModel.jobDatum.getSeniority(), Collections.singletonList(viewModel.getList_senior_level()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getSeniority(), Collections.singletonList(viewModel.getList_senior_level()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredAssignmentDurationDefinition());
+                if (checkItemInList(String.valueOf(viewModel.jobDatum.getSeniorityLevel()), Collections.singletonList(viewModel.getList_senior_level()))) {
+                    viewModel.selected_senior_level = getIndexFromList(String.valueOf(viewModel.jobDatum.getSeniorityLevel()), Collections.singletonList(viewModel.getList_senior_level()));
+                    binding.spinnerSeniorityLevel.setText("" + viewModel.jobDatum.getSeniorityLevelDefinition());
                 }
-                if (checkItemInList(viewModel.jobDatum.getJobFunctions(), Collections.singletonList(viewModel.getList_job_funcs()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getSeniority(), Collections.singletonList(viewModel.getList_job_funcs()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredAssignmentDurationDefinition());
+                if (checkItemInList(viewModel.jobDatum.getJobFunction(), Collections.singletonList(viewModel.getList_job_funcs()))) {
+                    viewModel.selected_job_funcs = getIndexFromList(viewModel.jobDatum.getJobFunction(), Collections.singletonList(viewModel.getList_job_funcs()));
+                    binding.spinnerJobFuncs.setText("" + viewModel.jobDatum.getJobFunctionDefinition());
                 }
                 if (checkItemInList(viewModel.jobDatum.getPreferredSpecialty(), Collections.singletonList(viewModel.getList_speciality()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getPreferredSpecialty(), Collections.singletonList(viewModel.getList_speciality()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                    viewModel.selected_speciality = getIndexFromList(viewModel.jobDatum.getPreferredSpecialty(), Collections.singletonList(viewModel.getList_speciality()));
+                    binding.tvSpecialty.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
                 }
-                if (checkItemInList(viewModel.jobDatum.getShiftDuration(), Collections.singletonList(viewModel.getList_preferred_shift()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getShiftDuration(), Collections.singletonList(viewModel.getList_preferred_shift()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                if (checkItemInList(viewModel.jobDatum.getPreferredShiftDuration(), Collections.singletonList(viewModel.getList_preferred_shift_duration()))) {
+                    viewModel.selected_shift_duration = getIndexFromList(viewModel.jobDatum.getPreferredShiftDuration(), Collections.singletonList(viewModel.getList_preferred_shift_duration()));
+                    binding.spinnerShiftDuration.setText("" + viewModel.jobDatum.getPreferredShiftDurationDefinition());
                 }
-                if (checkItemInList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                if (checkItemInList(viewModel.jobDatum.getPreferredWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()))) {
+                    viewModel.selected_work_loc = getIndexFromList(viewModel.jobDatum.getPreferredWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()));
+                    binding.spinnerWorkLoc.setText("" + viewModel.jobDatum.getPreferredWorkLocationDefinition());
                 }
-                binding.edExperience.setText("" + viewModel.jobDatum.getExperience());
-
-                if (checkItemInList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_loc()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                binding.edExperience.setText("" + viewModel.jobDatum.getPreferredExperience());
+                if (!TextUtils.isEmpty(viewModel.jobDatum.getPreferredDaysOfTheWeek())) {
+                    setupSelection_DaysOfWeeks_ByModelData(viewModel.jobDatum.getPreferredDaysOfTheWeek().split(","));
+                    daysOfWeekAdapter.notifyDataSetChanged();
                 }
-            /*if (checkItemInList_W(viewModel.jobDatum.getWorkLocation(), viewModel.getList_days_of_week())) {
-                viewModel.selected_assignment_duration = getIndexFromList_W(viewModel.jobDatum.getWorkLocation(), viewModel.getList_days_of_week());
-                binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
-            }*/
-
-                setupSelection_DaysOfWeeks_ByModelData(viewModel.jobDatum.getPreferredDaysOfTheWeekArray());
-                daysOfWeekAdapter.notifyDataSetChanged();
 
                 if (viewModel.select_daysOfWeek != null && viewModel.select_daysOfWeek.size() != 0) {
                     binding.tvWeeksDays.setVisibility(View.GONE);
@@ -168,38 +176,72 @@ public class Add_Job_1_Fragment extends Fragment {
                     binding.tvWeeksDays.setVisibility(View.VISIBLE);
                     binding.rvWeeksDays.setVisibility(View.GONE);
                 }
-                if (checkItemInList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_cerner()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(), Collections.singletonList(viewModel.getList_work_cerner()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                if (checkItemInList(viewModel.jobDatum.getJobCernerExp(), Collections.singletonList(viewModel.getList_work_cerner()))) {
+                    viewModel.selected_work_cerner = getIndexFromList(viewModel.jobDatum.getJobCernerExp(), Collections.singletonList(viewModel.getList_work_cerner()));
+                    binding.tvCenter.setText("" + viewModel.jobDatum.getJobCernerExpDefinition());
                 }
-                if (checkItemInList(viewModel.jobDatum.getWorkLocation(),
+                if (checkItemInList(viewModel.jobDatum.getJobMeditechExp(),
                         Collections.singletonList(viewModel.getList_work_cerner()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(),
+                    viewModel.selected_work_medtech = getIndexFromList(viewModel.jobDatum.getJobMeditechExp(),
                             Collections.singletonList(viewModel.getList_work_cerner()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                    binding.tvMeditech.setText("" + viewModel.jobDatum.getJobMeditechExpDefinition());
                 }
-                if (checkItemInList(viewModel.jobDatum.getWorkLocation(),
+                if (checkItemInList(viewModel.jobDatum.getJobEpicExp(),
                         Collections.singletonList(viewModel.getList_work_medtech()))) {
-                    viewModel.selected_assignment_duration = getIndexFromList(viewModel.jobDatum.getWorkLocation(),
+                    viewModel.selected_work_epic = getIndexFromList(viewModel.jobDatum.getJobEpicExp(),
                             Collections.singletonList(viewModel.getList_work_medtech()));
-                    binding.spinnerAssignment.setText("" + viewModel.jobDatum.getPreferredSpecialtyDefinition());
+                    binding.tvEpic.setText("" + viewModel.jobDatum.getJobEpicExpDefinition());
                 }
+                if (checkItemInList(viewModel.jobDatum.getPreferredShift(),
+                        Collections.singletonList(viewModel.getList_preferred_shift()))) {
+                    viewModel.selected_preferred_shift = getIndexFromList(viewModel.jobDatum.getPreferredShift(),
+                            Collections.singletonList(viewModel.getList_preferred_shift()));
+                    binding.tvEpic.setText("" + viewModel.jobDatum.getPreferredShiftDefinition());
+                }
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    /*
+                    Date str1 = simpleDateFormat.parse(viewModel.jobDatum.getCertitficate().get(select_certificate_pos).
+                            getEffectiveDate());
+                    Date str2 = simpleDateFormat.parse(viewModel.jobDatum.getCertitficate().get(select_certificate_pos).
+                            getExpirationDate());
+                    viewModel.date1 = simpleDateFormat1.format(str1);
+                    viewModel.date2 = simpleDateFormat1.format(str2);
 
+                    DateFormat formatter = new SimpleDateFormat("yyyy", Locale.getDefault());
+                    year2 = Integer.parseInt(formatter.format(str1.getTime()));
+                    formatter = new SimpleDateFormat("MM", Locale.getDefault());
+                    monthOfYear2 = Integer.parseInt(formatter.format(str1.getTime()));
+                    formatter = new SimpleDateFormat("dd", Locale.getDefault());
+                    dayOfMonth2 = Integer.parseInt(formatter.format(str1.getTime()));
 
+                    formatter = new SimpleDateFormat("yyyy", Locale.getDefault());
+                    year3 = Integer.parseInt(formatter.format(str2.getTime()));
+                    formatter = new SimpleDateFormat("MM", Locale.getDefault());
+                    monthOfYear3 = Integer.parseInt(formatter.format(str2.getTime()));
+                    formatter = new SimpleDateFormat("dd", Locale.getDefault());
+                    dayOfMonth3 = Integer.parseInt(formatter.format(str2.getTime()));
+                    monthOfYear2--;
+                    monthOfYear3--;
+                    */
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception exception) {
             Log.d("TAG", "setData: " + exception.getMessage());
         }
     }
 
-    private void setupSelection_DaysOfWeeks_ByModelData(List<String> specialty) {
+    private void setupSelection_DaysOfWeeks_ByModelData(String[] specialty) {
         viewModel.select_daysOfWeek.clear();
         for (int i = 0; i < viewModel.list_days_of_week.getValue().size(); i++) {
             HourlyRate_DayOfWeek_OptionDatum data = viewModel.list_days_of_week.getValue().get(i);
-            for (int j = 0; j < specialty.size(); j++) {
+            for (int j = 0; j < specialty.length; j++) {
                 Log.d("TAG1", "setupSelectionSpecialtyByModelData: " + "" + data.getId() +
-                        " " + ((String) specialty.get(j)));
-                if (("" + data.getId()).equals(((String) specialty.get(j)))) {
+                        " " + ((String) specialty[j]));
+                if (("" + data.getId()).equals(((String) specialty[j]))) {
                     viewModel.select_daysOfWeek.add(i);
                 }
             }
@@ -384,7 +426,11 @@ public class Add_Job_1_Fragment extends Fragment {
                 && appController.getList_epic().size() != 0) {
             status++;
         }
-        if (status == 10) {
+        if (appController.getList__preferred_shift() != null
+                && appController.getList__preferred_shift().size() != 0) {
+            status++;
+        }
+        if (status == 11) {
             return true;
         } else
             return false;
@@ -483,6 +529,18 @@ public class Add_Job_1_Fragment extends Fragment {
                     Utils.displayToast(getContext(), "Please, Select Preferred Work Location !");
                     return false;
                 }
+                if (viewModel.selected_preferred_shift == 0) {
+                    Utils.displayToast(getContext(), "Please, Select Your Preferred Shift !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(viewModel.date1)) {
+                    Utils.displayToast(getContext(), "Select Start Date");
+                    return false;
+                }
+                if (TextUtils.isEmpty(viewModel.date2)) {
+                    Utils.displayToast(getContext(), "Select End Date");
+                    return false;
+                }
                 if (TextUtils.isEmpty(binding.edExperience.getText().toString())) {
                     Utils.displayToast(getContext(), "Enter Experience Years First !");
                     return false;
@@ -571,7 +629,7 @@ public class Add_Job_1_Fragment extends Fragment {
             public void onClick(View v) {
 
                 showOptionPopup(getContext(), binding.view5, 5, binding.img5, binding.spinnerShiftDuration,
-                        viewModel.list_preferred_shift.getValue(), viewModel.selected_shift_duration
+                        viewModel.list_preferred_shift_duration.getValue(), viewModel.selected_shift_duration
                         , new ItemCallback() {
                             @Override
                             public void onClick(int position) {
@@ -581,6 +639,137 @@ public class Add_Job_1_Fragment extends Fragment {
                 Utils.onClickEvent(v);
             }
         });
+        binding.layPrefferedShift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showOptionPopup(getContext(), binding.view15, 15, binding.img15, binding.spinnerPreferredShift,
+                        viewModel.list_preferred_shift.getValue(), viewModel.selected_preferred_shift
+                        , new ItemCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                viewModel.selected_preferred_shift = position;
+                            }
+                        });
+                Utils.onClickEvent(v);
+            }
+        });
+        binding.imgStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(getContext(), v);
+
+                final Calendar c = Calendar.getInstance();
+
+                DatePickerDialog dpd = null;
+                if (dayOfMonth2 == 0 && year2 == 0 && monthOfYear2 == 0) {
+                    dpd = new DatePickerDialog(getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    binding.tvStartDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    viewModel.date1 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth2 = dayOfMonth;
+                                    monthOfYear2 = monthOfYear;
+                                    year2 = year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+
+                } else {
+                    dpd = new DatePickerDialog(getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    binding.tvStartDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    viewModel.date1 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth2 = dayOfMonth;
+                                    monthOfYear2 = monthOfYear;
+                                    year2 = year;
+                                }
+                            },
+                            year2, monthOfYear2, dayOfMonth2);
+                }
+                dpd.show();
+
+                Utils.onClickEvent(v);
+            }
+        });
+        binding.imgEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboardFrom(getContext(), v);
+
+                final Calendar c = Calendar.getInstance();
+
+                DatePickerDialog dpd = null;
+                if (dayOfMonth3 == 0 && year3 == 0 && monthOfYear3 == 0) {
+                    dpd = new DatePickerDialog(getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // here set the pattern as you date in string was containing like date/month/year
+                                    try {
+                                        Date d1 = sdf.parse(dayOfMonth + "/" + monthOfYear + "/" + year);
+                                        Date d2 = sdf.parse(dayOfMonth2 + "/" + monthOfYear2 + "/" + year2);
+                                        if (d1.getTime() <= d2.getTime()) {
+                                            Utils.displayToast(getContext(), "Please Select Proper Valid Date, It Must Be After Start Date  ");
+                                            return;
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    binding.tvEndDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    viewModel.date2 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth3 = dayOfMonth;
+                                    monthOfYear3 = monthOfYear;
+                                    year3 = year;
+                                }
+                            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+
+                } else {
+                    dpd = new DatePickerDialog(getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // here set the pattern as you date in string was containing like date/month/year
+                                    try {
+                                        Date d1 = sdf.parse(dayOfMonth + "/" + monthOfYear + "/" + year);
+                                        Date d2 = sdf.parse(dayOfMonth2 + "/" + monthOfYear2 + "/" + year2);
+                                        if (d1.getTime() <= d2.getTime()) {
+                                            Utils.displayToast(getContext(), "Please Select Proper Valid Date, It Must Be After Effective Date  ");
+                                            return;
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    binding.tvEndDate.setText(formatter.format((monthOfYear + 1)) + "-" + formatter.format(dayOfMonth) + "-" +
+                                            year);
+                                    viewModel.date2 = year + "-" + formatter.format((monthOfYear + 1)) + "-" +
+                                            formatter.format(dayOfMonth);
+                                    dayOfMonth3 = dayOfMonth;
+                                    monthOfYear3 = monthOfYear;
+                                    year3 = year;
+                                }
+                            },
+                            year3, monthOfYear3, dayOfMonth3);
+                }
+                dpd.show();
+
+                Utils.onClickEvent(v);
+            }
+        });
+
         binding.layWorkLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

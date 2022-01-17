@@ -16,6 +16,7 @@
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_add_job1.xml" value="0.264" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_add_job2.xml" value="0.176" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_add_jobs.xml" value="0.20854700854700856" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_applied_nurses.xml" value="0.38125" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_completed_job_details.xml" value="0.10683760683760683" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_facility_details1.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_facility_details2.xml" value="0.20854700854700856" />
@@ -35,7 +36,7 @@
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/activity_work_history.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_filter.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_filter_f.xml" value="0.144" />
-        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_horly_rate.xml" value="0.152" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_horly_rate.xml" value="0.264" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_invite_nurse.xml" value="0.4" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_nurse_availability.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_nurse_history.xml" value="0.264" />
@@ -47,23 +48,26 @@
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_profile_setup3.xml" value="0.264" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_profile_setup4.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_profile_setup5.xml" value="0.264" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_rating.xml" value="0.38125" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_role_interest.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_work_history.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_work_history_2.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/dialog_work_history_3.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_account_f.xml" value="0.264" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_blank.xml" value="0.24010416666666667" />
-        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_browse.xml" value="0.16052631578947368" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_browse.xml" value="0.264" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_browse_f.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_fullscreen.xml" value="0.24010416666666667" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_my_jobs_f.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_nurse.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/fragment_profile_setup_dialog_1.xml" value="0.25416666666666665" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_active_f.xml" value="0.176" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_applied_nurses.xml" value="0.38125" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_certifications.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_chat.xml" value="0.38125" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_completed.xml" value="0.16052631578947368" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_credential.xml" value="0.20854700854700856" />
+        <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_jobs.xml" value="0.38125" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_loading.xml" value="0.21837606837606838" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_nurse_files.xml" value="0.20854700854700856" />
         <entry key="..\:/Work/Android_Projects/WeboConnect/Nurseify_Facility_Side/nursify-android/app/src/main/res/layout/item_nurses.xml" value="0.264" />

@@ -107,7 +107,7 @@ public class Posted_Jobs_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
                                     pastAdapter.addLoading();
                                 }
                             } else {
@@ -150,7 +150,7 @@ public class Posted_Jobs_Fragment extends Fragment {
             };
             binding.recyclerView.addOnScrollListener(pagination);
         } catch (Exception e) {
-            Log.d("tag", "setData: "+e.getMessage());
+            Log.d("tag", "setData: " + e.getMessage());
         }
     }
 

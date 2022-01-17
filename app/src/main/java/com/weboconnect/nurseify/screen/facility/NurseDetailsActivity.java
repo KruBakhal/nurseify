@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,12 +35,12 @@ import com.weboconnect.nurseify.databinding.DialogNurseAvailabilityBinding;
 import com.weboconnect.nurseify.databinding.DialogNurseHistoryBinding;
 import com.weboconnect.nurseify.databinding.DialogNurseRoleBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
-import com.weboconnect.nurseify.screen.facility.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
+import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurseModel;
+import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurse_Datum;
 import com.weboconnect.nurseify.screen.facility.model.Offered_Job_F_Model;
-import com.weboconnect.nurseify.screen.nurse.MessageActivity;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
 import com.weboconnect.nurseify.utils.Constant;
@@ -68,7 +69,8 @@ public class NurseDetailsActivity extends AppCompatActivity {
     private View viewCalled;
     private ProgressDialog progressDialog;
     public int selected_job = 0;
-    List<Facility_JobDatum> listPostedJobs = new ArrayList<>();
+    List<OfferedJobNurse_Datum> listPostedJobs = new ArrayList<>();
+    private String nurse_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +132,13 @@ public class NurseDetailsActivity extends AppCompatActivity {
 
     private void setData() {
         model = new Gson().fromJson(getIntent().getStringExtra(Constant.STR_RESPONSE_DATA), Utils.typeNurse);
-        getNurseProfile(model.getUserId());
+        nurse_ID = getIntent().getStringExtra(Constant.ID);
+        if (model == null) {
+            getNurseProfile(nurse_ID);
+            return;
+        }
+        nurse_ID = model.getUserId();
+        getNurseProfile(nurse_ID);
         Glide.with(context).load(model.getNurseLogo()).placeholder(R.drawable.person)
                 .error(R.drawable.person).into(binding.circleImageView);
         binding.tvName.setText(model.getFirstName() + " " + model.getLastName());
@@ -170,9 +178,8 @@ public class NurseDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(context, MessageFacilityActivity.class)
-                        .putExtra("sender_id", model.getUserId())
+                        .putExtra("sender_id", nurse_ID)
                         .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));
-
                 Utils.onClickEvent(v);
             }
         });
@@ -215,59 +222,6 @@ public class NurseDetailsActivity extends AppCompatActivity {
                 Utils.onClickEvent(v);
             }
         });
-
-    }
-
-    private void check_open_inviteBox() {
-        if (!Utils.isNetworkAvailable(context)) {
-            Utils.displayToast(context, getResources().getString(R.string.no_internet));
-            return;
-        }
-        Utils.displayToast(context, null); // to cancel toast if showing on screen
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Please Wait");
-        progressDialog.show();
-        String user_id = new SessionManager(context).get_user_register_Id();
-        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
-        RequestBody user_id2 = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-
-        Call<FacilityJobModel> call = RetrofitClient.getInstance().getFacilityApi()
-                .call_my_jobs_posted(user_id1, user_id2);
-
-        call.enqueue(new Callback<FacilityJobModel>() {
-            @Override
-            public void onResponse(Call<FacilityJobModel> call, Response<FacilityJobModel> response) {
-                try {
-                    assert response.body() != null;
-                    if (!response.body().getApiStatus().equals("1")) {
-                        Utils.displayToast(context, response.body().getMessage());
-                        progressDialog.dismiss();
-                        return;
-                    }
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        FacilityJobModel jobModel = response.body();
-//                        Utils.displayToast(context, jobModel.getMessage());
-                        open_Invite_dialog(jobModel.getData());
-
-                    } else {
-                        Utils.displayToast(context, "Yet, no jobs created !");
-                        progressDialog.dismiss();
-                    }
-
-                } catch (Exception e) {
-                    progressDialog.dismiss();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FacilityJobModel> call, Throwable t) {
-                progressDialog.dismiss();
-                Log.d("TAG", "onFailure: " + t.getMessage());
-            }
-        });
-
 
     }
 
@@ -444,10 +398,64 @@ public class NurseDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void open_Invite_dialog(FacilityJobModel.FacilityJob_SubData data) {
+    private void check_open_inviteBox() {
+        if (!Utils.isNetworkAvailable(context)) {
+            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+            return;
+        }
+        Utils.displayToast(context, null); // to cancel toast if showing on screen
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Please Wait");
+        progressDialog.show();
+        String user_id = new SessionManager(context).get_user_register_Id();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), model.getUserId());
+        RequestBody user_id2 = RequestBody.create(MediaType.parse("multipart/form-data"), new SessionManager(context).get_facilityProfile().getFacilityId());
+
+        Call<OfferedJobNurseModel> call = RetrofitClient.getInstance().getFacilityApi()
+                .call_offer_job_to_nurse_dropdown(user_id1, user_id2);
+
+        call.enqueue(new Callback<OfferedJobNurseModel>() {
+            @Override
+            public void onResponse(Call<OfferedJobNurseModel> call, Response<OfferedJobNurseModel> response) {
+                try {
+                    assert response.body() != null;
+                    if (!response.body().getApiStatus().equals("1")) {
+                        Utils.displayToast(context, response.body().getMessage());
+                        progressDialog.dismiss();
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        OfferedJobNurseModel jobModel = response.body();
+//                        Utils.displayToast(context, jobModel.getMessage());
+                        open_Invite_dialog(jobModel.getData());
+
+                    } else {
+                        Utils.displayToast(context, "Yet, no jobs created !");
+                        progressDialog.dismiss();
+                    }
+
+                } catch (Exception e) {
+                    progressDialog.dismiss();
+                    Log.d(TAG, "onResponse: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OfferedJobNurseModel> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.d("TAG", "onFailure: " + t.getMessage());
+            }
+        });
+
+
+    }
+
+    private void open_Invite_dialog(List<OfferedJobNurse_Datum> data) {
         listPostedJobs.clear();
-        listPostedJobs.add(new Facility_JobDatum("-1", "Choose Job/Assignment"));
-        listPostedJobs.addAll(data.getData());
+        listPostedJobs.add(new OfferedJobNurse_Datum("-1", "Choose Job/Assignment"));
+        listPostedJobs.addAll(data);
         DialogInviteNurseBinding inviteNurseBinding = DialogInviteNurseBinding.inflate(getLayoutInflater(), null, false);
         final Dialog dialog = new Dialog(NurseDetailsActivity.this, R.style.AlertDialog);
         dialog.setContentView(inviteNurseBinding.getRoot());
@@ -466,27 +474,26 @@ public class NurseDetailsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(int position) {
                                 selected_job = position;
-                                String f_name = listPostedJobs.get(position).getFacilityFirstName() + " "
-                                        + listPostedJobs.get(position).getFacilityLastName();
-                                FacilityProfile profile = new SessionManager(context).get_facilityProfile();
-                                Facility_JobDatum jobDatum = listPostedJobs.get(position);
+                                String f_name = listPostedJobs.get(position).getContent().getName();
+                                OfferedJobNurse_Datum jobDatum = listPostedJobs.get(position);
                                 inviteNurseBinding.tv2
                                         .setText("" + f_name + " - " + listPostedJobs.get(position)
-                                                .getPreferredSpecialtyDefinition());
+                                                .getContent().getSpecialty());
                                 inviteNurseBinding.layDone.setVisibility(View.VISIBLE);
                                 inviteNurseBinding.layDetail.setVisibility(View.GONE);
                                 inviteNurseBinding.tvSucces.setVisibility(View.GONE);
                                 if (position == 0)
                                     return;
-                                inviteNurseBinding.tv3.setText("Hello " + model.getFirstName() + " " + model.getLastName());
+                                inviteNurseBinding.tv3.setText("Hello " + f_name);
                                 inviteNurseBinding.tv4.setText(f_name + " would like to book you for the assignment below.");
                                 inviteNurseBinding.tvFacilityName.setText("Facility Name: " + f_name);
-                                inviteNurseBinding.tvlocation.setText("Location : " + profile.getFacilityAddress());
-                                inviteNurseBinding.tvSpecialty.setText("Specialty : " + jobDatum.getPreferredSpecialtyDefinition());
-                                inviteNurseBinding.tvStartDate.setText("Start Date : " + jobDatum.getStartDate());
-                                inviteNurseBinding.tvAssignmentDuration.setText("Duration : " + jobDatum.getPreferredAssignmentDurationDefinition());
-                                inviteNurseBinding.tvShiftDuration.setText("Shift : ");
-                                inviteNurseBinding.tvWorkDays.setText("Work Days : " + jobDatum.getPreferredDaysOfTheWeek());
+                                inviteNurseBinding.tvlocation.setText("Location : " + jobDatum.getContent().getLocation());
+                                inviteNurseBinding.tvSpecialty.setText("Specialty : " + jobDatum.getContent().getSpecialty());
+                                inviteNurseBinding.tvStartDate.setText("Start Date : " + jobDatum.getContent().getJobDetail().getStartDate());
+                                inviteNurseBinding.tvAssignmentDuration.setText("Duration : " + jobDatum.getContent().getJobDetail().getDuration());
+                                inviteNurseBinding.tvShiftDuration.setText("Shift : " + jobDatum.getContent().getSpecialty());
+                                inviteNurseBinding.tvWorkDays.setText("Work Days : " + jobDatum.getContent().getJobDetail().getWorkdays());
+                                inviteNurseBinding.tv5.setText(Html.fromHtml("" + jobDatum.getContent().getTerms()));
                                 inviteNurseBinding.layDetail.setVisibility(View.VISIBLE);
                                 inviteNurseBinding.layDone.setVisibility(View.VISIBLE);
                                 inviteNurseBinding.tvSucces.setVisibility(View.GONE);
@@ -522,7 +529,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void make_offer(Dialog dialog, Facility_JobDatum facility_jobDatum,
+    private void make_offer(Dialog dialog, OfferedJobNurse_Datum facility_jobDatum,
                             DialogInviteNurseBinding inviteNurseBinding) {
         if (!Utils.isNetworkAvailable(context)) {
             Utils.displayToast(context, getResources().getString(R.string.no_internet));
@@ -535,7 +542,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
         String user_id = new SessionManager(context).get_facilityProfile().getUserId();
         RequestBody nurseReques = RequestBody.create(MediaType.parse("multipart/form-data"), model.getNurseId());
         RequestBody facilityReques = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
-        RequestBody jo_id = RequestBody.create(MediaType.parse("multipart/form-data"), "" + facility_jobDatum.getJob_id());
+        RequestBody jo_id = RequestBody.create(MediaType.parse("multipart/form-data"), "" + facility_jobDatum.getJobId());
 
 
         Call<Offered_Job_F_Model> call = RetrofitClient.getInstance().getFacilityApi()
@@ -559,7 +566,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
                     return;
                 }
                 if (response.isSuccessful()) {
-                    binding.tvMsg.setVisibility(View.GONE);
+                    inviteNurseBinding.tvMsg.setVisibility(View.GONE);
                     inviteNurseBinding.layProgress.setVisibility(View.GONE);
                     inviteNurseBinding.progressBar.setVisibility(View.GONE);
                     inviteNurseBinding.tvMsg.setText("Make an Offer");
@@ -596,7 +603,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
     }
 
     private void showOptionPopup(Context context, View v, int type, ImageView img1,
-                                 TextView tvState, List<Facility_JobDatum> cityData, int selected_City,
+                                 TextView tvState, List<OfferedJobNurse_Datum> cityData, int selected_City,
                                  ItemCallback
                                          itemCallback) {
         if (cityData == null || cityData.size() == 0) {

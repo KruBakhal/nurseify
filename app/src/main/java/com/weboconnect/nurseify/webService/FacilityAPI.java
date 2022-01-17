@@ -2,12 +2,15 @@ package com.weboconnect.nurseify.webService;
 
 import com.weboconnect.nurseify.common.CommonModel;
 import com.weboconnect.nurseify.screen.facility.model.AddJobModel;
+import com.weboconnect.nurseify.screen.facility.model.AppliedNurseModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
 import com.weboconnect.nurseify.screen.facility.model.NurseModel;
+import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurseModel;
 import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_F_Model;
 import com.weboconnect.nurseify.screen.facility.model.Offered_Job_F_Model;
 import com.weboconnect.nurseify.screen.nurse.model.CityModel;
+import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
@@ -115,6 +118,8 @@ public interface FacilityAPI {
     @POST("assignment-duration")
     Observable<CommonModel> call_assignment_duration();
 
+    @POST("preferred-shifts")
+    Observable<CommonModel> call_preferred_shifts();
 
     @POST("get-weekdays")
     Observable<HourlyRate_DayOfWeek_OptionModel> call_get_weekdays();
@@ -152,7 +157,10 @@ public interface FacilityAPI {
             @Part("qualifications") RequestBody tiktok,
             @Part("job_video") RequestBody sanpchat,
             @Part("active") RequestBody active,
-            @Part MultipartBody.Part[] job_photos
+            @Part MultipartBody.Part[] job_photos,
+            @Part("start_date") RequestBody start_date,
+            @Part("end_date") RequestBody end_date,
+            @Part("preferred_shift") RequestBody preferred_shift
 
     );
 
@@ -178,7 +186,10 @@ public interface FacilityAPI {
             @Part("responsibilities") RequestBody pinterest,
             @Part("qualifications") RequestBody tiktok,
             @Part("job_video") RequestBody sanpchat,
-            @Part("active") RequestBody active
+            @Part("active") RequestBody active,
+            @Part("start_date") RequestBody start_date,
+            @Part("end_date") RequestBody end_date,
+            @Part("preferred_shift") RequestBody preferred_shift
     );
 
     @Multipart
@@ -227,17 +238,22 @@ public interface FacilityAPI {
     @Multipart
     @POST("job-offered-active")
     Call<OfferedNurse_F_Model> call_job_active_list(@Part("user_id") RequestBody user_id,
-                                          @Part("page") RequestBody current_page1);
+                                                    @Part("page") RequestBody current_page1);
 
     @Multipart
     @POST("job-offered-completed")
     Call<OfferedNurse_F_Model> call_job_past_list(@Part("user_id") RequestBody user_id,
-                                        @Part("page") RequestBody current_page1);
+                                                  @Part("page") RequestBody current_page1);
 
     @Multipart
     @POST("my-jobs-posted")
     Call<FacilityJobModel> call_my_jobs_posted(@Part("user_id") RequestBody user_id,
                                                @Part("page") RequestBody current_page1);
+
+    @Multipart
+    @POST("offer-job-to-nurse-dropdown")
+    Call<OfferedJobNurseModel> call_offer_job_to_nurse_dropdown(@Part("user_id") RequestBody user_id,// nurse id
+                                                                @Part("facility_id") RequestBody current_page1);
 
     @Multipart
     @POST("my-jobs-active")
@@ -254,4 +270,7 @@ public interface FacilityAPI {
     Call<Offered_Job_F_Model> call_send_offer(@Part("nurse_id") RequestBody user_id,
                                               @Part("facility_id") RequestBody current_page1,
                                               @Part("job_id") RequestBody job_id);
+    @Multipart
+    @POST("nurses-applied-jobs")
+    Call<AppliedNurseModel> call_applied_nurse(@Part("job_id") RequestBody user_id1);
 }

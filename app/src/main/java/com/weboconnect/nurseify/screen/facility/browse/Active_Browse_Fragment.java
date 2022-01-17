@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -118,7 +120,7 @@ public class Active_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 offeredFAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
                                     offeredFAdapter.addLoading();
                                 }
                             } else {
@@ -326,7 +328,11 @@ public class Active_Browse_Fragment extends Fragment {
             return true;
         }
     };
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("TAG", "onViewCreated: AC ");
+    }
     @Override
     public void onResume() {
         super.onResume();

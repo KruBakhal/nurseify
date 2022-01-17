@@ -108,7 +108,7 @@ public class Complete_Jobs_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
                                     pastAdapter.addLoading();
                                 }
                             } else {
@@ -150,7 +150,7 @@ public class Complete_Jobs_Fragment extends Fragment {
             };
             binding.recyclerView.addOnScrollListener(pagination);
         } catch (Exception e) {
-            Log.d("tag", "setData: "+e.getMessage());
+            Log.d("tag", "setData: " + e.getMessage());
         }
     }
 
@@ -250,11 +250,14 @@ public class Complete_Jobs_Fragment extends Fragment {
                         }
                     }
                 } else {
+                    pastAdapter.removeLoading();
                     errorProgress(false);
                 }
             } else if (listPostedJob != null && listPostedJob.size() != 0) {
                 dismissProgress();
+//                pastAdapter.removeLoading();
             } else {
+//                pastAdapter.removeLoading();
                 errorProgress(true);
                 binding.tvMsg.setText("Yet, No Job Found !");
             }

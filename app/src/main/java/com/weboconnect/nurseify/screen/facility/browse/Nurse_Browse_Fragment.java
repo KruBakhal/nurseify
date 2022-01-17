@@ -22,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -176,7 +177,7 @@ public class Nurse_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 nursesAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
                                     nursesAdapter.addLoading();
                                 }
                             } else {
@@ -814,7 +815,9 @@ public class Nurse_Browse_Fragment extends Fragment {
             @Override
             public void onClick_Hire(NurseDatum model, int position) {
                 startActivity(new Intent(getContext(), NurseDetailsActivity.class)
-                        .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));
+                        .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model))
+                        .putExtra(Constant.ID, model.getUserId())
+                );
 
             }
         });
@@ -1184,7 +1187,11 @@ public class Nurse_Browse_Fragment extends Fragment {
         isFragActive = false;
         Log.d("TAG", "onPause: nb");
     }
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("TAG", "onViewCreated: NB ");
+    }
     private boolean check_Any_is_empty() {
 
         if (getEmptyCall(viewModel.list_State) && getEmptyCall1(viewModel.list_speciality)
@@ -1214,4 +1221,5 @@ public class Nurse_Browse_Fragment extends Fragment {
         }
         return false;
     }
+
 }

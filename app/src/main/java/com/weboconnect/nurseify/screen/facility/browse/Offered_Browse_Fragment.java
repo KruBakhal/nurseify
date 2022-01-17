@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -77,7 +79,11 @@ public class Offered_Browse_Fragment extends Fragment {
         return view = binding.getRoot();
     }
 
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("TAG", "onViewCreated: Of ");
+    }
 
     private void setData() {
         try {
@@ -102,7 +108,7 @@ public class Offered_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 offeredFAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
                                     offeredFAdapter.addLoading();
                                 }
                             } else {

@@ -328,7 +328,7 @@ public interface RetrofitApi {
     );
 
     @Multipart
-    @POST("job-offered")
+    @POST("job-offers")
     Call<OfferedJobModel> call_offered_job(
             @Query("page") String page,
             @Part("user_id") RequestBody user_id

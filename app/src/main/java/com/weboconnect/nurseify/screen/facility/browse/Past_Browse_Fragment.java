@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -104,7 +106,7 @@ public class Past_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
                                     pastAdapter.addLoading();
                                 }
                             } else {
@@ -284,9 +286,9 @@ public class Past_Browse_Fragment extends Fragment {
         binding.layProgress.setVisibility(View.VISIBLE);
         binding.pg.setVisibility(View.GONE);
         if (status)
-            binding.tvMsg.setText(getString(R.string.something_when_wrong));
+            binding.tvMsg.setText(getContext().getResources().getString(R.string.something_when_wrong));
         else
-            binding.tvMsg.setText(getString(R.string.no_internet));
+            binding.tvMsg.setText(getContext().getResources().getString(R.string.no_internet));
     }
 
     private void showProgress() {
@@ -312,7 +314,11 @@ public class Past_Browse_Fragment extends Fragment {
             return true;
         }
     };
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("TAG", "onViewCreated: Pas ");
+    }
     @Override
     public void onResume() {
         super.onResume();
