@@ -36,15 +36,6 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         userProfileData = new SessionManager(getApplicationContext()).get_User();
 
         setData();
-
-        for (int i = 0; i < userProfileData.getSpecialty().size(); i++) {
-            if (i == 0)
-                binding.tvSpecialty.setText(userProfileData.getSpecialty().get(i).getName());
-            else
-                binding.tvSpecialty.append(", " + userProfileData.getSpecialty().get(i).getName());
-        }
-
-
         binding.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +54,8 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void setData() {
         binding.tvFirstName.setText(userProfileData.getFirstName());
         binding.tvLastName.setText(userProfileData.getLastName());
@@ -76,6 +69,13 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         binding.tvState.setText(userProfileData.getState());
         binding.tvPostCode.setText(userProfileData.getPostcode());
         binding.tvCountry.setText(userProfileData.getCountry());
+        for (int i = 0; i < userProfileData.getSpecialty().size(); i++) {
+            if (i == 0)
+                binding.tvSpecialty.setText(userProfileData.getSpecialty().get(i).getName());
+            else
+                binding.tvSpecialty.append(", " + userProfileData.getSpecialty().get(i).getName());
+        }
+
     }
 
     @Override

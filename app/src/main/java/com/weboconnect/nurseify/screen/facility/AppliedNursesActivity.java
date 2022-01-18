@@ -3,6 +3,7 @@ package com.weboconnect.nurseify.screen.facility;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,10 +11,15 @@ import android.view.View;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.AppliedNursesAdapter;
 import com.weboconnect.nurseify.databinding.ActivityAppliedNursesBinding;
+import com.weboconnect.nurseify.databinding.DialogInviteNurseBinding;
+import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.model.AppliedNurseModel;
 import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
 import com.weboconnect.nurseify.screen.facility.model.NurseModel;
+import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurse_Datum;
+import com.weboconnect.nurseify.screen.facility.model.Offered_Job_F_Model;
 import com.weboconnect.nurseify.utils.Constant;
+import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
 
@@ -87,7 +93,6 @@ public class AppliedNursesActivity extends AppCompatActivity {
                             setAdapter();
                         }
                     });
-
                 } else {
 //                    Utils.displayToast(AppliedNursesActivity.this, "Data has not been updated");
                     errorProgress(false);
@@ -106,7 +111,63 @@ public class AppliedNursesActivity extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        binding.recyclerView.setAdapter(new AppliedNursesAdapter(AppliedNursesActivity.this, list));
+        binding.recyclerView.setAdapter(new AppliedNursesAdapter(AppliedNursesActivity.this, list, new ItemCallback() {
+            @Override
+            public void onClick(int position) {
+                AppliedNurseModel.AppliedNurseDatum datum = list.get(position);
+                if (datum != null) {
+                    make_offer(datum.getNurseId());
+                }
+            }
+
+            private void make_offer(String nurseId) {
+                if (!Utils.isNetworkAvailable(AppliedNursesActivity.this)) {
+                    Utils.displayToast(AppliedNursesActivity.this, getResources().getString(R.string.no_internet));
+                    return;
+                }
+                showProgress();
+                String facilityId = new SessionManager(AppliedNursesActivity.this).get_facilityProfile().getUserId();
+                RequestBody nurseReques = RequestBody.create(MediaType.parse("multipart/form-data"), nurseId);
+                RequestBody facilityReques = RequestBody.create(MediaType.parse("multipart/form-data"), facilityId);
+                RequestBody jo_id = RequestBody.create(MediaType.parse("multipart/form-data"), "" + job_id);
+
+
+                Call<Offered_Job_F_Model> call = RetrofitClient.getInstance().getFacilityApi()
+                        .call_send_offer(nurseReques, facilityReques, jo_id);
+
+                call.enqueue(new Callback<Offered_Job_F_Model>() {
+                    @Override
+                    public void onResponse(Call<Offered_Job_F_Model> call, Response<Offered_Job_F_Model> response) {
+                        if (response == null || response.body() == null) {
+                            errorProgress(false);
+                            Utils.displayToast(AppliedNursesActivity.this, "" + response.message());
+                            return;
+                        }
+                        if (!response.body().getApiStatus().equals("1")) {
+                            dismissProgress();
+                            Utils.displayToast(AppliedNursesActivity.this, "" + response.body().getMessage());
+                            return;
+                        }
+                        if (response.isSuccessful()) {
+                            dismissProgress();
+                            Utils.displayToast(AppliedNursesActivity.this, response.body().getMessage());
+                        } else {
+                            Utils.displayToast(AppliedNursesActivity.this, getString(R.string.something_when_wrong));
+                            dismissProgress();
+                        }
+                        dismissProgress();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Offered_Job_F_Model> call, Throwable t) {
+                        errorProgress(false);
+                        Utils.displayToast(AppliedNursesActivity.this,
+                                getString(R.string.something_when_wrong));
+                    }
+                });
+            }
+
+        }));
     }
 
     private void dismissProgress() {

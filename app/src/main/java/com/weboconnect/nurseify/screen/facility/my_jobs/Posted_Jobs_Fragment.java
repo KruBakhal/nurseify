@@ -1,7 +1,10 @@
 package com.weboconnect.nurseify.screen.facility.my_jobs;
 
+import static com.weboconnect.nurseify.utils.Constant.REQUEST_CODE_ADD_JOB;
 import static com.weboconnect.nurseify.utils.PaginationListener.PAGE_START;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -12,11 +15,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.Gson;
+import com.weboconnect.nurseify.AppController;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.PastAdapter;
 import com.weboconnect.nurseify.adapter.PostedAdapter;
@@ -24,6 +30,7 @@ import com.weboconnect.nurseify.adapter.ProgressHolder;
 import com.weboconnect.nurseify.adapter.TabAdapter;
 import com.weboconnect.nurseify.databinding.FragmentNurseBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
+import com.weboconnect.nurseify.screen.facility.Add_Jobs_Activity;
 import com.weboconnect.nurseify.screen.facility.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_Datum;
@@ -34,6 +41,7 @@ import com.weboconnect.nurseify.screen.facility.viewModel.Browse_Nurse_ViewModel
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
 import com.weboconnect.nurseify.screen.facility.viewModel.ProgressUIType;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.PaginationListener;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
@@ -65,6 +73,7 @@ public class Posted_Jobs_Fragment extends Fragment {
     private boolean isFilterApply = false;
     private List<Facility_JobDatum> listPostedJob = new ArrayList<>();
     private PaginationListener pagination;
+    private boolean isFetchData = false;
 
     public Posted_Jobs_Fragment() {
     }
@@ -80,7 +89,8 @@ public class Posted_Jobs_Fragment extends Fragment {
 
         setAdapter();
         setData();
-        refreshData();
+
+        Log.d("TAG", "onCreateView: Post job");
         return view = binding.getRoot();
     }
 
@@ -107,7 +117,8 @@ public class Posted_Jobs_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0
+                                        && currentPage < totalPage && !pastAdapter.isLoaderVisible) {
                                     pastAdapter.addLoading();
                                 }
                             } else {
@@ -149,13 +160,14 @@ public class Posted_Jobs_Fragment extends Fragment {
 
             };
             binding.recyclerView.addOnScrollListener(pagination);
+            binding.layProgress.setOnTouchListener(touchListner);
         } catch (Exception e) {
             Log.d("tag", "setData: " + e.getMessage());
         }
     }
 
     private void observeer_View() {
-        binding.layProgress.setOnTouchListener(touchListner);
+
 
     }
 
@@ -164,7 +176,10 @@ public class Posted_Jobs_Fragment extends Fragment {
 
             @Override
             public void onClick(int position) {
-
+                startActivityForResult(new Intent(getContext(), Add_Jobs_Activity.class)
+                                .putExtra(Constant.EDIT_MODE, true)
+                                .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(listPostedJob.get(position)))
+                        , REQUEST_CODE_ADD_JOB);
             }
         });
         binding.recyclerView.setAdapter(pastAdapter);
@@ -227,6 +242,15 @@ public class Posted_Jobs_Fragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_JOB && resultCode == Activity.RESULT_OK) {
+            boolean status = data.getBooleanExtra(Constant.EDIT_MODE, false);
+            if (status)
+                refreshData();
+        }
+    }
 
     private void init_Data(FacilityJobModel NurseModel, boolean isNetwork) {
         if (NurseModel == null ||
@@ -277,12 +301,14 @@ public class Posted_Jobs_Fragment extends Fragment {
     }
 
     private void dismissProgress() {
+        isFetchData = false;
         binding.layProgress.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.VISIBLE);
 //        binding.swipeRefresh.setRefreshing(false);
     }
 
     private void errorProgress(boolean status) {
+        isFetchData = false;
 //        binding.swipeRefresh.setRefreshing(false);
         binding.recyclerView.setVisibility(View.GONE);
         binding.layProgress.setVisibility(View.VISIBLE);
@@ -294,6 +320,7 @@ public class Posted_Jobs_Fragment extends Fragment {
     }
 
     private void showProgress() {
+        isFetchData = true;
         binding.recyclerView.setVisibility(View.GONE);
         binding.layProgress.setVisibility(View.VISIBLE);
         binding.pg.setVisibility(View.VISIBLE);
@@ -321,6 +348,12 @@ public class Posted_Jobs_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        if (AppController.isEdit_Result && listPostedJob != null && listPostedJob.size() != 0) {
+            AppController.isEdit_Result = false;
+            refreshData();
+        } else if (isFirstTime) {
+            refreshData();
+        }
     }
 
     @Override

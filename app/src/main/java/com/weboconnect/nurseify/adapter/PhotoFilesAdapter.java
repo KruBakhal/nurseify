@@ -1,11 +1,6 @@
 package com.weboconnect.nurseify.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.pdf.PdfDocument;
-import android.net.Uri;
-import android.os.ParcelFileDescriptor;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
+import com.weboconnect.nurseify.screen.facility.model.JobPhoto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.MyHolder> {
+    private int call = 0;
     private ItemCallback itemCallback;
     public List<String> list = new ArrayList<>();
+    public ArrayList<String> listPhotos = new ArrayList<>();
     int type = 1;
 
     public PhotoFilesAdapter(List<String> list, int type) {
@@ -43,6 +41,13 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
         this.list = list;
     }
 
+    public PhotoFilesAdapter(ArrayList<String> selected_list_photos, int type, int call, ItemCallback itemCallback) {
+        this.listPhotos = selected_list_photos;
+        this.type = type;
+        this.call = call;
+        this.itemCallback = itemCallback;
+    }
+
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,55 +60,72 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-        if (type == 1) {
-            Glide.with(holder.itemView.getContext())
-                    .load(list.get(position)).into(holder.img);
-            holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
-
-        } else if (type == 3) {
-            DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
-            int width = dm.widthPixels * 400 / 1080;
-            int height = dm.widthPixels * 400 / 1080;
-            holder.img.getLayoutParams().width = width;
-            holder.img.getLayoutParams().height = height;
-            width = dm.widthPixels * 90 / 1080;
-            height = dm.widthPixels * 90 / 1080;
-            holder.imgDelete.getLayoutParams().width = width;
-            holder.imgDelete.getLayoutParams().height = height;
-            Glide.with(holder.itemView.getContext())
-                    .load(list.get(position)).into(holder.img);
-            holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.imgDelete.setVisibility(View.VISIBLE);
-        } else if (type == 11) {
-            DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
-            int width = dm.widthPixels * 400 / 1080;
-            int height = dm.widthPixels * 400 / 1080;
-            holder.img.getLayoutParams().width = width;
-            holder.img.getLayoutParams().height = height;
-            width = dm.widthPixels * 90 / 1080;
-            height = dm.widthPixels * 90 / 1080;
-            holder.imgDelete.getLayoutParams().width = width;
-            holder.imgDelete.getLayoutParams().height = height;
-            Glide.with(holder.itemView.getContext())
-                    .load(list.get(position)).into(holder.img);
-            holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.imgDelete.setVisibility(View.GONE);
-        } else if (type == 4) {
+        if (call == 0) {
+            if (type == 1) {
+                Glide.with(holder.itemView.getContext())
+                        .load(list.get(position)).into(holder.img);
+                holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
+            } else if (type == 3) {
+                DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
+                int width = dm.widthPixels * 400 / 1080;
+                int height = dm.widthPixels * 400 / 1080;
+                holder.img.getLayoutParams().width = width;
+                holder.img.getLayoutParams().height = height;
+                width = dm.widthPixels * 90 / 1080;
+                height = dm.widthPixels * 90 / 1080;
+                holder.imgDelete.getLayoutParams().width = width;
+                holder.imgDelete.getLayoutParams().height = height;
+                Glide.with(holder.itemView.getContext())
+                        .load(list.get(position)).into(holder.img);
+                holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
+                holder.imgDelete.setVisibility(View.VISIBLE);
+            } else if (type == 11) {
+                DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
+                int width = dm.widthPixels * 400 / 1080;
+                int height = dm.widthPixels * 400 / 1080;
+                holder.img.getLayoutParams().width = width;
+                holder.img.getLayoutParams().height = height;
+                width = dm.widthPixels * 90 / 1080;
+                height = dm.widthPixels * 90 / 1080;
+                holder.imgDelete.getLayoutParams().width = width;
+                holder.imgDelete.getLayoutParams().height = height;
+                Glide.with(holder.itemView.getContext())
+                        .load(list.get(position)).into(holder.img);
+                holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
+                holder.imgDelete.setVisibility(View.GONE);
+            } else if (type == 4) {
 //                Bitmap bitmap = generateImageFromPdf(holder.img.getContext(), )
-            DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
-            int width = dm.widthPixels * 400 / 1080;
-            int height = dm.widthPixels * 400 / 1080;
-            holder.img.getLayoutParams().width = width;
-            holder.img.getLayoutParams().height = height;
-            width = dm.widthPixels * 90 / 1080;
-            height = dm.widthPixels * 90 / 1080;
-            holder.imgDelete.getLayoutParams().width = width;
-            holder.imgDelete.getLayoutParams().height = height;
-            holder.img.setImageResource(R.drawable.pdf_icon);
-            holder.imgDelete.setVisibility(View.VISIBLE);
+                DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
+                int width = dm.widthPixels * 400 / 1080;
+                int height = dm.widthPixels * 400 / 1080;
+                holder.img.getLayoutParams().width = width;
+                holder.img.getLayoutParams().height = height;
+                width = dm.widthPixels * 90 / 1080;
+                height = dm.widthPixels * 90 / 1080;
+                holder.imgDelete.getLayoutParams().width = width;
+                holder.imgDelete.getLayoutParams().height = height;
+                holder.img.setImageResource(R.drawable.pdf_icon);
+                holder.imgDelete.setVisibility(View.VISIBLE);
+            } else {
+                holder.img.setImageResource(R.drawable.pdf_icon);
+                holder.imgDelete.setVisibility(View.GONE);
+            }
         } else {
-            holder.img.setImageResource(R.drawable.pdf_icon);
-            holder.imgDelete.setVisibility(View.GONE);
+            if (type == 1) {
+                DisplayMetrics dm = holder.img.getResources().getDisplayMetrics();
+                int width = dm.widthPixels * 300 / 1080;
+                int height = dm.widthPixels * 300 / 1080;
+                holder.img.getLayoutParams().width = width;
+                holder.img.getLayoutParams().height = height;
+                width = dm.widthPixels * 90 / 1080;
+                height = dm.widthPixels * 90 / 1080;
+                holder.imgDelete.getLayoutParams().width = width;
+                holder.imgDelete.getLayoutParams().height = height;
+                Glide.with(holder.itemView.getContext())
+                        .load(listPhotos.get(position)).into(holder.img);
+                holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
+            }
+            holder.imgDelete.setVisibility(View.VISIBLE);
         }
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,10 +138,15 @@ public class PhotoFilesAdapter extends RecyclerView.Adapter<PhotoFilesAdapter.My
 
     @Override
     public int getItemCount() {
-        if (list == null || list.size() == 0)
+        if (call == 0)
+            if (list == null || list.size() == 0)
+                return 0;
+            else
+                return list.size();
+        else if (listPhotos == null || listPhotos.size() == 0)
             return 0;
         else
-            return list.size();
+            return listPhotos.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {

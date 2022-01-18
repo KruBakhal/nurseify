@@ -6,7 +6,7 @@ import android.os.Build;
 
 public class Constant {
 
-
+    public static final int REQUEST_CODE_ADD_JOB = 656;
     public static final int REQUEST_EDIT = 333;
     public static final int REQUEST_Browse_Job_FUNS = 456;
     public static final String POSITION = "POSITION";

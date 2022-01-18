@@ -12,6 +12,7 @@ import com.weboconnect.nurseify.screen.facility.model.Offered_Job_F_Model;
 import com.weboconnect.nurseify.screen.nurse.model.CityModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
@@ -270,7 +271,77 @@ public interface FacilityAPI {
     Call<Offered_Job_F_Model> call_send_offer(@Part("nurse_id") RequestBody user_id,
                                               @Part("facility_id") RequestBody current_page1,
                                               @Part("job_id") RequestBody job_id);
+
     @Multipart
     @POST("nurses-applied-jobs")
     Call<AppliedNurseModel> call_applied_nurse(@Part("job_id") RequestBody user_id1);
+
+    @Multipart
+    @POST("remove-job-asset")
+    Call<ResponseModel> call_remove_Asset_image(
+            @Part("job_id") RequestBody user_id,
+            @Part("asset_id") RequestBody certificate_id
+    );
+
+    @Multipart
+    @POST("job-update")
+    Call<AddJobModel> call_update_add_job(
+            @Part("user_id") RequestBody user_id,
+            @Part("facility_id") RequestBody facility_id,
+            @Part("preferred_assignment_duration") RequestBody facility_id1,
+            @Part("seniority_level") RequestBody name,
+            @Part("job_function") RequestBody type,
+            @Part("preferred_specialty") RequestBody facility_email,
+            @Part("preferred_shift_duration") RequestBody facility_phone,
+            @Part("preferred_work_location") RequestBody address,
+            @Part("preferred_days_of_the_week") RequestBody city,
+            @Part("preferred_experience") RequestBody state,
+            @Part("preferred_hourly_pay_rate") RequestBody postcode,
+            @Part("job_cerner_exp") RequestBody video_link,
+            @Part("job_meditech_exp") RequestBody facebook,
+            @Part("job_epic_exp") RequestBody twitter,
+            @Part("job_other_exp") RequestBody linkedin,
+            @Part("description") RequestBody instagram,
+            @Part("responsibilities") RequestBody pinterest,
+            @Part("qualifications") RequestBody tiktok,
+            @Part("job_video") RequestBody sanpchat,
+            @Part("active") RequestBody active,
+            @Part MultipartBody.Part[] job_photos,
+            @Part("start_date") RequestBody start_date,
+            @Part("end_date") RequestBody end_date,
+            @Part("preferred_shift") RequestBody preferred_shift,
+            @Part("job_id") RequestBody job_id
+    );
+
+    @Multipart
+    @POST("job-update")
+    Call<AddJobModel> call_update_add_job(
+            @Part("user_id") RequestBody user_id,
+            @Part("facility_id") RequestBody facility_id1,
+            @Part("preferred_assignment_duration") RequestBody facility_id,
+            @Part("seniority_level") RequestBody name,
+            @Part("job_function") RequestBody type,
+            @Part("preferred_specialty") RequestBody facility_email,
+            @Part("preferred_shift_duration") RequestBody facility_phone,
+            @Part("preferred_work_location") RequestBody address,
+            @Part("preferred_days_of_the_week") RequestBody city,
+            @Part("preferred_experience") RequestBody state,
+            @Part("preferred_hourly_pay_rate") RequestBody postcode,
+            @Part("job_cerner_exp") RequestBody video_link,
+            @Part("job_meditech_exp") RequestBody facebook,
+            @Part("job_epic_exp") RequestBody twitter,
+            @Part("job_other_exp") RequestBody linkedin,
+            @Part("description") RequestBody instagram,
+            @Part("responsibilities") RequestBody pinterest,
+            @Part("qualifications") RequestBody tiktok,
+            @Part("job_video") RequestBody sanpchat,
+            @Part("active") RequestBody active,
+            @Part("start_date") RequestBody start_date,
+            @Part("end_date") RequestBody end_date,
+            @Part("preferred_shift") RequestBody preferred_shift, @Part("job_id") RequestBody job_id
+
+    );
+    @Multipart
+    @POST("browse-facility")
+    Call<com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel> call_facility_profile(@Part("facility_id")RequestBody facility_id);
 }

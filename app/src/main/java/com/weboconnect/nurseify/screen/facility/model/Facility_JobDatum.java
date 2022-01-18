@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class Facility_JobDatum {
@@ -133,6 +131,17 @@ public class Facility_JobDatum {
     @SerializedName("rating_flag")
     @Expose
     private String rating_flag;
+    @SerializedName("job_photos")
+    @Expose
+    private List<JobPhoto> jobPhotos = null;
+
+    public List<JobPhoto> getJobPhotos() {
+        return jobPhotos;
+    }
+
+    public void setJobPhotos(List<JobPhoto> jobPhotos) {
+        this.jobPhotos = jobPhotos;
+    }
 
     public String getRating_flag() {
         return rating_flag;

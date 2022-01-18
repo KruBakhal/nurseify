@@ -379,7 +379,8 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                         return;
                     }
                     if (response.isSuccessful()) {
-                        inviteNurseBinding.tvMsg.setVisibility(View.GONE);
+
+                        inviteNurseBinding.tvMsg.setVisibility(View.VISIBLE);
                         inviteNurseBinding.layProgress.setVisibility(View.GONE);
                         inviteNurseBinding.progressBar.setVisibility(View.GONE);
                         inviteNurseBinding.tvMsg.setText("Make an Offer");
@@ -402,7 +403,6 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                         dialog.dismiss();
                     }
 
-//                    dismissProgress();
                 }
 
                 @Override

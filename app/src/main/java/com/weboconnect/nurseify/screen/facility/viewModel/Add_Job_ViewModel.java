@@ -14,6 +14,7 @@ import com.weboconnect.nurseify.screen.facility.model.AddJobData;
 import com.weboconnect.nurseify.screen.facility.model.AddJobModel;
 import com.weboconnect.nurseify.screen.facility.model.Combine_CommonModel_2;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
+import com.weboconnect.nurseify.screen.facility.model.JobPhoto;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionDatum;
 import com.weboconnect.nurseify.utils.Constant;
@@ -60,9 +61,21 @@ public class Add_Job_ViewModel extends ViewModel {
     public MutableLiveData<List<CommonDatum>> list_work_epic = new MutableLiveData<>();
     public String date2;
     public String date1;
+    //    public ArrayList<JobPhoto> edit_list_photos = new ArrayList<>();
+    public boolean isFirstTime = true;
 
-    public MutableLiveData<List<CommonDatum>> getList_preferred_shift() {
-        return list_preferred_shift;
+
+  /*  public ArrayList<JobPhoto> getEdit_list_photos() {
+        return edit_list_photos;
+    }
+
+    public void setEdit_list_photos(ArrayList<JobPhoto> edit_list_photos) {
+        this.edit_list_photos = edit_list_photos;
+    }*/
+
+
+    public List<CommonDatum> getList_preferred_shift() {
+        return list_preferred_shift.getValue();
     }
 
     public void setList_preferred_shift(MutableLiveData<List<CommonDatum>> list_preferred_shift) {
@@ -391,6 +404,51 @@ public class Add_Job_ViewModel extends ViewModel {
 
     public void peform_add_job(Context context) {
         showProgressBar.setValue(ProgressUIType.SHOW);
+
+        Call<AddJobModel> call;
+
+        call = get_params_setup(context);
+
+        call.enqueue(new Callback<AddJobModel>() {
+            @Override
+            public void onResponse(Call<AddJobModel> call, Response<AddJobModel> response) {
+                assert response.body() != null;
+                if (response == null || response.body() == null) {
+                    showProgressBar.setValue(ProgressUIType.DATA_ERROR);
+                    showErrorMsg.setValue(new ErrorMessage(Constant.API_STATUS, "Data not found !"));
+                    return;
+                }
+                if (!response.body().getApiStatus().equals("1")) {
+                    showProgressBar.setValue(ProgressUIType.DATA_ERROR);
+                    Utils.displayToast(context, "" + response.body().getMessage());
+                    return;
+                }
+
+                if (response.isSuccessful()) {
+                    AddJobModel facilityLoginModel = response.body();
+                    if (isEdit) {
+                        toastMesssage.setValue("Job Updated Successfully !");
+                    } else
+                        toastMesssage.setValue("" + facilityLoginModel.getMessage());
+                    showProgressBar.setValue(ProgressUIType.DIMISS);
+                    dialogStatus.setValue(new DialogStatusMessage(DialogStatus.Done, 2));
+                } else {
+                    showErrorMsg.setValue(new ErrorMessage(Constant.UnSuccessfull, "When wrong"));
+                    showProgressBar.setValue(ProgressUIType.DATA_ERROR);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AddJobModel> call, Throwable t) {
+                Log.d("TAG", "peform_add_job() onFailure: " + t.getMessage());
+                showErrorMsg.setValue(new ErrorMessage(Constant.WHEM_WRONG, "When wrong"));
+                showProgressBar.setValue(ProgressUIType.DATA_ERROR);
+            }
+        });
+    }
+
+    private Call<AddJobModel> get_params_setup(Context context) {
         AddJobData addJobData = new AddJobData();
         addJobData.setPreferredAssignmentDuration("" + list_assignment_durations.getValue().get(selected_assignment_duration).getId());
         addJobData.setSeniorityLevel("" + list_senior_level.getValue().get(selected_senior_level).getId());
@@ -411,14 +469,16 @@ public class Add_Job_ViewModel extends ViewModel {
         addJobData.setJobVideo("" + youtube);
         String days_str = null;
         addJobData.setActiveStatus("" + (isActive ? 1 : 0));
-
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < select_daysOfWeek.size(); i++) {
             if (i == 0) {
-                days_str = list_days_of_week.getValue().get(select_daysOfWeek.get(i)).getName();
-            } else
-                days_str = days_str + "," + list_days_of_week.getValue().get(select_daysOfWeek.get(i)).getName();
+                days_str = "\"" + list_days_of_week.getValue().get(select_daysOfWeek.get(i)).getName() + "\"";
+            } else {
+                days_str = days_str + ",\"" + list_days_of_week.getValue().get(select_daysOfWeek.get(i)).getName() + "\"";
+            }
+            list.add(list_days_of_week.getValue().get(select_daysOfWeek.get(i)).getName());
         }
-        addJobData.setPreferredDaysOfTheWeek(days_str);
+        addJobData.setPreferredDaysOfTheWeek("[" + days_str + "]");
 
 
         MediaType mediatTypeStr = MediaType.parse("multipart/form-data");
@@ -445,66 +505,49 @@ public class Add_Job_ViewModel extends ViewModel {
         RequestBody request_21 = RequestBody.create(mediatTypeStr, "" + addJobData.getPreferredShift());
         RequestBody request_22 = RequestBody.create(mediatTypeStr, "" + date1);
         RequestBody request_23 = RequestBody.create(mediatTypeStr, "" + date2);
+        RequestBody request_24 = RequestBody.create(mediatTypeStr, "" + jobDatum.getJobId());
 
         MultipartBody.Part[] multiPart_Pictures = null;
         Call<AddJobModel> call = null;
-
         if (selected_list_photos != null && selected_list_photos.size() != 0) {
             multiPart_Pictures = new MultipartBody.Part[selected_list_photos.size()];
             if (selected_list_photos != null && selected_list_photos.size() != 0)
                 for (int index = 0; index < selected_list_photos.size(); index++) {
-                    File file = new File(selected_list_photos.get(index));
-                    RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
-                    multiPart_Pictures[index] = MultipartBody.Part.createFormData("job_photos[]",
-                            file.getName(), body);
+                    if (!selected_list_photos.get(index).startsWith("http://")) {
+                        File file = new File(selected_list_photos.get(index));
+                        RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+                        multiPart_Pictures[index] = MultipartBody.Part.createFormData("job_photos[]",
+                                file.getName(), body);
+                    }
                 }
         }
-        if (multiPart_Pictures != null && multiPart_Pictures.length != 0) {
-            call = backendApi.call_create_add_job(request_1, request_2, request_3, request_4,
-                    request_5, request_6, request_7, request_8
-                    , request_9, request_10, request_11, request_12, request_13,
-                    request_14, request_15, request_16, request_17,
-                    request_18, request_19, request_20, multiPart_Pictures, request_22, request_23, request_21);
+        if (isEdit) {
+            if (multiPart_Pictures != null && multiPart_Pictures.length != 0) {
+                call = backendApi.call_update_add_job(request_1, request_2, request_3, request_4,
+                        request_5, request_6, request_7, request_8
+                        , request_9, request_10, request_11, request_12, request_13,
+                        request_14, request_15, request_16, request_17,
+                        request_18, request_19, request_20, multiPart_Pictures, request_22, request_23, request_21, request_24);
 
+            } else {
+                call = backendApi.call_update_add_job(request_1, request_2, request_3, request_4, request_5, request_6, request_7, request_8
+                        , request_9, request_10, request_11, request_12, request_13, request_14, request_15, request_16, request_17,
+                        request_18, request_19, request_20, request_22, request_23, request_21, request_24);
+            }
         } else {
-            call = backendApi.call_create_add_job(request_1, request_2, request_3, request_4, request_5, request_6, request_7, request_8
-                    , request_9, request_10, request_11, request_12, request_13, request_14, request_15, request_16, request_17,
-                    request_18, request_19, request_20, request_22, request_23, request_21);
+            if (multiPart_Pictures != null && multiPart_Pictures.length != 0) {
+                call = backendApi.call_create_add_job(request_1, request_2, request_3, request_4,
+                        request_5, request_6, request_7, request_8
+                        , request_9, request_10, request_11, request_12, request_13,
+                        request_14, request_15, request_16, request_17,
+                        request_18, request_19, request_20, multiPart_Pictures, request_22, request_23, request_21);
+
+            } else {
+                call = backendApi.call_create_add_job(request_1, request_2, request_3, request_4, request_5, request_6, request_7, request_8
+                        , request_9, request_10, request_11, request_12, request_13, request_14, request_15, request_16, request_17,
+                        request_18, request_19, request_20, request_22, request_23, request_21);
+            }
         }
-
-        call.enqueue(new Callback<AddJobModel>() {
-            @Override
-            public void onResponse(Call<AddJobModel> call, Response<AddJobModel> response) {
-                assert response.body() != null;
-                if (response == null || response.body() == null) {
-                    showProgressBar.setValue(ProgressUIType.DATA_ERROR);
-                    showErrorMsg.setValue(new ErrorMessage(Constant.API_STATUS, "Data not found !"));
-                    return;
-                }
-                if (!response.body().getApiStatus().equals("1")) {
-                    showProgressBar.setValue(ProgressUIType.DATA_ERROR);
-                    Utils.displayToast(context, "" + response.body().getMessage());
-                    return;
-                }
-
-                if (response.isSuccessful()) {
-                    AddJobModel facilityLoginModel = response.body();
-                    toastMesssage.setValue("" + facilityLoginModel.getMessage());
-                    showProgressBar.setValue(ProgressUIType.DIMISS);
-                    dialogStatus.setValue(new DialogStatusMessage(DialogStatus.Done, 2));
-                } else {
-                    showErrorMsg.setValue(new ErrorMessage(Constant.UnSuccessfull, "When wrong"));
-                    showProgressBar.setValue(ProgressUIType.DATA_ERROR);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<AddJobModel> call, Throwable t) {
-                Log.d("TAG", "peform_add_job() onFailure: " + t.getMessage());
-                showErrorMsg.setValue(new ErrorMessage(Constant.WHEM_WRONG, "When wrong"));
-                showProgressBar.setValue(ProgressUIType.DATA_ERROR);
-            }
-        });
+        return call;
     }
 }

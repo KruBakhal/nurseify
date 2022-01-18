@@ -73,16 +73,15 @@ public class Active_Jobs_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_nurse, null, false);
 
-//        binding.recyclerView.setAdapter(new ActiveFAdapter(getActivity()));
         setAdapter();
-//        observeer_View();
         setData();
-        refreshData();
+
         return view = binding.getRoot();
     }
 
     private void setData() {
         try {
+            binding.layProgress.setOnTouchListener(touchListner);
             MyJobFFragment browseFFragment = (MyJobFFragment) getParentFragment();
             if (browseFFragment != null && browseFFragment.binding != null
                     && browseFFragment.binding.editTextSearch != null)
@@ -104,7 +103,8 @@ public class Active_Jobs_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0
+                                        && currentPage < totalPage && !pastAdapter.isLoaderVisible) {
                                     pastAdapter.addLoading();
                                 }
                             } else {
@@ -149,10 +149,6 @@ public class Active_Jobs_Fragment extends Fragment {
         }
     }
 
-    private void observeer_View() {
-        binding.layProgress.setOnTouchListener(touchListner);
-
-    }
 
     private void setAdapter() {
         pastAdapter = new Active_My_job_FAdapter(getActivity(), listPostedJob, new ItemCallback() {
@@ -316,6 +312,9 @@ public class Active_Jobs_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        if (isFirstTime) {
+            refreshData();
+        }
     }
 
     @Override

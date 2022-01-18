@@ -85,9 +85,10 @@ public class Active_Browse_Fragment extends Fragment {
         setAdapter();
         observeer_View();
         setData();
-        refreshData();
+        setAdapter();
         return view = binding.getRoot();
     }
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
@@ -97,6 +98,7 @@ public class Active_Browse_Fragment extends Fragment {
             Log.d("TAG", "setMenuVisibility:ac  " + menuVisible);
         }
     }
+
     private void setData() {
         try {
             BrowseFFragment browseFFragment = (BrowseFFragment) getParentFragment();
@@ -120,7 +122,8 @@ public class Active_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 offeredFAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0
+                                        && currentPage < totalPage && !offeredFAdapter.isLoaderVisible) {
                                     offeredFAdapter.addLoading();
                                 }
                             } else {
@@ -328,15 +331,20 @@ public class Active_Browse_Fragment extends Fragment {
             return true;
         }
     };
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d("TAG", "onViewCreated: AC ");
     }
+
     @Override
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        if (isFirstTime) {
+            refreshData();
+        }
         Log.d("TAG", "onResume: Ac ");
     }
 

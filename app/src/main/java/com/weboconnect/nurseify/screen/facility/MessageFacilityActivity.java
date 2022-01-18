@@ -55,17 +55,17 @@ public class MessageFacilityActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        String str = getIntent().getStringExtra(Constant.STR_RESPONSE_DATA);// status_constraint = getIntent().getBooleanExtra("from_applied", false);
+        reciever_id = getIntent().getStringExtra("sender_id");
         sender_id = new SessionManager(MessageFacilityActivity.this).get_user_register_Id();
-        String str = getIntent().getStringExtra(Constant.STR_RESPONSE_DATA);
-        // status_constraint = getIntent().getBooleanExtra("from_applied", false);
-        Type type = new TypeToken<NurseDatum>() {
-        }.getType();
-        nurse_model = new Gson().fromJson(str, type);
+        if (!TextUtils.isEmpty(str)) {
+            Type type = new TypeToken<NurseDatum>() {
+            }.getType();
+            nurse_model = new Gson().fromJson(str, type);
+        }
+
         facility_model = new SessionManager(MessageFacilityActivity.this).get_facilityProfile();
 
-        Intent intent = getIntent();
-        reciever_id = intent.getStringExtra("sender_id");
 
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,6 +242,7 @@ public class MessageFacilityActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
     }
+
     @Override
     public void onResume() {
         super.onResume();

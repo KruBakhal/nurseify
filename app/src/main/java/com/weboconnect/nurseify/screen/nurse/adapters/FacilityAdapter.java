@@ -75,7 +75,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
             String id = list.get(position).getId();
 
 
-            if (list.get(position).getIsFollow() == 0) {
+            if (list.get(position).getIsFollow().equals("0")) {
                 holder.tv_follow.setBackground(activity.getResources().getDrawable(R.drawable.btn_back));
                 holder.tv_follow.setTextColor(activity.getResources().getColor(R.color.white));
                 holder.tv_follow.setText("Follow");
@@ -92,10 +92,6 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                 holder.img_heart1.setVisibility(View.VISIBLE);
                 holder.img_heart.setVisibility(View.GONE);
             }
-
-
-
-
 
 
             holder.lay_share.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +122,11 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void add_Item(List<FacilityJobModel.Facility> data) {
+        list.addAll(data);
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -190,7 +191,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                             Log.e("follow", "Success");
                             ResponseModel responseModel = response.body();
 //                        Utils.displayToast(itemView.getContext(), "" + responseModel.getMessage());
-                            facility.setIsLike(Integer.valueOf(like));
+                            facility.setIsLike(like);
                             list.set(pos, facility);
                             notifyItemChanged(pos);
                         } else {
@@ -215,7 +216,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
             lay_heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (list.get(position).getIsLike() == 1) {
+                    if (list.get(position).getIsLike().equals("1")) {
                         likeFacility(position, facility.getId(), "0", facility);
                     } else {
                         likeFacility(position, facility.getId(), "1", facility);
@@ -226,22 +227,23 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
             tv_follow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (list.get(position).getIsFollow() == 0) {
+                    if (list.get(position).getIsFollow().equals("0")) {
 //                        holder.tv_follow.setBackground(activity.getResources().getDrawable(R.drawable.btn_back));
 //                        holder.tv_follow.setTextColor(activity.getResources().getColor(R.color.white));
-                        followFacility(position, list.get(position).getId(),"1", list.get(position));
+                        followFacility(position, list.get(position).getId(), "1", list.get(position));
                     } else {
-                        followFacility(position, list.get(position).getId(),"0", list.get(position));
+                        followFacility(position, list.get(position).getId(), "0", list.get(position));
                     }
                 }
             });
         }
+
         private void followFacility(int pos, String facilityId, String type, FacilityJobModel.Facility facility) {
 
             Utils.displayToast(itemView.getContext(), null); // to cancel toast if showing on screen
 
             if (!Utils.isNetworkAvailable(itemView.getContext())) {
-                Utils.displayToast(itemView.getContext(),itemView. getResources().getString(R.string.no_internet));
+                Utils.displayToast(itemView.getContext(), itemView.getResources().getString(R.string.no_internet));
                 return;
             }
             Utils.displayToast(itemView.getContext(), null); // to cancel toast if showing on screen
@@ -260,7 +262,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                     try {
                         if (response.isSuccessful()) {
                             ResponseModel responseModel = response.body();
-                            facility.setIsFollow(Integer.valueOf(type));
+                            facility.setIsFollow(type);
                             list.set(pos, facility);
                             notifyItemChanged(pos);
                         } else {

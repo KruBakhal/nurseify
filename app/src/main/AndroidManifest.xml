@@ -35,6 +35,7 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <activity android:name=".screen.facility.NotificationActivity" />
         <activity android:name=".screen.facility.MessageFacilityActivity" />
         <activity android:name=".screen.facility.NurseDetailsActivity" />
         <activity android:name=".screen.facility.FacilityDetails4Activity" />

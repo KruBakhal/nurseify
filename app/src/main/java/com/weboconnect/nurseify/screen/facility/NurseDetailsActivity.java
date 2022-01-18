@@ -35,8 +35,6 @@ import com.weboconnect.nurseify.databinding.DialogNurseAvailabilityBinding;
 import com.weboconnect.nurseify.databinding.DialogNurseHistoryBinding;
 import com.weboconnect.nurseify.databinding.DialogNurseRoleBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
-import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
-import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
 import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurseModel;
 import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurse_Datum;
@@ -64,13 +62,15 @@ public class NurseDetailsActivity extends AppCompatActivity {
     private NurseDatum model;
     Context context;
     private boolean isFetching = false;
-    private UserProfile nurseProfileModel;
+    private UserProfileData nurseProfileModel;
     private boolean isCalled = false;
     private View viewCalled;
     private ProgressDialog progressDialog;
     public int selected_job = 0;
     List<OfferedJobNurse_Datum> listPostedJobs = new ArrayList<>();
     private String nurse_ID;
+    private boolean isEdit = false;
+    private String rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +108,13 @@ public class NurseDetailsActivity extends AppCompatActivity {
                     return;
                 }
                 if (response.isSuccessful()) {
-                    nurseProfileModel = response.body();
-                    if (!nurseProfileModel.getApiStatus().equals("1")) {
+                    nurseProfileModel = response.body().getData();
+                    if (!response.body().getApiStatus().equals("1")) {
                         errorProgress(true);
                     } else {
                         dismissProgress();
-                        Log.d(TAG, "onResponse: " + nurseProfileModel.getData().toString());
+//                        Log.d(TAG, "onResponse: " + nurseProfileModel.getData().toString());
+                        setup2(nurseProfileModel);
                     }
                 } else {
                     errorProgress(true);
@@ -133,12 +134,23 @@ public class NurseDetailsActivity extends AppCompatActivity {
     private void setData() {
         model = new Gson().fromJson(getIntent().getStringExtra(Constant.STR_RESPONSE_DATA), Utils.typeNurse);
         nurse_ID = getIntent().getStringExtra(Constant.ID);
+        rating = getIntent().getStringExtra("rating");
+        isEdit = getIntent().getBooleanExtra(Constant.EDIT_MODE, false);
+        if (isEdit) {
+            binding.layBottom.setVisibility(View.GONE);
+        }
         if (model == null) {
             getNurseProfile(nurse_ID);
             return;
         }
         nurse_ID = model.getUserId();
         getNurseProfile(nurse_ID);
+
+        setup();
+
+    }
+
+    private void setup() {
         Glide.with(context).load(model.getNurseLogo()).placeholder(R.drawable.person)
                 .error(R.drawable.person).into(binding.circleImageView);
         binding.tvName.setText(model.getFirstName() + " " + model.getLastName());
@@ -150,13 +162,32 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.tvRate.setText("$ " + rate + "/Hr");
         binding.tvLicenceState.setText(model.getNursingLicenseState());
         binding.tvLicenceNo.setText(model.getNursingLicenseNumber());
-        binding.tvPreferredGeography.setText("Preferred Geography");
+//        binding.tvPreferredGeography.setText(model.()); // need to uncomment
         binding.tvAddress.setText(model.getAddress());
         binding.tvCity.setText(model.getCity());
         binding.tvState.setText(model.getState());
         binding.tvPostCode.setText(model.getPostcode());
         binding.tvCountry.setText(model.getCountry());
+    }
 
+    private void setup2(UserProfileData model) {
+        Glide.with(context).load(model.getImage()).placeholder(R.drawable.person)
+                .error(R.drawable.person).into(binding.circleImageView);
+        binding.tvName.setText(model.getFirstName() + " " + model.getLastName());
+        binding.tvDescription.setText(model.getRoleInterest().getSummary());
+        binding.tvRating.setText(rating);
+        String rate = model.getHourlyPayRate();
+        if (TextUtils.isEmpty(rate))
+            rate = "0";
+        binding.tvRate.setText("$ " + rate + "/Hr");
+        binding.tvLicenceState.setText(model.getNursingLicenseState());
+        binding.tvLicenceNo.setText(model.getNursingLicenseNumber());
+        binding.tvPreferredGeography.setText(model.getWorkLocationDefinition());
+        binding.tvAddress.setText(model.getAddress());
+        binding.tvCity.setText(model.getCity());
+        binding.tvState.setText(model.getState());
+        binding.tvPostCode.setText(model.getPostcode());
+        binding.tvCountry.setText(model.getCountry());
     }
 
     private void click() {
@@ -181,12 +212,13 @@ public class NurseDetailsActivity extends AppCompatActivity {
                         .putExtra("sender_id", nurse_ID)
                         .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));
                 Utils.onClickEvent(v);
+
             }
         });
         binding.availability.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (nurseProfileModel == null && nurseProfileModel.getData() == null) {
+                if (nurseProfileModel == null && nurseProfileModel == null) {
                     viewCalled = v;
                     getNurseProfile(model.getUserId());
                 } else {
@@ -199,7 +231,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.workHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (nurseProfileModel == null && nurseProfileModel.getData() == null) {
+                if (nurseProfileModel == null && nurseProfileModel == null) {
                     viewCalled = v;
                     getNurseProfile(model.getUserId());
                 } else {
@@ -212,7 +244,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.roleInterest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (nurseProfileModel == null && nurseProfileModel.getData() == null) {
+                if (nurseProfileModel == null && nurseProfileModel == null) {
                     viewCalled = v;
                     getNurseProfile(model.getUserId());
                 } else {
@@ -235,31 +267,31 @@ public class NurseDetailsActivity extends AppCompatActivity {
         dialog.setContentView(roleBinding.getRoot());
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(false);
-        roleBinding.tv1.setText("" + nurseProfileModel.getData().getRoleInterest().getServingPreceptorDefinition());
-        roleBinding.tv2.setText("" + nurseProfileModel.getData().getRoleInterest().getServingInterimNurseLeaderDefinition());
-        roleBinding.tv3.setText("" + nurseProfileModel.getData().getRoleInterest().getLeadershipRolesDefinition());
-        roleBinding.tv4.setText("" + nurseProfileModel.getData().getRoleInterest().getClinicalEducatorDefinition());
-        roleBinding.tv5.setText("" + nurseProfileModel.getData().getRoleInterest().getIsDaisyAwardWinnerDefinition());
-        roleBinding.tv6.setText("" + nurseProfileModel.getData().getRoleInterest().getEmployeeOfTheMthQtrYrDefinition());
-        roleBinding.tv7.setText("" + nurseProfileModel.getData().getRoleInterest().getOtherNursingAwardsDefinition());
-        roleBinding.tv8.setText("" + nurseProfileModel.getData().getRoleInterest().getIsProfessionalPracticeCouncilDefinition());
-        roleBinding.tv9.setText("" + nurseProfileModel.getData().getRoleInterest().getIsResearchPublicationsDefinition());
-        if (!TextUtils.isEmpty(nurseProfileModel.getData().getRoleInterest().getServingInterimNurseLeaderDefinition())
-                && nurseProfileModel.getData().getRoleInterest().getServingInterimNurseLeaderDefinition().equals("yes")) {
+        roleBinding.tv1.setText("" + nurseProfileModel.getRoleInterest().getServingPreceptorDefinition());
+        roleBinding.tv2.setText("" + nurseProfileModel.getRoleInterest().getServingInterimNurseLeaderDefinition());
+        roleBinding.tv3.setText("" + nurseProfileModel.getRoleInterest().getLeadershipRolesDefinition());
+        roleBinding.tv4.setText("" + nurseProfileModel.getRoleInterest().getClinicalEducatorDefinition());
+        roleBinding.tv5.setText("" + nurseProfileModel.getRoleInterest().getIsDaisyAwardWinnerDefinition());
+        roleBinding.tv6.setText("" + nurseProfileModel.getRoleInterest().getEmployeeOfTheMthQtrYrDefinition());
+        roleBinding.tv7.setText("" + nurseProfileModel.getRoleInterest().getOtherNursingAwardsDefinition());
+        roleBinding.tv8.setText("" + nurseProfileModel.getRoleInterest().getIsProfessionalPracticeCouncilDefinition());
+        roleBinding.tv9.setText("" + nurseProfileModel.getRoleInterest().getIsResearchPublicationsDefinition());
+        if (!TextUtils.isEmpty(nurseProfileModel.getRoleInterest().getServingInterimNurseLeaderDefinition())
+                && nurseProfileModel.getRoleInterest().getServingInterimNurseLeaderDefinition().equals("yes")) {
             roleBinding.layHide.setVisibility(View.VISIBLE);
         } else roleBinding.layHide.setVisibility(View.GONE);
         String lang = "";
-        for (int i = 0; i < nurseProfileModel.getData().getRoleInterest().getLanguages().size(); i++) {
+        for (int i = 0; i < nurseProfileModel.getRoleInterest().getLanguages().size(); i++) {
             if (i == 0) {
-                lang = nurseProfileModel.getData().getRoleInterest().getLanguages().get(i);
+                lang = nurseProfileModel.getRoleInterest().getLanguages().get(i);
             } else
-                lang = lang + ", " + nurseProfileModel.getData().getRoleInterest().getLanguages().get(i);
+                lang = lang + ", " + nurseProfileModel.getRoleInterest().getLanguages().get(i);
         }
         roleBinding.tvLang.setText("" + lang);
-        roleBinding.tvIntro.setText("" + nurseProfileModel.getData().getRoleInterest().getSummary());
-        roleBinding.tvUrlLink.setText("" + nurseProfileModel.getData().getRoleInterest().getNuVideoEmbedUrl());
+        roleBinding.tvIntro.setText("" + nurseProfileModel.getRoleInterest().getSummary());
+        roleBinding.tvUrlLink.setText("" + nurseProfileModel.getRoleInterest().getNuVideoEmbedUrl());
         List<UserProfileData.AdditionalPicture> sdsd =
-                nurseProfileModel.getData().getRoleInterest().getAdditionalPictures();
+                nurseProfileModel.getRoleInterest().getAdditionalPictures();
         List<String> list_photos = new ArrayList<>();
         List<String> list_Files = new ArrayList<>();
 
@@ -277,7 +309,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
             roleBinding.rvPhotos.setAdapter(photoFilesAdapter);
         }
         List<UserProfileData.AdditionalFile> sdsd1 =
-                nurseProfileModel.getData().getRoleInterest().getAdditionalFiles();
+                nurseProfileModel.getRoleInterest().getAdditionalFiles();
         list_Files.clear();
         if (sdsd1 != null && sdsd1.size() != 0) {
             for (UserProfileData.AdditionalFile additionalPicture : sdsd1) {
@@ -286,7 +318,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
             Nurse_FilesAdapter filesAdapter = new Nurse_FilesAdapter(list_Files, new Nurse_FilesAdapter.PhotoFilesListner() {
                 @Override
                 public void onCLick_View(int position) {
-                    List<UserProfileData.AdditionalFile> list = nurseProfileModel.getData().getRoleInterest()
+                    List<UserProfileData.AdditionalFile> list = nurseProfileModel.getRoleInterest()
                             .getAdditionalFiles();
                     if (list != null && list.size() != 0 && position < list.size()) {
                         if (!TextUtils.isEmpty(list.get(position).getPhoto())) {
@@ -302,7 +334,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onCLick_Download(int position) {
-                    List<UserProfileData.AdditionalFile> list = nurseProfileModel.getData().getRoleInterest()
+                    List<UserProfileData.AdditionalFile> list = nurseProfileModel.getRoleInterest()
                             .getAdditionalFiles();
                     if (list != null && list.size() != 0 && position < list.size()) {
                         if (!TextUtils.isEmpty(list.get(position).getPhoto())) {
@@ -331,7 +363,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
     }
 
     private void open_workhistory() {
-        if (nurseProfileModel == null || nurseProfileModel.getData().getExperience() == null) {
+        if (nurseProfileModel == null || nurseProfileModel.getExperience() == null) {
             Utils.displayToast(context, "Nurse profile data is empty !");
             return;
         }
@@ -341,17 +373,17 @@ public class NurseDetailsActivity extends AppCompatActivity {
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(false);
 
-        historyBinding.tvHighestNurseDegree.setText(nurseProfileModel.getData().getExperience().getHighestNursingDegreeDefinition());
-        historyBinding.tvCollageName.setText(nurseProfileModel.getData().getExperience().getCollegeUniName());
-        historyBinding.tvFacilityExperience.setText(nurseProfileModel.getData().getExperience().getExperienceAsAcuteCareFacility());
-        historyBinding.tvNursingExperience.setText(nurseProfileModel.getData().getExperience().getExperienceAsAmbulatoryCareFacility());
-        historyBinding.tvCerner.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyCernerDefinition());
-        historyBinding.tvMeditech.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyMeditechDefinition());
-        historyBinding.tvEpic.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyEpicDefinition());
-        historyBinding.tvOther.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyOther());
+        historyBinding.tvHighestNurseDegree.setText(nurseProfileModel.getExperience().getHighestNursingDegreeDefinition());
+        historyBinding.tvCollageName.setText(nurseProfileModel.getExperience().getCollegeUniName());
+        historyBinding.tvFacilityExperience.setText(nurseProfileModel.getExperience().getExperienceAsAcuteCareFacility());
+        historyBinding.tvNursingExperience.setText(nurseProfileModel.getExperience().getExperienceAsAmbulatoryCareFacility());
+        historyBinding.tvCerner.setText(nurseProfileModel.getExperience().getEhrProficiencyCernerDefinition());
+        historyBinding.tvMeditech.setText(nurseProfileModel.getExperience().getEhrProficiencyMeditechDefinition());
+        historyBinding.tvEpic.setText(nurseProfileModel.getExperience().getEhrProficiencyEpicDefinition());
+        historyBinding.tvOther.setText(nurseProfileModel.getExperience().getEhrProficiencyOther());
         historyBinding.recyclerView.setAdapter(new Nurse_CertificationsAdapter(NurseDetailsActivity.this,
-                nurseProfileModel.getData().getCertitficate()));
-        if (!TextUtils.isEmpty(nurseProfileModel.getData().getResume())) {
+                nurseProfileModel.getCertitficate()));
+        if (!TextUtils.isEmpty(nurseProfileModel.getResume())) {
             historyBinding.layResume.setVisibility(View.VISIBLE);
         } else {
             historyBinding.layResume.setVisibility(View.GONE);
@@ -370,7 +402,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
     }
 
     private void open_availability() {
-        if (nurseProfileModel == null || nurseProfileModel.getData() == null) {
+        if (nurseProfileModel == null || nurseProfileModel == null) {
             Utils.displayToast(context, "Nurse profile data is empty !");
             return;
         }
@@ -379,11 +411,11 @@ public class NurseDetailsActivity extends AppCompatActivity {
         dialog.setContentView(availabilityBinding.getRoot());
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(false);
-        availabilityBinding.tvShiftDuration.setText(nurseProfileModel.getData().getShiftDurationDefinition());
-        availabilityBinding.tvAssignmentDuration.setText(nurseProfileModel.getData().getAssignmentDurationDefinition());
-        availabilityBinding.tvPreferredShift.setText(nurseProfileModel.getData().getPreferred_shift_definition());
-        if (!TextUtils.isEmpty(nurseProfileModel.getData().getEarliestStartDate()))
-            availabilityBinding.tvEarliestStartDate.setText(nurseProfileModel.getData().getEarliestStartDate().replace("/", "-"));
+        availabilityBinding.tvShiftDuration.setText(nurseProfileModel.getShiftDurationDefinition());
+        availabilityBinding.tvAssignmentDuration.setText(nurseProfileModel.getAssignmentDurationDefinition());
+        availabilityBinding.tvPreferredShift.setText(nurseProfileModel.getPreferred_shift_definition());
+        if (!TextUtils.isEmpty(nurseProfileModel.getEarliestStartDate()))
+            availabilityBinding.tvEarliestStartDate.setText(nurseProfileModel.getEarliestStartDate().replace("/", "-"));
 
         availabilityBinding.close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -566,7 +598,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
                     return;
                 }
                 if (response.isSuccessful()) {
-                    inviteNurseBinding.tvMsg.setVisibility(View.GONE);
+                    inviteNurseBinding.tvMsg.setVisibility(View.VISIBLE);
                     inviteNurseBinding.layProgress.setVisibility(View.GONE);
                     inviteNurseBinding.progressBar.setVisibility(View.GONE);
                     inviteNurseBinding.tvMsg.setText("Make an Offer");
@@ -589,7 +621,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
 
-                dismissProgress();
+
             }
 
             @Override

@@ -79,7 +79,7 @@ public class Past_Browse_Fragment extends Fragment {
         setAdapter();
         observeer_View();
         setData();
-        refreshData();
+        setAdapter();
         return view = binding.getRoot();
     }
 
@@ -106,7 +106,8 @@ public class Past_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0
+                                        && currentPage < totalPage && !pastAdapter.isLoaderVisible) {
                                     pastAdapter.addLoading();
                                 }
                             } else {
@@ -323,6 +324,9 @@ public class Past_Browse_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        if (isFirstTime) {
+            refreshData();
+        }
         Log.d("TAG", "onResume: pa ");
     }
 

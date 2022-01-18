@@ -78,7 +78,8 @@ public class BrowseFragment extends Fragment {
     String id;
     FragmentBrowseBinding binding;
     View view;
-    private int selected_page = 1;
+    private int selected_page_1 = 1;
+    private int selected_page_2 = 1;
     public int search_location = 75002;
     public int selected_open_assignment_type = 0;
     public int selected_facility_type = 0;
@@ -100,6 +101,7 @@ public class BrowseFragment extends Fragment {
     private int hours2 = 1;
     private String str_terms_conditions;
     Pattern patternAlphabetNumbers = Pattern.compile("^[a-zA-Z0-9]*$");
+    private boolean isFirstTime = true;
 
     public BrowseFragment() {
     }
@@ -121,6 +123,7 @@ public class BrowseFragment extends Fragment {
         click();
         layoutManager = binding.recyclerViewJobs.getLayoutManager();
         binding.recyclerViewJobs.addOnScrollListener(recyclerViewOnScrollListener);
+        binding.recyclerViewFacility.addOnScrollListener(recyclerViewOnScrollListener2);
 //        fecthBrowseFacility();
         ((SimpleItemAnimator) binding.recyclerViewJobs.getItemAnimator()).setSupportsChangeAnimations(false);
 
@@ -278,7 +281,7 @@ public class BrowseFragment extends Fragment {
                     zipCity = dialogFilterBinding.tvZip.getText().toString();
                     hours1 = dialogFilterBinding.rangeSeekbar3.getSelectedMinValue().intValue();
                     hours2 = dialogFilterBinding.rangeSeekbar3.getSelectedMaxValue().intValue();
-                    selected_page = 1;
+                    selected_page_1 = 1;
                     fecthBrowseJobs(true, dialogFilterBinding.tvZip.getText().toString(),
                             "" + dialogFilterBinding.rangeSeekbar3.getSelectedMinValue().intValue()
                             , "" + dialogFilterBinding.rangeSeekbar3.getSelectedMaxValue().intValue());
@@ -445,6 +448,9 @@ public class BrowseFragment extends Fragment {
 
     }
 
+    private boolean loading = false;
+    private boolean isLastPage = false;
+    private int offset = 10;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -458,17 +464,53 @@ public class BrowseFragment extends Fragment {
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
 
-           /* if (!fetchLiveData.loading && !fetchLiveData.isLastPage) {
+            if (!loading && !isLastPage) {
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0
-                        && totalItemCount >= fetchLiveData.offset) {
-                    fecthBrowseJobs(selected_page);
+                        && totalItemCount >= offset) {
+                    if (isJobType) {
+                        selected_page_1++;
+                        fecthBrowseJobs(false, null, null, null);
+                    } else {
+                        selected_page_2++;
+                        fecthBrowseFacility();
+                    }
+
                 }
-            }*/
+            }
         }
     };
 
-    private void fecthBrowseJobs(boolean b, String s, String s1, String s2) {
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener2 = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemCount = binding.recyclerViewFacility.getLayoutManager().getChildCount();
+            int totalItemCount = binding.recyclerViewFacility.getLayoutManager().getItemCount();
+            int firstVisibleItemPosition = ((LinearLayoutManager) binding.recyclerViewFacility.getLayoutManager()).findFirstVisibleItemPosition();
+            if (!loading && !isLastPage) {
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0
+                        && totalItemCount >= offset) {
+                    if (isJobType) {
+                        selected_page_1++;
+                        fecthBrowseJobs(false, null, null, null);
+                    } else {
+                        selected_page_2++;
+                        fecthBrowseFacility();
+                    }
+
+                }
+            }
+        }
+    };
+
+    private void fecthBrowseJobs(boolean isFilter, String search_loc, String range1, String range2) {
 
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
 
@@ -477,26 +519,30 @@ public class BrowseFragment extends Fragment {
             return;
         }
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
-        showProgress();
-        String page = "" + selected_page;
+        if (isFirstTime) {
+            isFirstTime = false;
+            showProgress();
+        } else {
+
+            binding.progressBar.setVisibility(View.VISIBLE);
+        }
+        String page = "" + selected_page_1;
         user_id = new SessionManager(getContext()).get_user_register_Id();
 
         Call<JobModel> call = null;
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
-        if (b) {
-            RequestBody search_location1 = RequestBody.create(MediaType.parse("multipart/form-data"), s);
+        if (isFilter) {
+            RequestBody search_location1 = RequestBody.create(MediaType.parse("multipart/form-data"), search_loc);
             RequestBody open_assignment_type1 = RequestBody.create(MediaType.parse("multipart/form-data"), list_assignment.get(selected_open_assignment_type).getId().toString());
             RequestBody facility_type1 = RequestBody.create(MediaType.parse("multipart/form-data"), list_facilty_type.get(selected_facility_type).getId().toString());
             RequestBody electronic_medical_records1 = RequestBody.create(MediaType.parse("multipart/form-data"), list_media.get(selected_electronic_medical_records).getId().toString());
-            String range = s1 + "-" + s2;
+            String range = range1 + "-" + range2;
             RequestBody rangeSLider = RequestBody.create(MediaType.parse("multipart/form-data"), range);
 
             call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_browser_filter_job(page, search_location1, open_assignment_type1,
                             facility_type1, electronic_medical_records1, user_id1, rangeSLider);
-
-        }
-        else
+        } else
             call = RetrofitClient.getInstance().getNurseRetrofitApi()
                     .call_browser_job(page, user_id1);
 
@@ -507,7 +553,7 @@ public class BrowseFragment extends Fragment {
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
                         errorProgress(true);
-                        if (b)
+                        if (isFilter)
                             openFilter();
                         return;
                     }
@@ -515,21 +561,19 @@ public class BrowseFragment extends Fragment {
                         dismissProgress();
                         JobModel jobModel = response.body();
                         if (jobModel.getData() == null || jobModel.getData().size() == 0) {
-                            Utils.displayToast(getContext(), "No Jobs found !");
-                            if (b)
+//                            Utils.displayToast(getContext(), "No Jobs found !");
+                            selected_page_1--;
+                            if (isFilter)
                                 openFilter();
                             return;
                         }
                         if (list_jobs == null) {
                             list_jobs = new ArrayList<>();
-                        }/*else {
-                            list_jobs.clear();
-                        }*/
+                        }
                         if (list_jobs.size() > 0) {
                             list_jobs.addAll(jobModel.getData());
                             if (browserJobsAdapter != null) {
-                                setAdapter();
-                                browserJobsAdapter.notifyDataSetChanged();
+                                browserJobsAdapter.add_Item(jobModel.getData());
                             } else
                                 setAdapter();
                         } else {
@@ -541,7 +585,7 @@ public class BrowseFragment extends Fragment {
                         }
                     } else {
                         errorProgress(true);
-                        if (b)
+                        if (isFilter)
                             openFilter();
                     }
                 } catch (Exception e) {
@@ -552,7 +596,7 @@ public class BrowseFragment extends Fragment {
             @Override
             public void onFailure(Call<JobModel> call, Throwable t) {
                 errorProgress(true);
-                if (b)
+                if (isFilter)
                     openFilter();
 
             }
@@ -571,7 +615,7 @@ public class BrowseFragment extends Fragment {
         }
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
         showProgress();
-        String page = "" + selected_page;
+        String page = "" + selected_page_1;
         if (isLiked.equals("0")) {
             isLiked = "1";
         } else {
@@ -647,8 +691,13 @@ public class BrowseFragment extends Fragment {
             return;
         }
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
-        showProgress();
-        String page = "" + selected_page;
+        if (isFirstTime) {
+            isFirstTime = false;
+            showProgress();
+        } else {
+            binding.progressBar.setVisibility(View.VISIBLE);
+        }
+        String page = "" + selected_page_2;
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
@@ -662,13 +711,40 @@ public class BrowseFragment extends Fragment {
                 try {
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
-
                         dismissProgress();
                         return;
                     }
                     if (response.isSuccessful()) {
                         dismissProgress();
                         FacilityJobModel facilityModel = response.body();
+
+                        if (facilityModel.getData() == null || facilityModel.getData().size() == 0) {
+//                            if (isFirstTime) {
+//                            Utils.displayToast(getContext(), "No Jobs found !");
+//                            }
+                            selected_page_2--;
+                            return;
+                        }
+                        if (list_facility == null) {
+                            list_facility = new ArrayList<>();
+                        }
+                        if (list_facility.size() > 0) {
+                            list_facility.addAll(facilityModel.getData());
+                            if (facilityAdapter != null) {
+                                facilityAdapter.add_Item(facilityModel.getData());
+                            } else {
+                                setAdapter_Facility();
+                            }
+                        } else {
+                            list_facility.addAll(facilityModel.getData());
+                            setAdapter_Facility();
+                            binding.textFacilities.performClick();
+                        }
+
+                        /*if (facilityModel.getData() == null || facilityModel.getData().size() == 0) {
+                            selected_page_2--;
+                            return;
+                        }
                         if (list_facility == null) {
                             list_facility = new ArrayList<>();
                         }
@@ -682,13 +758,14 @@ public class BrowseFragment extends Fragment {
                         } else {
                             list_facility.addAll(facilityModel.getData());
                             setAdapter_Facility();
-                        }
+                        }*/
 
 
                     } else {
 
                         dismissProgress();
                     }
+
                 } catch (Exception e) {
 
                     dismissProgress();
@@ -724,7 +801,7 @@ public class BrowseFragment extends Fragment {
 //                        , Constant.REQUEST_Facility_FUNS);
             }
         });
-        binding.recyclerViewJobs.setAdapter(facilityAdapter);
+        binding.recyclerViewFacility.setAdapter(facilityAdapter);
     }
 
     private void followFacility(int pos, String facilityId, String type, FacilityJobModel.Facility facility) {
@@ -756,7 +833,7 @@ public class BrowseFragment extends Fragment {
 //                        fecthBrowseFacility();
                         ResponseModel responseModel = response.body();
 //                        Utils.displayToast(getContext(), "" + responseModel.getMessage());
-                        facility.setIsFollow(Integer.valueOf(type));
+                        facility.setIsFollow(type);
                         list_facility.set(pos, facility);
                         facilityAdapter.notifyItemChanged(pos);
                     } else {
@@ -805,7 +882,7 @@ public class BrowseFragment extends Fragment {
                         Log.e("follow", "Success");
                         ResponseModel responseModel = response.body();
 //                        Utils.displayToast(getContext(), "" + responseModel.getMessage());
-                        facility.setIsLike(Integer.valueOf(like));
+                        facility.setIsLike(like);
                         list_facility.set(pos, facility);
                         facilityAdapter.notifyItemChanged(pos);
                     } else {
@@ -893,6 +970,10 @@ public class BrowseFragment extends Fragment {
                 binding.textJobs.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
                 binding.textFacilities.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
                 binding.recyclerViewJobs.setAdapter(browserJobsAdapter);
+                binding.recyclerViewFacility.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.recyclerViewJobs.setVisibility(View.VISIBLE);
+
                 if (list_jobs == null || list_jobs.size() == 0) {
                     fecthBrowseJobs(false, null, null, null);
                 } else {
@@ -913,11 +994,13 @@ public class BrowseFragment extends Fragment {
                 binding.textFacilities.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.btn_tab));
                 binding.textJobs.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_trans));
                 binding.recyclerViewJobs.setAdapter(facilityAdapter);
+                binding.recyclerViewFacility.setVisibility(View.VISIBLE);
+                binding.recyclerViewJobs.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 if (list_facility == null || list_facility.size() == 0) {
                     fecthBrowseFacility();
                 } else {
-                    binding.recyclerViewJobs.setAdapter(facilityAdapter);
-//                    binding.recyclerViewJobs.notify();
+                    binding.recyclerViewFacility.setAdapter(facilityAdapter);
                     dismissProgress();
                 }
             }
@@ -1125,11 +1208,19 @@ public class BrowseFragment extends Fragment {
 
     private void dismissProgress() {
         binding.layProgress.setVisibility(View.GONE);
-        binding.recyclerViewJobs.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.GONE);
+        if (isJobType) {
+            binding.recyclerViewJobs.setVisibility(View.VISIBLE);
+            binding.recyclerViewFacility.setVisibility(View.GONE);
+        } else {
+            binding.recyclerViewJobs.setVisibility(View.GONE);
+            binding.recyclerViewFacility.setVisibility(View.VISIBLE);
+        }
     }
 
     private void errorProgress(boolean status) {
         binding.recyclerViewJobs.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
         binding.layProgress.setVisibility(View.VISIBLE);
         binding.pg.setVisibility(View.GONE);
         if (status)
@@ -1137,14 +1228,25 @@ public class BrowseFragment extends Fragment {
         else
             binding.tvMsg.setText(getString(R.string.no_internet));
 
-
+        if (isJobType) {
+            binding.recyclerViewJobs.setVisibility(View.GONE);
+            binding.recyclerViewFacility.setVisibility(View.GONE);
+        } else {
+            binding.recyclerViewJobs.setVisibility(View.GONE);
+            binding.recyclerViewFacility.setVisibility(View.GONE);
+        }
     }
 
     private void showProgress() {
-        binding.recyclerViewJobs.setVisibility(View.GONE);
         binding.layProgress.setVisibility(View.VISIBLE);
+        if (isJobType) {
+            binding.recyclerViewJobs.setVisibility(View.GONE);
+            binding.recyclerViewFacility.setVisibility(View.GONE);
+        } else {
+            binding.recyclerViewJobs.setVisibility(View.GONE);
+            binding.recyclerViewFacility.setVisibility(View.GONE);
+        }
     }
-
 
 
     public class CombineCommonData {
@@ -1200,4 +1302,5 @@ public class BrowseFragment extends Fragment {
             }
         }
     }
+
 }

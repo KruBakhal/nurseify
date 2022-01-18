@@ -10,6 +10,7 @@ import java.util.List;
 
 public class AppController extends Application {
 
+    public static boolean isEdit_Result=false;
     public List<CommonDatum> list_assignment_durations = new ArrayList<>();
     public List<CommonDatum> list_senior_level = new ArrayList<>();
     public List<CommonDatum> list_job_funcs = new ArrayList<>();

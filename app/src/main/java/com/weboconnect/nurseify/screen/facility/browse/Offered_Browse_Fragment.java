@@ -75,7 +75,7 @@ public class Offered_Browse_Fragment extends Fragment {
         setAdapter();
         observeer_View();
         setData();
-        refreshData();
+        setAdapter();
         return view = binding.getRoot();
     }
 
@@ -108,7 +108,8 @@ public class Offered_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 offeredFAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0
+                                        && currentPage < totalPage && !offeredFAdapter.isLoaderVisible) {
                                     offeredFAdapter.addLoading();
                                 }
                             } else {
@@ -324,6 +325,9 @@ public class Offered_Browse_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        if (isFirstTime) {
+            refreshData();
+        }
         Log.d("TAG", "onResume: Of ");
     }
 

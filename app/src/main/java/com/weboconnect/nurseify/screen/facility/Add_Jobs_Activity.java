@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
@@ -63,7 +64,7 @@ public class Add_Jobs_Activity extends AppCompatActivity {
                         break;
                     case Done:
                         if (dialogStatus.getDialogType() == 2) {
-                            setResult(RESULT_OK);
+                            setResult(RESULT_OK, new Intent().putExtra(Constant.EDIT_MODE, true));
                             finish();
                         }
                         break;

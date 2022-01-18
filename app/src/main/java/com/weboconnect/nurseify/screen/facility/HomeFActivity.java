@@ -1,5 +1,7 @@
 package com.weboconnect.nurseify.screen.facility;
 
+import static com.weboconnect.nurseify.utils.Constant.REQUEST_CODE_ADD_JOB;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.weboconnect.nurseify.AppController;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityHomeFBinding;
 import com.weboconnect.nurseify.screen.facility.ui.AccountFFragment;
@@ -32,7 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HomeFActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE_ADD_JOB = 656;
+
     ActivityHomeFBinding binding;
     ArrayList<Integer> mFragmentInt = new ArrayList<>();
     public BrowseFFragment browseFFragment;
@@ -158,9 +161,7 @@ public class HomeFActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ADD_JOB) {
 
-        }
     }
 
     @Override

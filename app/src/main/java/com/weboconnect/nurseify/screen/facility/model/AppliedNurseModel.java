@@ -43,6 +43,29 @@ public class AppliedNurseModel {
 
     public class AppliedNurseDatum {
 
+        @SerializedName("nurse_id")
+        @Expose
+        private String nurseId;
+        @SerializedName("nurse_user_id")
+        @Expose
+        private String userId;
+
+        public String getNurseId() {
+            return nurseId;
+        }
+
+        public void setNurseId(String nurseId) {
+            this.nurseId = nurseId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
         @SerializedName("name")
         @Expose
         private String name;

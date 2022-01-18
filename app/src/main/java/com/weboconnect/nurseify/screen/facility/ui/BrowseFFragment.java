@@ -1,6 +1,7 @@
 package com.weboconnect.nurseify.screen.facility.ui;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.ActiveFAdapter;
 import com.weboconnect.nurseify.adapter.TabAdapter;
+import com.weboconnect.nurseify.screen.facility.NotificationActivity;
 import com.weboconnect.nurseify.screen.facility.browse.Active_Browse_Fragment;
 import com.weboconnect.nurseify.screen.facility.browse.Nurse_Browse_Fragment;
 import com.weboconnect.nurseify.screen.facility.browse.Offered_Browse_Fragment;
@@ -30,6 +32,7 @@ import com.weboconnect.nurseify.adapter.NursesAdapter;
 import com.weboconnect.nurseify.adapter.OfferedFAdapter;
 import com.weboconnect.nurseify.adapter.PastAdapter;
 import com.weboconnect.nurseify.databinding.FragmentBrowseFBinding;
+import com.weboconnect.nurseify.utils.Utils;
 
 
 public class BrowseFFragment extends Fragment {
@@ -54,25 +57,32 @@ public class BrowseFFragment extends Fragment {
         getTabList();
 
 
+        binding.imgNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), NotificationActivity.class));
+                Utils.onClickEvent(v);
+            }
+        });
         binding.textNurses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 change_tab(0);
-//                binding.recyclerViewJobs.setAdapter(new NursesAdapter(getActivity()));
+                Utils.onClickEvent(v);
             }
         });
         binding.textOffered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 change_tab(1);
-//                binding.recyclerViewJobs.setAdapter(new OfferedFAdapter(getActivity()));
+                Utils.onClickEvent(v);
             }
         });
         binding.textActive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 change_tab(2);
-//                binding.recyclerViewJobs.setAdapter(new ActiveFAdapter(getActivity()));
+                Utils.onClickEvent(v);
             }
         });
         binding.textPast.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +90,7 @@ public class BrowseFFragment extends Fragment {
             public void onClick(View v) {
 
                 change_tab(3);
+                Utils.onClickEvent(v);
             }
         });
 
@@ -88,8 +99,8 @@ public class BrowseFFragment extends Fragment {
 
     private void change_tab(int i) {
 //        if (!TextUtils.isEmpty(binding.editTextSearch.getText().toString())) {
-            binding.editTextSearch.setText("");
-            binding.editTextSearch.clearFocus();
+        binding.editTextSearch.setText("");
+        binding.editTextSearch.clearFocus();
 //        }
         switch (i) {
             case 0:

@@ -110,6 +110,15 @@ public class Add_Job_1_Fragment extends Fragment {
     }
 
     private void setData() {
+        if (viewModel.isFirstTime) {
+            viewModel.isFirstTime = false;
+            dayOfMonth2 = 0;
+            monthOfYear2 = 0;
+            year2 = 0;
+            dayOfMonth3 = 0;
+            monthOfYear3 = 0;
+            year3 = 0;
+        }
         AppController appController = (AppController) getActivity().getApplication();
         if (!checkDataEmpty()) {
             viewModel.fetch_add_job_data(appController);
@@ -164,6 +173,8 @@ public class Add_Job_1_Fragment extends Fragment {
                     binding.spinnerWorkLoc.setText("" + viewModel.jobDatum.getPreferredWorkLocationDefinition());
                 }
                 binding.edExperience.setText("" + viewModel.jobDatum.getPreferredExperience());
+                binding.edOther.setText("" + viewModel.jobDatum.getJobOtherExp());
+
                 if (!TextUtils.isEmpty(viewModel.jobDatum.getPreferredDaysOfTheWeek())) {
                     setupSelection_DaysOfWeeks_ByModelData(viewModel.jobDatum.getPreferredDaysOfTheWeek().split(","));
                     daysOfWeekAdapter.notifyDataSetChanged();
@@ -196,16 +207,14 @@ public class Add_Job_1_Fragment extends Fragment {
                         Collections.singletonList(viewModel.getList_preferred_shift()))) {
                     viewModel.selected_preferred_shift = getIndexFromList(viewModel.jobDatum.getPreferredShift(),
                             Collections.singletonList(viewModel.getList_preferred_shift()));
-                    binding.tvEpic.setText("" + viewModel.jobDatum.getPreferredShiftDefinition());
+                    binding.spinnerPreferredShift.setText("" + viewModel.jobDatum.getPreferredShiftDefinition());
                 }
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
                 SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
                 try {
-                    /*
-                    Date str1 = simpleDateFormat.parse(viewModel.jobDatum.getCertitficate().get(select_certificate_pos).
-                            getEffectiveDate());
-                    Date str2 = simpleDateFormat.parse(viewModel.jobDatum.getCertitficate().get(select_certificate_pos).
-                            getExpirationDate());
+                    Date str1 = simpleDateFormat.parse(viewModel.jobDatum.getStartDate());
+                    Date str2 = simpleDateFormat.parse(viewModel.jobDatum.getEndDate());
                     viewModel.date1 = simpleDateFormat1.format(str1);
                     viewModel.date2 = simpleDateFormat1.format(str2);
 
@@ -224,7 +233,9 @@ public class Add_Job_1_Fragment extends Fragment {
                     dayOfMonth3 = Integer.parseInt(formatter.format(str2.getTime()));
                     monthOfYear2--;
                     monthOfYear3--;
-                    */
+
+                    binding.tvStartDate.setText(simpleDateFormat2.format(str1));
+                    binding.tvEndDate.setText(simpleDateFormat2.format(str2));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

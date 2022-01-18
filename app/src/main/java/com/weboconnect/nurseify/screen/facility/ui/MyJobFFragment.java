@@ -28,7 +28,7 @@ public class MyJobFFragment extends Fragment {
     String id;
     public FragmentMyJobsFBinding binding;
     View view;
-    private TabAdapter adapter;
+    public TabAdapter adapter;
 
     public MyJobFFragment() {
     }

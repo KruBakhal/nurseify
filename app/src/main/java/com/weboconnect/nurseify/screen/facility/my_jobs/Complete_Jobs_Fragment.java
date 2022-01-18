@@ -79,14 +79,14 @@ public class Complete_Jobs_Fragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_nurse, null, false);
 
         setAdapter();
-//        observeer_View();
         setData();
-        refreshData();
+
         return view = binding.getRoot();
     }
 
     private void setData() {
         try {
+            binding.layProgress.setOnTouchListener(touchListner);
             MyJobFFragment browseFFragment = (MyJobFFragment) getParentFragment();
             if (browseFFragment != null && browseFFragment.binding != null
                     && browseFFragment.binding.editTextSearch != null)
@@ -108,7 +108,8 @@ public class Complete_Jobs_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 pastAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0
+                                        && currentPage < totalPage && !pastAdapter.isLoaderVisible) {
                                     pastAdapter.addLoading();
                                 }
                             } else {
@@ -155,7 +156,7 @@ public class Complete_Jobs_Fragment extends Fragment {
     }
 
     private void observeer_View() {
-        binding.layProgress.setOnTouchListener(touchListner);
+
 
     }
 
@@ -324,6 +325,9 @@ public class Complete_Jobs_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        if (isFirstTime) {
+            refreshData();
+        }
     }
 
     @Override

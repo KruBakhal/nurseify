@@ -120,7 +120,7 @@ public class Nurse_Browse_Fragment extends Fragment {
         setAdapter_Nurse();
         observeer_View();
         setData();
-        refreshData(true);
+        setAdapter_Nurse();
         return view = binding.getRoot();
     }
 
@@ -177,7 +177,8 @@ public class Nurse_Browse_Fragment extends Fragment {
                             if (TextUtils.isEmpty(text)) {
                                 nursesAdapter.getFilter().filter(text);
                                 isFilterApply = false;
-                                if (listPostedJob != null && listPostedJob.size() != 0 && currentPage < totalPage) {
+                                if (listPostedJob != null && listPostedJob.size() != 0
+                                        && currentPage < totalPage && !nursesAdapter.isLoaderVisible) {
                                     nursesAdapter.addLoading();
                                 }
                             } else {
@@ -800,7 +801,7 @@ public class Nurse_Browse_Fragment extends Fragment {
     }
 
     private void setAdapter_Nurse() {
-        nursesAdapter = new NursesAdapter(getActivity(), new ArrayList<>(), new NursesAdapter.NurseListener() {
+        nursesAdapter = new NursesAdapter(getActivity(), listPostedJob, new NursesAdapter.NurseListener() {
 
             @Override
             public void onClick_Msg(NurseDatum model, int position) {
@@ -1105,6 +1106,7 @@ public class Nurse_Browse_Fragment extends Fragment {
             if (currentPage != PAGE_START)
                 nursesAdapter.removeLoading();
 
+
             currentPage = Integer.parseInt(jobPostedModel.getData().getCurrentPage());
             totalPage = Integer.parseInt(jobPostedModel.getData().getTotalPagesAvailable());
             PaginationListener.PAGE_SIZE = Integer.parseInt(jobPostedModel.getData().getResultsPerPage());
@@ -1178,6 +1180,9 @@ public class Nurse_Browse_Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         isFragActive = true;
+        if (isFirstTime) {
+            refreshData(true);
+        }
         Log.d("TAG", "onResume: nb ");
     }
 
@@ -1187,11 +1192,13 @@ public class Nurse_Browse_Fragment extends Fragment {
         isFragActive = false;
         Log.d("TAG", "onPause: nb");
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d("TAG", "onViewCreated: NB ");
     }
+
     private boolean check_Any_is_empty() {
 
         if (getEmptyCall(viewModel.list_State) && getEmptyCall1(viewModel.list_speciality)

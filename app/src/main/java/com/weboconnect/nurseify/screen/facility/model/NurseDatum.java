@@ -1,5 +1,7 @@
 package com.weboconnect.nurseify.screen.facility.model;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -270,6 +272,8 @@ public class NurseDatum {
     }
 
     public String getLastName() {
+        if (TextUtils.isEmpty(languages))
+            lastName = "";
         return lastName;
     }
 
@@ -844,7 +848,6 @@ public class NurseDatum {
     public void setWorkExperience(String workExperience) {
         this.workExperience = workExperience;
     }
-
 
 
     public class Rating {

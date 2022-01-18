@@ -80,54 +80,42 @@ public class FacilityJobModel {
         @SerializedName("updated_at")
         @Expose
         private String updatedAt;
+        @SerializedName("facility_email")
+        @Expose
+        private String facilityEmail;
         @SerializedName("facility_phone")
         @Expose
         private String facilityPhone;
+        @SerializedName("slug")
+        @Expose
+        private String slug;
         @SerializedName("cno_message")
         @Expose
         private String cnoMessage;
-        @SerializedName("video")
+        @SerializedName("cno_image")
         @Expose
-        private String video;
+        private String cnoImage;
         @SerializedName("facebook")
         @Expose
         private String facebook;
-        @SerializedName("twitter")
-        @Expose
-        private String twitter;
         @SerializedName("linkedin")
         @Expose
         private String linkedin;
-        @SerializedName("instagram")
-        @Expose
-        private String instagram;
-        @SerializedName("pinterest")
-        @Expose
-        private String pinterest;
-        @SerializedName("youtube")
-        @Expose
-        private String youtube;
         @SerializedName("about_facility")
         @Expose
         private String aboutFacility;
-        @SerializedName("facility_website")
-        @Expose
-        private String facilityWebsite;
         @SerializedName("video_embed_url")
         @Expose
         private String videoEmbedUrl;
-        @SerializedName("f_lat")
-        @Expose
-        private String fLat;
-        @SerializedName("f_lang")
-        @Expose
-        private String fLang;
         @SerializedName("f_emr")
         @Expose
         private String fEmr;
         @SerializedName("f_bcheck_provider")
         @Expose
         private String fBcheckProvider;
+        @SerializedName("f_bcheck_provider_other")
+        @Expose
+        private String fBcheckProviderOther;
         @SerializedName("nurse_cred_soft")
         @Expose
         private String nurseCredSoft;
@@ -154,10 +142,10 @@ public class FacilityJobModel {
         private String rating;
         @SerializedName("is_follow")
         @Expose
-        private Integer isFollow;
+        private String isFollow;
         @SerializedName("is_like")
         @Expose
-        private Integer isLike;
+        private String isLike;
 
         public String getId() {
             return id;
@@ -255,12 +243,28 @@ public class FacilityJobModel {
             this.updatedAt = updatedAt;
         }
 
+        public String getFacilityEmail() {
+            return facilityEmail;
+        }
+
+        public void setFacilityEmail(String facilityEmail) {
+            this.facilityEmail = facilityEmail;
+        }
+
         public String getFacilityPhone() {
             return facilityPhone;
         }
 
         public void setFacilityPhone(String facilityPhone) {
             this.facilityPhone = facilityPhone;
+        }
+
+        public String getSlug() {
+            return slug;
+        }
+
+        public void setSlug(String slug) {
+            this.slug = slug;
         }
 
         public String getCnoMessage() {
@@ -271,12 +275,12 @@ public class FacilityJobModel {
             this.cnoMessage = cnoMessage;
         }
 
-        public String getVideo() {
-            return video;
+        public String getCnoImage() {
+            return cnoImage;
         }
 
-        public void setVideo(String video) {
-            this.video = video;
+        public void setCnoImage(String cnoImage) {
+            this.cnoImage = cnoImage;
         }
 
         public String getFacebook() {
@@ -287,44 +291,12 @@ public class FacilityJobModel {
             this.facebook = facebook;
         }
 
-        public String getTwitter() {
-            return twitter;
-        }
-
-        public void setTwitter(String twitter) {
-            this.twitter = twitter;
-        }
-
         public String getLinkedin() {
             return linkedin;
         }
 
         public void setLinkedin(String linkedin) {
             this.linkedin = linkedin;
-        }
-
-        public String getInstagram() {
-            return instagram;
-        }
-
-        public void setInstagram(String instagram) {
-            this.instagram = instagram;
-        }
-
-        public String getPinterest() {
-            return pinterest;
-        }
-
-        public void setPinterest(String pinterest) {
-            this.pinterest = pinterest;
-        }
-
-        public String getYoutube() {
-            return youtube;
-        }
-
-        public void setYoutube(String youtube) {
-            this.youtube = youtube;
         }
 
         public String getAboutFacility() {
@@ -335,36 +307,12 @@ public class FacilityJobModel {
             this.aboutFacility = aboutFacility;
         }
 
-        public String getFacilityWebsite() {
-            return facilityWebsite;
-        }
-
-        public void setFacilityWebsite(String facilityWebsite) {
-            this.facilityWebsite = facilityWebsite;
-        }
-
         public String getVideoEmbedUrl() {
             return videoEmbedUrl;
         }
 
         public void setVideoEmbedUrl(String videoEmbedUrl) {
             this.videoEmbedUrl = videoEmbedUrl;
-        }
-
-        public String getfLat() {
-            return fLat;
-        }
-
-        public void setfLat(String fLat) {
-            this.fLat = fLat;
-        }
-
-        public String getfLang() {
-            return fLang;
-        }
-
-        public void setfLang(String fLang) {
-            this.fLang = fLang;
         }
 
         public String getfEmr() {
@@ -381,6 +329,14 @@ public class FacilityJobModel {
 
         public void setfBcheckProvider(String fBcheckProvider) {
             this.fBcheckProvider = fBcheckProvider;
+        }
+
+        public String getfBcheckProviderOther() {
+            return fBcheckProviderOther;
+        }
+
+        public void setfBcheckProviderOther(String fBcheckProviderOther) {
+            this.fBcheckProviderOther = fBcheckProviderOther;
         }
 
         public String getNurseCredSoft() {
@@ -447,21 +403,22 @@ public class FacilityJobModel {
             this.rating = rating;
         }
 
-        public Integer getIsFollow() {
+        public String getIsFollow() {
             return isFollow;
         }
 
-        public void setIsFollow(Integer isFollow) {
+        public void setIsFollow(String isFollow) {
             this.isFollow = isFollow;
         }
 
-        public Integer getIsLike() {
+        public String getIsLike() {
             return isLike;
         }
 
-        public void setIsLike(Integer isLike) {
+        public void setIsLike(String isLike) {
             this.isLike = isLike;
         }
+
 
     }
 }

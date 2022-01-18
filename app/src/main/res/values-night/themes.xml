@@ -37,5 +37,7 @@
     <style name="ThemeOverlay.Nurseify.FullscreenContainer" parent="">
         <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
         <item name="fullscreenTextColor">@color/light_blue_A400</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+
     </style>
 </resources>

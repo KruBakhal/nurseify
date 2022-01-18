@@ -57,6 +57,11 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
         notifyItemChanged(position);
     }
 
+    public void add_Item(List<JobModel.JobDatum> data) {
+        list_jobs.addAll(data);
+        notifyDataSetChanged();
+    }
+
     public interface BrowseJobInteface {
         void onClick_Like(JobModel.JobDatum datum, int position);
 

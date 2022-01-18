@@ -46,7 +46,7 @@
                     android:layout_marginRight="15dp" />
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/page_bk"
@@ -129,31 +129,33 @@
                             android:orientation="vertical"
                             android:visibility="visible">
 
-                           <LinearLayout
-                               android:id="@+id/lay_head_cno"
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:orientation="vertical">
-                               <TextView
-                                   android:layout_width="wrap_content"
-                                   android:layout_height="wrap_content"
-                                   android:layout_marginLeft="18dp"
-                                   android:layout_marginTop="28dp"
-                                   android:fontFamily="@font/sf_500"
-                                   android:text="Headshot CNO"
-                                   android:textColor="#848297"
-                                   android:textSize="15dp" />
+                            <LinearLayout
+                                android:id="@+id/lay_head_cno"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
 
-                               <ImageView
-                                   android:id="@+id/imgHeadCNo"
-                                   android:layout_width="100dp"
-                                   android:layout_height="100dp"
-                                   android:layout_gravity="left"
-                                   android:layout_marginLeft="35dp"
-                                   android:layout_marginTop="10dp"
-                                   android:src="@drawable/test_6" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="18dp"
+                                    android:layout_marginTop="28dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="Headshot CNO"
+                                    android:textColor="#848297"
+                                    android:textSize="15dp" />
 
-                           </LinearLayout>
+                                <ImageView
+                                    android:id="@+id/imgHeadCNo"
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:layout_gravity="left"
+                                    android:layout_marginLeft="35dp"
+                                    android:layout_marginTop="10dp"
+                                    android:src="@drawable/test_6" />
+
+                            </LinearLayout>
+
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:id="@+id/lay_senior"
                                 android:layout_width="match_parent"
@@ -300,7 +302,14 @@
                             android:textSize="18dp" />
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
-            </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

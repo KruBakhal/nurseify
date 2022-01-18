@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.screen.nurse.ActiveJobDetailsActivity;
@@ -57,6 +59,10 @@ public class MyJobFragment extends Fragment {
     private CompletedAdapter completedAdapter;
     private ProgressDialog progressDialog;
     int currentTabSelected = 1;
+    private boolean isFirstTime = true;
+    private int selected_page = 1;
+    private int selected_page2 = 1;
+    private int selected_page3 = 1;
 
     public MyJobFragment() {
     }
@@ -72,10 +78,9 @@ public class MyJobFragment extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Please Wait");
-
-//        offeredJobAdapter = new OfferedJobAdapter(getActivity(), list_Offered_Job, offeredJobCallback);
-//        binding.recyclerViewJobs.setAdapter(offeredJobAdapter);
-
+        binding.recyclerViewJobs.addOnScrollListener(recyclerViewOnScrollListener);
+        binding.recyclerViewJobs2.addOnScrollListener(recyclerViewOnScrollListener2);
+        binding.recyclerViewJobs3.addOnScrollListener(recyclerViewOnScrollListener3);
         get_Offered_Job(false);
         click();
 
@@ -134,7 +139,12 @@ public class MyJobFragment extends Fragment {
                 binding.textOffered.setTextColor(Color.parseColor("#8A4999"));
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
                 binding.textCompleted.setTextColor(Color.parseColor("#000000"));
+                binding.recyclerViewJobs.setVisibility(View.VISIBLE);
+                binding.recyclerViewJobs2.setVisibility(View.GONE);
+                binding.recyclerViewJobs3.setVisibility(View.GONE);
+                binding.progress.setVisibility(View.GONE);
                 if (list_Offered_Job == null || list_Offered_Job.size() == 0) {
+                    isFirstTime = true;
                     get_Offered_Job(false);
                 } else {
                     binding.recyclerViewJobs.setAdapter(offeredJobAdapter);
@@ -154,10 +164,15 @@ public class MyJobFragment extends Fragment {
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
                 binding.textCompleted.setTextColor(Color.parseColor("#000000"));
 //                binding.recyclerViewJobs.setAdapter(new ActiveAdapter(getActivity(), list_Active_Job, offeredJobCallback));
+                binding.recyclerViewJobs.setVisibility(View.GONE);
+                binding.recyclerViewJobs2.setVisibility(View.VISIBLE);
+                binding.recyclerViewJobs3.setVisibility(View.GONE);
+                binding.progress.setVisibility(View.GONE);
                 if (list_Active_Job == null || list_Active_Job.size() == 0) {
+                    isFirstTime = true;
                     get_Active_Job();
                 } else {
-                    binding.recyclerViewJobs.setAdapter(activeAdapter);
+                    binding.recyclerViewJobs2.setAdapter(activeAdapter);
                     dismissProgress();
                 }
             }
@@ -174,25 +189,36 @@ public class MyJobFragment extends Fragment {
                 binding.textActive.setTextColor(Color.parseColor("#000000"));
                 binding.textOffered.setTextColor(Color.parseColor("#000000"));
 //                binding.recyclerViewJobs.setAdapter(new CompletedAdapter(getActivity(), list_Completed_Job, offeredJobCallback));
+                binding.recyclerViewJobs.setVisibility(View.GONE);
+                binding.recyclerViewJobs2.setVisibility(View.GONE);
+                binding.recyclerViewJobs3.setVisibility(View.VISIBLE);
+                binding.progress.setVisibility(View.GONE);
                 if (list_Completed_Job == null || list_Completed_Job.size() == 0) {
+                    isFirstTime = true;
                     get_Completed_Job();
                 } else {
-                    binding.recyclerViewJobs.setAdapter(completedAdapter);
+                    binding.recyclerViewJobs3.setAdapter(completedAdapter);
                     dismissProgress();
                 }
             }
         });
+
     }
 
     private void get_Offered_Job(boolean isAcceptCall) {
-
-        showProgress();
+        if (isFirstTime) {
+            isFirstTime = false;
+            showProgress();
+        } else {
+            selected_page++;
+            binding.progress.setVisibility(View.VISIBLE);
+        }
 
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
         Call<OfferedJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
-                .call_offered_job("1", user_id1);
+                .call_offered_job(String.valueOf(selected_page), user_id1);
 
         call.enqueue(new Callback<OfferedJobModel>() {
             @Override
@@ -200,11 +226,8 @@ public class MyJobFragment extends Fragment {
 //                Log.d(TAG + "getOfferedJob ResCode", response.code() + "");
 //                assert response.body() != null;
                 if (response != null && response.body() != null && !response.body().getApiStatus().equals("1")) {
-                    dismissProgress();
-                    binding.layProgress.setVisibility(View.VISIBLE);
-                    binding.pg.setVisibility(View.GONE);
-                    binding.recyclerViewJobs.setAdapter(null);
-                    binding.tvMsg.setText("No Data");
+                    errorProgress(false);
+
                     return;
                 }
                 if (response.isSuccessful()) {
@@ -212,7 +235,11 @@ public class MyJobFragment extends Fragment {
                         dismissProgress();
                         OfferedJobModel offeredJobModel = response.body();
                         if (offeredJobModel.getData() == null || offeredJobModel.getData().getOffer() == null || offeredJobModel.getData().getOffer().size() == 0) {
-                            Utils.displayToast(getContext(), "no data found");
+                            if (selected_page >= 1)
+                                selected_page--;
+                            if (list_Offered_Job == null && list_Offered_Job.size() == 0) {
+                                errorProgress(false);
+                            }
                             return;
                         }
 
@@ -224,25 +251,24 @@ public class MyJobFragment extends Fragment {
                         }
                         list_Offered_Job.addAll(offeredJobModel.getData().getOffer());
                         if (list_Offered_Job.size() > 0) {
-                            if (offeredJobAdapter != null) {
-                                set_Offered_Adapter();
-                                binding.textOffered.performClick();
-                            } else
-                                set_Offered_Adapter();
+                            set_Offered_Adapter();
                         } else {
                             list_Offered_Job.addAll(offeredJobModel.getData().getOffer());
                             set_Offered_Adapter();
                         }
+
+
                     } catch (Exception e) {
                         errorProgress(false);
                         Log.e(TAG + "getOfferedJob", e.toString());
                     }
 
                 } else {
+                    dismissProgress();
                     Log.e(TAG + "getOfferedJob", response.message());
                     return;
                 }
-                dismissProgress();
+
             }
 
             @Override
@@ -256,13 +282,20 @@ public class MyJobFragment extends Fragment {
 
     private void get_Active_Job() {
 
-        showProgress();
+        if (isFirstTime) {
+            isFirstTime = false;
+            showProgress();
+        } else {
+            selected_page2++;
+            binding.progress.setVisibility(View.VISIBLE);
+        }
+
 
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
         Call<ActiveModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
-                .call_active_job("1", user_id1);
+                .call_active_job(String.valueOf(selected_page2), user_id1);
 
         call.enqueue(new Callback<ActiveModel>() {
             @Override
@@ -278,7 +311,12 @@ public class MyJobFragment extends Fragment {
                     try {
                         ActiveModel offeredJobModel = response.body();
                         if (offeredJobModel.getData() == null || offeredJobModel.getData().size() == 0) {
-                            Utils.displayToast(getContext(), "no data found");
+//                            Utils.displayToast(getContext(), "no data found");
+                            if (selected_page2 >= 1)
+                                selected_page2--;
+                            if (list_Active_Job == null && list_Active_Job.size() == 0) {
+                                errorProgress(false);
+                            }
                             return;
                         }
                         if (list_Active_Job == null) {
@@ -317,14 +355,20 @@ public class MyJobFragment extends Fragment {
     }
 
     private void get_Completed_Job() {
+        if (isFirstTime) {
+            isFirstTime = false;
+            showProgress();
+        } else {
+            selected_page3++;
+            binding.progress.setVisibility(View.VISIBLE);
+        }
 
-        showProgress();
 
         user_id = new SessionManager(getContext()).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
         Call<CompletedJobModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
-                .call_completed_job("1", user_id1);
+                .call_completed_job(String.valueOf(selected_page3), user_id1);
 
         call.enqueue(new Callback<CompletedJobModel>() {
             @Override
@@ -340,7 +384,12 @@ public class MyJobFragment extends Fragment {
                     try {
                         CompletedJobModel offeredJobModel = response.body();
                         if (offeredJobModel.getData() == null || offeredJobModel.getData().size() == 0) {
-                            Utils.displayToast(getContext(), "no data found");
+//                            Utils.displayToast(getContext(), "no data found");
+                            if (selected_page3 >= 1)
+                                selected_page3--;
+                            if (list_Completed_Job == null && list_Completed_Job.size() == 0) {
+                                errorProgress(false);
+                            }
                             return;
                         }
                         if (list_Completed_Job == null) {
@@ -430,7 +479,7 @@ public class MyJobFragment extends Fragment {
 
             }
         });
-        binding.recyclerViewJobs.setAdapter(activeAdapter);
+        binding.recyclerViewJobs2.setAdapter(activeAdapter);
 //        activeAdapter.notifyDataSetChanged();
     }
 
@@ -454,7 +503,7 @@ public class MyJobFragment extends Fragment {
                 );
             }
         });
-        binding.recyclerViewJobs.setAdapter(completedAdapter);
+        binding.recyclerViewJobs3.setAdapter(completedAdapter);
 //        completedAdapter.notifyDataSetChanged();
     }
 
@@ -555,23 +604,116 @@ public class MyJobFragment extends Fragment {
     private void dismissProgress() {
         binding.layProgress.setVisibility(View.GONE);
         binding.recyclerViewJobs.setVisibility(View.VISIBLE);
+        binding.progress.setVisibility(View.GONE);
+        if (currentTabSelected == 1) {
+            binding.recyclerViewJobs.setVisibility(View.VISIBLE);
+            binding.recyclerViewJobs2.setVisibility(View.GONE);
+            binding.recyclerViewJobs3.setVisibility(View.GONE);
+        } else if (currentTabSelected == 2) {
+            binding.recyclerViewJobs.setVisibility(View.GONE);
+            binding.recyclerViewJobs2.setVisibility(View.VISIBLE);
+            binding.recyclerViewJobs3.setVisibility(View.GONE);
+        } else if (currentTabSelected == 3) {
+            binding.recyclerViewJobs.setVisibility(View.GONE);
+            binding.recyclerViewJobs2.setVisibility(View.GONE);
+            binding.recyclerViewJobs3.setVisibility(View.VISIBLE);
+        }
     }
 
     private void errorProgress(boolean status) {
         binding.recyclerViewJobs.setVisibility(View.GONE);
         binding.layProgress.setVisibility(View.VISIBLE);
         binding.pg.setVisibility(View.GONE);
+        binding.progress.setVisibility(View.GONE);
         if (status)
             binding.tvMsg.setText(getString(R.string.something_when_wrong));
         else
             binding.tvMsg.setText(getString(R.string.no_internet));
 
-
+        binding.recyclerViewJobs.setVisibility(View.GONE);
+        binding.recyclerViewJobs2.setVisibility(View.GONE);
+        binding.recyclerViewJobs3.setVisibility(View.GONE);
     }
 
     private void showProgress() {
         binding.recyclerViewJobs.setVisibility(View.GONE);
+        binding.recyclerViewJobs2.setVisibility(View.GONE);
+        binding.recyclerViewJobs3.setVisibility(View.GONE);
         binding.layProgress.setVisibility(View.VISIBLE);
+
     }
 
+    private boolean loading = false;
+    private boolean isLastPage = false;
+
+    private int offset = 10;
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemCount = binding.recyclerViewJobs.getLayoutManager().getChildCount();
+            int totalItemCount = binding.recyclerViewJobs.getLayoutManager().getItemCount();
+            int firstVisibleItemPosition = ((LinearLayoutManager) binding.recyclerViewJobs.getLayoutManager()).findFirstVisibleItemPosition();
+
+            if (!loading && !isLastPage) {
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0
+                        && totalItemCount >= offset) {
+                    get_Offered_Job(false);
+
+                }
+            }
+        }
+    };
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener2 = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemCount = binding.recyclerViewJobs2.getLayoutManager().getChildCount();
+            int totalItemCount = binding.recyclerViewJobs2.getLayoutManager().getItemCount();
+            int firstVisibleItemPosition = ((LinearLayoutManager) binding.recyclerViewJobs2.getLayoutManager()).findFirstVisibleItemPosition();
+
+            if (!loading && !isLastPage) {
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0
+                        && totalItemCount >= offset) {
+                    get_Active_Job();
+
+                }
+            }
+        }
+    };
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener3 = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemCount = binding.recyclerViewJobs3.getLayoutManager().getChildCount();
+            int totalItemCount = binding.recyclerViewJobs3.getLayoutManager().getItemCount();
+            int firstVisibleItemPosition = ((LinearLayoutManager) binding.recyclerViewJobs3.getLayoutManager()).findFirstVisibleItemPosition();
+
+            if (!loading && !isLastPage) {
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0
+                        && totalItemCount >= offset) {
+                    get_Completed_Job();
+
+                }
+            }
+        }
+    };
 }

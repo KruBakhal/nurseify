@@ -498,6 +498,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26dp"
+                        android:layout_marginBottom="40dp"
                         android:background="@drawable/bk_menue"
                         android:orientation="horizontal"
                         android:padding="18dp">
@@ -526,6 +527,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/lay_bottom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -539,7 +541,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginTop="40dp"
+
                             android:gravity="center">
 
                             <TextView
@@ -559,9 +561,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="20dp"
-                            android:layout_marginBottom="20dp"
+                            android:layout_marginBottom="40dp"
                             android:gravity="center"
-
                             android:orientation="horizontal">
 
                             <androidx.cardview.widget.CardView
@@ -581,8 +582,8 @@
                             </androidx.cardview.widget.CardView>
 
                             <androidx.cardview.widget.CardView
-                                android:layout_width="47dp"
                                 android:id="@+id/layMesg"
+                                android:layout_width="47dp"
                                 android:layout_height="47dp"
                                 android:layout_marginBottom="2dp"
                                 app:cardBackgroundColor="@color/white"

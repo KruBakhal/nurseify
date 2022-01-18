@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -15,11 +16,20 @@ import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityFacilityDetails4Binding;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
+import com.weboconnect.nurseify.webService.RetrofitClient;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FacilityDetails4Activity extends AppCompatActivity {
 
@@ -34,7 +44,99 @@ public class FacilityDetails4Activity extends AppCompatActivity {
         context = this;
         model = new SessionManager(context).get_facilityProfile();
         setData();
+     //   getProfileData();
         click();
+    }
+    private void getProfileData() {
+        if (!Utils.isNetworkAvailable(FacilityDetails4Activity.this)) {
+            Utils.displayToast(FacilityDetails4Activity.this, getResources().getString(R.string.no_internet));
+            return;
+        }
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        String user_id = new SessionManager(getApplicationContext()).get_facilityProfile().getFacilityId();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+
+        Call<FacilityJobModel> call = RetrofitClient.getInstance().getFacilityApi()
+                .call_facility_profile(user_id1);
+
+        call.enqueue(new Callback<FacilityJobModel>() {
+            @Override
+            public void onResponse(Call<FacilityJobModel> call, Response<FacilityJobModel> response) {
+
+                if (response.body() == null) {
+                    try {
+                        binding.progressBar.setVisibility(View.GONE);
+                        Log.d("TAG", "onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+                if (response.body().getApiStatus().equals("1")) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    FacilityJobModel.Facility model = response.body().getData().get(0);
+                   /* if (model == null || model.getSoc() == null)
+                        return;
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getFacebook())) {
+                        binding.edFb.setText("-");
+                    } else {
+                        binding.edFb.setText("" + model.getFacilitySocial().getFacebook());
+                    }
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getTwitter())) {
+                        binding.edTweet.setText("-");
+                    } else {
+                        binding.edTweet.setText("" + model.getFacilitySocial().getTwitter());
+                    }
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getYoutube())) {
+                        binding.edYoutube.setText("-");
+                    } else {
+                        binding.edYoutube.setText("" + model.getFacilitySocial().getYoutube());
+                    }
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getTiktok())) {
+                        binding.edTiktok.setText("-");
+                    } else {
+                        binding.edTiktok.setText("" + model.getFacilitySocial().getTiktok());
+                    }
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getSanpchat())) {
+                        binding.edSnap.setText("-");
+                    } else {
+                        binding.edSnap.setText("" + model.getFacilitySocial().getSanpchat());
+                    }
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getLinkedin())) {
+                        binding.edLinkin.setText("-");
+                    } else {
+                        binding.edLinkin.setText("" + model.getFacilitySocial().getLinkedin());
+                    }
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getPinterest())) {
+                        binding.edPinterest.setText("-");
+                    } else {
+                        binding.edPinterest.setText("" + model.getFacilitySocial().getPinterest());
+                    }
+                    if (TextUtils.isEmpty(model.getFacilitySocial().getInstagram())) {
+                        binding.edInsta.setText("-");
+                    } else {
+                        binding.edInsta.setText("" + model.getFacilitySocial().getInstagram());
+                    }
+
+*/
+                } else {
+                    Utils.displayToast(FacilityDetails4Activity.this, "Data has not been updated");
+
+                    binding.progressBar.setVisibility(View.GONE);
+                }
+
+
+                binding.progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<FacilityJobModel> call, Throwable t) {
+                binding.progressBar.setVisibility(View.GONE);
+                Utils.displayToast(FacilityDetails4Activity.this, "Failed to get updated data !");
+                Log.e("TAG" + "getNurseProfile", t.toString());
+            }
+        });
     }
 
     private void setData() {

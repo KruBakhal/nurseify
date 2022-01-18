@@ -155,9 +155,7 @@ public class PostedAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                         return;
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
-                    activity.startActivity(new Intent(activity, Add_Jobs_Activity.class)
-                            .putExtra(Constant.EDIT_MODE, true)
-                            .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(datum)));
+                    postedListener.onClick(position);
                 }
             });
             itemView.layApplied.setOnClickListener(new View.OnClickListener() {

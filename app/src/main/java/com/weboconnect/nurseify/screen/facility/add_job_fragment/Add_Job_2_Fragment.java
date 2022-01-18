@@ -3,7 +3,6 @@ package com.weboconnect.nurseify.screen.facility.add_job_fragment;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
-import static com.weboconnect.nurseify.utils.Utils.patternExp;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,17 +36,27 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.PhotoFilesAdapter;
-import com.weboconnect.nurseify.databinding.ActivityAddJob1Binding;
 import com.weboconnect.nurseify.databinding.ActivityAddJob2Binding;
+import com.weboconnect.nurseify.intermediate.ItemCallback;
+import com.weboconnect.nurseify.screen.facility.model.JobPhoto;
 import com.weboconnect.nurseify.screen.facility.viewModel.Add_Job_ViewModel;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatus;
 import com.weboconnect.nurseify.screen.facility.viewModel.DialogStatusMessage;
 import com.weboconnect.nurseify.screen.facility.viewModel.ProgressUIType;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.utils.FileUtils;
 import com.weboconnect.nurseify.utils.Utils;
+import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Add_Job_2_Fragment extends Fragment {
     String id;
@@ -112,38 +122,45 @@ public class Add_Job_2_Fragment extends Fragment {
                 binding.textView3.setText("Edit Job");
                 binding.distanceSlider.setProgress(Integer.parseInt(viewModel.jobDatum.getPreferredHourlyPayRate()));
                 if (!TextUtils.isEmpty(viewModel.jobDatum.getDescription())) {
-                    binding.edDescription.setText(viewModel.jobDatum.getDescription());
+                    binding.edDescription.setText(Html.fromHtml(viewModel.jobDatum.getDescription()));
                 }
                 if (!TextUtils.isEmpty(viewModel.jobDatum.getResponsibilities())) {
-                    binding.edDescription.setText(viewModel.jobDatum.getResponsibilities());
+                    binding.edResponsibilities.setText(Html.fromHtml(viewModel.jobDatum.getResponsibilities()));
                 }
                 if (!TextUtils.isEmpty(viewModel.jobDatum.getQualifications())) {
-                    binding.edDescription.setText(viewModel.jobDatum.getQualifications());
+                    binding.edQualifications.setText(Html.fromHtml(viewModel.jobDatum.getQualifications()));
                 }
                 if (!TextUtils.isEmpty(viewModel.jobDatum.getJobVideo())) {
-                    binding.edDescription.setText(viewModel.jobDatum.getJobVideo());
+                    binding.edYoutube.setText(viewModel.jobDatum.getJobVideo());
                 }
-               /* if (viewModel.jobDatum.getUploadPhotos() != null && viewModel.jobDatum.getUploadPhotos().size() != 0) {
-                    if (viewModel.selected_list_photos == null) {
-                        viewModel.selected_list_photos = new ArrayList<>();
-                        setAdapter();
-                    }
-                    viewModel.selected_list_photos.addAll(viewModel.jobDatum.getUploadPhotos());
-                    binding.rvPhotos.setVisibility(View.VISIBLE);
-                    if (photoFilesAdapter != null) {
-                        setAdapter();
-                        photoFilesAdapter.notifyDataSetChanged();
-                    }
-                }*/
-                if (viewModel.jobDatum.getActive().equals("1")) {
+                setupPhotoData();
+                if (viewModel.jobDatum.getActive().equals(1)) {
                     binding.checkBox.setChecked(true);
-                }else{
+                } else {
                     binding.checkBox.setChecked(false);
                 }
 
             }
         } catch (Exception exception) {
             Log.d("TAG", "setData: " + exception.getMessage());
+        }
+    }
+
+    private void setupPhotoData() {
+        if (viewModel.jobDatum.getJobPhotos() != null && viewModel.jobDatum.getJobPhotos().size() != 0) {
+            /*if (viewModel.edit_list_photos == null) {
+                viewModel.edit_list_photos = new ArrayList<>();
+            }
+            viewModel.edit_list_photos.addAll(viewModel.jobDatum.getJobPhotos());*/
+            viewModel.selected_list_photos = new ArrayList<>();
+            for (JobPhoto jobPhoto : viewModel.jobDatum.getJobPhotos()) {
+                viewModel.selected_list_photos.add(jobPhoto.getName());
+            }
+            binding.rvPhotos.setVisibility(View.VISIBLE);
+            if (photoFilesAdapter != null) {
+                setAdapter();
+                photoFilesAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -422,7 +439,6 @@ public class Add_Job_2_Fragment extends Fragment {
 //                        return;
 //                    }
                     if (file != null) {
-//                        list_photos.add(file.getAbsolutePath());
                         if (viewModel.selected_list_photos == null) {
                             viewModel.selected_list_photos = new ArrayList<>();
                             setAdapter();
@@ -439,8 +455,93 @@ public class Add_Job_2_Fragment extends Fragment {
             });
 
     private void setAdapter() {
-        photoFilesAdapter = new PhotoFilesAdapter(viewModel.selected_list_photos, 1);
-        binding.rvPhotos.setAdapter(photoFilesAdapter);
+        if (viewModel.isEdit) {
+            photoFilesAdapter = new PhotoFilesAdapter(viewModel.selected_list_photos, 1, 1
+                    , new ItemCallback() {
+                @Override
+                public void onClick(int position) {
+                    if (!TextUtils.isEmpty(viewModel.selected_list_photos.get(position))
+                            && viewModel.selected_list_photos.get(position).startsWith("http://")) {
+                        String pos = getAsserId(viewModel.jobDatum.getJobPhotos(),
+                                viewModel.selected_list_photos.get(position));
+                        if (!TextUtils.isEmpty(pos)) {
+                            String asserId = viewModel.jobDatum.getJobPhotos().get(Integer.parseInt(pos)).getAssetId();
+                            performDelete(asserId, viewModel.jobDatum.getJobId(), position, pos);
+                        }
+                    } else {
+                        if (viewModel.selected_list_photos != null && position < viewModel.selected_list_photos.size()) {
+                            viewModel.selected_list_photos.remove(position);
+                            setAdapter();
+                        }
+                    }
+                }
+
+                private String getAsserId(List<JobPhoto> jobPhotos, String s) {
+                    for (int i = 0; i < jobPhotos.size(); i++) {
+                        JobPhoto jobPhoto = jobPhotos.get(i);
+                        if (jobPhoto.getName().equals(s)) {
+                            return "" + i;
+                        }
+                    }
+                    return null;
+                }
+
+                private void performDelete(String assetId, String job_id, int position, String pos) {
+                    if (!Utils.isNetworkAvailable(getContext())) {
+                        Utils.displayToast(getContext(), getContext().getResources().getString(R.string.no_internet));
+                        return;
+                    }
+                    viewModel.showProgressBar.setValue(ProgressUIType.SHOW);
+
+                    RequestBody job_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), job_id);
+                    RequestBody assetId1 = RequestBody.create(MediaType.parse("multipart/form-data"), assetId);
+
+                    Call<ResponseModel> call = RetrofitClient.getInstance().getFacilityApi()
+                            .call_remove_Asset_image(job_id1, assetId1);
+
+                    call.enqueue(new Callback<ResponseModel>() {
+                        @Override
+                        public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                            assert response.body() != null;
+                            if (!response.body().getApiStatus().equals("1")) {
+                                Utils.displayToast(getContext(), "" + response.body().getMessage());
+                                viewModel.showProgressBar.setValue(ProgressUIType.DIMISS);
+                                return;
+                            }
+                            if (response.isSuccessful()) {
+                                viewModel.showProgressBar.setValue(ProgressUIType.DIMISS);
+                                Utils.displayToast(getContext(), "Item data deleted !");
+                                viewModel.selected_list_photos.remove(position);
+                                if (viewModel.jobDatum.getJobPhotos() != null
+                                        && viewModel.jobDatum.getJobPhotos().size() != 0) {
+                                    List<JobPhoto> list = viewModel.jobDatum.getJobPhotos();
+                                    int a = Integer.parseInt(pos);
+                                    list.remove(a);
+                                    viewModel.jobDatum.setJobPhotos(list);
+                                }
+                                setAdapter();
+                            } else {
+                                viewModel.showProgressBar.setValue(ProgressUIType.DIMISS);
+                                Utils.displayToast(getContext(), "Failed to delete item data");
+                            }
+                            viewModel.showProgressBar.setValue(ProgressUIType.DIMISS);
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseModel> call, Throwable t) {
+                            viewModel.showProgressBar.setValue(ProgressUIType.DIMISS);
+                            Log.e("TAG" + "getNurseProfile", t.toString());
+                        }
+                    });
+
+                }
+            });
+            binding.rvPhotos.setAdapter(photoFilesAdapter);
+        } else {
+            photoFilesAdapter = new PhotoFilesAdapter(viewModel.selected_list_photos, 1);
+            binding.rvPhotos.setAdapter(photoFilesAdapter);
+
+        }
     }
 
     @Override
@@ -459,7 +560,8 @@ public class Add_Job_2_Fragment extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 123:

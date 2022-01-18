@@ -183,7 +183,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                 if (flag == 1) {
                     performLike(model.getJobId(), model.getIsLiked(), position);
                 } else if (flag == 2) {
-                    if (facility.getIsLike() == 1) {
+                    if (facility.getIsLike().equals("1")) {
                         likeFacility(facility.getId(), "0");
                     } else {
                         likeFacility(facility.getId(), "1");
