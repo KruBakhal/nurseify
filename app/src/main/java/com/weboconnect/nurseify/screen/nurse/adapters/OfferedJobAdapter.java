@@ -73,14 +73,14 @@ public class OfferedJobAdapter extends RecyclerView.Adapter<OfferedJobAdapter.Vi
             holder.layoutReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callback.onReject(list.get(pp).getJobId());
+                    callback.onReject(list.get(pp).getOfferId());
                 }
             });
 
             holder.layoutAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callback.onAccept(list.get(pp).getJobId());
+                    callback.onAccept(list.get(pp).getOfferId());
                 }
             });
 

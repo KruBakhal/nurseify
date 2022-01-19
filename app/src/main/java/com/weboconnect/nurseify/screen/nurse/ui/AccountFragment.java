@@ -136,7 +136,7 @@ public class AccountFragment extends Fragment {
         binding.layoutSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), SettingActivity.class));
+                startActivityForResult(new Intent((HomeActivity) getActivity(), SettingActivity.class), 223);
             }
         });
         return view = binding.getRoot();

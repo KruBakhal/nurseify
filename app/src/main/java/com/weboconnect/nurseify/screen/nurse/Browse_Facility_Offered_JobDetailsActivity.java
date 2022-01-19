@@ -650,12 +650,12 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_accept(user_id1, job_id);
 
-        call.enqueue(new Callback<PrivacyPolicyModel>() {
+        call.enqueue(new Callback<ResponseModel>() {
             @Override
-            public void onResponse(Call<PrivacyPolicyModel> call, Response<PrivacyPolicyModel> response) {
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 try {
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
@@ -663,9 +663,9 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                         return;
                     }
                     if (response.isSuccessful()) {
-                        PrivacyPolicyModel responseModel = response.body();
+                        ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
-                            Utils.displayToast(context, responseModel.getData());
+                            Utils.displayToast(context, responseModel.getMessage());
                         }
                     } else {
                         Log.e(TAG + "accept", response.message());
@@ -679,7 +679,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
             }
 
             @Override
-            public void onFailure(Call<PrivacyPolicyModel> call, Throwable t) {
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.e(TAG + "accept", t.toString());
             }
@@ -695,12 +695,12 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_reject(user_id1, job_id);
 
-        call.enqueue(new Callback<PrivacyPolicyModel>() {
+        call.enqueue(new Callback<ResponseModel>() {
             @Override
-            public void onResponse(Call<PrivacyPolicyModel> call, Response<PrivacyPolicyModel> response) {
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 try {
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
@@ -708,9 +708,9 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                         return;
                     }
                     if (response.isSuccessful()) {
-                        PrivacyPolicyModel responseModel = response.body();
+                        ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
-                            Utils.displayToast(context, responseModel.getData());
+                            Utils.displayToast(context, responseModel.getMessage());
                         }
 
 
@@ -726,7 +726,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
             }
 
             @Override
-            public void onFailure(Call<PrivacyPolicyModel> call, Throwable t) {
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.e(TAG + "reject", t.toString());
             }

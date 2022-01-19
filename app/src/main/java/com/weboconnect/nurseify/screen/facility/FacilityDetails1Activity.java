@@ -120,7 +120,8 @@ public class FacilityDetails1Activity extends AppCompatActivity {
 
     private void create_facility_profile(FacilityJobModel.Facility facility) {
         FacilityProfile facilityProfile = new FacilityProfile();
-        facilityProfile.setUserId(facility.getId());
+        facilityProfile.setUserId(this.model.getUserId());
+        facilityProfile.setFacilityId(this.model.getFacilityId());
         facilityProfile.setFacilityName(facility.getName());
         facilityProfile.setFacilityType("" + facility.getFacilityType());
         facilityProfile.setFacilityTypeDefinition("" + facility.getFacilityTypeDefinition());
@@ -130,6 +131,7 @@ public class FacilityDetails1Activity extends AppCompatActivity {
         facilityProfile.setFacilityCity(facility.getCity());
         facilityProfile.setFacilityState(facility.getState());
         facilityProfile.setFacilityPostcode(facility.getPostcode());
+        facilityProfile.setFacilityLogo(facility.getFacilityLogo());
 
         facilityProfile.setCnoImage(facility.getCnoImage());
         facilityProfile.setFacilityWebsite(facility.getFacilityWebsite());

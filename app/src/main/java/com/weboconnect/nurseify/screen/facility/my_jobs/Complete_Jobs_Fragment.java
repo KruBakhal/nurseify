@@ -261,6 +261,8 @@ public class Complete_Jobs_Fragment extends Fragment {
 //                pastAdapter.removeLoading();
                 errorProgress(true);
                 binding.tvMsg.setText("Yet, No Job Found !");
+                isFirstTime=true;
+
             }
         } else {
             dismissProgress();

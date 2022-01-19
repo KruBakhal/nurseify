@@ -137,6 +137,7 @@ public class FacilityDetails2Activity extends AppCompatActivity {
         FacilityProfile facilityProfile = new FacilityProfile();
         facilityProfile.setUserId(facility.getId());
         facilityProfile.setFacilityName(facility.getName());
+        facilityProfile.setFacilityId(this.model.getFacilityId());
         facilityProfile.setFacilityType("" + facility.getFacilityType());
         facilityProfile.setFacilityEmail(facility.getFacilityEmail());
         facilityProfile.setFacilityPhone(facility.getFacilityPhone());
@@ -144,6 +145,7 @@ public class FacilityDetails2Activity extends AppCompatActivity {
         facilityProfile.setFacilityCity(facility.getCity());
         facilityProfile.setFacilityState(facility.getState());
         facilityProfile.setFacilityPostcode(facility.getPostcode());
+        facilityProfile.setFacilityLogo(facility.getFacilityLogo());
 
         facilityProfile.setCnoImage(facility.getCnoImage());
         facilityProfile.setFacilityWebsite(facility.getFacilityWebsite());

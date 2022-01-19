@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -121,8 +122,6 @@ public class BrowseFragment extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
-//        binding.recyclerViewJobs.setAdapter(new JobAdapter(getActivity(), 1));
-//        facilityAdapter = new FacilityAdapter(getActivity(), list_facility, facilityListCallback);
         click();
         layoutManager = binding.recyclerViewJobs.getLayoutManager();
         binding.recyclerViewJobs.addOnScrollListener(recyclerViewOnScrollListener);
@@ -132,7 +131,6 @@ public class BrowseFragment extends Fragment {
 
         return view = binding.getRoot();
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -470,6 +468,7 @@ public class BrowseFragment extends Fragment {
     private boolean loading = false;
     private boolean isLastPage = false;
     private int offset = 10;
+
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -710,7 +709,6 @@ public class BrowseFragment extends Fragment {
 
 
     }
-
 
     private void fecthBrowseFacility() {
 
@@ -1082,11 +1080,11 @@ public class BrowseFragment extends Fragment {
                     public void onClick_Apply(int position, JobModel.JobDatum datum) {
                         if (datum.getIsApplied().equals("1")) {
                             performApply(datum, position);
-                        } else if (TextUtils.isEmpty(str_terms_conditions))
-                            fetch_terms_conditions(datum, position);
+                        } else /*if (TextUtils.isEmpty(str_terms_conditions))
+//                            fetch_terms_conditions(datum, position);
                         else {
+                        }*/
                             terms_conditions_Dialog(datum, str_terms_conditions, position);
-                        }
                     }
 
                     @Override
@@ -1157,7 +1155,7 @@ public class BrowseFragment extends Fragment {
         ImageView closeDialog = dialog.findViewById(R.id.close_dialog);
         TextView tv_text = dialog.findViewById(R.id.tv_text);
         View sdsds = dialog.findViewById(R.id.sdsds);
-        tv_text.setText(Html.fromHtml(str_terms_conditions));
+//        tv_text.setText(Html.fromHtml(str_terms_conditions));
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1165,7 +1163,7 @@ public class BrowseFragment extends Fragment {
                 dialog.dismiss();
             }
         });
-        TextView textApply = dialog.findViewById(R.id.text_apply);
+        tv_text.setText(Constant.URL_TERMS_CONDITION);
         sdsds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1173,6 +1171,15 @@ public class BrowseFragment extends Fragment {
                 performApply(datum, position);
 
                 dialog.dismiss();
+            }
+        });
+        tv_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(Constant.URL_TERMS_CONDITION);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
             }
         });
     }
@@ -1295,6 +1302,7 @@ public class BrowseFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+
     }
 
     @Override

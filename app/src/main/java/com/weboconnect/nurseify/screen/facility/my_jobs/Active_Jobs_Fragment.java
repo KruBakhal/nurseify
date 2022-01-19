@@ -248,6 +248,8 @@ public class Active_Jobs_Fragment extends Fragment {
             } else {
                 errorProgress(true);
                 binding.tvMsg.setText("Yet, No Job Found !");
+                isFirstTime=true;
+
             }
         } else {
             dismissProgress();

@@ -108,7 +108,7 @@
                             android:background="@drawable/btn_accept"
                             android:fontFamily="@font/sf_600"
                             android:gravity="center"
-                            android:text="Hire"
+                            android:text="Invite"
                             android:textColor="@color/white"
                             android:textSize="16dp" />
 

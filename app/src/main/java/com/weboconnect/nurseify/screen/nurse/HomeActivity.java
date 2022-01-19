@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -207,6 +208,23 @@ public class HomeActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         update_user_status(true);
+        if (!new SessionManager(this).get_NotificationToggle()) {
+            binding.notification.setVisibility(View.GONE);
+        }else{
+            binding.notification.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 223 && resultCode == RESULT_OK) {
+            if (!new SessionManager(this).get_NotificationToggle()) {
+                binding.notification.setVisibility(View.GONE);
+            }else{
+                binding.notification.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void update_user_status(boolean status) {

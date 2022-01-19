@@ -255,6 +255,7 @@ public class FacilityDetails3Activity extends AppCompatActivity {
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 finish();
                 Utils.onClickEvent(v);
             }

@@ -18,6 +18,7 @@ public class Constant {
     public static final String ONLINE_STATUS = "status";
     public static final String JOB_ID = "job_id";
     public static final String ID = "id";
+    public static final String URL_TERMS_CONDITION = "http://35.200.185.126/terms-conditions";
 
     // person session constant
     public static String CONST_NURSE_TYPE = "Nurse";
@@ -62,4 +63,5 @@ public class Constant {
     public static String UnSuccessfull = "unsuccessfull";
     public static final String API_STATUS = "apip_status";
     public static final String UNITED_STATE_CODE = "233";
+    public static final String Notification = "Notification";
 }

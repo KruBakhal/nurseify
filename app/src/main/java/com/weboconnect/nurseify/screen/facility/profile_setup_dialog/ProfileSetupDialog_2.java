@@ -273,7 +273,10 @@ public class ProfileSetupDialog_2 extends DialogFragment {
         setup1Binding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.do_DismissDialog(new DialogStatusMessage(DialogStatus.Cancel, mParam1));
+                if (viewModel.isEditMode && viewModel.option_call == 2) {
+                    getActivity().finish();
+                } else
+                    viewModel.do_DismissDialog(new DialogStatusMessage(DialogStatus.Cancel, mParam1));
                 Utils.onClickEvent(v);
             }
         });

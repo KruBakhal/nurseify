@@ -155,4 +155,16 @@ public class SessionManager {
     public boolean get_RoleDialogStatus() {
         return sharedPreferences.getBoolean(Constant.Role_Interest1, false);
     }
+
+    public boolean get_NotificationToggle() {
+        return sharedPreferences.getBoolean(Constant.Notification, true);
+    }
+
+
+    public void setNotificationToggle(boolean isChecked) {
+        editor.putBoolean(Constant.Notification, isChecked);
+        editor.apply();
+    }
+
+
 }

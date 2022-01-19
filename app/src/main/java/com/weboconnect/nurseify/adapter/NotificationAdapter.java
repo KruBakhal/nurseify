@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
 
 import java.util.List;
@@ -25,23 +26,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     Activity activity;
     List<NotificationModel.Notification> list;
 
-    public NotificationAdapter(Activity activity, List<NotificationModel.Notification> list) {
+    public NotificationAdapter(Activity activity, List<NotificationModel.Notification> list, ItemCallback itemCallback) {
         this.activity = activity;
         this.list = list;
+        this.itemCallback = itemCallback;
     }
+
+    ItemCallback itemCallback;
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String msg1 = "Applications for the recording and management of a patient’s";
         String msg2 = "  #vital signs.";
-        SpannableStringBuilder SS = new SpannableStringBuilder(msg1+msg2);
-        SS.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.secondary_till)), msg1.length(), msg1.length()+msg2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        SpannableStringBuilder SS = new SpannableStringBuilder(msg1 + msg2);
+        SS.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.secondary_till)), msg1.length(), msg1.length() + msg2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 //        holder.messageText.setText(SS);
         try {
 
@@ -50,25 +56,33 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.messageText.setText(Html.fromHtml(list.get(pp).getMessage()));
             holder.tv_date.setText(list.get(pp).getDate());
 
-            holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+            holder.close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //activity.startActivity(new Intent(activity, MessageActivity.class));
+                    itemCallback.onClick(position);
                 }
             });
-        }catch (Exception e){
-            Log.e("NotificationAdapter",e.toString());
+        } catch (Exception e) {
+            Log.e("NotificationAdapter", e.toString());
         }
     }
+
     @Override
     public int getItemCount() {
         return list.size();
     }
+
+    public void removeItem(int position) {
+        list.remove(position);
+        notifyItemRemoved(position);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout mainLayout;
         TextView messageText;
         TextView tv_date;
         ImageView close;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mainLayout = itemView.findViewById(R.id.mainLayout);

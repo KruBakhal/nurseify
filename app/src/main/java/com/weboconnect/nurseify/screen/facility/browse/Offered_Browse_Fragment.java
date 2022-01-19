@@ -260,6 +260,7 @@ public class Offered_Browse_Fragment extends Fragment {
             } else {
                 errorProgress(true);
                 binding.tvMsg.setText("Yet, No Job Found !");
+                isFirstTime=true;
             }
         } else {
             dismissProgress();

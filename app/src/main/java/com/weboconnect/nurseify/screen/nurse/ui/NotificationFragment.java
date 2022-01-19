@@ -1,5 +1,6 @@
 package com.weboconnect.nurseify.screen.nurse.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +13,11 @@ import androidx.fragment.app.Fragment;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.NotificationAdapter;
 import com.weboconnect.nurseify.databinding.FragmentNotificationBinding;
+import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.utils.SessionManager;
+import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.util.ArrayList;
@@ -35,6 +39,7 @@ public class NotificationFragment extends Fragment {
 
     NotificationAdapter notificationAdapter;
     List<NotificationModel.Notification> notificationList = new ArrayList<>();
+    private ProgressDialog progressDialog;
 
     public NotificationFragment() {
     }
@@ -48,7 +53,68 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notification, null, false);
 
-        notificationAdapter = new NotificationAdapter(getActivity(), notificationList);
+        notificationAdapter = new NotificationAdapter(getActivity(), notificationList
+                , new ItemCallback() {
+            @Override
+            public void onClick(int position) {
+
+                performDelete(notificationList.get(position).getNotificationId()
+                        , new SessionManager(getContext()).get_user_register_Id(), position);
+
+            }
+
+            private void performDelete(String assetId, String user_id, int position) {
+                if (!Utils.isNetworkAvailable(getContext())) {
+                    Utils.displayToast(getContext(), getContext().getResources().getString(R.string.no_internet));
+                    return;
+                }
+                progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Please Wait");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+                RequestBody assetId1 = RequestBody.create(MediaType.parse("multipart/form-data"), assetId);
+
+                Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+                        .call_remove_notification(user_id1, assetId1);
+
+                call.enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        if (response == null || response.body() == null) {
+                            progressDialog.cancel();
+                            Utils.displayToast(getContext(), getContext().getResources().getString(R.string.something_when_wrong));
+                            return;
+                        }
+                        if (!response.body().getApiStatus().equals("1")) {
+                            Utils.displayToast(getContext(), "" + response.body().getMessage());
+                            progressDialog.cancel();
+                            return;
+                        }
+                        if (response.isSuccessful()) {
+                            progressDialog.dismiss();
+                            Utils.displayToast(getContext(), "Item data deleted !");
+                            notificationList.remove(position);
+                            notificationAdapter.removeItem(position);
+                            notificationAdapter.notifyDataSetChanged();
+                        } else {
+                            progressDialog.dismiss();
+                            Utils.displayToast(getContext(), "Failed to delete item data");
+                        }
+                        if (progressDialog != null && progressDialog.isShowing())
+                            progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                        progressDialog.cancel();
+                        Log.e("TAG" + "getNurseProfile", t.toString());
+                    }
+                });
+
+            }
+        });
 
         binding.recyclerViewJobs.setAdapter(notificationAdapter);
 

@@ -32,6 +32,7 @@ import com.weboconnect.nurseify.adapter.NursesAdapter;
 import com.weboconnect.nurseify.adapter.OfferedFAdapter;
 import com.weboconnect.nurseify.adapter.PastAdapter;
 import com.weboconnect.nurseify.databinding.FragmentBrowseFBinding;
+import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 
 
@@ -181,4 +182,13 @@ public class BrowseFFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!new SessionManager(getContext()).get_NotificationToggle()) {
+            binding.imgNotification.setVisibility(View.GONE);
+        } else {
+            binding.imgNotification.setVisibility(View.VISIBLE);
+        }
+    }
 }

@@ -29,6 +29,7 @@ import com.weboconnect.nurseify.screen.facility.FacilityDetails1Activity;
 import com.weboconnect.nurseify.screen.facility.HomeFActivity;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
 import com.weboconnect.nurseify.screen.facility.model.FacilitySettingModel;
+import com.weboconnect.nurseify.screen.nurse.HomeActivity;
 import com.weboconnect.nurseify.screen.nurse.SettingActivity;
 import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
@@ -55,7 +56,7 @@ public class AccountFFragment extends Fragment {
     View view;
     private FacilityProfile facilityProfile;
     private ProgressDialog progressDialog;
-    private String user_id;
+    private String user_id = "";
     private String str_facility_logo;
 
     public AccountFFragment() {
@@ -113,7 +114,7 @@ public class AccountFFragment extends Fragment {
         binding.layoutSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), SettingActivity.class));
+                startActivityForResult(new Intent((HomeFActivity) getActivity(), SettingActivity.class), 223);
             }
         });
 

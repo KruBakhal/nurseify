@@ -228,6 +228,7 @@ public class ProfileSetupDialog_4 extends DialogFragment {
         setup1Binding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 viewModel.do_DismissDialog(new DialogStatusMessage(DialogStatus.Cancel, mParam1));
                 Utils.onClickEvent(v);
             }

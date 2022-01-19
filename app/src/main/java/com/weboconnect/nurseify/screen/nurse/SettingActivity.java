@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -21,6 +22,7 @@ import com.weboconnect.nurseify.screen.AboutActivity;
 import com.weboconnect.nurseify.screen.LoginSelectActivity;
 import com.weboconnect.nurseify.screen.PrivacyActivity;
 import com.weboconnect.nurseify.screen.nurse.sample.SampleModel;
+import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
 import com.weboconnect.nurseify.webService.RetrofitClient;
@@ -41,10 +43,23 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(SettingActivity.this, R.layout.activity_setting);
-        if (new SessionManager(context) != null && new SessionManager(context).get_User() != null
-                && !TextUtils.isEmpty(new SessionManager(context).get_User().getMobile()))
-            binding.edPhone.setText(new SessionManager(context).get_User().getMobile());
+        String type = new SessionManager(context).get_TYPE();
+        if (!TextUtils.isEmpty(type)) {
+            if (type.equals(Constant.CONST_NURSE_TYPE) && new SessionManager(context).get_User() != null) {
+                binding.edPhone.setText(new SessionManager(context).get_User().getMobile());
+            } else if (new SessionManager(context).get_facilityProfile() != null) {
+                binding.edPhone.setText(new SessionManager(context).get_facilityProfile().getFacilityPhone());
+            }
+        }
+        binding.allNote.setChecked(new SessionManager(context).get_NotificationToggle());
 
+        binding.allNote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                new SessionManager(context).setNotificationToggle(isChecked);
+                setResult(RESULT_OK);
+            }
+        });
         binding.layoutAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

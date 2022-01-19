@@ -336,16 +336,16 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("job-accept")
-    Call<PrivacyPolicyModel> call_offered_job_accept(
+    Call<ResponseModel> call_offered_job_accept(
             @Part("user_id") RequestBody user_id,
-            @Part("job_id") RequestBody job_id
+            @Part("offer_id") RequestBody job_id
     );
 
     @Multipart
     @POST("job-reject")
-    Call<PrivacyPolicyModel> call_offered_job_reject(
+    Call<ResponseModel> call_offered_job_reject(
             @Part("user_id") RequestBody user_id,
-            @Part("job_id") RequestBody job_id
+            @Part("offer_id") RequestBody job_id
     );
 
     @Multipart
@@ -496,4 +496,9 @@ public interface RetrofitApi {
                                              @Part("tools_todo_my_job") RequestBody tools_todo_my_job,
                                              @Part("experience") RequestBody experience
     );
+
+    @Multipart
+    @POST("remove-notification")
+    Call<ResponseModel> call_remove_notification(@Part("user_id") RequestBody user_id, @Part("notification_id")
+            RequestBody notification_id);
 }

@@ -356,4 +356,9 @@ public interface FacilityAPI {
     @Multipart
     @POST("facility-settings")
     Call<FacilitySettingModel> call_setting(@Part("facility_id") RequestBody user_id1);
+
+    @Multipart
+    @POST("remove-notification")
+    Call<ResponseModel> call_remove_notification(@Part("user_id") RequestBody user_id, @Part("notification_id")
+            RequestBody notification_id);
 }

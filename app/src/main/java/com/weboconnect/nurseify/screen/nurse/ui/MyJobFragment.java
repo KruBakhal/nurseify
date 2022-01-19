@@ -1,8 +1,10 @@
 package com.weboconnect.nurseify.screen.nurse.ui;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -28,8 +32,10 @@ import com.weboconnect.nurseify.databinding.FragmentMyJobsBinding;
 import com.weboconnect.nurseify.screen.nurse.adapters.OfferedJobAdapter;
 import com.weboconnect.nurseify.screen.nurse.model.ActiveModel;
 import com.weboconnect.nurseify.screen.nurse.model.CompletedJobModel;
+import com.weboconnect.nurseify.screen.nurse.model.JobModel;
 import com.weboconnect.nurseify.screen.nurse.model.OfferedJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.PrivacyPolicyModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
@@ -208,6 +214,7 @@ public class MyJobFragment extends Fragment {
     private void get_Offered_Job(boolean isAcceptCall) {
         if (isFirstTime) {
             isFirstTime = false;
+            selected_page = 1;
             showProgress();
         } else {
             selected_page++;
@@ -300,7 +307,6 @@ public class MyJobFragment extends Fragment {
         call.enqueue(new Callback<ActiveModel>() {
             @Override
             public void onResponse(Call<ActiveModel> call, Response<ActiveModel> response) {
-//                Log.d(TAG + "getOfferedJob ResCode", response.code() + "");
                 assert response.body() != null;
                 if (!response.body().getApiStatus().equals("1")) {
                     errorProgress(false);
@@ -431,7 +437,8 @@ public class MyJobFragment extends Fragment {
         offeredJobAdapter = new OfferedJobAdapter(getActivity(), list_Offered_Job, new OfferedJobCallback() {
             @Override
             public void onAccept(String jobId) {
-                offeredJobAccept(jobId);
+//                offeredJobAccept(jobId);
+                terms_conditions_Dialog(jobId);
             }
 
             @Override
@@ -507,7 +514,7 @@ public class MyJobFragment extends Fragment {
 //        completedAdapter.notifyDataSetChanged();
     }
 
-    private void offeredJobAccept(String jobId) {
+    private void offeredJobAccept(String jobId, Dialog dialog) {
 
         progressDialog.show();
 
@@ -515,12 +522,12 @@ public class MyJobFragment extends Fragment {
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_accept(user_id1, job_id);
 
-        call.enqueue(new Callback<PrivacyPolicyModel>() {
+        call.enqueue(new Callback<ResponseModel>() {
             @Override
-            public void onResponse(Call<PrivacyPolicyModel> call, Response<PrivacyPolicyModel> response) {
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 try {
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
@@ -528,10 +535,13 @@ public class MyJobFragment extends Fragment {
                         return;
                     }
                     if (response.isSuccessful()) {
-                        PrivacyPolicyModel responseModel = response.body();
+                        ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
-//                            Utils.displayToast(getContext(), responseModel.getData());
+                            dialog.dismiss();
+                            isFirstTime = true;
                             get_Offered_Job(true);
+                        } else {
+
                         }
                     } else {
                         Log.e(TAG + "accept", response.message());
@@ -545,7 +555,7 @@ public class MyJobFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PrivacyPolicyModel> call, Throwable t) {
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.e(TAG + "accept", t.toString());
             }
@@ -561,12 +571,12 @@ public class MyJobFragment extends Fragment {
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         RequestBody job_id = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
 
-        Call<PrivacyPolicyModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+        Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                 .call_offered_job_reject(user_id1, job_id);
 
-        call.enqueue(new Callback<PrivacyPolicyModel>() {
+        call.enqueue(new Callback<ResponseModel>() {
             @Override
-            public void onResponse(Call<PrivacyPolicyModel> call, Response<PrivacyPolicyModel> response) {
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 try {
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
@@ -574,13 +584,12 @@ public class MyJobFragment extends Fragment {
                         return;
                     }
                     if (response.isSuccessful()) {
-                        PrivacyPolicyModel responseModel = response.body();
+                        ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
 //                            Utils.displayToast(getContext(), responseModel.getData());
+                            isFirstTime = true;
                             get_Offered_Job(true);
                         }
-
-
                     } else {
                         Log.e(TAG + "reject", response.message());
                         return;
@@ -593,12 +602,53 @@ public class MyJobFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PrivacyPolicyModel> call, Throwable t) {
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.e(TAG + "reject", t.toString());
             }
         });
 
+    }
+
+    private void terms_conditions_Dialog(String job_id) {
+        final View loc = getLayoutInflater().from(getContext()).inflate(R.layout.dialog_tearms, null);
+        final Dialog dialog = new Dialog(getContext(), R.style.AlertDialog);
+        dialog.setContentView(loc);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(true);
+        dialog.show();
+        ImageView closeDialog = dialog.findViewById(R.id.close_dialog);
+        TextView tv_text = dialog.findViewById(R.id.tv_text);
+        View sdsds = dialog.findViewById(R.id.sdsds);
+//        tv_text.setText(Html.fromHtml(str_terms_conditions));
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+        TextView textApply = dialog.findViewById(R.id.text_apply);
+        textApply.setText("Accept");
+        tv_text.setText(Constant.URL_TERMS_CONDITION);
+        sdsds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                offeredJobAccept(job_id, dialog);
+
+                dialog.dismiss();
+            }
+        });
+        tv_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(Constant.URL_TERMS_CONDITION);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void dismissProgress() {
