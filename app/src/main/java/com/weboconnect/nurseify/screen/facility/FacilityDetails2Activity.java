@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityFacilityDetails2Binding;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
+import com.weboconnect.nurseify.screen.facility.model.FacilitySocial;
 import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
@@ -45,9 +46,10 @@ public class FacilityDetails2Activity extends AppCompatActivity {
         context = this;
         model = new SessionManager(context).get_facilityProfile();
         setData();
-     //   getProfileData();
+//        getProfileData();
         click();
     }
+
     private void getProfileData() {
         if (!Utils.isNetworkAvailable(FacilityDetails2Activity.this)) {
             Utils.displayToast(FacilityDetails2Activity.this, getResources().getString(R.string.no_internet));
@@ -77,11 +79,11 @@ public class FacilityDetails2Activity extends AppCompatActivity {
                 if (response.body().getApiStatus().equals("1")) {
                     binding.progressBar.setVisibility(View.GONE);
                     FacilityJobModel.Facility model = response.body().getData().get(0);
-
+                    create_facility_profile(model);
                     String img = "", web = "", you = "", senior, about;
 
                     img = model.getCnoImage();
-//                    web = model.getFacilityWebsite();
+                    web = model.getFacilityWebsite();
                     you = model.getVideoEmbedUrl();
                     senior = model.getCnoMessage();
                     about = model.getAboutFacility();
@@ -130,6 +132,60 @@ public class FacilityDetails2Activity extends AppCompatActivity {
             }
         });
     }
+
+    private void create_facility_profile(FacilityJobModel.Facility facility) {
+        FacilityProfile facilityProfile = new FacilityProfile();
+        facilityProfile.setUserId(facility.getId());
+        facilityProfile.setFacilityName(facility.getName());
+        facilityProfile.setFacilityType("" + facility.getFacilityType());
+        facilityProfile.setFacilityEmail(facility.getFacilityEmail());
+        facilityProfile.setFacilityPhone(facility.getFacilityPhone());
+        facilityProfile.setFacilityAddress(facility.getAddress());
+        facilityProfile.setFacilityCity(facility.getCity());
+        facilityProfile.setFacilityState(facility.getState());
+        facilityProfile.setFacilityPostcode(facility.getPostcode());
+
+        facilityProfile.setCnoImage(facility.getCnoImage());
+        facilityProfile.setFacilityWebsite(facility.getFacilityWebsite());
+        facilityProfile.setVideoEmbedUrl(facility.getVideoEmbedUrl());
+        facilityProfile.setCnoMessage(facility.getCnoMessage());
+        facilityProfile.setAboutFacility(facility.getAboutFacility());
+
+        facilityProfile.setFacilityEmr("" + facility.getfEmr());
+        facilityProfile.setFacilityEmrDefinition("" + facility.getfEmrDefinition());
+        facilityProfile.setFacilityEmr_Other("" + facility.getfEmrOther());
+        facilityProfile.setFacilityBcheckProvider("" + facility.getfBcheckProvider());
+        facilityProfile.setFacilityBcheckProviderDefinition("" + facility.getfBcheckProviderDefinition());
+        facilityProfile.setFacilityBcheckProvider_Other("" + facility.getfBcheckProviderOther());
+        facilityProfile.setNurseCredSoft("" + facility.getNurseCredSoft());
+        facilityProfile.setNurseCredSoftDefinition("" + facility.getNurseCredSoftDefinition());
+        facilityProfile.setNurseCredSoft_other("" + facility.getNurseCredSoftOther());
+        facilityProfile.setNurseSchedulingSys("" + facility.getNurseSchedulingSys());
+        facilityProfile.setNurseSchedulingSysDefinition("" + facility.getNurseSchedulingSysDefinition());
+        facilityProfile.setNurseSchedulingSys_other("" + facility.getNurseSchedulingSysOther());
+        facilityProfile.setTimeAttendSys("" + facility.getTimeAttendSys());
+        facilityProfile.setTimeAttendSysDefinition("" + facility.getTimeAttendSysDefinition());
+        facilityProfile.setTimeAttendSys_other("" + facility.getTimeAttendSysOther());
+        facilityProfile.setLicensedBeds(facility.getLicensedBeds());
+        facilityProfile.setTraumaDesignationDefinition(facility.getTraumaDesignationDefinition());
+        facilityProfile.setTraumaDesignation(facility.getTraumaDesignation());
+
+        FacilitySocial facilitySocial = new FacilitySocial();
+
+        facilitySocial.setFacebook("" + facility.getFacebook());
+        facilitySocial.setTwitter("" + facility.getTwitter());
+        facilitySocial.setYoutube("" + facility.getYoutube());
+        facilitySocial.setTiktok("" + facility.getTiktok());
+        facilitySocial.setSanpchat("" + facility.getSanpchat());
+        facilitySocial.setLinkedin("" + facility.getLinkedin());
+        facilitySocial.setPinterest("" + facility.getPinterest());
+        facilitySocial.setInstagram("" + facility.getInstagram());
+
+        facilityProfile.setFacilitySocial(facilitySocial);
+
+        this.model = facilityProfile;
+    }
+
     private void setData() {
         String img = "", web = "", you = "", senior, about;
 
@@ -193,6 +249,7 @@ public class FacilityDetails2Activity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

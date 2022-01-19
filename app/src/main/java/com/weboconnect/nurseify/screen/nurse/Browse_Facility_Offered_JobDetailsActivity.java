@@ -171,7 +171,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                         terms_conditions_Dialog(model, str_terms_conditions, position);
                     }
                 } else if (flag == 2) {
-                    followFacility(facility.getId(), facility.getType().toString());
+                    followFacility(facility.getId(), facility.getFacilityType().toString());
                 }
 
             }

@@ -147,7 +147,8 @@ public class Nurse_Browse_Fragment extends Fragment {
             public void onChanged(DialogStatusMessage dialogStatusMessage) {
                 if (dialogStatusMessage.getDialogStatus() == DialogStatus.Done
                         && dialogStatusMessage.getDialogType() == 1) {
-                    open_filter();
+                    if (isFragActive)
+                        open_filter();
                 }
             }
         });

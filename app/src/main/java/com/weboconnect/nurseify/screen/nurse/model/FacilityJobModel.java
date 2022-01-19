@@ -68,12 +68,18 @@ public class FacilityJobModel {
         @SerializedName("postcode")
         @Expose
         private String postcode;
-        @SerializedName("type")
+        @SerializedName("facility_type")
         @Expose
-        private Integer type;
+        private String facilityType;
+        @SerializedName("facility_type_definition")
+        @Expose
+        private String facilityTypeDefinition;
         @SerializedName("active")
         @Expose
         private Integer active;
+        @SerializedName("deleted_at")
+        @Expose
+        private String deletedAt;
         @SerializedName("created_at")
         @Expose
         private String createdAt;
@@ -86,6 +92,9 @@ public class FacilityJobModel {
         @SerializedName("facility_phone")
         @Expose
         private String facilityPhone;
+        @SerializedName("specialty_need")
+        @Expose
+        private String specialtyNeed;
         @SerializedName("slug")
         @Expose
         private String slug;
@@ -95,45 +104,114 @@ public class FacilityJobModel {
         @SerializedName("cno_image")
         @Expose
         private String cnoImage;
+        @SerializedName("gallery_images")
+        @Expose
+        private String galleryImages;
+        @SerializedName("video")
+        @Expose
+        private String video;
         @SerializedName("facebook")
         @Expose
         private String facebook;
+        @SerializedName("twitter")
+        @Expose
+        private String twitter;
         @SerializedName("linkedin")
         @Expose
         private String linkedin;
+        @SerializedName("instagram")
+        @Expose
+        private String instagram;
+        @SerializedName("pinterest")
+        @Expose
+        private String pinterest;
+        @SerializedName("tiktok")
+        @Expose
+        private String tiktok;
+        @SerializedName("sanpchat")
+        @Expose
+        private String sanpchat;
+        @SerializedName("youtube")
+        @Expose
+        private String youtube;
         @SerializedName("about_facility")
         @Expose
         private String aboutFacility;
+        @SerializedName("facility_website")
+        @Expose
+        private String facilityWebsite;
         @SerializedName("video_embed_url")
         @Expose
         private String videoEmbedUrl;
+        @SerializedName("f_lat")
+        @Expose
+        private String fLat;
+        @SerializedName("f_lang")
+        @Expose
+        private String fLang;
         @SerializedName("f_emr")
         @Expose
         private String fEmr;
+        @SerializedName("f_emr_definition")
+        @Expose
+        private String fEmrDefinition;
+        @SerializedName("f_emr_other")
+        @Expose
+        private String fEmrOther;
         @SerializedName("f_bcheck_provider")
         @Expose
         private String fBcheckProvider;
+        @SerializedName("f_bcheck_provider_definition")
+        @Expose
+        private String fBcheckProviderDefinition;
         @SerializedName("f_bcheck_provider_other")
         @Expose
         private String fBcheckProviderOther;
         @SerializedName("nurse_cred_soft")
         @Expose
         private String nurseCredSoft;
+        @SerializedName("nurse_cred_soft_definition")
+        @Expose
+        private String nurseCredSoftDefinition;
+        @SerializedName("nurse_cred_soft_other")
+        @Expose
+        private String nurseCredSoftOther;
         @SerializedName("nurse_scheduling_sys")
         @Expose
         private String nurseSchedulingSys;
+        @SerializedName("nurse_scheduling_sys_definition")
+        @Expose
+        private String nurseSchedulingSysDefinition;
+        @SerializedName("nurse_scheduling_sys_other")
+        @Expose
+        private String nurseSchedulingSysOther;
         @SerializedName("time_attend_sys")
         @Expose
         private String timeAttendSys;
+        @SerializedName("time_attend_sys_definition")
+        @Expose
+        private String timeAttendSysDefinition;
+        @SerializedName("time_attend_sys_other")
+        @Expose
+        private String timeAttendSysOther;
         @SerializedName("licensed_beds")
         @Expose
         private String licensedBeds;
+        @SerializedName("licensed_beds_definition")
+        @Expose
+        private String licensedBedsDefinition;
         @SerializedName("trauma_designation")
         @Expose
         private String traumaDesignation;
+        @SerializedName("trauma_designation_definition")
+        @Expose
+        private String traumaDesignationDefinition;
         @SerializedName("preferred_specialty")
         @Expose
-        private Integer preferredSpecialty;
+        private String preferredSpecialty;
+        @SerializedName("preferred_specialty_definition")
+        @Expose
+        private String preferredSpecialtyDefinition;
         @SerializedName("total_jobs")
         @Expose
         private String totalJobs;
@@ -211,12 +289,20 @@ public class FacilityJobModel {
             this.postcode = postcode;
         }
 
-        public Integer getType() {
-            return type;
+        public String getFacilityType() {
+            return facilityType;
         }
 
-        public void setType(Integer type) {
-            this.type = type;
+        public void setFacilityType(String facilityType) {
+            this.facilityType = facilityType;
+        }
+
+        public String getFacilityTypeDefinition() {
+            return facilityTypeDefinition;
+        }
+
+        public void setFacilityTypeDefinition(String facilityTypeDefinition) {
+            this.facilityTypeDefinition = facilityTypeDefinition;
         }
 
         public Integer getActive() {
@@ -225,6 +311,14 @@ public class FacilityJobModel {
 
         public void setActive(Integer active) {
             this.active = active;
+        }
+
+        public String getDeletedAt() {
+            return deletedAt;
+        }
+
+        public void setDeletedAt(String deletedAt) {
+            this.deletedAt = deletedAt;
         }
 
         public String getCreatedAt() {
@@ -259,6 +353,14 @@ public class FacilityJobModel {
             this.facilityPhone = facilityPhone;
         }
 
+        public String getSpecialtyNeed() {
+            return specialtyNeed;
+        }
+
+        public void setSpecialtyNeed(String specialtyNeed) {
+            this.specialtyNeed = specialtyNeed;
+        }
+
         public String getSlug() {
             return slug;
         }
@@ -283,12 +385,36 @@ public class FacilityJobModel {
             this.cnoImage = cnoImage;
         }
 
+        public String getGalleryImages() {
+            return galleryImages;
+        }
+
+        public void setGalleryImages(String galleryImages) {
+            this.galleryImages = galleryImages;
+        }
+
+        public String getVideo() {
+            return video;
+        }
+
+        public void setVideo(String video) {
+            this.video = video;
+        }
+
         public String getFacebook() {
             return facebook;
         }
 
         public void setFacebook(String facebook) {
             this.facebook = facebook;
+        }
+
+        public String getTwitter() {
+            return twitter;
+        }
+
+        public void setTwitter(String twitter) {
+            this.twitter = twitter;
         }
 
         public String getLinkedin() {
@@ -299,12 +425,60 @@ public class FacilityJobModel {
             this.linkedin = linkedin;
         }
 
+        public String getInstagram() {
+            return instagram;
+        }
+
+        public void setInstagram(String instagram) {
+            this.instagram = instagram;
+        }
+
+        public String getPinterest() {
+            return pinterest;
+        }
+
+        public void setPinterest(String pinterest) {
+            this.pinterest = pinterest;
+        }
+
+        public String getTiktok() {
+            return tiktok;
+        }
+
+        public void setTiktok(String tiktok) {
+            this.tiktok = tiktok;
+        }
+
+        public String getSanpchat() {
+            return sanpchat;
+        }
+
+        public void setSanpchat(String sanpchat) {
+            this.sanpchat = sanpchat;
+        }
+
+        public String getYoutube() {
+            return youtube;
+        }
+
+        public void setYoutube(String youtube) {
+            this.youtube = youtube;
+        }
+
         public String getAboutFacility() {
             return aboutFacility;
         }
 
         public void setAboutFacility(String aboutFacility) {
             this.aboutFacility = aboutFacility;
+        }
+
+        public String getFacilityWebsite() {
+            return facilityWebsite;
+        }
+
+        public void setFacilityWebsite(String facilityWebsite) {
+            this.facilityWebsite = facilityWebsite;
         }
 
         public String getVideoEmbedUrl() {
@@ -315,6 +489,22 @@ public class FacilityJobModel {
             this.videoEmbedUrl = videoEmbedUrl;
         }
 
+        public String getfLat() {
+            return fLat;
+        }
+
+        public void setfLat(String fLat) {
+            this.fLat = fLat;
+        }
+
+        public String getfLang() {
+            return fLang;
+        }
+
+        public void setfLang(String fLang) {
+            this.fLang = fLang;
+        }
+
         public String getfEmr() {
             return fEmr;
         }
@@ -323,12 +513,36 @@ public class FacilityJobModel {
             this.fEmr = fEmr;
         }
 
+        public String getfEmrDefinition() {
+            return fEmrDefinition;
+        }
+
+        public void setfEmrDefinition(String fEmrDefinition) {
+            this.fEmrDefinition = fEmrDefinition;
+        }
+
+        public String getfEmrOther() {
+            return fEmrOther;
+        }
+
+        public void setfEmrOther(String fEmrOther) {
+            this.fEmrOther = fEmrOther;
+        }
+
         public String getfBcheckProvider() {
             return fBcheckProvider;
         }
 
         public void setfBcheckProvider(String fBcheckProvider) {
             this.fBcheckProvider = fBcheckProvider;
+        }
+
+        public String getfBcheckProviderDefinition() {
+            return fBcheckProviderDefinition;
+        }
+
+        public void setfBcheckProviderDefinition(String fBcheckProviderDefinition) {
+            this.fBcheckProviderDefinition = fBcheckProviderDefinition;
         }
 
         public String getfBcheckProviderOther() {
@@ -347,12 +561,44 @@ public class FacilityJobModel {
             this.nurseCredSoft = nurseCredSoft;
         }
 
+        public String getNurseCredSoftDefinition() {
+            return nurseCredSoftDefinition;
+        }
+
+        public void setNurseCredSoftDefinition(String nurseCredSoftDefinition) {
+            this.nurseCredSoftDefinition = nurseCredSoftDefinition;
+        }
+
+        public String getNurseCredSoftOther() {
+            return nurseCredSoftOther;
+        }
+
+        public void setNurseCredSoftOther(String nurseCredSoftOther) {
+            this.nurseCredSoftOther = nurseCredSoftOther;
+        }
+
         public String getNurseSchedulingSys() {
             return nurseSchedulingSys;
         }
 
         public void setNurseSchedulingSys(String nurseSchedulingSys) {
             this.nurseSchedulingSys = nurseSchedulingSys;
+        }
+
+        public String getNurseSchedulingSysDefinition() {
+            return nurseSchedulingSysDefinition;
+        }
+
+        public void setNurseSchedulingSysDefinition(String nurseSchedulingSysDefinition) {
+            this.nurseSchedulingSysDefinition = nurseSchedulingSysDefinition;
+        }
+
+        public String getNurseSchedulingSysOther() {
+            return nurseSchedulingSysOther;
+        }
+
+        public void setNurseSchedulingSysOther(String nurseSchedulingSysOther) {
+            this.nurseSchedulingSysOther = nurseSchedulingSysOther;
         }
 
         public String getTimeAttendSys() {
@@ -363,12 +609,36 @@ public class FacilityJobModel {
             this.timeAttendSys = timeAttendSys;
         }
 
+        public String getTimeAttendSysDefinition() {
+            return timeAttendSysDefinition;
+        }
+
+        public void setTimeAttendSysDefinition(String timeAttendSysDefinition) {
+            this.timeAttendSysDefinition = timeAttendSysDefinition;
+        }
+
+        public String getTimeAttendSysOther() {
+            return timeAttendSysOther;
+        }
+
+        public void setTimeAttendSysOther(String timeAttendSysOther) {
+            this.timeAttendSysOther = timeAttendSysOther;
+        }
+
         public String getLicensedBeds() {
             return licensedBeds;
         }
 
         public void setLicensedBeds(String licensedBeds) {
             this.licensedBeds = licensedBeds;
+        }
+
+        public String getLicensedBedsDefinition() {
+            return licensedBedsDefinition;
+        }
+
+        public void setLicensedBedsDefinition(String licensedBedsDefinition) {
+            this.licensedBedsDefinition = licensedBedsDefinition;
         }
 
         public String getTraumaDesignation() {
@@ -379,12 +649,28 @@ public class FacilityJobModel {
             this.traumaDesignation = traumaDesignation;
         }
 
-        public Integer getPreferredSpecialty() {
+        public String getTraumaDesignationDefinition() {
+            return traumaDesignationDefinition;
+        }
+
+        public void setTraumaDesignationDefinition(String traumaDesignationDefinition) {
+            this.traumaDesignationDefinition = traumaDesignationDefinition;
+        }
+
+        public String getPreferredSpecialty() {
             return preferredSpecialty;
         }
 
-        public void setPreferredSpecialty(Integer preferredSpecialty) {
+        public void setPreferredSpecialty(String preferredSpecialty) {
             this.preferredSpecialty = preferredSpecialty;
+        }
+
+        public String getPreferredSpecialtyDefinition() {
+            return preferredSpecialtyDefinition;
+        }
+
+        public void setPreferredSpecialtyDefinition(String preferredSpecialtyDefinition) {
+            this.preferredSpecialtyDefinition = preferredSpecialtyDefinition;
         }
 
         public String getTotalJobs() {
@@ -418,7 +704,5 @@ public class FacilityJobModel {
         public void setIsLike(String isLike) {
             this.isLike = isLike;
         }
-
-
     }
 }

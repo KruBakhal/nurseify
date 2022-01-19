@@ -99,9 +99,12 @@ public class BrowseFragment extends Fragment {
     private String zipCity;
     private int hours1 = 1;
     private int hours2 = 1;
+    String assign = "", facility_type = "", media_record = "";
+
     private String str_terms_conditions;
     Pattern patternAlphabetNumbers = Pattern.compile("^[a-zA-Z0-9]*$");
     private boolean isFirstTime = true;
+    private boolean isFilter = false;
 
     public BrowseFragment() {
     }
@@ -136,7 +139,7 @@ public class BrowseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if (Utils.isNetworkAvailable(getContext())) {
             if (isJobType) {
-                fecthBrowseJobs(false, null, null, null);
+                fecthBrowseJobs(false);
             } else {
 
             }
@@ -260,17 +263,23 @@ public class BrowseFragment extends Fragment {
                 selected_electronic_medical_records = 0;
                 hours1 = 4;
                 hours2 = 5;
+                assign = "";
+                facility_type = "";
+                media_record = "";
+                isFilter = false;
                 dialogFilterBinding.tvZip.setText(zipCity);
                 dialogFilterBinding.distanceSlider.setValues(4.0F, 5.0F);
-//                dialogFilterBinding.rangeSeekbar3.setValues(4.0F, 5.0F);
                 dialogFilterBinding.tvHourRate.setText("$" + dialogFilterBinding.rangeSeekbar3.getSelectedMinValue().intValue()
                         + "/hr - $" + dialogFilterBinding.rangeSeekbar3.getSelectedMaxValue().intValue() + "/hr");
                 dialogFilterBinding.spinnerAssignment.setText(list_assignment.get(selected_open_assignment_type).getName());
                 dialogFilterBinding.spinnerFacility.setText(list_facilty_type.get(selected_facility_type).getName());
                 dialogFilterBinding.spinnerElectric.setText(list_media.get(selected_electronic_medical_records).getName());
-
                 Utils.displayToast(getContext(), "All Field Value has been reset !");
-//                dialog.dismiss();
+                dialog.dismiss();
+                selected_page_1 = 1;
+                browserJobsAdapter.removeAll();
+                isFirstTime = true;
+                fecthBrowseJobs(false);
             }
         });
         dialogFilterBinding.textApply.setOnClickListener(new View.OnClickListener() {
@@ -282,9 +291,17 @@ public class BrowseFragment extends Fragment {
                     hours1 = dialogFilterBinding.rangeSeekbar3.getSelectedMinValue().intValue();
                     hours2 = dialogFilterBinding.rangeSeekbar3.getSelectedMaxValue().intValue();
                     selected_page_1 = 1;
-                    fecthBrowseJobs(true, dialogFilterBinding.tvZip.getText().toString(),
-                            "" + dialogFilterBinding.rangeSeekbar3.getSelectedMinValue().intValue()
-                            , "" + dialogFilterBinding.rangeSeekbar3.getSelectedMaxValue().intValue());
+                    if (TextUtils.isEmpty(zipCity)) {
+                        zipCity = "";
+                    }
+                    if (selected_open_assignment_type != 0)
+                        assign = list_assignment.get(selected_open_assignment_type).getId().toString();
+                    if (selected_facility_type != 0)
+                        facility_type = list_facilty_type.get(selected_facility_type).getId().toString();
+                    if (selected_electronic_medical_records != 0)
+                        media_record = list_media.get(selected_electronic_medical_records).getId().toString();
+                    isFilter = true;
+                    fecthBrowseJobs(true);
 
                 }
             }
@@ -294,6 +311,7 @@ public class BrowseFragment extends Fragment {
                 int hours1 = dialogFilterBinding.rangeSeekbar3.getSelectedMinValue().intValue();
                 int hours2 = dialogFilterBinding.rangeSeekbar3.getSelectedMaxValue().intValue();
 
+/*
                 if (TextUtils.isEmpty(zipCity)) {
                     Utils.displayToast(getContext(), "Enter Zip/City First !");
                     return false;
@@ -310,6 +328,7 @@ public class BrowseFragment extends Fragment {
                     Utils.displayToast(getContext(), "Select Electronic Media Record  First !");
                     return false;
                 }
+*/
 
                 if (hours1 == hours2) {
                     Utils.displayToast(getContext(), "Select proper range of hours rate  !");
@@ -470,7 +489,7 @@ public class BrowseFragment extends Fragment {
                         && totalItemCount >= offset) {
                     if (isJobType) {
                         selected_page_1++;
-                        fecthBrowseJobs(false, null, null, null);
+                        fecthBrowseJobs(isFilter);
                     } else {
                         selected_page_2++;
                         fecthBrowseFacility();
@@ -499,7 +518,7 @@ public class BrowseFragment extends Fragment {
                         && totalItemCount >= offset) {
                     if (isJobType) {
                         selected_page_1++;
-                        fecthBrowseJobs(false, null, null, null);
+                        fecthBrowseJobs(false);
                     } else {
                         selected_page_2++;
                         fecthBrowseFacility();
@@ -510,7 +529,7 @@ public class BrowseFragment extends Fragment {
         }
     };
 
-    private void fecthBrowseJobs(boolean isFilter, String search_loc, String range1, String range2) {
+    private void fecthBrowseJobs(boolean isFilter) {
 
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
 
@@ -532,11 +551,11 @@ public class BrowseFragment extends Fragment {
         Call<JobModel> call = null;
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
         if (isFilter) {
-            RequestBody search_location1 = RequestBody.create(MediaType.parse("multipart/form-data"), search_loc);
-            RequestBody open_assignment_type1 = RequestBody.create(MediaType.parse("multipart/form-data"), list_assignment.get(selected_open_assignment_type).getId().toString());
-            RequestBody facility_type1 = RequestBody.create(MediaType.parse("multipart/form-data"), list_facilty_type.get(selected_facility_type).getId().toString());
-            RequestBody electronic_medical_records1 = RequestBody.create(MediaType.parse("multipart/form-data"), list_media.get(selected_electronic_medical_records).getId().toString());
-            String range = range1 + "-" + range2;
+            RequestBody search_location1 = RequestBody.create(MediaType.parse("multipart/form-data"), zipCity);
+            RequestBody open_assignment_type1 = RequestBody.create(MediaType.parse("multipart/form-data"), assign);
+            RequestBody facility_type1 = RequestBody.create(MediaType.parse("multipart/form-data"), facility_type);
+            RequestBody electronic_medical_records1 = RequestBody.create(MediaType.parse("multipart/form-data"), media_record);
+            String range = hours1 + "-" + hours2;
             RequestBody rangeSLider = RequestBody.create(MediaType.parse("multipart/form-data"), range);
 
             call = RetrofitClient.getInstance().getNurseRetrofitApi()
@@ -570,15 +589,26 @@ public class BrowseFragment extends Fragment {
                         if (list_jobs == null) {
                             list_jobs = new ArrayList<>();
                         }
-                        if (list_jobs.size() > 0) {
-                            list_jobs.addAll(jobModel.getData());
-                            if (browserJobsAdapter != null) {
-                                browserJobsAdapter.add_Item(jobModel.getData());
-                            } else
-                                setAdapter();
-                        } else {
+                        if (isFilter) {
+                            if (list_jobs == null)
+                                list_jobs = new ArrayList<>();
+                            else if (list_jobs.size() > 0)
+                                list_jobs.clear();
                             list_jobs.addAll(jobModel.getData());
                             setAdapter();
+                            browserJobsAdapter.removeAll();
+                            browserJobsAdapter.add_Item(jobModel.getData());
+                        } else {
+                            if (list_jobs.size() > 0) {
+                                list_jobs.addAll(jobModel.getData());
+                                if (browserJobsAdapter != null) {
+                                    browserJobsAdapter.add_Item(jobModel.getData());
+                                } else
+                                    setAdapter();
+                            } else {
+                                list_jobs.addAll(jobModel.getData());
+                                setAdapter();
+                            }
                         }
                         if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
@@ -975,7 +1005,7 @@ public class BrowseFragment extends Fragment {
                 binding.recyclerViewJobs.setVisibility(View.VISIBLE);
 
                 if (list_jobs == null || list_jobs.size() == 0) {
-                    fecthBrowseJobs(false, null, null, null);
+                    fecthBrowseJobs(false);
                 } else {
                     binding.recyclerViewJobs.setAdapter(browserJobsAdapter);
                     dismissProgress();
@@ -1067,6 +1097,7 @@ public class BrowseFragment extends Fragment {
                     }
                 });
         binding.recyclerViewJobs.setAdapter(browserJobsAdapter);
+        browserJobsAdapter.notifyDataSetChanged();
     }
 
     private void fetch_terms_conditions(JobModel.JobDatum datum, int position) {

@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityFacilityDetails3Binding;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
+import com.weboconnect.nurseify.screen.facility.model.FacilitySocial;
 import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
@@ -47,7 +48,7 @@ public class FacilityDetails3Activity extends AppCompatActivity {
         context = this;
         model = new SessionManager(context).get_facilityProfile();
         setData();
-       // getProfileData();
+//        getProfileData();
         click();
     }
 
@@ -80,20 +81,21 @@ public class FacilityDetails3Activity extends AppCompatActivity {
                 if (response.body().getApiStatus().equals("1")) {
                     binding.progressBar.setVisibility(View.GONE);
                     FacilityJobModel.Facility model = response.body().getData().get(0);
+                    create_facility_profile(model);
                     String tvEMR;
-                   /* if (!TextUtils.isEmpty(model.getfEmr()) && model.getfEmr().equals("0")) {
+                    if (!TextUtils.isEmpty(model.getfEmr()) && model.getfEmr().equals("0")) {
                         binding.tvEmr.setText("Other");
-                        binding.edEmr.setText("" + model.getFacilityEmrDefinition());
+                        binding.edEmr.setText("" + model.getfEmrDefinition());
                     } else {
                         binding.layEmr.setVisibility(View.GONE);
-                        binding.tvEmr.setText("" + model.getFacilityEmrDefinition());
+                        binding.tvEmr.setText("" + model.getfEmrDefinition());
                     }
                     if (!TextUtils.isEmpty(model.getfBcheckProvider()) && model.getfBcheckProvider().equals("0")) {
                         binding.tvBackground.setText("Other");
-                        binding.edBackground.setText("" + model.getFacilityBcheckProviderDefinition());
+                        binding.edBackground.setText("" + model.getfBcheckProviderDefinition());
                     } else {
                         binding.layBackground.setVisibility(View.GONE);
-                        binding.tvBackground.setText("" + model.getFacilityBcheckProviderDefinition());
+                        binding.tvBackground.setText("" + model.getfBcheckProviderDefinition());
                     }
                     if (!TextUtils.isEmpty(model.getNurseCredSoft()) && model.getNurseCredSoft().equals("0")) {
                         binding.tvSoft.setText("Other");
@@ -126,7 +128,6 @@ public class FacilityDetails3Activity extends AppCompatActivity {
                         trauma = "-";
                     binding.edLicenseBed.setText(edLicenseBed);
                     binding.tvTrauma.setText(trauma);
-*/
 
                 } else {
                     Utils.displayToast(FacilityDetails3Activity.this, "Data has not been updated");
@@ -145,6 +146,58 @@ public class FacilityDetails3Activity extends AppCompatActivity {
                 Log.e("TAG" + "getNurseProfile", t.toString());
             }
         });
+    }
+    private void create_facility_profile(FacilityJobModel.Facility facility) {
+        FacilityProfile facilityProfile = new FacilityProfile();
+        facilityProfile.setUserId(facility.getId());
+        facilityProfile.setFacilityName(facility.getName());
+        facilityProfile.setFacilityType("" + facility.getFacilityType());
+        facilityProfile.setFacilityEmail(facility.getFacilityEmail());
+        facilityProfile.setFacilityPhone(facility.getFacilityPhone());
+        facilityProfile.setFacilityAddress(facility.getAddress());
+        facilityProfile.setFacilityCity(facility.getCity());
+        facilityProfile.setFacilityState(facility.getState());
+        facilityProfile.setFacilityPostcode(facility.getPostcode());
+
+        facilityProfile.setCnoImage(facility.getCnoImage());
+        facilityProfile.setFacilityWebsite(facility.getFacilityWebsite());
+        facilityProfile.setVideoEmbedUrl(facility.getVideoEmbedUrl());
+        facilityProfile.setCnoMessage(facility.getCnoMessage());
+        facilityProfile.setAboutFacility(facility.getAboutFacility());
+
+        facilityProfile.setFacilityEmr("" + facility.getfEmr());
+        facilityProfile.setFacilityEmrDefinition("" + facility.getfEmrDefinition());
+        facilityProfile.setFacilityEmr_Other("" + facility.getfEmrOther());
+        facilityProfile.setFacilityBcheckProvider("" + facility.getfBcheckProvider());
+        facilityProfile.setFacilityBcheckProviderDefinition("" + facility.getfBcheckProviderDefinition());
+        facilityProfile.setFacilityBcheckProvider_Other("" + facility.getfBcheckProviderOther());
+        facilityProfile.setNurseCredSoft("" + facility.getNurseCredSoft());
+        facilityProfile.setNurseCredSoftDefinition("" + facility.getNurseCredSoftDefinition());
+        facilityProfile.setNurseCredSoft_other("" + facility.getNurseCredSoftOther());
+        facilityProfile.setNurseSchedulingSys("" + facility.getNurseSchedulingSys());
+        facilityProfile.setNurseSchedulingSysDefinition("" + facility.getNurseSchedulingSysDefinition());
+        facilityProfile.setNurseSchedulingSys_other("" + facility.getNurseSchedulingSysOther());
+        facilityProfile.setTimeAttendSys("" + facility.getTimeAttendSys());
+        facilityProfile.setTimeAttendSysDefinition("" + facility.getTimeAttendSysDefinition());
+        facilityProfile.setTimeAttendSys_other("" + facility.getTimeAttendSysOther());
+        facilityProfile.setLicensedBeds(facility.getLicensedBeds());
+        facilityProfile.setTraumaDesignationDefinition(facility.getTraumaDesignationDefinition());
+        facilityProfile.setTraumaDesignation(facility.getTraumaDesignation());
+
+        FacilitySocial facilitySocial = new FacilitySocial();
+
+        facilitySocial.setFacebook("" + facility.getFacebook());
+        facilitySocial.setTwitter("" + facility.getTwitter());
+        facilitySocial.setYoutube("" + facility.getYoutube());
+        facilitySocial.setTiktok("" + facility.getTiktok());
+        facilitySocial.setSanpchat("" + facility.getSanpchat());
+        facilitySocial.setLinkedin("" + facility.getLinkedin());
+        facilitySocial.setPinterest("" + facility.getPinterest());
+        facilitySocial.setInstagram("" + facility.getInstagram());
+
+        facilityProfile.setFacilitySocial(facilitySocial);
+
+        this.model = facilityProfile;
     }
 
     private void setData() {

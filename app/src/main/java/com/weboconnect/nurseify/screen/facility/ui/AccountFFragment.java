@@ -28,7 +28,9 @@ import com.weboconnect.nurseify.databinding.FragmentAccountFBinding;
 import com.weboconnect.nurseify.screen.facility.FacilityDetails1Activity;
 import com.weboconnect.nurseify.screen.facility.HomeFActivity;
 import com.weboconnect.nurseify.screen.facility.model.FacilityProfile;
+import com.weboconnect.nurseify.screen.facility.model.FacilitySettingModel;
 import com.weboconnect.nurseify.screen.nurse.SettingActivity;
+import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfile;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
@@ -37,6 +39,7 @@ import com.weboconnect.nurseify.webService.FacilityAPI;
 import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.io.File;
+import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -53,6 +56,7 @@ public class AccountFFragment extends Fragment {
     private FacilityProfile facilityProfile;
     private ProgressDialog progressDialog;
     private String user_id;
+    private String str_facility_logo;
 
     public AccountFFragment() {
     }
@@ -69,12 +73,13 @@ public class AccountFFragment extends Fragment {
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
         facilityProfile = new SessionManager(getContext()).get_facilityProfile();
-
+        str_facility_logo = facilityProfile.getFacilityLogo();
         binding.facilityName.setText(facilityProfile.getFacilityName());
         binding.layFacilityType.setText(facilityProfile.getFacilityTypeDefinition());
         binding.facilityAddress.setText(facilityProfile.getFacilityAddress() + ", " + facilityProfile.getFacilityCity()
                 + ", " + facilityProfile.getFacilityState());
         loadProfile_Pic(false);
+        getSetting();
         click();
         return view = binding.getRoot();
     }
@@ -115,9 +120,9 @@ public class AccountFFragment extends Fragment {
     }
 
     private void loadProfile_Pic(boolean b) {
-        if (!TextUtils.isEmpty(facilityProfile.getFacilityLogo())) {
+        if (!TextUtils.isEmpty(str_facility_logo)) {
             Glide.with((HomeFActivity) getActivity())
-                    .load(facilityProfile.getFacilityLogo()).placeholder(R.drawable.person)
+                    .load(str_facility_logo).placeholder(R.drawable.person)
                     .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.circleImageView2);
         }
 
@@ -174,7 +179,7 @@ public class AccountFFragment extends Fragment {
         progressDialog.show();
         FacilityAPI backendApi = RetrofitClient.getInstance().getFacilityApi();
         RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data")
-                , new SessionManager(getContext()).get_user_register_Id());
+                , new SessionManager(getContext()).get_facilityProfile().getFacilityId());
         RequestBody request_key = RequestBody.create(MediaType.parse("multipart/form-data")
                 , new SessionManager(getContext()).get_API_KEY());
         RequestBody request_img = RequestBody.create(MediaType.parse("image/*"),
@@ -194,7 +199,7 @@ public class AccountFFragment extends Fragment {
                         }
                         if (response.isSuccessful()) {
                             progressDialog.dismiss();
-//                            getNurseProfile();
+                            getFacilityProfile();
                         } else {
 
                             progressDialog.dismiss();
@@ -226,30 +231,33 @@ public class AccountFFragment extends Fragment {
 
     private void getSetting() {
 
-      /*  binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
 
-        user_id = new SessionManager(getContext()).get_user_register_Id();
+        user_id = new SessionManager(getContext()).get_facilityProfile().getFacilityId();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<SettingModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+        Call<FacilitySettingModel> call = RetrofitClient.getInstance().getFacilityApi()
                 .call_setting(user_id1);
 
-        call.enqueue(new Callback<SettingModel>() {
+        call.enqueue(new Callback<FacilitySettingModel>() {
             @Override
-            public void onResponse(Call<SettingModel> call, Response<SettingModel> response) {
+            public void onResponse(Call<FacilitySettingModel> call, Response<FacilitySettingModel> response) {
                 Log.d(TAG, "getNotification ResCode" + response.code() + "");
                 if (response.isSuccessful()) {
 
                     try {
-                        SettingModel settingModel = response.body();
+                        FacilitySettingModel settingModel = response.body();
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
 
-                                binding.tvBill.setText("$ " + settingModel.getData().getBilRate());
-                                binding.tvExperience.setText(settingModel.getData().getExperience());
-                                binding.tvShift.setText(settingModel.getData().getShift());
-
+                                binding.tvRating.setText("$ " + settingModel.getData().getRating().getOverAll());
+                                binding.tvFollower.setText(settingModel.getData().getFollowers());
+                                binding.tvReview.setText(settingModel.getData().getReview());
+                                binding.facilityName.setText(settingModel.getData().getFacilityName());
+//                                binding.layFacilityType.setText(settingModel.getData().getFacilityTypeDefinition());
+                                binding.facilityAddress.setText(settingModel.getData().getAddress() + ", " + settingModel.getData().getCity()
+                                        + ", " + settingModel.getData().getState());
                             }
                         });
 
@@ -265,30 +273,29 @@ public class AccountFFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<SettingModel> call, Throwable t) {
+            public void onFailure(Call<FacilitySettingModel> call, Throwable t) {
                 binding.progressBar.setVisibility(View.GONE);
                 Log.e(TAG + "getNotification", t.toString());
             }
-        });*/
+        });
 
     }
 
-    private void getNurseProfile() {
+    private void getFacilityProfile() {
         if (!Utils.isNetworkAvailable(getContext())) {
             Utils.displayToast(getContext(), getResources().getString(R.string.no_internet));
             return;
         }
         progressDialog.show();
 
-        user_id = new SessionManager(getContext()).get_user_register_Id();
+        user_id = new SessionManager(getContext()).get_facilityProfile().getFacilityId();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
-                .call_nurse_profile(user_id1);
+        Call<FacilityJobModel> call = RetrofitClient.getInstance().getFacilityApi().call_facility_profile(user_id1);
 
-        /*call.enqueue(new Callback<UserProfile>() {
+        call.enqueue(new Callback<FacilityJobModel>() {
             @Override
-            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+            public void onResponse(Call<FacilityJobModel> call, Response<FacilityJobModel> response) {
                 Log.d(TAG, "getNurseProfile ResCode" + response.code() + "");
 
                 if (response.body() == null) {
@@ -301,37 +308,27 @@ public class AccountFFragment extends Fragment {
                     return;
                 }
                 if (response.body().getApiStatus().equals("1")) {
-//                    Utils.displayToast(context, null);
-//                    Utils.displayToast(context, response.message());
-
                     progressDialog.dismiss();
-
-//                    Utils.displayToast(context, "" + response.body().getMessage());
-
-                    facilityProfile = response.body().getData();
-                    new SessionManager(getContext()).save_user(facilityProfile);
+                    FacilityJobModel.Facility model = response.body().getData().get(0);
+                    str_facility_logo = model.getFacilityLogo();
                     loadProfile_Pic(true);
                 } else {
-//                    Utils.displayToast(getContext(), "Data has not been updated");
-
                     progressDialog.dismiss();
-
                 }
-
 
                 progressDialog.dismiss();
 
             }
 
             @Override
-            public void onFailure(Call<UserProfile> call, Throwable t) {
+            public void onFailure(Call<FacilityJobModel> call, Throwable t) {
                 progressDialog.dismiss();
 
                 Utils.displayToast(getContext(), "Failed to get updated data !");
                 Log.e(TAG + "getNurseProfile", t.toString());
             }
         });
-*/
+
     }
 
     @Override

@@ -62,6 +62,12 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
         notifyDataSetChanged();
     }
 
+    public void removeAll() {
+      if(list_jobs!=null && list_jobs.size()!=0)
+          list_jobs.clear();
+      notifyDataSetChanged();
+    }
+
     public interface BrowseJobInteface {
         void onClick_Like(JobModel.JobDatum datum, int position);
 
@@ -144,7 +150,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
             tv_created_at_definition.setText("" + datum.getCreatedAtDefinition());
             tv_assignment_duration_definition.setText("" + datum.getPreferredAssignmentDurationDefinition());
             tv_shift_duration.setText("" + datum.getPreferredShiftDurationDefinition());
-            tv_applied.setText("" + datum.getTotalApplied());
+            tv_applied.setText("" + datum.getTotalApplied()+"+ Applied");
             String days = null;
             for (int i = 0; i < datum.getPreferredDaysOfTheWeek().size(); i++) {
                 String str = datum.getPreferredDaysOfTheWeek().get(i);

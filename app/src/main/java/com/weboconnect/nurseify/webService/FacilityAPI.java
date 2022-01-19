@@ -5,6 +5,7 @@ import com.weboconnect.nurseify.screen.facility.model.AddJobModel;
 import com.weboconnect.nurseify.screen.facility.model.AppliedNurseModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.facility.model.FacilityLoginModel;
+import com.weboconnect.nurseify.screen.facility.model.FacilitySettingModel;
 import com.weboconnect.nurseify.screen.facility.model.NurseModel;
 import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurseModel;
 import com.weboconnect.nurseify.screen.facility.model.OfferedNurse_F_Model;
@@ -12,6 +13,7 @@ import com.weboconnect.nurseify.screen.facility.model.Offered_Job_F_Model;
 import com.weboconnect.nurseify.screen.nurse.model.CityModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_Common_OptionModel;
 import com.weboconnect.nurseify.screen.nurse.model.HourlyRate_DayOfWeek_OptionModel;
+import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
 import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.screen.nurse.model.SpecialtyModel;
 import com.weboconnect.nurseify.screen.nurse.model.StateModel;
@@ -102,10 +104,11 @@ public interface FacilityAPI {
     @POST("facility-dropdown-getncredentialingsoftware")
     Observable<CommonModel> call_facility_getncredentialingsoftware();
 
-
+    @Multipart
+    @POST("change-facility-logo")
     Call<UserProfile> call_Profile_Photos(@Part("api_key") RequestBody api_key,
                                           @Part("facility_id") RequestBody facility_id,
-                                          @Part("facility_logo") MultipartBody.Part facility_logo);
+                                          @Part MultipartBody.Part facility_logo);
 
     @POST("get-work-location")
     Observable<CommonModel> call_work_location();
@@ -341,7 +344,16 @@ public interface FacilityAPI {
             @Part("preferred_shift") RequestBody preferred_shift, @Part("job_id") RequestBody job_id
 
     );
+
     @Multipart
     @POST("browse-facility")
-    Call<com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel> call_facility_profile(@Part("facility_id")RequestBody facility_id);
+    Call<com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel> call_facility_profile(@Part("facility_id") RequestBody facility_id);
+
+    @Multipart
+    @POST("facility-notifications")
+    Call<NotificationModel> call_notification(@Part("user_id") RequestBody user_id1);
+
+    @Multipart
+    @POST("facility-settings")
+    Call<FacilitySettingModel> call_setting(@Part("facility_id") RequestBody user_id1);
 }

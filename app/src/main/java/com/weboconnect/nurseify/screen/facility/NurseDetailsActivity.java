@@ -162,7 +162,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.tvRate.setText("$ " + rate + "/Hr");
         binding.tvLicenceState.setText(model.getNursingLicenseState());
         binding.tvLicenceNo.setText(model.getNursingLicenseNumber());
-//        binding.tvPreferredGeography.setText(model.()); // need to uncomment
+//        binding.tvPreferredGeography.setText(model.geo()); // need to uncomment
         binding.tvAddress.setText(model.getAddress());
         binding.tvCity.setText(model.getCity());
         binding.tvState.setText(model.getState());

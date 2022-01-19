@@ -43,7 +43,7 @@ public class NotificationActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(NotificationActivity.this, R.layout.fragment_notification);
         notificationAdapter = new NotificationAdapter(this, notificationList);
         binding.recyclerViewJobs.setAdapter(notificationAdapter);
-
+        binding.btnBack.setVisibility(View.VISIBLE);
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +62,7 @@ public class NotificationActivity extends AppCompatActivity {
         user_id = new SessionManager(this).get_user_register_Id();
         RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
 
-        Call<NotificationModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+        Call<NotificationModel> call = RetrofitClient.getInstance().getFacilityApi()
                 .call_notification(user_id1);
 
         call.enqueue(new Callback<NotificationModel>() {

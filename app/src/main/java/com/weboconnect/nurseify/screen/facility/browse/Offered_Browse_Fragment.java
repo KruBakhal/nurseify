@@ -199,7 +199,6 @@ public class Offered_Browse_Fragment extends Fragment {
         RequestBody current_Page1 = RequestBody.create(MediaType.parse("multipart/form-data"), ""
                 + currentPage);
 
-
         Call<OfferedNurse_F_Model> call = RetrofitClient.getInstance().getFacilityApi()
                 .call_job_offered_list(user_id1, current_Page1);
 
