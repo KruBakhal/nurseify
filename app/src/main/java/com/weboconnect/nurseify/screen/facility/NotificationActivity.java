@@ -50,7 +50,7 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(NotificationActivity.this, R.layout.fragment_notification);
         context = this;
-        notificationAdapter = new NotificationAdapter(this, notificationList
+        notificationAdapter = new NotificationAdapter(this, notificationList,false
                 , new ItemCallback() {
             @Override
             public void onClick(int position) {

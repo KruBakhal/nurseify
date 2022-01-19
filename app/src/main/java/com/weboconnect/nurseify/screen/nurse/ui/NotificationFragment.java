@@ -54,7 +54,7 @@ public class NotificationFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notification, null, false);
 
         notificationAdapter = new NotificationAdapter(getActivity(), notificationList
-                , new ItemCallback() {
+                , true, new ItemCallback() {
             @Override
             public void onClick(int position) {
 
@@ -94,8 +94,8 @@ public class NotificationFragment extends Fragment {
                         }
                         if (response.isSuccessful()) {
                             progressDialog.dismiss();
-                            Utils.displayToast(getContext(), "Item data deleted !");
-                            notificationList.remove(position);
+                            Utils.displayToast(getContext(), "Notification deleted !");
+                            /*notificationList.remove(position);*/
                             notificationAdapter.removeItem(position);
                             notificationAdapter.notifyDataSetChanged();
                         } else {

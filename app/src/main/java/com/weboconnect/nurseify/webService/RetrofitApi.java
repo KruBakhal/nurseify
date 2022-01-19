@@ -378,7 +378,7 @@ public interface RetrofitApi {
     @POST("get-nurse-profile")
     Call<UserProfile> call_nurse_profile(
             @Part("user_id") RequestBody user_id
-    );
+   );
 
     @Multipart
     @POST("remove-credentials-image")

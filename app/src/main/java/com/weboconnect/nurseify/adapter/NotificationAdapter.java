@@ -23,12 +23,14 @@ import com.weboconnect.nurseify.screen.nurse.model.NotificationModel;
 import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
+    private final boolean isCall;
     Activity activity;
     List<NotificationModel.Notification> list;
 
-    public NotificationAdapter(Activity activity, List<NotificationModel.Notification> list, ItemCallback itemCallback) {
+    public NotificationAdapter(Activity activity, List<NotificationModel.Notification> list, boolean b, ItemCallback itemCallback) {
         this.activity = activity;
         this.list = list;
+        this.isCall = b;
         this.itemCallback = itemCallback;
     }
 
@@ -55,7 +57,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             holder.messageText.setText(Html.fromHtml(list.get(pp).getMessage()));
             holder.tv_date.setText(list.get(pp).getDate());
-
+            if (isCall) {
+                holder.close.setVisibility(View.VISIBLE);
+            } else {
+                holder.close.setVisibility(View.GONE);
+            }
             holder.close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

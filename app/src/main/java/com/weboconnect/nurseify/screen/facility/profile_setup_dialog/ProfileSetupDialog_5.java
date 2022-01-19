@@ -130,26 +130,30 @@ public class ProfileSetupDialog_5 extends DialogFragment {
         if (check_any_list_empty()) {
             viewModel.fetch_profile_setup_4();
         } else {
-            if (model.getFacilitySocial() == null)
-                return;
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getFacebook()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getFacebook());
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getInstagram()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getInstagram());
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getLinkedin()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getLinkedin());
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getPinterest()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getPinterest());
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getSanpchat()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getSanpchat());
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getTiktok()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getTiktok());
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getTwitter()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getTwitter());
-            if (!TextUtils.isEmpty(model.getFacilitySocial().getYoutube()))
-                setup1Binding.edFb.setText(model.getFacilitySocial().getYoutube());
+          setup();
 
         }
+    }
+
+    private void setup() {
+        if (model.getFacilitySocial() == null)
+            return;
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getFacebook()))
+            setup1Binding.edFb.setText(model.getFacilitySocial().getFacebook());
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getInstagram()))
+            setup1Binding.edInsta.setText(model.getFacilitySocial().getInstagram());
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getLinkedin()))
+            setup1Binding.edLinkin.setText(model.getFacilitySocial().getLinkedin());
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getPinterest()))
+            setup1Binding.edPinterest.setText(model.getFacilitySocial().getPinterest());
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getSanpchat()))
+            setup1Binding.edSnap.setText(model.getFacilitySocial().getSanpchat());
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getTiktok()))
+            setup1Binding.edTiktok.setText(model.getFacilitySocial().getTiktok());
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getTwitter()))
+            setup1Binding.edTweet.setText(model.getFacilitySocial().getTwitter());
+        if (!TextUtils.isEmpty(model.getFacilitySocial().getYoutube()))
+            setup1Binding.edYoutube.setText(model.getFacilitySocial().getYoutube());
     }
 
     private boolean check_any_list_empty() {
@@ -261,6 +265,7 @@ public class ProfileSetupDialog_5 extends DialogFragment {
                     setup1Binding.layProgress.setVisibility(View.VISIBLE);
                 } else if (progressUIType == ProgressUIType.DIMISS) {
                     setup1Binding.layProgress.setVisibility(View.GONE);
+                    setup();
                 } else if (progressUIType == ProgressUIType.CANCEL) {
                     setup1Binding.layProgress.setVisibility(View.GONE);
                 } else if (progressUIType == ProgressUIType.DATA_ERROR) {
