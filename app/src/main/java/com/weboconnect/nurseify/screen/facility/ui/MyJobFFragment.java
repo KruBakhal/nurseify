@@ -109,6 +109,7 @@ public class MyJobFFragment extends Fragment {
         adapter.addFragment(new Complete_Jobs_Fragment(), "Complete");
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.setOffscreenPageLimit(1);
+        binding.viewPager.setPagingEnabled(false);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

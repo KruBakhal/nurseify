@@ -164,6 +164,8 @@ public class BrowseFFragment extends Fragment {
         adapter.addFragment(new Past_Browse_Fragment(), "Past");
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.setOffscreenPageLimit(1);
+        binding.viewPager.setPagingEnabled(false);
+
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
