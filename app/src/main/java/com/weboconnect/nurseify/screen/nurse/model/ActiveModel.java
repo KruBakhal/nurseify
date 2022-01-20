@@ -15,7 +15,11 @@ public class ActiveModel {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<ActiveDatum> data = null;
+    private Data data;
+
+    public Data getData() {
+        return data;
+    }
 
     public String getApiStatus() {
         return apiStatus;
@@ -33,28 +37,32 @@ public class ActiveModel {
         this.message = message;
     }
 
-    public List<ActiveDatum> getData() {
-        return data;
-    }
 
-    public void setData(List<ActiveDatum> data) {
+    public void setData(Data data) {
         this.data = data;
     }
+
+    public class Data {
+
+        @SerializedName("data")
+        @Expose
+        private List<ActiveDatum> data = null;
+
+        public List<ActiveDatum> getData() {
+            return data;
+        }
+
+        public void setData(List<ActiveDatum> data) {
+            this.data = data;
+        }
+    }
+
 
     public class ActiveDatum {
 
         @SerializedName("offer_id")
         @Expose
-        private String offer_id;
-
-        public String getOffer_id() {
-            return offer_id;
-        }
-
-        public void setOffer_id(String offer_id) {
-            this.offer_id = offer_id;
-        }
-
+        private String offerId;
         @SerializedName("facility_id")
         @Expose
         private String facilityId;
@@ -82,12 +90,29 @@ public class ActiveModel {
         @SerializedName("work_days")
         @Expose
         private String workDays;
+        @SerializedName("work_days_array")
+        @Expose
+        private List<Object> workDaysArray = null;
+        @SerializedName("work_days_string")
+        @Expose
+        private String workDaysString;
         @SerializedName("hourly_rate")
         @Expose
         private String hourlyRate;
         @SerializedName("start_date")
         @Expose
         private String startDate;
+        @SerializedName("end_date")
+        @Expose
+        private String endDate;
+
+        public String getOfferId() {
+            return offerId;
+        }
+
+        public void setOfferId(String offerId) {
+            this.offerId = offerId;
+        }
 
         public String getFacilityId() {
             return facilityId;
@@ -161,6 +186,22 @@ public class ActiveModel {
             this.workDays = workDays;
         }
 
+        public List<Object> getWorkDaysArray() {
+            return workDaysArray;
+        }
+
+        public void setWorkDaysArray(List<Object> workDaysArray) {
+            this.workDaysArray = workDaysArray;
+        }
+
+        public String getWorkDaysString() {
+            return workDaysString;
+        }
+
+        public void setWorkDaysString(String workDaysString) {
+            this.workDaysString = workDaysString;
+        }
+
         public String getHourlyRate() {
             return hourlyRate;
         }
@@ -177,6 +218,13 @@ public class ActiveModel {
             this.startDate = startDate;
         }
 
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            this.endDate = endDate;
+        }
     }
 
 }

@@ -63,7 +63,7 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
             holder.tv_title.setText("" + datum.getTitle());
             holder.tv_duration.setText("" + datum.getWorkDurationDefinition());
             holder.tv_shift.setText("" + datum.getShiftDefinition());
-            holder.tv_workingDay.setText("" + datum.getWorkDays());
+            holder.tv_workingDay.setText("" + datum.getWorkDaysString());
             holder.tv_amount.setText("$ " + datum.getHourlyRate() + "/Hr");
             holder.tv_start_date.setText("" + datum.getStartDate());
 

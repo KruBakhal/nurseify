@@ -63,7 +63,7 @@ public class NotificationFragment extends Fragment {
 
             }
 
-            private void performDelete(String assetId, String user_id, int position) {
+            private void performDelete(String assetId, String user_id, int position)    {
                 if (!Utils.isNetworkAvailable(getContext())) {
                     Utils.displayToast(getContext(), getContext().getResources().getString(R.string.no_internet));
                     return;
@@ -78,7 +78,6 @@ public class NotificationFragment extends Fragment {
 
                 Call<ResponseModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
                         .call_remove_notification(user_id1, assetId1);
-
                 call.enqueue(new Callback<ResponseModel>() {
                     @Override
                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {

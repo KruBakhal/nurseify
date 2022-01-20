@@ -316,7 +316,7 @@ public class MyJobFragment extends Fragment {
                     dismissProgress();
                     try {
                         ActiveModel offeredJobModel = response.body();
-                        if (offeredJobModel.getData() == null || offeredJobModel.getData().size() == 0) {
+                        if (offeredJobModel.getData() == null || offeredJobModel.getData().getData().size() == 0) {
 //                            Utils.displayToast(getContext(), "no data found");
                             if (selected_page2 >= 1)
                                 selected_page2--;
@@ -328,7 +328,7 @@ public class MyJobFragment extends Fragment {
                         if (list_Active_Job == null) {
                             list_Active_Job = new ArrayList<>();
                         }
-                        list_Active_Job.addAll(offeredJobModel.getData());
+                        list_Active_Job.addAll(offeredJobModel.getData().getData());
                         if (list_Active_Job.size() > 0) {
                             if (activeAdapter != null) {
                                 set_Active_Adapter();
@@ -336,7 +336,7 @@ public class MyJobFragment extends Fragment {
                             } else
                                 set_Active_Adapter();
                         } else {
-                            list_Active_Job.addAll(offeredJobModel.getData());
+                            list_Active_Job.addAll(offeredJobModel.getData().getData());
                             set_Active_Adapter();
                         }
                     } catch (Exception e) {
@@ -389,7 +389,7 @@ public class MyJobFragment extends Fragment {
                     dismissProgress();
                     try {
                         CompletedJobModel offeredJobModel = response.body();
-                        if (offeredJobModel.getData() == null || offeredJobModel.getData().size() == 0) {
+                        if (offeredJobModel.getData() == null || offeredJobModel.getData().getData().size() == 0) {
 //                            Utils.displayToast(getContext(), "no data found");
                             if (selected_page3 >= 1)
                                 selected_page3--;
@@ -401,7 +401,7 @@ public class MyJobFragment extends Fragment {
                         if (list_Completed_Job == null) {
                             list_Completed_Job = new ArrayList<>();
                         }
-                        list_Completed_Job.addAll(offeredJobModel.getData());
+                        list_Completed_Job.addAll(offeredJobModel.getData().getData());
                         if (list_Completed_Job.size() > 0) {
                             if (completedAdapter != null) {
                                 set_Completed_Adapter();
@@ -409,7 +409,7 @@ public class MyJobFragment extends Fragment {
                             } else
                                 set_Completed_Adapter();
                         } else {
-                            list_Completed_Job.addAll(offeredJobModel.getData());
+                            list_Completed_Job.addAll(offeredJobModel.getData().getData());
                             set_Completed_Adapter();
                         }
                     } catch (Exception e) {
@@ -482,7 +482,7 @@ public class MyJobFragment extends Fragment {
             public void onClick(int pos) {
 
                 getActivity().startActivity(new Intent(getActivity(), ActiveJobDetailsActivity.class)
-                        .putExtra("data", list_Active_Job.get(pos).getOffer_id()));
+                        .putExtra("data", list_Active_Job.get(pos).getOfferId()));
 
             }
         });

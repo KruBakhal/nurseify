@@ -15,7 +15,11 @@ public class CompletedJobModel {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<CompletedDatum> data = null;
+    private Data data;
+
+    public Data getData() {
+        return data;
+    }
 
     public String getApiStatus() {
         return apiStatus;
@@ -33,35 +37,47 @@ public class CompletedJobModel {
         this.message = message;
     }
 
-    public List<CompletedDatum> getData() {
-        return data;
+
+    public void setData(Data data) {
+        this.data = data;
     }
 
-    public void setData(List<CompletedDatum> data) {
-        this.data = data;
+    public class Data {
+
+        @SerializedName("data")
+        @Expose
+        private List<CompletedDatum> data = null;
+
+        public List<CompletedDatum> getData() {
+            return data;
+        }
+
+        public void setData(List<CompletedDatum> data) {
+            this.data = data;
+        }
     }
 
     public class CompletedDatum {
         public String getOffer_id() {
-            return offer_id;
+            return offerId;
         }
 
         public void setOffer_id(String offer_id) {
-            this.offer_id = offer_id;
+            this.offerId = offer_id;
         }
 
         @SerializedName("offer_id")
         @Expose
-        private String offer_id;
-        @SerializedName("facility_id")
-        @Expose
-        private String facilityId;
-        @SerializedName("facility_logo")
-        @Expose
-        private String facilityLogo;
+        private String offerId;
         @SerializedName("facility_name")
         @Expose
         private String facilityName;
+        @SerializedName("facility_logo")
+        @Expose
+        private String facilityLogo;
+        @SerializedName("facility_id")
+        @Expose
+        private String facilityId;
         @SerializedName("title")
         @Expose
         private String title;
@@ -80,6 +96,12 @@ public class CompletedJobModel {
         @SerializedName("work_days")
         @Expose
         private String workDays;
+        @SerializedName("work_days_array")
+        @Expose
+        private List<Object> workDaysArray = null;
+        @SerializedName("work_days_string")
+        @Expose
+        private String workDaysString;
         @SerializedName("hourly_rate")
         @Expose
         private String hourlyRate;
@@ -90,12 +112,20 @@ public class CompletedJobModel {
         @Expose
         private String endDate;
 
-        public String getFacilityId() {
-            return facilityId;
+        public String getOfferId() {
+            return offerId;
         }
 
-        public void setFacilityId(String facilityId) {
-            this.facilityId = facilityId;
+        public void setOfferId(String offerId) {
+            this.offerId = offerId;
+        }
+
+        public String getFacilityName() {
+            return facilityName;
+        }
+
+        public void setFacilityName(String facilityName) {
+            this.facilityName = facilityName;
         }
 
         public String getFacilityLogo() {
@@ -106,12 +136,12 @@ public class CompletedJobModel {
             this.facilityLogo = facilityLogo;
         }
 
-        public String getFacilityName() {
-            return facilityName;
+        public String getFacilityId() {
+            return facilityId;
         }
 
-        public void setFacilityName(String facilityName) {
-            this.facilityName = facilityName;
+        public void setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
         }
 
         public String getTitle() {
@@ -162,6 +192,22 @@ public class CompletedJobModel {
             this.workDays = workDays;
         }
 
+        public List<Object> getWorkDaysArray() {
+            return workDaysArray;
+        }
+
+        public void setWorkDaysArray(List<Object> workDaysArray) {
+            this.workDaysArray = workDaysArray;
+        }
+
+        public String getWorkDaysString() {
+            return workDaysString;
+        }
+
+        public void setWorkDaysString(String workDaysString) {
+            this.workDaysString = workDaysString;
+        }
+
         public String getHourlyRate() {
             return hourlyRate;
         }
@@ -185,6 +231,7 @@ public class CompletedJobModel {
         public void setEndDate(String endDate) {
             this.endDate = endDate;
         }
+
 
     }
 }
