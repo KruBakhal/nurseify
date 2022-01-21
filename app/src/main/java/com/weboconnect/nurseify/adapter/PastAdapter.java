@@ -140,22 +140,14 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             if (TextUtils.isEmpty(rate))
                 rate = "0";
             itemView.tvRate.setText("$ " + rate + "/Hr");
-            itemView.tvWeeksDaysCount.setText(model.getPreferredDaysOfTheWeekString());
+            itemView.tvWeeksDaysCount.setText(model.getPreferredAssignmentDurationDefinition());
+            itemView.tvWeeksDays.setText(model.getPreferredDaysOfTheWeekString());
             itemView.tvTitle.setText(model.getPreferredSpecialtyDefinition());
-//            itemView.tvTime.setText(model.getOfferedAt());
-//            itemView.tvTitle.setText(model.get);
+            itemView.tvShift.setText(model.getPreferredShift_definition());
+            itemView.tvStartDate.setText(model.getStart_date());
+            itemView.tvEndDate.setText(model.getEnd_date());
 
 
-          /*  itemView.layItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-//                    postedListener.onClick_Hire(model,position);
-                }
-            });*/
         }
 
         @Override

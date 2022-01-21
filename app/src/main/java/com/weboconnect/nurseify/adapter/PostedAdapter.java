@@ -141,7 +141,7 @@ public class PostedAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
             itemView.tvSpecialty.setText("" + datum.getPreferredSpecialtyDefinition());
 //            itemView.tvCreatedAtDefinition.setText("" + datum.());
             itemView.tvAssignmentDurationDefinition.setText("" + datum.getPreferredAssignmentDurationDefinition());
-            itemView.tvShiftDuration.setText("" + datum.getPreferredShiftDurationDefinition());
+            itemView.tvShiftDuration.setText("" + datum.getPreferredShiftDefinition());
             itemView.tvApplied.setText("" + datum.getApplied());
             itemView.tvHourlyRate.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
             itemView.tvWeeksDays.setText(datum.getPreferredDaysOfTheWeekString());

@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -53,7 +54,7 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
     String TAG = "JobDetailsActivity ";
     int flag = 1;    //1=browse job,  2= facility , 3= offered job
     String job_id;
-    private String str_terms_conditions;
+    private String str_terms_conditions = "";
     private int position;
 
     @Override
@@ -165,11 +166,11 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                 if (flag == 1) {
                     if (model.getIsApplied().equals("1")) {
                         performApply(model, position);
-                    } else if (TextUtils.isEmpty(str_terms_conditions))
-                        fetch_terms_conditions(model, position);
-                    else {
+                    } else /*if (TextUtils.isEmpty(str_terms_conditions))
+//                            fetch_terms_conditions(datum, position);
+                        else {
+                        }*/
                         terms_conditions_Dialog(model, str_terms_conditions, position);
-                    }
                 } else if (flag == 2) {
                     followFacility(facility.getId(), facility.getFacilityType().toString());
                 }
@@ -333,7 +334,8 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         dialog.show();
         ImageView closeDialog = dialog.findViewById(R.id.close_dialog);
         TextView tv_text = dialog.findViewById(R.id.tv_text);
-        tv_text.setText(Html.fromHtml(str_terms_conditions));
+        View sdsds = dialog.findViewById(R.id.sdsds);
+//        tv_text.setText(Html.fromHtml(str_terms_conditions));
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -341,14 +343,23 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                 dialog.dismiss();
             }
         });
-        TextView textApply = dialog.findViewById(R.id.text_apply);
-        textApply.setOnClickListener(new View.OnClickListener() {
+        tv_text.setText(Constant.URL_TERMS_CONDITION);
+        sdsds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 performApply(datum, position);
 
                 dialog.dismiss();
+            }
+        });
+        tv_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(Constant.URL_TERMS_CONDITION);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
             }
         });
     }

@@ -143,7 +143,7 @@
                 android:textSize="13dp" />
 
             <TextView
-                android:id="@+id/tv_weeks_days"
+                android:id="@+id/tv_shift"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="9dp"

@@ -505,7 +505,7 @@ public class Add_Job_ViewModel extends ViewModel {
         RequestBody request_21 = RequestBody.create(mediatTypeStr, "" + addJobData.getPreferredShift());
         RequestBody request_22 = RequestBody.create(mediatTypeStr, "" + date1);
         RequestBody request_23 = RequestBody.create(mediatTypeStr, "" + date2);
-        RequestBody request_24 = RequestBody.create(mediatTypeStr, "" + jobDatum.getJobId());
+
 
         MultipartBody.Part[] multiPart_Pictures = null;
         Call<AddJobModel> call = null;
@@ -522,6 +522,8 @@ public class Add_Job_ViewModel extends ViewModel {
                 }
         }
         if (isEdit) {
+            RequestBody request_24 = RequestBody.create(mediatTypeStr, "" + jobDatum.getJobId());
+
             if (multiPart_Pictures != null && multiPart_Pictures.length != 0) {
                 call = backendApi.call_update_add_job(request_1, request_2, request_3, request_4,
                         request_5, request_6, request_7, request_8

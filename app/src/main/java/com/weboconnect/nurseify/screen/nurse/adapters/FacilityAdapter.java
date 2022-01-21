@@ -68,7 +68,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
 
             holder.tv_name.setText(list.get(position).getName());
             holder.tv_description.setText(Html.fromHtml(list.get(position).getAboutFacility()));
-            holder.tv_job.setText(list.get(position).getTotalJobs() + " Job");
+            holder.tv_job.setText(list.get(position).getTotalJobs() + " Jobs");
             holder.tv_rating.setText(("" + list.get(position).getRating()));
             holder.tv_address.setText(list.get(position).getPostcode() + " " + list.get(position).getAddress());
 

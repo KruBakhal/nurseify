@@ -143,7 +143,7 @@ public class Completed_F_Adapter extends RecyclerView.Adapter<BaseViewHolder> im
             itemView.tvName.setText("" + datum.getFacilityFirstName() + " " + datum.getFacilityLastName());
             itemView.tvTitle.setText("" + datum.getPreferredSpecialtyDefinition());
             itemView.tvDuration.setText("" + datum.getPreferredAssignmentDurationDefinition());
-//            tv_shift.setText("" + datum.getShiftDefinition());
+            itemView.tvShift.setText(datum.getPreferredShiftDefinition());
             itemView.tvWorkingDay.setText("" + datum.getPreferredDaysOfTheWeekString());
             itemView.tvAmount.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
             itemView.tvStartDate.setText("" + datum.getStartDate());

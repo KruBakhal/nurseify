@@ -312,6 +312,7 @@
 
                             <CheckBox
                                 android:id="@+id/check_box"
+                                android:checked="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
 

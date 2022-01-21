@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -23,6 +24,11 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.FragmentAccountFBinding;
 import com.weboconnect.nurseify.screen.facility.FacilityDetails1Activity;
@@ -107,7 +113,7 @@ public class AccountFFragment extends Fragment {
         binding.layoutPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), FacilityDetails1Activity.class));
+                startActivityForResult(new Intent(getContext(), FacilityDetails1Activity.class), Constant.REQUEST_EDIT);
             }
         });
 
@@ -178,6 +184,7 @@ public class AccountFFragment extends Fragment {
 
     private void upload_profile_photo(String user_profile) {
         progressDialog.show();
+
         FacilityAPI backendApi = RetrofitClient.getInstance().getFacilityApi();
         RequestBody request_id = RequestBody.create(MediaType.parse("multipart/form-data")
                 , new SessionManager(getContext()).get_facilityProfile().getFacilityId());
@@ -243,9 +250,7 @@ public class AccountFFragment extends Fragment {
         call.enqueue(new Callback<FacilitySettingModel>() {
             @Override
             public void onResponse(Call<FacilitySettingModel> call, Response<FacilitySettingModel> response) {
-                Log.d(TAG, "getNotification ResCode" + response.code() + "");
                 if (response.isSuccessful()) {
-
                     try {
                         FacilitySettingModel settingModel = response.body();
                         getActivity().runOnUiThread(new Runnable() {
@@ -312,6 +317,7 @@ public class AccountFFragment extends Fragment {
                     progressDialog.dismiss();
                     FacilityJobModel.Facility model = response.body().getData().get(0);
                     str_facility_logo = model.getFacilityLogo();
+                    send_profile_path_to_firebase(model.getId(), str_facility_logo);
                     loadProfile_Pic(true);
                 } else {
                     progressDialog.dismiss();
@@ -332,6 +338,38 @@ public class AccountFFragment extends Fragment {
 
     }
 
+    private void send_profile_path_to_firebase(String id, String image) {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(Constant.USER_NODE)
+                .child(new SessionManager(getContext()).get_user_register_Id());
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                try {
+                    if (snapshot.getValue() == null) {
+//                        create_user_inside_firebase(new SessionManager(getContext()).get_User());
+                    } else {
+                        try {
+                            String userid = new SessionManager(getContext()).get_user_register_Id();
+                            FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
+                                    .child(userid).child("profile_path")
+                                    .setValue(image);
+                        } catch (Exception e) {
+                            Log.d("TAG", "update_user_status: " + e.getMessage());
+                        }
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG_check_User_exist", "onDataChange: " + exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -343,11 +381,13 @@ public class AccountFFragment extends Fragment {
 //                userProfileData = new Gson().fromJson(data1, type);
                 facilityProfile = new SessionManager(getContext()).get_facilityProfile();
                 if (facilityProfile != null) {
+                    str_facility_logo = facilityProfile.getFacilityLogo();
                     binding.facilityName.setText(facilityProfile.getFacilityName());
                     binding.layFacilityType.setText(facilityProfile.getFacilityTypeDefinition());
                     binding.facilityAddress.setText(facilityProfile.getFacilityAddress() + ", " + facilityProfile.getFacilityCity()
                             + ", " + facilityProfile.getFacilityState());
                     loadProfile_Pic(true);
+                    send_profile_path_to_firebase(facilityProfile.getUserId(), facilityProfile.getFacilityLogo());
                 } else
                     Utils.displayToast(getContext(), "Empty Data on Result");
             } else {

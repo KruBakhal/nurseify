@@ -527,7 +527,7 @@ public class RegistrationViewModel extends ViewModel {
                             new File(new_facilityModel.getCnoImage_new()).getName(), img);
         }
         if (!TextUtils.isEmpty(new_facilityModel.getFacilityLogo_new())
-                && new_facilityModel.getFacilityLogo_new().startsWith("http:/35.200.185.126")) {
+                && !new_facilityModel.getFacilityLogo_new().startsWith("http:/35.200.185.126")) {
             RequestBody img = RequestBody.create(MediaType.parse("image/*"),
                     new File(new_facilityModel.getFacilityLogo_new()));
             request_34 =
@@ -557,7 +557,8 @@ public class RegistrationViewModel extends ViewModel {
                         if (response.isSuccessful()) {
                             FacilityLoginModel facilityLoginModel = response.body();
                             new SessionManager(context).setSession_IN_facility(
-                                    facilityLoginModel.getData().getUserId(), facilityLoginModel.getData().getFacilityId(),
+                                    facilityLoginModel.getData().getUserId(),
+                                    facilityLoginModel.getData().getFacilityId(),
                                     facilityLoginModel.getData());
                             showProgressBar.setValue(ProgressUIType.DIMISS);
 

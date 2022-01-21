@@ -138,7 +138,8 @@ public class Active_My_job_FAdapter extends RecyclerView.Adapter<BaseViewHolder>
                 rate = "0";
             itemView.tvRate.setText("$ " + rate + "/Hr");
             itemView.tvWeeksDaysCount.setText(model.getPreferredAssignmentDurationDefinition());
-            itemView.tvWeeksDays.setText(model.getPreferredDaysOfTheWeekString());
+            itemView.tvShift.setText(model.getPreferredShiftDefinition());
+
             itemView.tvTitle.setText(model.getPreferredSpecialtyDefinition());
             itemView.tvStartDate.setText(model.getStartDate());
         }

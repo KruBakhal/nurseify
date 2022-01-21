@@ -230,11 +230,14 @@ public class MyJobFragment extends Fragment {
         call.enqueue(new Callback<OfferedJobModel>() {
             @Override
             public void onResponse(Call<OfferedJobModel> call, Response<OfferedJobModel> response) {
-//                Log.d(TAG + "getOfferedJob ResCode", response.code() + "");
-//                assert response.body() != null;
-                if (response != null && response.body() != null && !response.body().getApiStatus().equals("1")) {
-                    errorProgress(false);
-
+                assert response.body() != null;
+                if (!response.body().getApiStatus().equals("1")) {
+                    if (list_Offered_Job != null && list_Offered_Job.size() != 0) {
+                        binding.progress.setVisibility(View.GONE);
+                    } else if (list_Offered_Job != null && list_Offered_Job.size() == 0) {
+                        errorProgress(true);
+                        binding.tvMsg.setText("Yet,No Job Found !");
+                    }
                     return;
                 }
                 if (response.isSuccessful()) {
@@ -309,7 +312,14 @@ public class MyJobFragment extends Fragment {
             public void onResponse(Call<ActiveModel> call, Response<ActiveModel> response) {
                 assert response.body() != null;
                 if (!response.body().getApiStatus().equals("1")) {
-                    errorProgress(false);
+
+                    if (list_Active_Job != null && list_Active_Job.size() != 0) {
+                        binding.progress.setVisibility(View.GONE);
+                        dismissProgress();
+                    } else if (list_Active_Job != null && list_Active_Job.size() == 0) {
+                        errorProgress(true);
+                        binding.tvMsg.setText("Yet,No Job Found !");
+                    }
                     return;
                 }
                 if (response.isSuccessful()) {
@@ -382,7 +392,13 @@ public class MyJobFragment extends Fragment {
 //                Log.d(TAG + "getOfferedJob ResCode", response.code() + "");
                 assert response.body() != null;
                 if (!response.body().getApiStatus().equals("1")) {
-                    errorProgress(false);
+                    if (list_Completed_Job != null && list_Completed_Job.size() != 0) {
+                        binding.progress.setVisibility(View.GONE);
+                        dismissProgress();
+                    } else if (list_Completed_Job != null && list_Completed_Job.size()== 0) {
+                        errorProgress(true);
+                        binding.tvMsg.setText("Yet,No Job Found !");
+                    }
                     return;
                 }
                 if (response.isSuccessful()) {

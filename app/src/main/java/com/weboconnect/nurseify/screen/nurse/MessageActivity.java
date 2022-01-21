@@ -100,6 +100,7 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         seenMessage(chat_user_id, nurse_id);
+
     }
 
     private void seenMessage(String chat_user_id, final String userid) {

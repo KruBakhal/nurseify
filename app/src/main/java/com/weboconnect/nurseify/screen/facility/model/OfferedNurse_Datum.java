@@ -46,6 +46,51 @@ public class OfferedNurse_Datum {
     @SerializedName("rating")
     @Expose
     private String rating;
+    @SerializedName("start_date")
+    @Expose
+    private String start_date;
+    @SerializedName("end_date")
+    @Expose
+    private String end_date;
+    @SerializedName("preferred_shift")
+    @Expose
+    private String preferredShift;
+
+    @SerializedName("preferred_shift_definition")
+    @Expose
+    private String preferredShift_definition;
+
+    public String getPreferredShift_definition() {
+        return preferredShift_definition;
+    }
+
+    public void setPreferredShift_definition(String preferredShift_definition) {
+        this.preferredShift_definition = preferredShift_definition;
+    }
+
+    public String getPreferredShift() {
+        return preferredShift;
+    }
+
+    public void setPreferredShift(String preferredShift) {
+        this.preferredShift = preferredShift;
+    }
+
+    public String getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(String start_date) {
+        this.start_date = start_date;
+    }
+
+    public String getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
 
     public String getNurseFirstName() {
         return nurseFirstName;

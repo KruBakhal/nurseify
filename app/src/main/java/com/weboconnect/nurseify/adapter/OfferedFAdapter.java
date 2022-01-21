@@ -132,7 +132,8 @@ public class OfferedFAdapter extends RecyclerView.Adapter<BaseViewHolder> implem
                 rate = "0";
             itemView.tvRate.setText("$ " + rate + "/Hr");
             itemView.tvWeeksDaysCount.setText(model.getPreferredAssignmentDurationDefinition());
-            itemView.tvWeeksDays.setText(model.getPreferredDaysOfTheWeekString());
+            itemView.tvWorkDays.setText(model.getPreferredDaysOfTheWeekString());
+            itemView.tvShift.setText(model.getPreferredShift_definition());
             itemView.tvTitle.setText(model.getPreferredSpecialtyDefinition());
             itemView.tvTime.setText(model.getOfferedAt());
 //            itemView.tvWeeksDays.setText(model.getPreferredSpecialty());

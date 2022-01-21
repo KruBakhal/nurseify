@@ -123,7 +123,7 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
     class ViewHolder extends BaseViewHolder {
         ItemActiveFBinding itemView;
 
-        public ViewHolder( @NonNull ItemActiveFBinding itemView) {
+        public ViewHolder(@NonNull ItemActiveFBinding itemView) {
             super(itemView.getRoot());
             this.itemView = itemView;
         }
@@ -140,23 +140,12 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
             if (TextUtils.isEmpty(rate))
                 rate = "0";
             itemView.tvRate.setText("$ " + rate + "/Hr");
-            itemView.tvWeeksDaysCount.setText(model.getPreferredDaysOfTheWeekString());
+            itemView.tvWeeksDaysCount.setText(model.getPreferredAssignmentDurationDefinition());
             itemView.tvTitle.setText(model.getPreferredSpecialtyDefinition());
             itemView.tvTime.setText(model.getOfferedAt());
-//            itemView.tvWeeksDays.setText(model.getPreferredSpecialty());
-//            itemView.tvTitle.setText(model.get);
-
-
-          /*  itemView.layItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-//                    postedListener.onClick_Hire(model,position);
-                }
-            });*/
+            itemView.tvWorkDays.setText(model.getPreferredDaysOfTheWeekString());
+            itemView.tvShift.setText(model.getPreferredShift_definition());
+            itemView.tvStartDate.setText(model.getStart_date());
         }
 
         @Override

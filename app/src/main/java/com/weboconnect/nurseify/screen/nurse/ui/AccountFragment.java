@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -28,6 +29,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.FragmentAccountBinding;
 import com.weboconnect.nurseify.screen.nurse.HomeActivity;
@@ -47,6 +53,7 @@ import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -85,7 +92,6 @@ public class AccountFragment extends Fragment {
         binding.tvName.setText(userProfileData.getFullName());
         binding.tvLicenceNo.setText(userProfileData.getNursingLicenseNumber());
         binding.tvAddress.setText(userProfileData.getAddress() + ", " + userProfileData.getCity() + ", " + userProfileData.getCountry());
-
         loadProfile_Pic(false);
         getSetting();
         binding.profileLayout.setOnClickListener(new View.OnClickListener() {
@@ -381,21 +387,14 @@ public class AccountFragment extends Fragment {
                     return;
                 }
                 if (response.body().getApiStatus().equals("1")) {
-//                    Utils.displayToast(context, null);
-//                    Utils.displayToast(context, response.message());
 
                     progressDialog.dismiss();
-
-//                    Utils.displayToast(context, "" + response.body().getMessage());
-
                     userProfileData = response.body().getData();
+                    send_profile_path_to_firebase(userProfileData.getId(), userProfileData.getImage());
                     new SessionManager(getContext()).save_user(userProfileData);
                     loadProfile_Pic(true);
                 } else {
-//                    Utils.displayToast(getContext(), "Data has not been updated");
-
                     progressDialog.dismiss();
-
                 }
 
 
@@ -412,6 +411,38 @@ public class AccountFragment extends Fragment {
             }
         });
 
+    }
+
+    private void send_profile_path_to_firebase(String id, String image) {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(Constant.USER_NODE)
+                .child(new SessionManager(getContext()).get_user_register_Id());
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                try {
+                    if (snapshot.getValue() == null) {
+//                        create_user_inside_firebase(new SessionManager(getContext()).get_User());
+                    } else {
+                        try {
+                            String userid = new SessionManager(getContext()).get_user_register_Id();
+                            FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
+                                    .child(userid).child("profile_path")
+                                    .setValue(image);
+                        } catch (Exception e) {
+                            Log.d("TAG", "update_user_status: " + e.getMessage());
+                        }
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG_check_User_exist", "onDataChange: " + exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }
