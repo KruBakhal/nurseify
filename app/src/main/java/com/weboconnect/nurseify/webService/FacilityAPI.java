@@ -104,12 +104,6 @@ public interface FacilityAPI {
     @POST("facility-dropdown-getncredentialingsoftware")
     Observable<CommonModel> call_facility_getncredentialingsoftware();
 
-    @Multipart
-    @POST("change-facility-logo")
-    Call<UserProfile> call_Profile_Photos(@Part("api_key") RequestBody api_key,
-                                          @Part("facility_id") RequestBody facility_id,
-                                          @Part MultipartBody.Part facility_logo);
-
     @POST("get-work-location")
     Observable<CommonModel> call_work_location();
 
@@ -167,6 +161,11 @@ public interface FacilityAPI {
             @Part("preferred_shift") RequestBody preferred_shift
 
     );
+    @Multipart
+    @POST("change-facility-logo")
+    Call<UserProfile> call_Profile_Photos(@Part("api_key") RequestBody api_key,
+                                          @Part("facility_id") RequestBody facility_id,
+                                          @Part MultipartBody.Part facility_logo);
 
     @Multipart
     @POST("job-create")
