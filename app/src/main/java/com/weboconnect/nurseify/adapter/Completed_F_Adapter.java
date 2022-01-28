@@ -1,6 +1,8 @@
 package com.weboconnect.nurseify.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,17 +18,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
+import com.weboconnect.nurseify.databinding.DialogRatingBinding;
 import com.weboconnect.nurseify.databinding.ItemActiveFBinding;
 import com.weboconnect.nurseify.databinding.ItemCompletedBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.intermediate.OfferedJobCallback;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
+import com.weboconnect.nurseify.screen.nurse.CompletedJobDetailsActivity;
+import com.weboconnect.nurseify.screen.nurse.adapters.RatingAdapter;
 import com.weboconnect.nurseify.screen.nurse.model.CompletedJobModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
+import com.weboconnect.nurseify.utils.SessionManager;
+import com.weboconnect.nurseify.utils.Utils;
+import com.weboconnect.nurseify.webService.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Completed_F_Adapter extends RecyclerView.Adapter<BaseViewHolder> implements Filterable {
 
@@ -135,8 +149,8 @@ public class Completed_F_Adapter extends RecyclerView.Adapter<BaseViewHolder> im
             Facility_JobDatum datum = listPostedJob.get(position);
 
             try {
-                Glide.with(activity).load(datum.getFacilityImage()).placeholder(R.drawable.test1)
-                        .error(R.drawable.test1).into(itemView.imageView);
+                Glide.with(activity).load(datum.getFacilityImage()).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(itemView.imageView);
             } catch (Exception e) {
 
             }
@@ -148,6 +162,22 @@ public class Completed_F_Adapter extends RecyclerView.Adapter<BaseViewHolder> im
             itemView.tvAmount.setText("$ " + datum.getPreferredHourlyPayRate() + "/Hr");
             itemView.tvStartDate.setText("" + datum.getStartDate());
             itemView.tvEndDate.setText("" + datum.getEndDate());
+            itemView.mainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+//                    if (datum.getRating_flag() != null && datum.getRating_flag().equals("0")) {
+                    postedListener.onClick(position);
+//                    } else {
+//                        show_rating();
+//                    }
+                }
+
+
+            });
         }
 
         @Override
@@ -159,6 +189,10 @@ public class Completed_F_Adapter extends RecyclerView.Adapter<BaseViewHolder> im
         protected void clear() {
 
         }
+    }
+
+    private void show_rating() {
+
     }
 
     private Filter fRecords;

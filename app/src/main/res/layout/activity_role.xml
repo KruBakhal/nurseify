@@ -151,7 +151,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="Yes"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -179,7 +179,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="No"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -214,7 +214,7 @@
                                         android:layout_marginLeft="35dp"
                                         android:layout_marginTop="7dp"
                                         android:fontFamily="@font/sf_500"
-                                        android:text="No"
+                                        android:text="-"
                                         android:textColor="@color/black"
                                         android:textSize="16dp" />
 
@@ -244,7 +244,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="No"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -273,7 +273,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="No"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -302,7 +302,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="No"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -331,7 +331,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="No"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -360,7 +360,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="No"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -389,7 +389,7 @@
                                     android:layout_marginLeft="35dp"
                                     android:layout_marginTop="7dp"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="No"
+                                    android:text="-"
                                     android:textColor="@color/black"
                                     android:textSize="16dp" />
 
@@ -418,7 +418,7 @@
                                 android:layout_marginLeft="35dp"
                                 android:layout_marginTop="7dp"
                                 android:fontFamily="@font/sf_500"
-                                android:text="English, Spanish"
+                                android:text="-"
                                 android:textColor="@color/black"
                                 android:textSize="16dp" />
 
@@ -444,10 +444,10 @@ additional photos)"
                                 android:id="@+id/tv_intro"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
+                                android:layout_marginLeft="35dp"
                                 android:layout_marginTop="7dp"
                                 android:fontFamily="@font/sf_500"
-                                android:text="I have a Master’s Degree in nursing and 8+ years of proven experience effectively and efficiently managing both patients and staff. I am an extremely organized, calm, and patient professional with excellent healthcare skills. I have a passion for providing quality care to patients, and the necessary leadership skills to inspire other staff members to strive to provide above standard levels of service."
+                                android:text="-"
                                 android:textColor="@color/black"
                                 android:textSize="16dp"
                                 android:visibility="visible" />
@@ -476,7 +476,7 @@ additional photos)"
                                 android:layout_marginLeft="35dp"
                                 android:layout_marginTop="7dp"
                                 android:fontFamily="@font/sf_500"
-                                android:text="https://vimeo.com/upgrade"
+                                android:text="-"
                                 android:textColor="@color/black"
                                 android:textSize="16dp" />
 
@@ -502,14 +502,29 @@ additional photos)"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="20dp"
                                 android:layout_marginTop="16dp"
-                                android:orientation="horizontal">
+                                android:orientation="vertical">
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/rv_photos"
                                     android:layout_width="match_parent"
                                     android:layout_height="200dp"
+
                                     android:orientation="horizontal"
+                                    android:visibility="gone"
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                                <TextView
+                                    android:id="@+id/tvBlank1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="25dp"
+                                    android:layout_marginTop="7dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="-"
+                                    android:textColor="@color/black"
+                                    android:textSize="16dp"
+                                    android:visibility="visible" />
+
                             </LinearLayout>
 
                             <TextView
@@ -529,16 +544,31 @@ additional photos)"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginRight="80dp"
                                 android:layout_marginBottom="30dp"
-                                android:layout_weight="1">
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/rv_files"
                                     android:layout_width="match_parent"
                                     android:layout_height="200dp"
                                     android:orientation="horizontal"
+                                    android:visibility="gone"
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+                                <TextView
+                                    android:id="@+id/tvBlank2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="25dp"
+                                    android:layout_marginTop="7dp"
+                                    android:fontFamily="@font/sf_500"
+                                    android:text="-"
+                                    android:textColor="@color/black"
+                                    android:textSize="16dp"
+                                    android:visibility="visible" />
+
                             </LinearLayout>
+
                         </LinearLayout>
 
 
@@ -546,11 +576,11 @@ additional photos)"
                 </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:id="@+id/progressBar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"

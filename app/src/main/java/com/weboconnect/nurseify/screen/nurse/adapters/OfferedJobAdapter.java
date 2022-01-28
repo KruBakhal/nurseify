@@ -91,11 +91,11 @@ public class OfferedJobAdapter extends RecyclerView.Adapter<OfferedJobAdapter.Vi
                 }
             });
 
-            Glide.with(holder.imageView.getContext()).load(list.get(pp).getFacilityLogo()).into(holder.imageView);
+            Glide.with(holder.imageView.getContext()).load(list.get(pp).getFacilityLogo())
+                    .placeholder(R.drawable.person).error(R.drawable.person).into(holder.imageView);
 
         } catch (Exception e) {
             Log.e("OfferedJobAdapter ", e.toString());
-
         }
     }
 

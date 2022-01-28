@@ -360,4 +360,16 @@ public interface FacilityAPI {
     @POST("remove-notification")
     Call<ResponseModel> call_remove_notification(@Part("user_id") RequestBody user_id, @Part("notification_id")
             RequestBody notification_id);
-}
+
+    @Multipart
+    @POST("nurse-rating")
+    Call<ResponseModel> call_nurse_rating(@Part("user_id") RequestBody user_id,
+                                          @Part("nurse_id") RequestBody offer_id,
+                                          @Part("job_id") RequestBody job_id,
+                                          @Part("overall") RequestBody overall,
+                                          @Part("clinical_skills") RequestBody on_board,
+                                          @Part("nurse_teamwork") RequestBody nurse_team_work,
+                                          @Part("interpersonal_skills") RequestBody leadership_support,
+                                          @Part("work_ethic") RequestBody tools_todo_my_job,
+                                          @Part("experience") RequestBody experience
+    );}

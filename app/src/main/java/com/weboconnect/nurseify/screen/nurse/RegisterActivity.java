@@ -132,6 +132,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1708,6 +1709,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
             distanceSlider.setProgress(5);
+            Collections.sort(select_daysOfWeek, new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    return o1 < o2 ? -1 : 1;
+                }
+            });
             daysOfWeekAdapter = new SpecialtyAdapter(context, select_daysOfWeek, list_days_of_week, 3, 3, new SpecialtyAdapter.SpecialtyListener() {
                 @Override
                 public void onClickItem(int position) {
@@ -5438,6 +5445,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         }
+        Collections.sort(select_daysOfWeek, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 < o2 ? -1 : 1;
+            }
+        });
     }
 
     private void setupSelection_Language_ByModelData(List<String> specialty, TextView tvLang) {

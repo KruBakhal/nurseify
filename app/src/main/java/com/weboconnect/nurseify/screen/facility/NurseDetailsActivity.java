@@ -155,7 +155,10 @@ public class NurseDetailsActivity extends AppCompatActivity {
                 .error(R.drawable.person).into(binding.circleImageView);
         binding.tvName.setText(model.getFirstName() + " " + model.getLastName());
         binding.tvDescription.setText(model.getSummary());
-        binding.tvRating.setText(model.getRating().getOverAll());
+        if (TextUtils.isEmpty(model.getRating().getOverAll())) {
+            binding.tvRating.setText("0");
+        } else
+            binding.tvRating.setText(model.getRating().getOverAll());
         String rate = model.getHourlyPayRate();
         if (TextUtils.isEmpty(rate))
             rate = "0";
@@ -176,6 +179,10 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.tvName.setText(model.getFirstName() + " " + model.getLastName());
         binding.tvDescription.setText(model.getRoleInterest().getSummary());
         binding.tvRating.setText(rating);
+        if (TextUtils.isEmpty(rating)) {
+            binding.tvRating.setText("0");
+        } else
+            binding.tvRating.setText(rating);
         String rate = model.getHourlyPayRate();
         if (TextUtils.isEmpty(rate))
             rate = "0";
@@ -209,7 +216,7 @@ public class NurseDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(context, MessageFacilityActivity.class)
-                        .putExtra("sender_id", nurse_ID)
+                        .putExtra("receiver_id", nurse_ID)
                         .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));
                 Utils.onClickEvent(v);
 
@@ -288,7 +295,11 @@ public class NurseDetailsActivity extends AppCompatActivity {
                 lang = lang + ", " + nurseProfileModel.getRoleInterest().getLanguages().get(i);
         }
         roleBinding.tvLang.setText("" + lang);
-        roleBinding.tvIntro.setText("" + nurseProfileModel.getRoleInterest().getSummary());
+        if (!TextUtils.isEmpty(nurseProfileModel.getRoleInterest().getSummary()))
+            roleBinding.tvIntro.setText(Html.fromHtml("" + nurseProfileModel.getRoleInterest().getSummary()));
+        else {
+            roleBinding.tvIntro.setText("");
+        }
         roleBinding.tvUrlLink.setText("" + nurseProfileModel.getRoleInterest().getNuVideoEmbedUrl());
         List<UserProfileData.AdditionalPicture> sdsd =
                 nurseProfileModel.getRoleInterest().getAdditionalPictures();

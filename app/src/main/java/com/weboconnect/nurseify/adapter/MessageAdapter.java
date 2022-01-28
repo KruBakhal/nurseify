@@ -3,6 +3,7 @@ package com.weboconnect.nurseify.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import com.weboconnect.nurseify.screen.nurse.model.Chatlist;
 import com.weboconnect.nurseify.screen.nurse.model.User;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
+import com.weboconnect.nurseify.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +43,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     boolean isNurse;
     private Context mContext;
     private List<User> mUsers;
-    private boolean ischat;
     private OnItemClick onItemClick;
     String theLastMessage = "default";
 
@@ -54,8 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public MessageAdapter(Context context, OnItemClick onItemClick, ArrayList<User> mUsers, boolean b) {
         this.mContext = context;
         this.mUsers = mUsers;
-        this.ischat = b;
-        isNurse = true;
+        isNurse = b;
         this.onItemClick = onItemClick;
     }
 
@@ -78,27 +78,41 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             User user = mUsers.get(position);
             holder.tv_name.setText("" + user.getFull_name());
             holder.tv_title.setText("" + (TextUtils.isEmpty(user.getSpecialty()) ? "" : user.getSpecialty()));
+            try {
+                if (user.getChat_model() != null) {
+                    holder.tv_last_msg.setText("" + user.getChat_model().getMessage());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+                    String date = simpleDateFormat.format(new Date(user.getChat_model().getTime_stamp())).toString();
+                    holder.tv_last_msg_time.setText(date);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (TextUtils.isEmpty(user.getProfile_path())) {
                 holder.circleImageView.setImageResource(R.drawable.person);
             } else {
-                Glide.with(mContext).load(user.getProfile_path()).error(R.drawable.person).into(holder.circleImageView);
+                Glide.with(mContext).load(user.getProfile_path()).placeholder(R.drawable.person).error(R.drawable.person).into(holder.circleImageView);
             }
             if (user.getStatus()) {
                 holder.img_status.setImageResource(R.color.drak_green);
             } else {
                 holder.img_status.setImageResource(R.color.drak_yellow);
             }
-            unreadMessageCount(user.getId(), holder.tv_count, holder.lay_count);
+            unreadMessageCount(user.getId(), user.getType(), holder.tv_count, holder.lay_count);
             lastStatus(user.getId(), holder.img_status);
-            lastMessage(user.getId(), holder.tv_last_msg, holder.tv_last_msg_time);
+            // lastMessage(user.getId(), holder.tv_last_msg, holder.tv_last_msg_time);
 
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isNurse)
+                    if (isNurse) {
                         mContext.startActivity(new Intent(mContext, MessageActivity.class)
-                                .putExtra("sender_id", user.getId()));
-                    else {
+                                .putExtra("receiver_id", user.getId())
+                                .putExtra(Constant.PROFILE_PATH, user.getProfile_path())
+                                .putExtra(Constant.FULL_NAME, user.getFull_name())
+                                .putExtra(Constant.EMAIL_ID, user.getEmail())
+                        );
+                    } else {
                         NurseDatum datum = new NurseDatum();
                         datum.setUserId(user.getId());
                         datum.setNurseEmail(user.getEmail());
@@ -106,7 +120,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         datum.setSpecialty(user.getSpecialty());
                         datum.setNurseLogo(user.getProfile_path());
                         mContext.startActivity(new Intent(mContext, MessageFacilityActivity.class)
-                                .putExtra("sender_id", user.getId())
+                                .putExtra("receiver_id", user.getId())
                                 .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(datum))
                         );
                     }
@@ -118,18 +132,28 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
-    private void unreadMessageCount(String id, TextView tv_count, View lay_count) {
-        String user_id = new SessionManager(mContext).get_user_register_Id();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
+    private void unreadMessageCount(String n_id, String type, TextView tv_count, View lay_count) {
+        String account_id = new SessionManager(mContext).get_user_register_Id();
+        String both_user_key;
+        if (new SessionManager(mContext).get_TYPE().equals(Constant.CONST_FACULTY_TYPE)) {
+            both_user_key = Utils.getCombine_Node_Key(new SessionManager(mContext).get_TYPE(), n_id, account_id);
+        } else
+            both_user_key = Utils.getCombine_Node_Key(new SessionManager(mContext).get_TYPE(), account_id, n_id);
+
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Constant.CHAT_NODE)
+                .child(both_user_key);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int unread = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chatlist chat = snapshot.getValue(Chatlist.class);
-                    if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(user_id) && !TextUtils.isEmpty(chat.getReceiver()) && !TextUtils.isEmpty(chat.getSender())
-                            && chat.getSender().equals(id) && chat.getReceiver().equals(user_id) && chat.getIs_seen() == 0) {
-                        unread++;
+                if (dataSnapshot.getChildren() != null) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Chatlist chat = snapshot.getValue(Chatlist.class);
+                        if (chat.getReceiver().equals(account_id) &&
+                                chat.getIs_seen() == 0) {
+                            unread++;
+                        }
                     }
                 }
                 if (unread != 0) {
@@ -141,34 +165,29 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
 
-
     }
 
-
     private void lastStatus(String id, ImageView img_status) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
+                .child(id);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                if (dataSnapshot.getValue() != null)
                     try {
-                        User chat = snapshot.getValue(User.class);
-                        if ((chat.getId().equals(id))) {
-                            if (chat.getStatus()) {
-                                img_status.setImageResource(R.color.drak_green);
-                            } else {
-                                img_status.setImageResource(R.color.drak_yellow);
-                            }
+                        if ((boolean) dataSnapshot.child(Constant.ONLINE_STATUS).getValue()) {
+                            img_status.setImageResource(R.color.drak_green);
+                        } else {
+                            img_status.setImageResource(R.color.drak_yellow);
                         }
                     } catch (Exception e) {
                         Log.d("TAG", "onDataChange: " + e.getMessage());
                     }
-                }
             }
 
             @Override

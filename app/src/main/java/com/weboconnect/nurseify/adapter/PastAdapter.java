@@ -146,8 +146,7 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             itemView.tvShift.setText(model.getPreferredShift_definition());
             itemView.tvStartDate.setText(model.getStart_date());
             itemView.tvEndDate.setText(model.getEnd_date());
-
-
+            itemView.tvTime.setText(model.getOfferedAt());
         }
 
         @Override

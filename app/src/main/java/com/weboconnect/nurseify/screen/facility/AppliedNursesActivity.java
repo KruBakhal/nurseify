@@ -3,7 +3,7 @@ package com.weboconnect.nurseify.screen.facility;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,12 +11,8 @@ import android.view.View;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.adapter.AppliedNursesAdapter;
 import com.weboconnect.nurseify.databinding.ActivityAppliedNursesBinding;
-import com.weboconnect.nurseify.databinding.DialogInviteNurseBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
 import com.weboconnect.nurseify.screen.facility.model.AppliedNurseModel;
-import com.weboconnect.nurseify.screen.facility.model.NurseDatum;
-import com.weboconnect.nurseify.screen.facility.model.NurseModel;
-import com.weboconnect.nurseify.screen.facility.model.OfferedJobNurse_Datum;
 import com.weboconnect.nurseify.screen.facility.model.Offered_Job_F_Model;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
@@ -39,6 +35,7 @@ public class AppliedNursesActivity extends AppCompatActivity {
     private String job_id;
     private AppliedNurseModel nurseProfileModel;
     private List<AppliedNurseModel.AppliedNurseDatum> list = new ArrayList<>();
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +122,11 @@ public class AppliedNursesActivity extends AppCompatActivity {
                     Utils.displayToast(AppliedNursesActivity.this, getResources().getString(R.string.no_internet));
                     return;
                 }
-                showProgress();
+//                showProgress();
+                progressDialog = new ProgressDialog(AppliedNursesActivity.this);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Please Wait");
+                progressDialog.show();
                 String facilityId = new SessionManager(AppliedNursesActivity.this).get_facilityProfile().getUserId();
                 RequestBody nurseReques = RequestBody.create(MediaType.parse("multipart/form-data"), nurseId);
                 RequestBody facilityReques = RequestBody.create(MediaType.parse("multipart/form-data"), facilityId);
@@ -139,28 +140,35 @@ public class AppliedNursesActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<Offered_Job_F_Model> call, Response<Offered_Job_F_Model> response) {
                         if (response == null || response.body() == null) {
-                            errorProgress(false);
+//                            errorProgress(false);
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
                             Utils.displayToast(AppliedNursesActivity.this, "" + response.message());
                             return;
                         }
                         if (!response.body().getApiStatus().equals("1")) {
-                            dismissProgress();
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
                             Utils.displayToast(AppliedNursesActivity.this, "" + response.body().getMessage());
                             return;
                         }
                         if (response.isSuccessful()) {
-                            dismissProgress();
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
                             Utils.displayToast(AppliedNursesActivity.this, response.body().getMessage());
                         } else {
                             Utils.displayToast(AppliedNursesActivity.this, getString(R.string.something_when_wrong));
-                            dismissProgress();
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
                         }
-                        dismissProgress();
+                        if (progressDialog != null && progressDialog.isShowing())
+                            progressDialog.dismiss();
                     }
 
                     @Override
                     public void onFailure(Call<Offered_Job_F_Model> call, Throwable t) {
-                        errorProgress(false);
+                        if (progressDialog != null && progressDialog.isShowing())
+                            progressDialog.dismiss();
                         Utils.displayToast(AppliedNursesActivity.this,
                                 getString(R.string.something_when_wrong));
                     }

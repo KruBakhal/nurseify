@@ -94,7 +94,7 @@ public class AppliedNursesAdapter extends RecyclerView.Adapter<AppliedNursesAdap
                         nurse_model.setNurseLogo(holder.profileData.getImage());
                         nurse_model.setSpecialty("");
                         activity.startActivity(new Intent(activity, MessageFacilityActivity.class)
-                                .putExtra("sender_id", appliedNurseDatum.getUserId())
+                                .putExtra("receiver_id", appliedNurseDatum.getUserId())
                                 /* .putExtra("email", holder.nurseDatum.getEmail())
                                  .putExtra("id", holder.nurseDatum.getId())
                                  .putExtra("full_name", holder.nurseDatum.getFirstName() + " " + holder.nurseDatum.getLastName())
@@ -141,7 +141,7 @@ public class AppliedNursesAdapter extends RecyclerView.Adapter<AppliedNursesAdap
                                 nurse_model.setNurseLogo(profileData.getImage());
                                 nurse_model.setSpecialty("");
                                 activity.startActivity(new Intent(activity, MessageFacilityActivity.class)
-                                        .putExtra("sender_id", appliedNurseDatum.getUserId())
+                                        .putExtra("receiver_id", appliedNurseDatum.getUserId())
                                         /* .putExtra("email", holder.nurseDatum.getEmail())
                                          .putExtra("id", holder.nurseDatum.getId())
                                          .putExtra("full_name", holder.nurseDatum.getFirstName() + " " + holder.nurseDatum.getLastName())

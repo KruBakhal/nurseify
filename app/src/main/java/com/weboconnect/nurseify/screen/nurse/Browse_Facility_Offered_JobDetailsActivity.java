@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.weboconnect.nurseify.AppController;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityJobDetailsBinding;
 import com.weboconnect.nurseify.screen.nurse.model.FacilityJobModel;
@@ -208,7 +209,6 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         });
     }
 
-
     private void fetch_terms_conditions(JobModel.JobDatum datum, int position) {
         progressDialog.show();
         String id = "";
@@ -323,7 +323,6 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
 
 
     }
-
 
     private void terms_conditions_Dialog(JobModel.JobDatum datum, String str_terms_conditions, int position) {
         final View loc = getLayoutInflater().from(context).inflate(R.layout.dialog_tearms, null);
@@ -444,13 +443,15 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
             Utils.displayToast(context, "Empty Data");
             return;
         }
+        binding.tvTitle.setText("" + model.getPreferredSpecialtyDefinition());
         binding.tvName.setText("" + model.getName());
         binding.tvSpecialty.setText("" + model.getPreferredSpecialtyDefinition());
-        binding.tvDate.setText("" + model.getCreatedAtDefinition());
+        binding.tvDate.setText("" + model.getStartDate());
         binding.tvAssignmentDurationDefinition.setText("" + model.getPreferredAssignmentDurationDefinition());
         binding.tvShiftDuration.setText("" + model.getPreferredShiftDurationDefinition());
         binding.tvHourlyRate.setText("$ " + model.getPreferredHourlyPayRate() + "/Hr");
         binding.tvCreatedAtDefinition.setText("" + model.getCreatedAtDefinition());
+        binding.tvAddress.setText("" + model.getAddress());
 
         if (model.getIsLiked().toString().equals("0")) {
             binding.imgHeart.setVisibility(View.VISIBLE);
@@ -481,11 +482,11 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         binding.tvDescriptions.setText("" + Html.fromHtml(model.getDescription()));
         binding.tvSeniority.setText("" + model.getSeniorityLevelDefinition());
         binding.tvShiftDuration.setText("" + model.getPreferredShiftDurationDefinition());
-        binding.tvPrefferedExp.setText("" + model.getPreferredExperience());
+        binding.tvPrefferedExp.setText("" + model.getPreferredExperience() + " Years");
         binding.tvCerner.setText("" + model.getJobCernerExpDefinition());
         binding.tvMeditech.setText("" + model.getJobMeditechExpDefinition());
         binding.tvEpic.setText("" + model.getJobEpicExpDefinition());
-
+        binding.tvAddress.setText("" + model.getAddress());
     }
 
     private void setFacilityData() {
@@ -493,11 +494,13 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
             Utils.displayToast(context, "Empty Data");
             return;
         }
+        binding.tvTitle.setText("" + facility.getPreferredSpecialtyDefinition());
         binding.tvName.setText("" + facility.getName());
         binding.tvSpecialty.setText("" + facility.getPreferredSpecialty());
         binding.tvDate.setText("" + facility.getCreatedAt());
         binding.tvAssignmentDurationDefinition.setText("");
         binding.tvShiftDuration.setText("");
+        binding.tvAddress.setText("" + facility.getAddress());
 //        binding.tvHourlyRate.setText("$ "  + "/Hr");
 
         if (facility.getIsLike().toString().equals("0")) {
@@ -554,11 +557,11 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         binding.tvDescriptions.setText("" + jobModel.getJobDescription());
         binding.tvSeniority.setText("" + jobModel.getAboutJob().getSeniorityLevelDefinition());
         binding.tvShiftDuration.setText("" + jobModel.getAboutJob().getPreferredShiftDurationDefinition());
-        binding.tvPrefferedExp.setText("" + jobModel.getAboutJob().getPreferredExperience());
+        binding.tvPrefferedExp.setText("" + jobModel.getAboutJob().getPreferredExperience() + " Years");
         binding.tvCerner.setText("" + jobModel.getAboutJob().getCernerDefinition());
         binding.tvMeditech.setText("" + jobModel.getAboutJob().getMeditechDefinition());
         binding.tvEpic.setText("" + jobModel.getAboutJob().getEpicDefinition());
-
+        binding.tvAddress.setText("" + jobModel.getPreferredWorkLocationDefinition());
     }
 
     private void followFacility(String facilityId, String type) {
@@ -677,6 +680,9 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                         ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
                             Utils.displayToast(context, responseModel.getMessage());
+                            AppController.isEdit_Result = true;
+                            setResult(RESULT_OK);
+                            binding.layoutAccept.setVisibility(View.GONE);
                         }
                     } else {
                         Log.e(TAG + "accept", response.message());
@@ -722,6 +728,9 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                         ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
                             Utils.displayToast(context, responseModel.getMessage());
+                            AppController.isEdit_Result = true;
+                            setResult(RESULT_OK);
+                            binding.layoutAccept.setVisibility(View.GONE);
                         }
 
 

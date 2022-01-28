@@ -18,7 +18,6 @@ import com.weboconnect.nurseify.screen.nurse.model.Chatlist;
 import com.weboconnect.nurseify.utils.SessionManager;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +36,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
 //    FirebaseUser fuser;
 
-    public ChatAdapter(Activity activity, ArrayList<Chatlist> mchat, String imageurl) {
+    public ChatAdapter(Activity activity, List<Chatlist> mchat, String imageurl) {
         this.mContext = activity;
         this.mChat = mchat;
         this.imageurl = imageurl;

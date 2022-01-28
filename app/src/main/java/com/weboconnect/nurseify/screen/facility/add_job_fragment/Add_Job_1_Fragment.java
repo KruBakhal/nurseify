@@ -56,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -327,6 +328,12 @@ public class Add_Job_1_Fragment extends Fragment {
     }
 
     private void setAdapter() {
+        Collections.sort(viewModel.select_daysOfWeek, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 < o2 ? -1 : 1;
+            }
+        });
         daysOfWeekAdapter = new SpecialtyAdapter(getContext(), viewModel.select_daysOfWeek,
                 viewModel.list_days_of_week.getValue(), 3, 3, new SpecialtyAdapter.SpecialtyListener() {
             @Override
@@ -814,7 +821,7 @@ public class Add_Job_1_Fragment extends Fragment {
                                 binding.tvWeeksDays.setVisibility(View.GONE);
                                 binding.rvWeeksDays.setVisibility(View.VISIBLE);
 
-                                daysOfWeekAdapter.notifyDataSetChanged();
+                                setAdapter();
                             }
                         });
                 Utils.onClickEvent(v);

@@ -13,9 +13,9 @@ public class Chatlist {
     @SerializedName("sender")
     @Expose
     private String sender;
-    @SerializedName("time_stamp")
+    @SerializedName("timestamp")
     @Expose
-    private Long time_stamp;
+    public long timestamp;
     @SerializedName("type")
     @Expose
     private String type;
@@ -56,11 +56,11 @@ public class Chatlist {
     }
 
     public Long getTime_stamp() {
-        return time_stamp;
+        return timestamp;
     }
 
     public void setTime_stamp(Long time_stamp) {
-        this.time_stamp = time_stamp;
+        this.timestamp = time_stamp;
     }
 
     public String getType() {

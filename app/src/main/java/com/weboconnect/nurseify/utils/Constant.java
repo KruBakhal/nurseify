@@ -14,12 +14,17 @@ public class Constant {
     public static final String ADD = "Add";
     public static final String FLAG = "flag";
     public static final String DEVICE_INFO = "Device: " + Build.DEVICE + " Model: " + Build.MODEL + " Version: " + SDK_INT + "";
-    public static final String USER_NODE = "users";
+    public static final String USER_NODE = "Users_db";
     public static final String ONLINE_STATUS = "status";
     public static final String JOB_ID = "job_id";
     public static final String ID = "id";
     public static final String URL_TERMS_CONDITION = "http://35.200.185.126/terms-conditions";
-
+    public static final String CHAT_NODE = "Chat_db";
+    public static final String TIME_STAMP = "timestamp";
+    public static final String IS_SEEN = "is_seen";
+    public static final String CHAT_USERS_CHILD = "chat_users";
+    public static final String FULL_NAME = "full_name";
+    public static final String PROFILE_PATH = "profile_path";
     // person session constant
     public static String CONST_NURSE_TYPE = "Nurse";
     public static String CONST_FACULTY_TYPE = "Faculty";

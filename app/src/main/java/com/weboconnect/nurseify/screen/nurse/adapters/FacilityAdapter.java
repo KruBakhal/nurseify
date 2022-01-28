@@ -64,7 +64,8 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
 
-            Glide.with(activity).load(list.get(position).getFacilityLogo()).into(holder.imageView);
+            Glide.with(activity).load(list.get(position).getFacilityLogo())
+                    .placeholder(R.drawable.person).error(R.drawable.person).into(holder.imageView);
 
             holder.tv_name.setText(list.get(position).getName());
             holder.tv_description.setText(Html.fromHtml(list.get(position).getAboutFacility()));
@@ -98,9 +99,12 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                    String shareBody = list.get(position).getName()
-                            + "\n" + Html.fromHtml(list.get(position).getAboutFacility())
-                            + "\n" + list.get(position).getAddress() + " " + list.get(position).getPostcode();
+                    String shareBody = "Facility Name: " + list.get(position).getName()
+                            + "\nAbout: " + Html.fromHtml(list.get(position).getAboutFacility())
+                            + "\nAddress: " + list.get(position).getAddress() + " " + list.get(position).getPostcode()
+                            + "\nTotal Jobs: " + Html.fromHtml(list.get(position).getTotalJobs())
+                            + "\nhttps://play.google.com/store/apps/details?id=" + activity.getPackageName();
+
                     intent.setType("text/plain");
                     intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     activity.startActivity(Intent.createChooser(intent, "Share"));

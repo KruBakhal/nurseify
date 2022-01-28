@@ -237,4 +237,17 @@ public class Utils {
 
         return questionModelList;
     }
+
+    public static String getCombine_Node_Key(String type, String nurse_id, String facility) {
+        /*if (type.equals(Constant.CONST_FACULTY_TYPE)) {
+            return facility_user_id + "==" + nurse_user_id;
+        } else {
+            return facility_user_id + "==" + nurse_user_id;
+        }*/
+        if (type.equals(Constant.CONST_FACULTY_TYPE)) {
+            return facility + "==" + nurse_id;
+        } else
+            return facility + "==" + nurse_id;
+
+    }
 }

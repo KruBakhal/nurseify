@@ -148,7 +148,7 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.View
             if (select_specialty == null || select_specialty.size() == 0) {
                 return 0;
             } else
-                return list_Specialty.size();
+                return select_specialty.size();
         } else if (type == 2) {
             if (select_specialty == null || select_specialty.size() == 0)
                 return 0;

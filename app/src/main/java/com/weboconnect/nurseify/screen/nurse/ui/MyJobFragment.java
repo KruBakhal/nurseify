@@ -1,5 +1,8 @@
 package com.weboconnect.nurseify.screen.nurse.ui;
 
+import static com.weboconnect.nurseify.utils.Constant.REQUEST_EDIT;
+
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -330,8 +334,8 @@ public class MyJobFragment extends Fragment {
 //                            Utils.displayToast(getContext(), "no data found");
                             if (selected_page2 >= 1)
                                 selected_page2--;
-                            if (list_Active_Job == null && list_Active_Job.size() == 0) {
-                                errorProgress(false);
+                            if (list_Active_Job == null || list_Active_Job.size() == 0) {
+                                errorProgress(true);
                             }
                             return;
                         }
@@ -395,7 +399,7 @@ public class MyJobFragment extends Fragment {
                     if (list_Completed_Job != null && list_Completed_Job.size() != 0) {
                         binding.progress.setVisibility(View.GONE);
                         dismissProgress();
-                    } else if (list_Completed_Job != null && list_Completed_Job.size()== 0) {
+                    } else if (list_Completed_Job != null && list_Completed_Job.size() == 0) {
                         errorProgress(true);
                         binding.tvMsg.setText("Yet,No Job Found !");
                     }
@@ -409,8 +413,8 @@ public class MyJobFragment extends Fragment {
 //                            Utils.displayToast(getContext(), "no data found");
                             if (selected_page3 >= 1)
                                 selected_page3--;
-                            if (list_Completed_Job == null && list_Completed_Job.size() == 0) {
-                                errorProgress(false);
+                            if (list_Completed_Job == null || list_Completed_Job.size() == 0) {
+                                errorProgress(true);
                             }
                             return;
                         }
@@ -466,9 +470,9 @@ public class MyJobFragment extends Fragment {
             public void onClick(int pos) {
                 String job_id = list_Offered_Job.get(pos).getOfferId();
                 if (list_Offered_Job.get(pos).getStatus().equals("pending")) {
-                    getActivity().startActivity(new Intent(getActivity(), Browse_Facility_Offered_JobDetailsActivity.class)
+                    getActivity().startActivityForResult(new Intent(getActivity(), Browse_Facility_Offered_JobDetailsActivity.class)
                             .putExtra("data", job_id)
-                            .putExtra(Constant.FLAG, 3));
+                            .putExtra(Constant.FLAG, 3), REQUEST_EDIT);
                 } else if (list_Offered_Job.get(pos).getStatus().equals("active")) {
                     getActivity().startActivity(new Intent(getActivity(), ActiveJobDetailsActivity.class)
                             .putExtra("data", job_id));
@@ -520,14 +524,22 @@ public class MyJobFragment extends Fragment {
 
             @Override
             public void onClick(int pos) {
-                getActivity().startActivity(new Intent(getActivity(), CompletedJobDetailsActivity.class)
+                startActivityForResult(new Intent(getActivity(), CompletedJobDetailsActivity.class)
 //                        .putExtra(Constant.FLAG, 5)
                                 .putExtra("data", list_Completed_Job.get(pos).getOffer_id())
-                );
+                        , REQUEST_EDIT);
             }
         });
         binding.recyclerViewJobs3.setAdapter(completedAdapter);
 //        completedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_EDIT && resultCode == Activity.RESULT_OK) {
+            refresh();
+        }
     }
 
     private void offeredJobAccept(String jobId, Dialog dialog) {
@@ -554,8 +566,9 @@ public class MyJobFragment extends Fragment {
                         ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
                             dialog.dismiss();
-                            isFirstTime = true;
-                            get_Offered_Job(true);
+//                            isFirstTime = true;
+//                            get_Offered_Job(true);
+                            refresh();
                         } else {
 
                         }
@@ -603,8 +616,10 @@ public class MyJobFragment extends Fragment {
                         ResponseModel responseModel = response.body();
                         if (responseModel.getApiStatus().equals("1")) {
 //                            Utils.displayToast(getContext(), responseModel.getData());
-                            isFirstTime = true;
+                            /*isFirstTime = true;
                             get_Offered_Job(true);
+                            */
+                            refresh();
                         }
                     } else {
                         Log.e(TAG + "reject", response.message());
@@ -782,4 +797,22 @@ public class MyJobFragment extends Fragment {
             }
         }
     };
+
+    public void refresh() {
+        if (list_Offered_Job != null) {
+            list_Offered_Job.clear();
+        }
+        if (list_Active_Job != null) {
+            list_Active_Job.clear();
+        }
+        selected_page = 1;
+        selected_page2 = 1;
+        if (currentTabSelected == 1) {
+            isFirstTime = true;
+            get_Offered_Job(true);
+        } else if (currentTabSelected == 2) {
+            isFirstTime = true;
+            get_Active_Job();
+        }
+    }
 }

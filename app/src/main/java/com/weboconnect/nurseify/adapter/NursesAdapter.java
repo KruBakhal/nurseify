@@ -168,7 +168,10 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
             Glide.with(itemView.imgProfile.getContext()).load(model.getNurseLogo()).placeholder(R.drawable.person)
                     .error(R.drawable.person).into(itemView.imgProfile);
             itemView.tvName.setText(model.getFirstName() + " " + model.getLastName());
-            itemView.tvDescription.setText(model.getSummary());
+            if (TextUtils.isEmpty(model.getSummary())) {
+                itemView.tvDescription.setText("");
+            } else
+                itemView.tvDescription.setText(Html.fromHtml(model.getSummary()));
             if (model.getRating() != null && !TextUtils.isEmpty(model.getRating().getOverAll()))
                 itemView.tvRating.setText(model.getRating().getOverAll());
             String rate = model.getHourlyPayRate();
@@ -204,7 +207,7 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                     activity.startActivity(new Intent(activity, MessageFacilityActivity.class)
-                            .putExtra("sender_id", model.getUserId())
+                            .putExtra("receiver_id", model.getUserId())
                             .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));
                 }
             });
@@ -260,7 +263,6 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                     Log.d("TAG", "onFailure: " + t.getMessage());
                 }
             });
-
 
         }
 

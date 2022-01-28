@@ -121,6 +121,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLines="1"
+                        android:textCursorDrawable="@drawable/effect_cursor_color"
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textSize="16dp" />
@@ -151,6 +152,7 @@
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:maxLines="1"
+                        android:textCursorDrawable="@drawable/effect_cursor_color"
                         android:paddingLeft="10dp"
                         android:textColor="#A4ADBB"
                         android:textSize="16dp" />

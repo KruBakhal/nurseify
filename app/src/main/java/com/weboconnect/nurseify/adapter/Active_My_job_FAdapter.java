@@ -128,7 +128,8 @@ public class Active_My_job_FAdapter extends RecyclerView.Adapter<BaseViewHolder>
         public void onBind(int position) {
             Facility_JobDatum model = listPostedJob.get(position);
 
-            Glide.with(itemView.imgProfile.getContext()).load(model.getFacilityImage()).placeholder(R.drawable.person)
+            Glide.with(itemView.imgProfile.getContext()).load(model.getFacilityImage())
+                    .placeholder(R.drawable.person)
                     .error(R.drawable.person).into(itemView.imgProfile);
             itemView.tvName.setText(model.getFacilityFirstName() + " " + model.getFacilityLastName());
             itemView.layRating.setVisibility(View.GONE);

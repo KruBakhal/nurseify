@@ -180,6 +180,7 @@ public class AccountFragment extends Fragment {
         if (!TextUtils.isEmpty(userProfileData.getImage())) {
             Glide.with((HomeActivity) getActivity())
                     .load(userProfileData.getImage()).placeholder(R.drawable.person)
+                    .error(R.drawable.person)
                     .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

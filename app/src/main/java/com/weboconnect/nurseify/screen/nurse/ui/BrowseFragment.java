@@ -106,6 +106,7 @@ public class BrowseFragment extends Fragment {
     Pattern patternAlphabetNumbers = Pattern.compile("^[a-zA-Z0-9]*$");
     private boolean isFirstTime = true;
     private boolean isFilter = false;
+    private boolean isWas = false;
 
     public BrowseFragment() {
     }
@@ -265,6 +266,8 @@ public class BrowseFragment extends Fragment {
                 facility_type = "";
                 media_record = "";
                 isFilter = false;
+                isLastPage = false;
+                loading = false;
                 dialogFilterBinding.tvZip.setText(zipCity);
                 dialogFilterBinding.distanceSlider.setValues(4.0F, 5.0F);
                 dialogFilterBinding.tvHourRate.setText("$" + dialogFilterBinding.rangeSeekbar3.getSelectedMinValue().intValue()
@@ -299,6 +302,7 @@ public class BrowseFragment extends Fragment {
                     if (selected_electronic_medical_records != 0)
                         media_record = list_media.get(selected_electronic_medical_records).getId().toString();
                     isFilter = true;
+                    isWas = true;
                     fecthBrowseJobs(true);
 
                 }
@@ -537,6 +541,7 @@ public class BrowseFragment extends Fragment {
             return;
         }
         Utils.displayToast(getContext(), null); // to cancel toast if showing on screen
+        loading = true;
         if (isFirstTime) {
             isFirstTime = false;
             showProgress();
@@ -568,6 +573,7 @@ public class BrowseFragment extends Fragment {
             @Override
             public void onResponse(Call<JobModel> call, Response<JobModel> response) {
                 try {
+                    loading = false;
                     assert response.body() != null;
                     if (!response.body().getApiStatus().equals("1")) {
                         errorProgress(true);
@@ -581,22 +587,37 @@ public class BrowseFragment extends Fragment {
                         if (jobModel.getData() == null || jobModel.getData().size() == 0) {
 //                            Utils.displayToast(getContext(), "No Jobs found !");
                             selected_page_1--;
-                            if (isFilter)
-                                openFilter();
+                            if (isFilter) {
+                                if (isWas)
+                                    openFilter();
+                                else
+                                    isLastPage = true;
+                            }
                             return;
                         }
                         if (list_jobs == null) {
                             list_jobs = new ArrayList<>();
                         }
                         if (isFilter) {
-                            if (list_jobs == null)
-                                list_jobs = new ArrayList<>();
-                            else if (list_jobs.size() > 0)
-                                list_jobs.clear();
-                            list_jobs.addAll(jobModel.getData());
-                            setAdapter();
-                            browserJobsAdapter.removeAll();
-                            browserJobsAdapter.add_Item(jobModel.getData());
+                            if (isWas) {
+                                isWas = false;
+                                if (list_jobs == null)
+                                    list_jobs = new ArrayList<>();
+                                else if (list_jobs.size() > 0)
+                                    list_jobs.clear();
+                                list_jobs.addAll(jobModel.getData());
+                                setAdapter();
+                                browserJobsAdapter.removeAll();
+                                browserJobsAdapter.add_Item(jobModel.getData());
+                            } else {
+//                                list_jobs.addAll(jobModel.getData());
+//                                setAdapter();
+                                isWas = false;
+                                list_jobs.addAll(jobModel.getData());
+                                browserJobsAdapter.notifyDataSetChanged();
+//                                browserJobsAdapter.removeAll();
+//                                browserJobsAdapter.add_Item(jobModel.getData());
+                            }
                         } else {
                             if (list_jobs.size() > 0) {
                                 list_jobs.addAll(jobModel.getData());
@@ -624,6 +645,7 @@ public class BrowseFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JobModel> call, Throwable t) {
+                loading = false;
                 errorProgress(true);
                 if (isFilter)
                     openFilter();
@@ -1003,8 +1025,10 @@ public class BrowseFragment extends Fragment {
                 binding.recyclerViewJobs.setVisibility(View.VISIBLE);
 
                 if (list_jobs == null || list_jobs.size() == 0) {
+                    isFirstTime = true;
                     fecthBrowseJobs(false);
                 } else {
+                    isFirstTime = false;
                     binding.recyclerViewJobs.setAdapter(browserJobsAdapter);
                     dismissProgress();
 //                    binding.recyclerViewJobs.notify();
@@ -1026,8 +1050,10 @@ public class BrowseFragment extends Fragment {
                 binding.recyclerViewJobs.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
                 if (list_facility == null || list_facility.size() == 0) {
+                    isFirstTime = true;
                     fecthBrowseFacility();
                 } else {
+                    isFirstTime = false;
                     binding.recyclerViewFacility.setAdapter(facilityAdapter);
                     dismissProgress();
                 }

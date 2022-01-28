@@ -54,8 +54,8 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
             ActiveModel.ActiveDatum datum = list.get(position);
             try {
                 Glide.with(holder.itemView.getContext()).load(datum.getFacilityLogo())
-                        .placeholder(R.drawable.test1)
-                        .error(R.drawable.test1).into(holder.imageView);
+                        .placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(holder.imageView);
             } catch (Exception e) {
 
             }

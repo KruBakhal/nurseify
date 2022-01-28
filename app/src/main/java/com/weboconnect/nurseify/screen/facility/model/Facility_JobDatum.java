@@ -131,6 +131,18 @@ public class Facility_JobDatum {
     @SerializedName("rating_flag")
     @Expose
     private String rating_flag;
+    @SerializedName("offered_nurse_id")
+    @Expose
+    private String offered_nurse_id;
+
+    public String getOffered_nurse_id() {
+        return offered_nurse_id;
+    }
+
+    public void setOffered_nurse_id(String offered_nurse_id) {
+        this.offered_nurse_id = offered_nurse_id;
+    }
+
     @SerializedName("job_photos")
     @Expose
     private List<JobPhoto> jobPhotos = null;
@@ -484,5 +496,66 @@ public class Facility_JobDatum {
 
     public void setApplied(String applied) {
         this.applied = applied;
+    }
+
+    @SerializedName("rating_comment")
+    @Expose
+    private RatingComment ratingComment;
+
+    public RatingComment getRatingComment() {
+        return ratingComment;
+    }
+
+    public void setRatingComment(RatingComment ratingComment) {
+        this.ratingComment = ratingComment;
+    }
+    public class RatingComment {
+
+
+        @SerializedName("rating")
+        @Expose
+        private String rating;
+        @SerializedName("experience")
+        @Expose
+        private String experience;
+        @SerializedName("nurse_name")
+        @Expose
+        private String nurseName;
+        @SerializedName("nurse_image")
+        @Expose
+        private String nurseImage;
+
+        public String getRating() {
+            return rating;
+        }
+
+        public void setRating(String rating) {
+            this.rating = rating;
+        }
+
+        public String getExperience() {
+            return experience;
+        }
+
+        public void setExperience(String experience) {
+            this.experience = experience;
+        }
+
+        public String getNurseName() {
+            return nurseName;
+        }
+
+        public void setNurseName(String nurseName) {
+            this.nurseName = nurseName;
+        }
+
+        public String getNurseImage() {
+            return nurseImage;
+        }
+
+        public void setNurseImage(String nurseImage) {
+            this.nurseImage = nurseImage;
+        }
+
     }
 }

@@ -70,6 +70,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -195,7 +196,7 @@ public class Nurse_Browse_Fragment extends Fragment {
                 });
 
         } catch (Exception e) {
-
+            Log.d("TAG", "setData: " + e.getMessage());
         }
        /* binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -214,10 +215,14 @@ public class Nurse_Browse_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (check_Any_is_empty()) {
-                    viewModel.fetch_data(getContext());
-                } else {
-                    open_filter();
+                try {
+                    if (!isOpenFIlter && check_Any_is_empty()) {
+                        viewModel.fetch_data(getContext());
+                    } else {
+                        open_filter();
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG", "onClick: " + exception.getMessage());
                 }
                 Utils.onClickEvent(v);
             }
@@ -289,6 +294,14 @@ public class Nurse_Browse_Fragment extends Fragment {
                 state_click_action(filterBinding);
             }
         });
+        if (viewModel.select_speciality.size() == viewModel.getList_speciality().getValue().size()) {
+            filterBinding.checkSpecailty.setChecked(true);
+        } else
+            filterBinding.checkSpecailty.setChecked(false);
+        if (viewModel.select_daysOfWeek.size() == viewModel.getList_days_of_week().getValue().size()) {
+            filterBinding.checkDays.setChecked(true);
+        } else
+            filterBinding.checkDays.setChecked(false);
         filterBinding.layCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -640,6 +653,12 @@ public class Nurse_Browse_Fragment extends Fragment {
     }
 
     private void setAdapter_Days(DialogFilterFBinding filterBinding) {
+        Collections.sort(viewModel.select_daysOfWeek, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 < o2 ? -1 : 1;
+            }
+        });
         daysOfWeekAdapter = new SpecialtyAdapter(getContext(), viewModel.select_daysOfWeek,
                 viewModel.list_days_of_week.getValue(), 3, 3, new SpecialtyAdapter.SpecialtyListener() {
             @Override
@@ -1073,62 +1092,66 @@ public class Nurse_Browse_Fragment extends Fragment {
     }
 
     private void init_Data(NurseModel jobPostedModel, boolean isNetwork) {
-        if (jobPostedModel == null ||
-                ((jobPostedModel.getData() == null || jobPostedModel.getData().getData() == null
-                        || jobPostedModel.getData().getData().size() == 0))) {
-            if (isNetwork) {
-                if (listPostedJob != null && listPostedJob.size() != 0) {
-                    dismissProgress();
-                    if (currentPage != PAGE_START) {
+        try {
+            if (jobPostedModel == null ||
+                    ((jobPostedModel.getData() == null || jobPostedModel.getData().getData() == null
+                            || jobPostedModel.getData().getData().size() == 0))) {
+                if (isNetwork) {
+                    if (listPostedJob != null && listPostedJob.size() != 0) {
+                        dismissProgress();
+                        if (currentPage != PAGE_START) {
 //                        jobPostAdapter.removeLoading();
 //                        binding.swipeRefresh.setRefreshing(false);
-                        isLoading = false;
-                        currentPage--;
-                        try {
+                            isLoading = false;
+                            currentPage--;
+
                             ProgressHolder holder = (ProgressHolder) binding.recyclerView.findViewHolderForAdapterPosition(nursesAdapter.getItemCount() - 1);
                             if (holder != null && holder.item_tv_msg != null) {
                                 holder.item_tv_msg.setText("No Internet Connectivity Found !");
                             }
-                        } catch (Exception exception) {
-                            Log.d("TAG", "init_Data: " + exception.getMessage());
                         }
+                    } else {
+                        errorProgress(false);
                     }
+                } else if (listPostedJob != null && listPostedJob.size() != 0) {
+                    dismissProgress();
                 } else {
-                    errorProgress(false);
+                    errorProgress(true);
+                    binding.tvMsg.setText("Yet, No Job Found !");
+                    /*if (isOpenFIlter) {
+                        open_filter();
+                    }*/
                 }
-            } else if (listPostedJob != null && listPostedJob.size() != 0) {
-                dismissProgress();
             } else {
-                errorProgress(true);
-                binding.tvMsg.setText("Yet, No Job Found !");
-            }
-        } else {
-            dismissProgress();
-            if (currentPage != PAGE_START)
-                nursesAdapter.removeLoading();
+                dismissProgress();
+                if (currentPage != PAGE_START)
+                    nursesAdapter.removeLoading();
 
 
-            currentPage = Integer.parseInt(jobPostedModel.getData().getCurrentPage());
-            totalPage = Integer.parseInt(jobPostedModel.getData().getTotalPagesAvailable());
-            PaginationListener.PAGE_SIZE = Integer.parseInt(jobPostedModel.getData().getResultsPerPage());
+                currentPage = Integer.parseInt(jobPostedModel.getData().getCurrentPage());
+                totalPage = Integer.parseInt(jobPostedModel.getData().getTotalPagesAvailable());
+                PaginationListener.PAGE_SIZE = Integer.parseInt(jobPostedModel.getData().getResultsPerPage());
 
-            if (currentPage == totalPage) {
-                isLastPage = true;
-                nursesAdapter.removeLoading();
-            }
+                if (currentPage == totalPage) {
+                    isLastPage = true;
+                    nursesAdapter.removeLoading();
+                }
 
-            nursesAdapter.addItems(jobPostedModel.getData().getData());
+                nursesAdapter.addItems(jobPostedModel.getData().getData());
 //            binding.swipeRefresh.setRefreshing(false);
 
 
-            if (currentPage < totalPage) {
-                nursesAdapter.addLoading();
-            } else {
-                isLastPage = true;
+                if (currentPage < totalPage) {
+                    nursesAdapter.addLoading();
+                } else {
+                    isLastPage = true;
 //                nursesAdapter.removeLoading();
-            }
+                }
 
-            isLoading = false;
+                isLoading = false;
+            }
+        } catch (Exception exception) {
+            Log.d("TAG", "init_Data: " + exception.getMessage());
         }
     }
 
@@ -1140,13 +1163,14 @@ public class Nurse_Browse_Fragment extends Fragment {
 
     private void errorProgress(boolean status) {
 //        binding.swipeRefresh.setRefreshing(false);
+
         binding.recyclerView.setVisibility(View.GONE);
         binding.layProgress.setVisibility(View.VISIBLE);
         binding.pg.setVisibility(View.GONE);
         if (status)
-            binding.tvMsg.setText(getString(R.string.something_when_wrong));
+            binding.tvMsg.setText(getResources().getString(R.string.something_when_wrong));
         else
-            binding.tvMsg.setText(getString(R.string.no_internet));
+            binding.tvMsg.setText(getResources().getString(R.string.no_internet));
     }
 
     private void showProgress() {

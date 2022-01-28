@@ -30,12 +30,16 @@
                     android:src="@drawable/back" />
 
                 <TextView
+                    android:id="@+id/tv_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:fontFamily="@font/sf_500"
                     android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingHorizontal="5dp"
                     android:text="Infection Prevention"
                     android:textColor="@color/white"
                     android:textSize="27dp" />
@@ -252,6 +256,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:layout_marginBottom="30dp"
                         android:background="@color/white"
                         android:orientation="vertical">
 

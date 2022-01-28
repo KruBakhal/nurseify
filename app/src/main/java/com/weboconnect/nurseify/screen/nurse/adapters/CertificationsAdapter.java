@@ -55,7 +55,7 @@ public class CertificationsAdapter extends RecyclerView.Adapter<CertificationsAd
 
 
             Glide.with(holder.imageView.getContext()).load(list.get(pp).getCertificateImage())
-                    .placeholder(R.drawable.place_holder_img).into(holder.imageView);
+                    .placeholder(R.drawable.place_holder_img).error(R.drawable.place_holder_img).into(holder.imageView);
 
             holder.lay_Delete.setOnClickListener(new View.OnClickListener() {
                 @Override

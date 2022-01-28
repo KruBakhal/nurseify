@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.weboconnect.nurseify.AppController;
 import com.weboconnect.nurseify.R;
 import com.weboconnect.nurseify.databinding.ActivityHomeBinding;
 import com.weboconnect.nurseify.screen.nurse.model.UserProfileData;
@@ -64,6 +65,8 @@ public class HomeActivity extends AppCompatActivity {
     private void setData() {
         UserProfileData userProfileData = new SessionManager(HomeActivity.this).get_User();
         Glide.with(HomeActivity.this).load(userProfileData.getImage())
+                .placeholder(R.drawable.person)
+                .error(R.drawable.person)
                 .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -210,7 +213,7 @@ public class HomeActivity extends AppCompatActivity {
         update_user_status(true);
         if (!new SessionManager(this).get_NotificationToggle()) {
             binding.notification.setVisibility(View.GONE);
-        }else{
+        } else {
             binding.notification.setVisibility(View.VISIBLE);
         }
     }
@@ -221,8 +224,15 @@ public class HomeActivity extends AppCompatActivity {
         if (requestCode == 223 && resultCode == RESULT_OK) {
             if (!new SessionManager(this).get_NotificationToggle()) {
                 binding.notification.setVisibility(View.GONE);
-            }else{
+            } else {
                 binding.notification.setVisibility(View.VISIBLE);
+            }
+        } else if (requestCode == Constant.REQUEST_EDIT && resultCode == RESULT_OK) {
+            if (AppController.isEdit_Result) {
+                AppController.isEdit_Result = false;
+                if (myJobFragment != null) {
+                    myJobFragment.refresh();
+                }
             }
         }
     }
@@ -276,5 +286,4 @@ public class HomeActivity extends AppCompatActivity {
         super.onPause();
         update_user_status(false);
     }
-
 }

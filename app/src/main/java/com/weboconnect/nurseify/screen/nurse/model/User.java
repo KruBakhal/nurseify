@@ -2,6 +2,9 @@ package com.weboconnect.nurseify.screen.nurse.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.weboconnect.nurseify.utils.Constant;
+
+import java.util.List;
 
 public class User {
 
@@ -22,10 +25,30 @@ public class User {
     private Boolean status;
     @SerializedName("type")
     @Expose
-    private int type;
+    private String type;
     @SerializedName("specialty")
     @Expose
     private String specialty;
+    @SerializedName(Constant.CHAT_USERS_CHILD)
+    @Expose
+    private List<Chatlist> chat_users;
+    private Chatlist chat_model;
+
+    public Chatlist getChat_model() {
+        return chat_model;
+    }
+
+    public void setChat_model(Chatlist chat_model) {
+        this.chat_model = chat_model;
+    }
+
+    public List<Chatlist> getChat_users() {
+        return chat_users;
+    }
+
+    public void setChat_users(List<Chatlist> chat_users) {
+        this.chat_users = chat_users;
+    }
 
     public String getSpecialty() {
         return specialty;
@@ -75,11 +98,15 @@ public class User {
         this.status = status;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
+    }
+
+    public void setChat_users(Chatlist chat_model) {
+        this.chat_model=chat_model;
     }
 }

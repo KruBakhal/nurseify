@@ -2,6 +2,7 @@ package com.weboconnect.nurseify.screen.facility.my_jobs;
 
 import static com.weboconnect.nurseify.utils.PaginationListener.PAGE_START;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -11,27 +12,28 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.weboconnect.nurseify.R;
-import com.weboconnect.nurseify.adapter.ActiveFAdapter;
-import com.weboconnect.nurseify.adapter.Active_My_job_FAdapter;
 import com.weboconnect.nurseify.adapter.Completed_F_Adapter;
-import com.weboconnect.nurseify.adapter.PastAdapter;
 import com.weboconnect.nurseify.adapter.ProgressHolder;
 import com.weboconnect.nurseify.adapter.TabAdapter;
+import com.weboconnect.nurseify.databinding.DialogRatingBinding;
+import com.weboconnect.nurseify.databinding.DialogReviewBinding;
 import com.weboconnect.nurseify.databinding.FragmentNurseBinding;
 import com.weboconnect.nurseify.intermediate.ItemCallback;
-import com.weboconnect.nurseify.intermediate.OfferedJobCallback;
 import com.weboconnect.nurseify.screen.facility.model.FacilityJobModel;
 import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
-import com.weboconnect.nurseify.screen.facility.ui.BrowseFFragment;
 import com.weboconnect.nurseify.screen.facility.ui.MyJobFFragment;
-import com.weboconnect.nurseify.screen.nurse.adapters.CompletedAdapter;
+import com.weboconnect.nurseify.screen.nurse.adapters.RatingAdapter;
 import com.weboconnect.nurseify.screen.nurse.model.CompletedJobModel;
+import com.weboconnect.nurseify.screen.nurse.model.ResponseModel;
 import com.weboconnect.nurseify.utils.PaginationListener;
 import com.weboconnect.nurseify.utils.SessionManager;
 import com.weboconnect.nurseify.utils.Utils;
@@ -65,6 +67,10 @@ public class Complete_Jobs_Fragment extends Fragment {
     private boolean isFilterApply = false;
     private List<Facility_JobDatum> listPostedJob = new ArrayList<>();
     private PaginationListener pagination;
+    public String selected_onBoard;
+    public String selected_onNurse;
+    public String selected_onLeader;
+    public String selected_onTool;
 
     public Complete_Jobs_Fragment() {
     }
@@ -165,10 +171,194 @@ public class Complete_Jobs_Fragment extends Fragment {
 
             @Override
             public void onClick(int position) {
-
+                if (listPostedJob.get(position).getRating_flag() != null
+                        && listPostedJob.get(position).getRating_flag().equals("0")) {
+                    ratingDailog(listPostedJob.get(position).getJobId(), listPostedJob.get(position).getOffered_nurse_id());
+                } else {
+                    open_rated_popup(listPostedJob.get(position).getRatingComment());
+                }
             }
         });
         binding.recyclerView.setAdapter(pastAdapter);
+    }
+
+    private void open_rated_popup(Facility_JobDatum.RatingComment ratingComment) {
+        DialogReviewBinding dialogRatingBinding = DialogReviewBinding.inflate(getActivity().getLayoutInflater());
+        final Dialog dialog = new Dialog(getActivity(), R.style.AlertDialog);
+        dialog.setContentView(dialogRatingBinding.getRoot());
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(true);
+        dialog.show();
+        try {
+            Glide.with(getActivity()).load(ratingComment.getNurseImage())
+                    .placeholder(R.drawable.person).error(R.drawable.person)
+                    .into(dialogRatingBinding.imgProfile);
+        } catch (Exception e) {
+
+        }
+        dialogRatingBinding.tvFacilityName.setText(ratingComment.getNurseName());
+        dialogRatingBinding.tvRating.setText(ratingComment.getRating());
+        if (!TextUtils.isEmpty(ratingComment.getRating()))
+            dialogRatingBinding.reatingBar.setRating(Float.parseFloat(ratingComment.getRating()));
+        dialogRatingBinding.tvReview.setText(ratingComment.getExperience());
+        dialogRatingBinding.close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void ratingDailog(String jobId, String offered_nurse_id) {
+//        final View loc = getLayoutInflater().from(CompletedJobDetailsActivity.this).inflate(R.layout.dialog_rating, null);
+        DialogRatingBinding dialogRatingBinding = DialogRatingBinding.inflate(getActivity().getLayoutInflater());
+        final Dialog dialog = new Dialog(getActivity(), R.style.AlertDialog);
+        dialog.setContentView(dialogRatingBinding.getRoot());
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(false);
+        dialogRatingBinding.tvTitle.setText("Rate The Nurse");
+        dialogRatingBinding.tv1.setText("Clinical Skills");
+        dialogRatingBinding.tv2.setText("Nurse Teamwork");
+        dialogRatingBinding.tv3.setText("Interpersonal Skills");
+        dialogRatingBinding.tv4.setText("Work Ethic ");
+        dialogRatingBinding.close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        ArrayList<String> onBoard = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            onBoard.add("" + (i + 1));
+        }
+        RatingAdapter ratingAdapter1 = new RatingAdapter(Complete_Jobs_Fragment.this, 1, onBoard, true);
+        dialogRatingBinding.rvOnBoard.setAdapter(ratingAdapter1);
+        RatingAdapter ratingAdapter2 = new RatingAdapter(Complete_Jobs_Fragment.this, 2, onBoard, true);
+        dialogRatingBinding.rvNurse.setAdapter(ratingAdapter2);
+        RatingAdapter ratingAdapter3 = new RatingAdapter(Complete_Jobs_Fragment.this, 3, onBoard, true);
+        dialogRatingBinding.rvLeader.setAdapter(ratingAdapter3);
+        RatingAdapter ratingAdapter4 = new RatingAdapter(Complete_Jobs_Fragment.this, 4, onBoard, true);
+        dialogRatingBinding.rvTools.setAdapter(ratingAdapter4);
+
+
+        dialogRatingBinding.textSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkValidation()) {
+                    if (Utils.isNetworkAvailable(getActivity())) {
+                        performRating_Call((int) dialogRatingBinding.reatingBar.getRating(),
+                                dialogRatingBinding.edReview.getText().toString());
+                    } else {
+                        Utils.displayToast(getActivity(), getActivity().getResources().getString(R.string.no_internet));
+                    }
+                }
+//                dialog.dismiss();
+            }
+
+            private boolean checkValidation() {
+                if (dialogRatingBinding.reatingBar.getRating() == 0) {
+                    Utils.displayToast(getActivity(), "Please give rating to nurse first !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onBoard)) {
+                    Utils.displayToast(getActivity(), "Please Rate Clinical Skills !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onNurse)) {
+                    Utils.displayToast(getActivity(), "Please Rate Nurse Teamwork !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onLeader)) {
+                    Utils.displayToast(getActivity(), "Please Rate Interpersonal Skills !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(selected_onTool)) {
+                    Utils.displayToast(getActivity(), "Please Work Ethic !");
+                    return false;
+                }
+                if (TextUtils.isEmpty(dialogRatingBinding.edReview.getText().toString())) {
+                    Utils.displayToast(getActivity(), "Please, enter your experience !");
+                    return false;
+                }
+
+                return true;
+            }
+
+            private void performRating_Call(int rating, String review) {
+                if (!Utils.isNetworkAvailable(getActivity())) {
+                    Utils.displayToast(getActivity(), getActivity().getResources().getString(R.string.no_internet));
+                    return;
+                }
+                Utils.displayToast(getActivity(), null); // to cancel toast if showing on screen
+//                progressDialog.show();
+                String user_id = new SessionManager(getActivity()).get_user_register_Id();
+                RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+                RequestBody user_id11 = RequestBody.create(MediaType.parse("multipart/form-data"), offered_nurse_id);
+                RequestBody user_id2 = RequestBody.create(MediaType.parse("multipart/form-data"), jobId);
+                RequestBody user_id3 = RequestBody.create(MediaType.parse("multipart/form-data"), "" + rating);
+                RequestBody user_id4 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onBoard);
+                RequestBody user_id5 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onNurse);
+                RequestBody user_id6 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onLeader);
+                RequestBody user_id7 = RequestBody.create(MediaType.parse("multipart/form-data"), selected_onTool);
+                RequestBody user_id8 = RequestBody.create(MediaType.parse("multipart/form-data"), review);
+
+                Call<ResponseModel> call = RetrofitClient.getInstance().getFacilityApi()
+                        .call_nurse_rating(user_id1, user_id11, user_id2, user_id3, user_id4, user_id5, user_id6, user_id7, user_id8);
+
+                call.enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        try {
+                            assert response.body() != null;
+                            if (!response.body().getApiStatus().equals("1")) {
+//                                progressDialog.dismiss();
+                                return;
+                            }
+                            if (response.isSuccessful()) {
+//                                progressDialog.dismiss();
+                                ResponseModel jobModel = response.body();
+                                Utils.displayToast(getActivity(), jobModel.getMessage());
+                                dialog.dismiss();
+                                ratingDailogDone();
+
+                            } else {
+                                Utils.displayToast(getActivity(), "Failed to submit your rating details");
+//                                progressDialog.dismiss();
+                            }
+                        } catch (Exception e) {
+//                            progressDialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+//                        progressDialog.dismiss();
+                    }
+                });
+            }
+
+        });
+        dialog.show();
+    }
+
+
+    private void ratingDailogDone() {
+        final View loc = getActivity().getLayoutInflater().from(getActivity()).inflate(R.layout.dialog_rating_done, null);
+        final Dialog dialog = new Dialog(getActivity(), R.style.AlertDialog);
+        dialog.setContentView(loc);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(false);
+        dialog.show();
+        TextView text_ok = dialog.findViewById(R.id.text_ok);
+        text_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                refreshData();
+            }
+        });
     }
 
     public void fetchData() {
@@ -261,7 +451,7 @@ public class Complete_Jobs_Fragment extends Fragment {
 //                pastAdapter.removeLoading();
                 errorProgress(true);
                 binding.tvMsg.setText("Yet, No Job Found !");
-                isFirstTime=true;
+                isFirstTime = true;
 
             }
         } else {

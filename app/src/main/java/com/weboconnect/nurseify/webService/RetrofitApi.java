@@ -483,7 +483,8 @@ public interface RetrofitApi {
 
     @Multipart
     @POST("view-job-detail")
-    Call<MyJobModel> call_view_job_detail(@Part("user_id") RequestBody user_id, @Part("offer_id") RequestBody offer_id);
+    Call<MyJobModel> call_view_job_detail(@Part("user_id") RequestBody user_id,
+                                          @Part("offer_id") RequestBody offer_id);
 
     @Multipart
     @POST("facility-rating")

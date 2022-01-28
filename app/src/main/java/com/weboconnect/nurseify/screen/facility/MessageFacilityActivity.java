@@ -28,10 +28,12 @@ import com.weboconnect.nurseify.screen.nurse.model.Chatlist;
 import com.weboconnect.nurseify.screen.nurse.model.User;
 import com.weboconnect.nurseify.utils.Constant;
 import com.weboconnect.nurseify.utils.SessionManager;
+import com.weboconnect.nurseify.utils.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MessageFacilityActivity extends AppCompatActivity {
 
@@ -39,10 +41,15 @@ public class MessageFacilityActivity extends AppCompatActivity {
     private String reciever_id;
     private DatabaseReference reference;
     private String sender_id;
-    private ArrayList<Chatlist> mchat;
+    private List<Chatlist> mchat = new ArrayList<>();
     private ChatAdapter chatAdapter;
     private NurseDatum nurse_model;
     private FacilityProfile facility_model;
+    private String reciever_profile_path;
+    private String reciever_name;
+    private String both_user_key;
+    private SessionManager sessionManager;
+    private ValueEventListener messeageRefrence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,26 +62,29 @@ public class MessageFacilityActivity extends AppCompatActivity {
                 finish();
             }
         });
+        sessionManager = new SessionManager(this);
         String str = getIntent().getStringExtra(Constant.STR_RESPONSE_DATA);// status_constraint = getIntent().getBooleanExtra("from_applied", false);
-        reciever_id = getIntent().getStringExtra("sender_id");
-        sender_id = new SessionManager(MessageFacilityActivity.this).get_user_register_Id();
+        reciever_id = getIntent().getStringExtra("receiver_id");
+        sender_id = sessionManager.get_user_register_Id();
         if (!TextUtils.isEmpty(str)) {
             Type type = new TypeToken<NurseDatum>() {
             }.getType();
             nurse_model = new Gson().fromJson(str, type);
         }
-
-        facility_model = new SessionManager(MessageFacilityActivity.this).get_facilityProfile();
-
+        facility_model = sessionManager.get_facilityProfile();
+        reciever_profile_path = nurse_model.getNurseLogo();
+        reciever_name = nurse_model.getFirstName() + " " + nurse_model.getLastName();
+        binding.tvTitle.setText(reciever_name);
+        Glide.with(this).load(nurse_model.getNurseLogo())
+                .placeholder(R.drawable.person).error(R.drawable.person).into(binding.imgProfile);
 
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                notify = true;
                 String msg = binding.textSend.getText().toString();
-                String time = String.valueOf(System.currentTimeMillis());
                 if (!msg.equals("")) {
-                    sendMessage(sender_id, reciever_id, msg, time);
+                    sendMessage(msg);
                 } else {
                     Toast.makeText(MessageFacilityActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
                 }
@@ -83,99 +93,78 @@ public class MessageFacilityActivity extends AppCompatActivity {
         });
 
 
-        reference = FirebaseDatabase.getInstance().getReference("users").child(reciever_id);
+        both_user_key = Utils.getCombine_Node_Key(sessionManager.get_TYPE(),
+                reciever_id, sessionManager.get_user_register_Id());
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                if (user == null) {
-                    mchat = new ArrayList<>();
-                    chatAdapter = new ChatAdapter(MessageFacilityActivity.this, mchat, null);
-                    binding.recyclerViewJobs.setAdapter(chatAdapter);
-                    return;
-                }
-                if (!TextUtils.isEmpty(user.getFull_name()))
-                    binding.tvTitle.setText(user.getFull_name());
-                if (TextUtils.isEmpty(user.getProfile_path())) {
-                    binding.imgProfile.setImageResource(R.drawable.person);
-                } else {
-                    //and this
-                    Glide.with(getApplicationContext()).load(user.getProfile_path())
-                            .error(R.drawable.person).into(binding.imgProfile);
-                }
+        reference = FirebaseDatabase.getInstance().getReference(Constant.CHAT_NODE).child(both_user_key);
 
-                readMesagges(sender_id, reciever_id, user.getProfile_path());
-            }
+        messeageRefrence = reference.orderByChild(Constant.TIME_STAMP)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        mchat.clear();
+                        if (dataSnapshot.getChildren() != null && dataSnapshot.hasChildren())
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Chatlist chat = snapshot.getValue(Chatlist.class);
+                                mchat.add(chat);
+                                chatAdapter = new ChatAdapter(MessageFacilityActivity.this, mchat,
+                                        null);
+                                binding.recyclerViewJobs.setAdapter(chatAdapter);
+                            }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
 
-        seenMessage(reciever_id, sender_id);
+        seenMessage();
     }
 
-    private void seenMessage(String chat_user_id, final String userid) {
-        reference = FirebaseDatabase.getInstance().getReference("chats");
-        ValueEventListener seenListener = reference.addValueEventListener(new ValueEventListener() {
+    private void seenMessage() {
+        reference = FirebaseDatabase.getInstance().getReference(Constant.CHAT_NODE)
+                .child(both_user_key);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chatlist chat = snapshot.getValue(Chatlist.class);
-                    if (chat.getReceiver().equals(userid) && chat.getSender().equals(chat_user_id)) {
-//                        HashMap<String, Object> hashMap = new HashMap<>();
-//                        hashMap.put("isseen", true);
-                        snapshot.getRef().child("is_seen").setValue(1);
+                    if (chat.getReceiver().equals(sender_id)) {
+                        snapshot.getRef().child(Constant.IS_SEEN).setValue(1);
                     }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
     }
 
-    private void sendMessage(String sender, final String receiver, String message, String time) {
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
+    private void sendMessage(String message) {
+        reference = FirebaseDatabase.getInstance().getReference();
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("sender", sender);
-        hashMap.put("receiver", receiver);
+        hashMap.put("sender", sender_id);
+        hashMap.put("receiver", reciever_id);
         hashMap.put("message", message);
-        hashMap.put("time_stamp", System.currentTimeMillis());
+        hashMap.put("timestamp", System.currentTimeMillis());
         hashMap.put("is_seen", 0);
         hashMap.put("type", "text");
-        reference.child("chats").push().setValue(hashMap);
-        HashMap<String, Object> mech_hashMap = get_NUrse_Hash();
-        reference.child(Constant.USER_NODE).child(receiver)
+
+        reference.child(Constant.CHAT_NODE).child(both_user_key).push().setValue(hashMap);
+
+        HashMap<String, Object> user_hashMap = get_User_Hash();
+        HashMap<String, Object> mech_hashMap = get_Mech_Hash();
+
+        reference.child(Constant.USER_NODE).child(sender_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot == null || snapshot.getValue() == null) {
                             // users nodes update profile
-                            reference.child(Constant.USER_NODE).child(receiver)
-                                    .updateChildren(mech_hashMap);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        HashMap<String, Object> user_hashMap = get_User_Hash(sender, receiver, message, time);
-        reference.child(Constant.USER_NODE).child(sender)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot == null || snapshot.getValue() == null) {
-                            // users nodes update profile
-                            reference.child(Constant.USER_NODE).child(sender)
+                            reference.child(Constant.USER_NODE).child(sender_id)
                                     .updateChildren(user_hashMap);
                         }
                     }
@@ -185,57 +174,106 @@ public class MessageFacilityActivity extends AppCompatActivity {
 
                     }
                 });
-    }
 
-    private HashMap<String, Object> get_User_Hash(String sender, String receiver, String message, String time) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("email", facility_model.getFacilityEmail());
-        hashMap.put("id", facility_model.getUserId());
-        hashMap.put("full_name", facility_model.getFacilityName());
-        hashMap.put("profile_path", facility_model.getFacilityLogo());
-        hashMap.put("status", true);
-        hashMap.put("specialty", facility_model.getFacilityTypeDefinition());
-        hashMap.put("type", 2); // facility side        return mech_hashMap;
-        return hashMap;
-    }
-
-    private HashMap<String, Object> get_NUrse_Hash() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("email", nurse_model.getNurseEmail());
-        hashMap.put("id", nurse_model.getUserId());
-        hashMap.put("full_name", nurse_model.getFirstName() + " " + nurse_model.getLastName());
-        hashMap.put("profile_path", nurse_model.getNurseLogo());
-        hashMap.put("status", false);
-        hashMap.put("specialty", " ");
-        hashMap.put("type", 1); // nurse side        return mech_hashMap;
-        return hashMap;
-    }
-
-    private void readMesagges(final String myid, final String userid, final String imageurl) {
-        mchat = new ArrayList<>();
-
-        reference = FirebaseDatabase.getInstance().getReference("chats");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mchat.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chatlist chat = snapshot.getValue(Chatlist.class);
-                    if ((chat.getReceiver().equals(myid) && chat.getSender().equals(userid))
-                            || (chat.getReceiver().equals(userid) && chat.getSender().equals(myid))) {
-                        mchat.add(chat);
+        reference.child(Constant.USER_NODE).child(reciever_id)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot == null || snapshot.getValue() == null) {
+                            // users nodes update profile
+                            reference.child(Constant.USER_NODE).child(reciever_id)
+                                    .updateChildren(mech_hashMap);
+                        }
                     }
-                    chatAdapter = new ChatAdapter(MessageFacilityActivity.this, mchat, imageurl);
-                    binding.recyclerViewJobs.setAdapter(chatAdapter);
-                    chatAdapter.notifyDataSetChanged();
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
+
+        reference = FirebaseDatabase.getInstance().getReference();
+        String send, receive;
+
+        //sender user node
+        reference.child(Constant.USER_NODE)
+                .child(sender_id).child(Constant.CHAT_USERS_CHILD)
+                .child(reciever_id)
+                .updateChildren(hashMap);
+
+        // receiver user node
+        reference.child(Constant.USER_NODE)
+                .child(reciever_id).child(Constant.CHAT_USERS_CHILD)
+                .child(sender_id)
+                .updateChildren(hashMap);
+    }
+
+    private HashMap<String, Object> get_User_Hash() {
+        String userData = sessionManager.get_TYPE();
+        String email, full_name, id, profile, specialty, status, type;
+        if (userData.equals(Constant.CONST_FACULTY_TYPE)) {
+            email = sessionManager.get_facilityProfile().getFacilityEmail();
+            profile = sessionManager.get_facilityProfile().getFacilityLogo();
+            full_name = sessionManager.get_facilityProfile().getFacilityName();
+            id = sessionManager.get_facilityProfile().getUserId();
+            specialty = " " + sessionManager.get_facilityProfile().getFacilityTypeDefinition();
+            status = "true";
+            type = "2";
+        } else {
+            email = sessionManager.get_User().getEmail();
+            profile = sessionManager.get_User().getImage();
+            full_name = sessionManager.get_User().getFullName();
+            id = sessionManager.get_User().getId();
+            specialty = " " + sessionManager.get_facilityProfile().getFacilityTypeDefinition();
+            status = "true";
+            type = "1";
+        }
+        if (TextUtils.isEmpty(specialty))
+            specialty = " ";
+        HashMap<String, Object> user_hashMap = new HashMap<>();
+        user_hashMap.put(Constant.EMAIL_ID, email);
+        user_hashMap.put(Constant.ID, id);
+        user_hashMap.put(Constant.FULL_NAME, full_name);
+        user_hashMap.put(Constant.PROFILE_PATH, profile);
+        user_hashMap.put(Constant.ONLINE_STATUS, true);
+        user_hashMap.put(Constant.TYPE, type);
+        user_hashMap.put(Constant.SPECIALITY, specialty);
+        return user_hashMap;
+
+    }
+
+    private HashMap<String, Object> get_Mech_Hash() {
+
+        String userData = sessionManager.get_TYPE();
+        String email, full_name, id, profile, specialty, status, type;
+        if (userData.equals(Constant.CONST_FACULTY_TYPE)) {
+            email = nurse_model.getNurseEmail();
+            profile = nurse_model.getNurseLogo();
+            full_name = nurse_model.getFirstName() + " " + nurse_model.getLastName();
+            specialty = " ";
+            id = nurse_model.getUserId();
+            status = "false";
+            type = "1";
+        } else {
+            email = nurse_model.getNurseEmail();
+            profile = nurse_model.getNurseLogo();
+            full_name = nurse_model.getFirstName() + " " + nurse_model.getLastName();
+            specialty = nurse_model.getSpecialtyDefinition().get(0).getName();
+            id = nurse_model.getUserId();
+            status = "true";
+            type = "1";
+        }
+        if (TextUtils.isEmpty(specialty))
+            specialty = " ";
+        HashMap<String, Object> mech_hashMap = new HashMap<>();
+        mech_hashMap.put(Constant.EMAIL_ID, email);
+        mech_hashMap.put(Constant.ID, id);
+        mech_hashMap.put(Constant.FULL_NAME, full_name);
+        mech_hashMap.put(Constant.PROFILE_PATH, profile);
+        mech_hashMap.put(Constant.ONLINE_STATUS, true);
+        mech_hashMap.put(Constant.TYPE, type);
+        mech_hashMap.put(Constant.SPECIALITY, specialty);
+        return mech_hashMap;
     }
 
     @Override
@@ -261,7 +299,7 @@ public class MessageFacilityActivity extends AppCompatActivity {
         }*/
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(Constant.USER_NODE)
-                .child(new SessionManager(MessageFacilityActivity.this).get_user_register_Id());
+                .child(sessionManager.get_user_register_Id());
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -273,7 +311,7 @@ public class MessageFacilityActivity extends AppCompatActivity {
                         try {
                             HashMap<String, Object> sdsd = new HashMap<>();
                             sdsd.put("status", status);
-                            String userid = new SessionManager(MessageFacilityActivity.this).get_user_register_Id();
+                            String userid = sessionManager.get_user_register_Id();
                             FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
                                     .child(userid).child(Constant.ONLINE_STATUS)
                                     .setValue(status);

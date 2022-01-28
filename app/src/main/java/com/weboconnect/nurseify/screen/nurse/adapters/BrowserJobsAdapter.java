@@ -44,6 +44,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
     private List<JobModel.JobDatum> copy_contactList = new ArrayList<>();
     Activity activity;
     private long mLastClickTime = 0;
+
     public BrowserJobsAdapter(Activity activity, List<JobModel.JobDatum> list_jobs, BrowseJobInteface browseJobInteface) {
         this.activity = activity;
         this.list_jobs = list_jobs;
@@ -63,9 +64,9 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
     }
 
     public void removeAll() {
-      if(list_jobs!=null && list_jobs.size()!=0)
-          list_jobs.clear();
-      notifyDataSetChanged();
+        if (list_jobs != null && list_jobs.size() != 0)
+            list_jobs.clear();
+        notifyDataSetChanged();
     }
 
     public interface BrowseJobInteface {
@@ -100,7 +101,6 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
     }
 
 
-
     @Override
     public int getItemCount() {
         return list_jobs.size();
@@ -113,7 +113,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                 tv_applied, tv_shift_duration, tv_hourly_rate, tv_weeks_days;
         public LinearLayout lay_apply;
         public TextView tv_applied1;
-        public View lay_share, lay_heart,edit;
+        public View lay_share, lay_heart, edit;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -141,7 +141,8 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
 
         public void bind(JobModel.JobDatum datum, int position) {
             try {
-                Glide.with(itemView.getContext()).load(datum.getFacilityLogo()).into(img);
+                Glide.with(itemView.getContext()).load(datum.getFacilityLogo())
+                        .placeholder(R.drawable.person).error(R.drawable.person).into(img);
             } catch (Exception e) {
 
             }
@@ -150,8 +151,8 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
             tv_created_at_definition.setText("" + datum.getCreatedAtDefinition());
             tv_assignment_duration_definition.setText("" + datum.getPreferredAssignmentDurationDefinition());
             tv_shift_duration.setText("" + datum.getPreferredShiftDurationDefinition());
-            tv_applied.setText("" + datum.getTotalApplied()+"+ Applied");
-            String days = null;
+            tv_applied.setText("" + datum.getTotalApplied() + "+ Applied");
+            String days = "";
             for (int i = 0; i < datum.getPreferredDaysOfTheWeek().size(); i++) {
                 String str = datum.getPreferredDaysOfTheWeek().get(i);
                 if (TextUtils.isEmpty(days)) {
@@ -171,6 +172,8 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                         } else {
                             days = (str.substring(0, 1).toUpperCase());
                         }
+                    } else {
+                        days = (str.substring(0, 1).toUpperCase());
                     }
                 } else {
                     if (str.startsWith("T")) {
@@ -189,6 +192,8 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                         } else {
                             days = days + ", " + (str.substring(0, 1).toUpperCase());
                         }
+                    } else {
+                        days = days + "," + (str.substring(0, 1).toUpperCase());
                     }
                     /*if (str.equals("Thursday")) {
                         days = days + ",Th";
@@ -251,6 +256,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                 }
             });*/
 
+            String finalDays = days;
             lay_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -259,9 +265,13 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                    String shareBody = datum.getName() + "\n" + datum.getPreferredShiftDurationDefinition()
-                            + "\n" + datum.getPreferredAssignmentDurationDefinition()
-                            + "\n" + datum.getPreferredShiftDurationDefinition();
+                    String shareBody = "Facility Name: " + datum.getName()
+                            + "\nTitle: " + datum.getPreferredSpecialtyDefinition()
+                            + "\nShift: " + datum.getPreferredShiftDurationDefinition()
+                            + "\nAssignment: " + datum.getPreferredAssignmentDurationDefinition()
+                            + "\nWork Days: " + finalDays
+                            + "\nHourly Rate: " + datum.getPreferredHourlyPayRate()+" /Hr"
+                            + "\nhttps://play.google.com/store/apps/details?id=" + activity.getPackageName();
                     intent.setType("text/plain");
                     intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     activity.startActivity(Intent.createChooser(intent, "Share"));
@@ -316,7 +326,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                             ResponseModel jobModel = response.body();
                             datum.setIsLiked(finalIsLiked);
                             list_jobs.set(position, datum);
-                            browseJobInteface.onClick_Like(datum,position);
+                            browseJobInteface.onClick_Like(datum, position);
                             notifyItemChanged(position);
                         } else {
 

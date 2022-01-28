@@ -56,6 +56,7 @@
 
                     <TextView
                         android:id="@+id/tv_name"
+                        android:maxLines="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/sf_400"
@@ -111,6 +112,7 @@
                     android:id="@+id/lay_count"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
+                    android:visibility="invisible"
                     android:background="@drawable/bk_message_count"
                     android:gravity="center">
 

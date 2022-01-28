@@ -360,26 +360,26 @@ public class Add_Job_2_Fragment extends Fragment {
                     binding.edDescription.setError("Enter Description First !");
                     return false;
                 }
-                if (!(Utils.patternAlphabetNumbersSpace.matcher(desc).find())) {
+                /*if (!(Utils.patternAlphabetNumbersSpace.matcher(desc).find())) {
                     binding.edDescription.setError("Description Can Contain Alphabets, Numbers, Space !");
                     return false;
-                }
+                }*/
                 if (TextUtils.isEmpty(respo)) {
                     binding.edQualifications.setError("Enter Responsibilities First !");
                     return false;
                 }
-                if (!(Utils.patternAlphabetNumbersSpace.matcher(respo).find())) {
+                /*if (!(Utils.patternAlphabetNumbersSpace.matcher(respo).find())) {
                     binding.edQualifications.setError("Responsibilities Can Contain Alphabets, Numbers, Space !");
                     return false;
-                }
+                }*/
                 if (TextUtils.isEmpty(qual)) {
                     binding.edQualifications.setError("Enter Qualifications First !");
                     return false;
                 }
-                if (!(Utils.patternAlphabetNumbersSpace.matcher(qual).find())) {
+                /*if (!(Utils.patternAlphabetNumbersSpace.matcher(qual).find())) {
                     binding.edQualifications.setError("Qualifications Can Contain Alphabets, Numbers, Space !");
                     return false;
-                }
+                }*/
                 if (!TextUtils.isEmpty(youtube) && !(Utils.patternYoutubeURL.matcher(youtube).find())) {
                     binding.edYoutube.setError("Enter Youtube/Vinmo URL In Proper Format !");
                     return false;

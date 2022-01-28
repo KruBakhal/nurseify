@@ -176,6 +176,8 @@ public class RoleActivity extends AppCompatActivity {
                 }
             });
             binding.rvPhotos.setAdapter(photoFilesAdapter);
+            binding.rvPhotos.setVisibility(View.VISIBLE);
+            binding.tvBlank1.setVisibility(View.GONE);
         }
         List<UserProfileData.AdditionalFile> sdsd1 =
                 nurseProfileModel.getData().getRoleInterest().getAdditionalFiles();
@@ -196,6 +198,9 @@ public class RoleActivity extends AppCompatActivity {
                 }
             });
             binding.rvFiles.setAdapter(filesAdapter);
+            binding.rvFiles.setVisibility(View.VISIBLE);
+            binding.tvBlank2.setVisibility(View.GONE);
+
         }
     }
 

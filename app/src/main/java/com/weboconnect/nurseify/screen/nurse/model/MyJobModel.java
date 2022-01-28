@@ -2,6 +2,7 @@ package com.weboconnect.nurseify.screen.nurse.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.weboconnect.nurseify.screen.facility.model.Facility_JobDatum;
 
 import java.util.List;
 
@@ -55,6 +56,12 @@ public class MyJobModel {
         @SerializedName("facility_name")
         @Expose
         private String facilityName;
+        @SerializedName("preferred_work_location")
+        @Expose
+        private String preferredWorkLocation;
+        @SerializedName("preferred_work_location_definition")
+        @Expose
+        private String preferredWorkLocationDefinition;
         @SerializedName("job_title")
         @Expose
         private String jobTitle;
@@ -91,9 +98,72 @@ public class MyJobModel {
         @SerializedName("end_date")
         @Expose
         private String endDate;
-        @SerializedName("rating")
+        @SerializedName("rating_flag")
         @Expose
-        private List<Object> rating = null;
+        private String rating_flag;
+
+
+        @SerializedName("rating_comment")
+        @Expose
+        private RatingComment ratingComment;
+
+        public RatingComment getRatingComment() {
+            return ratingComment;
+        }
+
+        public void setRatingComment(RatingComment ratingComment) {
+            this.ratingComment = ratingComment;
+        }
+
+        public class RatingComment {
+
+
+            @SerializedName("rating")
+            @Expose
+            private String rating;
+            @SerializedName("experience")
+            @Expose
+            private String experience;
+            @SerializedName("nurse_name")
+            @Expose
+            private String nurseName;
+            @SerializedName("nurse_image")
+            @Expose
+            private String nurseImage;
+
+            public String getRating() {
+                return rating;
+            }
+
+            public void setRating(String rating) {
+                this.rating = rating;
+            }
+
+            public String getExperience() {
+                return experience;
+            }
+
+            public void setExperience(String experience) {
+                this.experience = experience;
+            }
+
+            public String getNurseName() {
+                return nurseName;
+            }
+
+            public void setNurseName(String nurseName) {
+                this.nurseName = nurseName;
+            }
+
+            public String getNurseImage() {
+                return nurseImage;
+            }
+
+            public void setNurseImage(String nurseImage) {
+                this.nurseImage = nurseImage;
+            }
+
+        }
 
         public String getOfferId() {
             return offerId;
@@ -101,6 +171,14 @@ public class MyJobModel {
 
         public void setOfferId(String offerId) {
             this.offerId = offerId;
+        }
+
+        public String getRating_flag() {
+            return rating_flag;
+        }
+
+        public void setRating_flag(String rating_flag) {
+            this.rating_flag = rating_flag;
         }
 
         public String getJobId() {
@@ -125,6 +203,22 @@ public class MyJobModel {
 
         public void setFacilityName(String facilityName) {
             this.facilityName = facilityName;
+        }
+
+        public String getPreferredWorkLocation() {
+            return preferredWorkLocation;
+        }
+
+        public void setPreferredWorkLocation(String preferredWorkLocation) {
+            this.preferredWorkLocation = preferredWorkLocation;
+        }
+
+        public String getPreferredWorkLocationDefinition() {
+            return preferredWorkLocationDefinition;
+        }
+
+        public void setPreferredWorkLocationDefinition(String preferredWorkLocationDefinition) {
+            this.preferredWorkLocationDefinition = preferredWorkLocationDefinition;
         }
 
         public String getJobTitle() {
@@ -223,12 +317,12 @@ public class MyJobModel {
             this.endDate = endDate;
         }
 
-        public List<Object> getRating() {
-            return rating;
+        public RatingComment getRating() {
+            return ratingComment;
         }
 
-        public void setRating(List<Object> rating) {
-            this.rating = rating;
+        public void setRating(RatingComment rating) {
+            this.ratingComment = rating;
         }
 
     }
