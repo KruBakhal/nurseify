@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.weboconnect.nurseify">
+    package="com.nurseify.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,7 +13,7 @@
         android:value="true" />
 
     <application
-        android:name=".AppController"
+        android:name="com.nurseify.app.AppController"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
@@ -24,50 +24,50 @@
         android:theme="@style/Theme.nurseify"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".screen.facility.Add_Jobs_Activity"
+            android:name="com.nurseify.app.screen.facility.Add_Jobs_Activity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".screen.ForgetPasswordActivity"
+            android:name="com.nurseify.app.screen.ForgetPasswordActivity"
             android:exported="false" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".screen.facility.NotificationActivity" />
-        <activity android:name=".screen.facility.MessageFacilityActivity" />
-        <activity android:name=".screen.facility.NurseDetailsActivity" />
-        <activity android:name=".screen.facility.FacilityDetails4Activity" />
-        <activity android:name=".screen.facility.FacilityDetails3Activity" />
-        <activity android:name=".screen.facility.FacilityDetails2Activity" />
-        <activity android:name=".screen.facility.FacilityDetails1Activity" />
-        <activity android:name=".screen.facility.AddJob2Activity" />
-        <activity android:name=".screen.facility.AddJobActivity1" />
-        <activity android:name=".screen.facility.AppliedNursesActivity" />
-        <activity android:name=".screen.facility.RegistrationFActivity" />
-        <activity android:name=".screen.facility.HomeFActivity" />
-        <activity android:name=".screen.facility.LoginFacilityActivity" />
-        <activity android:name=".screen.nurse.OfferedJobsActivityActivity" />
-        <activity android:name=".screen.nurse.CompletedJobDetailsActivity" />
-        <activity android:name=".screen.nurse.ActiveJobDetailsActivity" />
-        <activity android:name=".screen.PrivacyActivity" />
-        <activity android:name=".screen.AboutActivity" />
-        <activity android:name=".screen.nurse.SettingActivity" />
-        <activity android:name=".screen.nurse.RoleActivity" />
-        <activity android:name=".screen.nurse.WorkHistoryActivity" />
-        <activity android:name=".screen.nurse.HourlyRateActivity" />
-        <activity android:name=".screen.nurse.PersonalDetailsActivity" />
-        <activity android:name=".screen.nurse.MessageActivity" />
-        <activity android:name=".screen.nurse.Browse_Facility_Offered_JobDetailsActivity" />
-        <activity android:name=".screen.nurse.RegisterActivity" />
-        <activity android:name=".screen.nurse.CreateProfileActivity" />
-        <activity android:name=".screen.nurse.HomeActivity" />
-        <activity android:name=".screen.nurse.SignupDetailsActivity" />
-        <activity android:name=".screen.nurse.SignupActivity" />
-        <activity android:name=".screen.nurse.LoginActivity" />
-        <activity android:name=".screen.LoginSelectActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.nurseify.app.screen.facility.NotificationActivity" />
+        <activity android:name="com.nurseify.app.screen.facility.MessageFacilityActivity" />
+        <activity android:name="com.nurseify.app.screen.facility.NurseDetailsActivity" />
+        <activity android:name="com.nurseify.app.screen.facility.FacilityDetails4Activity" />
+        <activity android:name="com.nurseify.app.screen.facility.FacilityDetails3Activity" />
+        <activity android:name="com.nurseify.app.screen.facility.FacilityDetails2Activity" />
+        <activity android:name="com.nurseify.app.screen.facility.FacilityDetails1Activity" />
+        <activity android:name="com.nurseify.app.screen.facility.AddJob2Activity" />
+        <activity android:name="com.nurseify.app.screen.facility.AddJobActivity1" />
+        <activity android:name="com.nurseify.app.screen.facility.AppliedNursesActivity" />
+        <activity android:name="com.nurseify.app.screen.facility.RegistrationFActivity" />
+        <activity android:name="com.nurseify.app.screen.facility.HomeFActivity" />
+        <activity android:name="com.nurseify.app.screen.facility.LoginFacilityActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.OfferedJobsActivityActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.CompletedJobDetailsActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.ActiveJobDetailsActivity" />
+        <activity android:name="com.nurseify.app.screen.PrivacyActivity" />
+        <activity android:name="com.nurseify.app.screen.AboutActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.SettingActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.RoleActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.WorkHistoryActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.HourlyRateActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.PersonalDetailsActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.MessageActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.Browse_Facility_Offered_JobDetailsActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.RegisterActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.CreateProfileActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.HomeActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.SignupDetailsActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.SignupActivity" />
+        <activity android:name="com.nurseify.app.screen.nurse.LoginActivity" />
+        <activity android:name="com.nurseify.app.screen.LoginSelectActivity" />
+        <activity android:name="com.nurseify.app.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
