@@ -129,7 +129,8 @@ public class PostedAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
         public void onBind(int position) {
             Facility_JobDatum datum = listPostedJob.get(position);
             try {
-                Glide.with(activity).load(datum.getFacilityImage()).placeholder(R.drawable.person).error(R.drawable.person).into(itemView.img);
+                Glide.with(activity).load(datum.getFacilityImage()).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(itemView.img);
             } catch (Exception e) {
 
             }

@@ -1375,7 +1375,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 dialog.dismiss();
                                 mRegistrationStep++;
                                 personalDetails = true;
-                                create_user_inside_firebase();
+                                //create_user_inside_firebase();
                             }
 
                         } else {

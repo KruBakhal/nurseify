@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,7 +66,7 @@ public class MessageActivity extends AppCompatActivity {
         receiver_email = getIntent().getStringExtra(Constant.EMAIL_ID);
         binding.tvTitle.setText("" + receiver_full_name);
         Glide.with(this).load(receiver_profile_path)
-                .placeholder(R.drawable.person).error(R.drawable.person).into(binding.imgProfile);
+                .placeholder(R.drawable.person).error(R.drawable.person).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.imgProfile);
 
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override

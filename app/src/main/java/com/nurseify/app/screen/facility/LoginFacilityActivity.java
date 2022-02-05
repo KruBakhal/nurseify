@@ -143,26 +143,34 @@ public class LoginFacilityActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
                     FacilityLoginModel profile = response.body();
-                    sessionManger.set_TYPE(Constant.CONST_FACULTY_TYPE);
-                    sessionManger.setSession_IN_facility(profile.getData().getUserId(),
-                            profile.getData().getFacilityId(), profile.getData());
+                    if (profile != null && profile.getData() != null) {
+                        if (!TextUtils.isEmpty(profile.getData().getRole()) &&
+                                !profile.getData().getRole().equals("NURSE")) {
 
-                    if (profile.getData().getFacilityProfileFlag().equals("0")) {
-                        Intent i = new Intent(context, RegistrationFActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(profile.getData()));
-                        startActivity(i);
+                            sessionManger.set_TYPE(Constant.CONST_FACULTY_TYPE);
+                            sessionManger.setSession_IN_facility(profile.getData().getUserId(),
+                                    profile.getData().getFacilityId(), profile.getData());
 
-                    } else {
-                        Intent i = new Intent(context, HomeFActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(i);
-                    }
+                            if (profile.getData().getFacilityProfileFlag().equals("0")) {
+                                Intent i = new Intent(context, RegistrationFActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(profile.getData()));
+                                startActivity(i);
 
+                            } else {
+                                Intent i = new Intent(context, HomeFActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(i);
+                            }
+                        } else {
+                            Utils.displayToast(context, "Invalid email or password");
+                        }
+                    } else
+                        Utils.displayToast(context, context.getResources().getString(R.string.something_when_wrong));
                 } else {
                     progressDialog.dismiss();
                     Log.e(TAG + "LogIn code", response.code() + "");

@@ -333,6 +333,7 @@ public class MyJobFragment extends Fragment {
                                 selected_page2--;
                             if (list_Active_Job == null || list_Active_Job.size() == 0) {
                                 errorProgress(true);
+                                binding.tvMsg.setText("Yet,No Job Found !");
                             }
                             return;
                         }
@@ -412,6 +413,7 @@ public class MyJobFragment extends Fragment {
                                 selected_page3--;
                             if (list_Completed_Job == null || list_Completed_Job.size() == 0) {
                                 errorProgress(true);
+                                binding.tvMsg.setText("Yet,No Job Found !");
                             }
                             return;
                         }

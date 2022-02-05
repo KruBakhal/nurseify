@@ -214,16 +214,16 @@ public class FacilityJobModel {
         private String preferredSpecialtyDefinition;
         @SerializedName("total_jobs")
         @Expose
-        private String totalJobs;
+        private Integer totalJobs;
         @SerializedName("rating")
         @Expose
-        private String rating;
+        private Rating rating;
         @SerializedName("is_follow")
         @Expose
-        private String isFollow;
+        private Integer isFollow;
         @SerializedName("is_like")
         @Expose
-        private String isLike;
+        private Integer isLike;
 
         public String getId() {
             return id;
@@ -673,36 +673,100 @@ public class FacilityJobModel {
             this.preferredSpecialtyDefinition = preferredSpecialtyDefinition;
         }
 
-        public String getTotalJobs() {
+        public Integer getTotalJobs() {
             return totalJobs;
         }
 
-        public void setTotalJobs(String totalJobs) {
+        public void setTotalJobs(Integer totalJobs) {
             this.totalJobs = totalJobs;
         }
 
-        public String getRating() {
+        public Rating getRating() {
             return rating;
         }
 
-        public void setRating(String rating) {
+        public void setRating(Rating rating) {
             this.rating = rating;
         }
 
         public String getIsFollow() {
-            return isFollow;
+            if (isFollow != null)
+                return isFollow.toString();
+            else return "";
         }
 
-        public void setIsFollow(String isFollow) {
+        public void setIsFollow(Integer isFollow) {
             this.isFollow = isFollow;
         }
 
         public String getIsLike() {
-            return isLike;
+            if (isLike != null)
+                return isLike.toString();
+            else return "";
         }
 
-        public void setIsLike(String isLike) {
+        public void setIsLike(Integer isLike) {
             this.isLike = isLike;
+        }
+
+
+        public class Rating {
+
+            @SerializedName("over_all")
+            @Expose
+            private String overAll;
+            @SerializedName("on_board")
+            @Expose
+            private String onBoard;
+            @SerializedName("nurse_team_work")
+            @Expose
+            private String nurseTeamWork;
+            @SerializedName("leadership_support")
+            @Expose
+            private String leadershipSupport;
+            @SerializedName("tools_todo_my_job")
+            @Expose
+            private String toolsTodoMyJob;
+
+            public String getOverAll() {
+                return overAll;
+            }
+
+            public void setOverAll(String overAll) {
+                this.overAll = overAll;
+            }
+
+            public String getOnBoard() {
+                return onBoard;
+            }
+
+            public void setOnBoard(String onBoard) {
+                this.onBoard = onBoard;
+            }
+
+            public String getNurseTeamWork() {
+                return nurseTeamWork;
+            }
+
+            public void setNurseTeamWork(String nurseTeamWork) {
+                this.nurseTeamWork = nurseTeamWork;
+            }
+
+            public String getLeadershipSupport() {
+                return leadershipSupport;
+            }
+
+            public void setLeadershipSupport(String leadershipSupport) {
+                this.leadershipSupport = leadershipSupport;
+            }
+
+            public String getToolsTodoMyJob() {
+                return toolsTodoMyJob;
+            }
+
+            public void setToolsTodoMyJob(String toolsTodoMyJob) {
+                this.toolsTodoMyJob = toolsTodoMyJob;
+            }
         }
     }
 }

@@ -92,14 +92,14 @@ public class AppliedNursesActivity extends AppCompatActivity {
                     });
                 } else {
 //                    Utils.displayToast(AppliedNursesActivity.this, "Data has not been updated");
-                    errorProgress(false);
+                    errorProgress(true);
                 }
 
             }
 
             @Override
             public void onFailure(Call<AppliedNurseModel> call, Throwable t) {
-                errorProgress(false);
+                errorProgress(true);
                 Utils.displayToast(AppliedNursesActivity.this, "Failed to get updated data !");
                 Log.e("TAG", "onFailure applied nurse " + t.toString());
             }

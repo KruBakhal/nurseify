@@ -91,15 +91,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 holder.tv_time_title.setVisibility(View.VISIBLE);
             }
 
-           /* try {
-                if (position > 0) {
+            try {
+                if (position >= 0) {
                     Chatlist pm = mChat.get(position - 1);
                     previousTs = pm.getTime_stamp();
                 }
-                setTimeTextVisibility(chatlist.getTime_stamp(), previousTs, holder.tv_time_title);
+                setTimeTextVisibility(chatlist.getTime_stamp(), previousTs, holder.tv_time_title, position);
             } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }
 
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -113,7 +113,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    private void setTimeTextVisibility(long ts1, long ts2, TextView timeText) {
+    private void setTimeTextVisibility(long ts1, long ts2, TextView timeText, int position) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm aa");
         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd,MMMM yyyy");
 
@@ -122,18 +122,21 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             String date = simpleDateFormat1.format(new Date(ts1)).toString();
             timeText.setText(date);
 //            timeText.setText(Utils.formatDayTimeHtml(ts1));
+            Log.d("TAG", position+" setTimeTextVisibility: ts2=0 \n" + date);
         } else {
             Calendar cal1 = Calendar.getInstance();
             Calendar cal2 = Calendar.getInstance();
             cal1.setTimeInMillis(ts1);
             cal2.setTimeInMillis(ts2);
-
+            String date1 = simpleDateFormat1.format(new Date(ts1)).toString();
+            String date2 = simpleDateFormat1.format(new Date(ts1)).toString();
+            Log.d("TAG", position+" setTimeTextVisibility: \n" + date1 + "\n" + date2);
             boolean sameMonth = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                     cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-
             if (sameMonth) {
                 timeText.setVisibility(View.GONE);
                 timeText.setText("");
+
             } else {
                 timeText.setVisibility(View.VISIBLE);
                 String date = simpleDateFormat1.format(new Date(ts1)).toString();

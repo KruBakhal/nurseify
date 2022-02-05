@@ -42,6 +42,18 @@ public class SettingModel {
 
     public class Data {
 
+        @SerializedName("first_name")
+        @Expose
+        private String firstName;
+        @SerializedName("last_name")
+        @Expose
+        private String lastName;
+        @SerializedName("full_name")
+        @Expose
+        private String fullName;
+        @SerializedName("profile_picture")
+        @Expose
+        private String profilePicture;
         @SerializedName("address")
         @Expose
         private String address;
@@ -66,9 +78,44 @@ public class SettingModel {
         @SerializedName("experience")
         @Expose
         private String experience;
+        @SerializedName("shift_definition")
+        @Expose
+        private String shiftDefinition;
         @SerializedName("shift")
         @Expose
         private String shift;
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public String getProfilePicture() {
+            return profilePicture;
+        }
+
+        public void setProfilePicture(String profilePicture) {
+            this.profilePicture = profilePicture;
+        }
 
         public String getAddress() {
             return address;
@@ -132,6 +179,14 @@ public class SettingModel {
 
         public void setExperience(String experience) {
             this.experience = experience;
+        }
+
+        public String getShiftDefinition() {
+            return shiftDefinition;
+        }
+
+        public void setShiftDefinition(String shiftDefinition) {
+            this.shiftDefinition = shiftDefinition;
         }
 
         public String getShift() {

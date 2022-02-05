@@ -130,6 +130,18 @@ public class FacilityProfile {
     @SerializedName("facility_profile_flag")
     @Expose
     private String facilityProfileFlag;
+    @SerializedName("role")
+    @Expose
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     private String facilityLogo_new;
     private String cnoImage_new;
 

@@ -161,6 +161,7 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
 
         @Override
         public void onBind(int position) {
+            System.gc();
             NurseDatum model = listPostedJob.get(position);
             Glide.with(itemView.imgProfile.getContext()).load(model.getNurseLogo()).placeholder(R.drawable.person)
                     .error(R.drawable.person).into(itemView.imgProfile);

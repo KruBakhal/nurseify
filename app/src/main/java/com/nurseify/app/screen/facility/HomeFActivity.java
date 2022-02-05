@@ -11,16 +11,20 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.nurseify.app.AppController;
+import com.nurseify.app.MainActivity;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.ActivityHomeFBinding;
 import com.nurseify.app.screen.facility.ui.AccountFFragment;
@@ -49,6 +53,7 @@ public class HomeFActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(HomeFActivity.this, R.layout.activity_home_f);
         fm = getSupportFragmentManager();
+        Clear_GlideCaches();
         resetBottomBar(1);
         binding.browse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +83,22 @@ public class HomeFActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 resetBottomBar(5);
+            }
+        });
+    }
+
+    public void Clear_GlideCaches() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(HomeFActivity.this).clearMemory();
+            }
+        }, 0);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(HomeFActivity.this).clearDiskCache();
             }
         });
     }

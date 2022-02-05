@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,7 +76,7 @@ public class MessageFacilityActivity extends AppCompatActivity {
         reciever_name = nurse_model.getFirstName() + " " + nurse_model.getLastName();
         binding.tvTitle.setText(reciever_name);
         Glide.with(this).load(nurse_model.getNurseLogo())
-                .placeholder(R.drawable.person).error(R.drawable.person).into(binding.imgProfile);
+                .placeholder(R.drawable.person).error(R.drawable.person).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.imgProfile);
 
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -640,6 +640,7 @@ public class BrowseFragment extends Fragment {
                 } catch (Exception e) {
                     errorProgress(true);
                 }
+
             }
 
             @Override
@@ -882,7 +883,7 @@ public class BrowseFragment extends Fragment {
 //                        fecthBrowseFacility();
                         ResponseModel responseModel = response.body();
 //                        Utils.displayToast(getContext(), "" + responseModel.getMessage());
-                        facility.setIsFollow(type);
+                        facility.setIsFollow(Integer.valueOf(type));
                         list_facility.set(pos, facility);
                         facilityAdapter.notifyItemChanged(pos);
                     } else {
@@ -931,7 +932,7 @@ public class BrowseFragment extends Fragment {
                         Log.e("follow", "Success");
                         ResponseModel responseModel = response.body();
 //                        Utils.displayToast(getContext(), "" + responseModel.getMessage());
-                        facility.setIsLike(like);
+                        facility.setIsLike(Integer.valueOf(like));
                         list_facility.set(pos, facility);
                         facilityAdapter.notifyItemChanged(pos);
                     } else {
@@ -1248,6 +1249,23 @@ public class BrowseFragment extends Fragment {
                         ResponseModel jobModel = response.body();
 //                        Utils.displayToast(getContext(), "" + jobModel.getMessage());
                         datum.setIsApplied(finalIsApplied);
+                        if (finalIsApplied.equals("1")) {
+                            String total_Applied = datum.getTotalApplied();
+                            if (TextUtils.isEmpty(total_Applied))
+                                total_Applied = "0";
+                            int count = Integer.parseInt(total_Applied);
+                            count++;
+                            datum.setTotalApplied(String.valueOf(count));
+                        } else {
+                            String total_Applied = datum.getTotalApplied();
+                            if (TextUtils.isEmpty(total_Applied))
+                                total_Applied = "0";
+                            int count = Integer.parseInt(total_Applied);
+                            if (count != 0)
+                                count--;
+                            datum.setTotalApplied(String.valueOf(count));
+                        }
+
                         list_jobs.set(position, datum);
                         browserJobsAdapter.notifyItemChanged(position);
                     } else {

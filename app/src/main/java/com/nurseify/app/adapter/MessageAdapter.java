@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -90,7 +91,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if (TextUtils.isEmpty(user.getProfile_path())) {
                 holder.circleImageView.setImageResource(R.drawable.person);
             } else {
-                Glide.with(mContext).load(user.getProfile_path()).placeholder(R.drawable.person).error(R.drawable.person).into(holder.circleImageView);
+                Glide.with(mContext).load(user.getProfile_path())
+                        .placeholder(R.drawable.person).error(R.drawable.person)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+                        .into(holder.circleImageView);
             }
             if (user.getStatus()) {
                 holder.img_status.setImageResource(R.color.drak_green);

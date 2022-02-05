@@ -216,7 +216,7 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.show();
             RequestBody requestBody3 = RequestBody.create(MediaType.parse("multipart/form-data"), binding.editTextEmail.getText().toString());
             RequestBody requestBody13 = RequestBody.create(MediaType.parse("multipart/form-data"), binding.editTextPassword.getText().toString());
-            RequestBody requestBody131 = RequestBody.create(MediaType.parse("multipart/form-data"), "1a2b3c4d5e6f7g8h9ij10" );
+            RequestBody requestBody131 = RequestBody.create(MediaType.parse("multipart/form-data"), "1a2b3c4d5e6f7g8h9ij10");
 
 
             Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
@@ -232,33 +232,40 @@ public class LoginActivity extends AppCompatActivity {
                         return;
                     }
                     if (response.isSuccessful()) {
-
                         progressDialog.dismiss();
                         UserProfile profile = response.body();
-                        sessionManger.set_TYPE(Constant.CONST_NURSE_TYPE);
-                        sessionManger.setSession_IN(profile.getData().getId(),
-                                profile.getData());
+                        if (profile != null && profile.getData() != null) {
+                            if (!TextUtils.isEmpty(profile.getData().getRole())
+                                    && !profile.getData().getRole()
+                                    .equals("FACILITYADMIN")) {
+                                sessionManger.set_TYPE(Constant.CONST_NURSE_TYPE);
+                                sessionManger.setSession_IN(profile.getData().getId(),
+                                        profile.getData());
+                                Utils.displayToast(context, "Login Successfully Completed");
+                                if (profile.getData().getProfileDetailFlag().equals("0") ||
+                                        profile.getData().getHourlyRateAndAvailFlag().equals("0")) {
 
-                        Utils.displayToast(context, "Login Successfully Completed");
-                        if (profile.getData().getProfileDetailFlag().equals("0") ||
-                                profile.getData().getHourlyRateAndAvailFlag().equals("0")) {
+                                    Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(profile.getData()));
+                                    startActivity(i);
 
-                            Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(profile.getData()));
-                            startActivity(i);
+                                } else {
 
-                        } else {
-
-                            Intent i = new Intent(LoginActivity.this, HomeActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(i);
-                        }
-                        LoginActivity.this.finish();
+                                    Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(i);
+                                }
+                                LoginActivity.this.finish();
+                            } else {
+                                Utils.displayToast(context, "Invalid email or password");
+                            }
+                        } else
+                            Utils.displayToast(context, context.getResources().getString(R.string.something_when_wrong));
 
                     } else {
                         if (progressDialog.isShowing())

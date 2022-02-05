@@ -123,6 +123,7 @@ public class PastAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
 
         @Override
         public void onBind(int position) {
+            System.gc();
             OfferedNurse_Datum model = listPostedJob.get(position);
             Glide.with(itemView.imgProfile.getContext()).load(model.getNurseImage()).placeholder(R.drawable.person)
                     .error(R.drawable.person).into(itemView.imgProfile);

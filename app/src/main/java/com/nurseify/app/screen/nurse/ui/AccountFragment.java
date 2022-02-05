@@ -53,6 +53,8 @@ import com.nurseify.app.webService.RetrofitClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -163,9 +165,13 @@ public class AccountFragment extends Fragment {
                     binding.tvLicenceNo.setText(userProfileData.getNursingLicenseNumber());
                     binding.tvAddress.setText(userProfileData.getAddress() + ", " + userProfileData.getCity() + ", " + userProfileData.getCountry());
                     binding.tvBill.setText("$ " + userProfileData.getHourlyPayRate());
-                    double s1 = ((Double.parseDouble(userProfileData.getExperience().getExperienceAsAcuteCareFacility())));
-                    double s2 = ((Double.parseDouble(userProfileData.getExperience().getExperienceAsAmbulatoryCareFacility())));
-                    binding.tvExperience.setText("" + (s1 + s2));
+                    if (!TextUtils.isEmpty(userProfileData.getExperience().getExperienceAsAcuteCareFacility())
+                            && !TextUtils.isEmpty(userProfileData.getExperience().getExperienceAsAmbulatoryCareFacility())) {
+                        double s1 = ((Double.parseDouble(userProfileData.getExperience().getExperienceAsAcuteCareFacility())));
+
+                        double s2 = ((Double.parseDouble(userProfileData.getExperience().getExperienceAsAmbulatoryCareFacility())));
+                        binding.tvExperience.setText("" + (s1 + s2));
+                    }
                     loadProfile_Pic(true);
                 } else
                     Utils.displayToast(getContext(), "Empty Data on Result");
@@ -335,7 +341,10 @@ public class AccountFragment extends Fragment {
                                 binding.tvBill.setText("$ " + settingModel.getData().getBilRate());
                                 binding.tvExperience.setText(settingModel.getData().getExperience());
                                 binding.tvShift.setText(settingModel.getData().getShift());
-
+                                if (userProfileData != null) {
+                                    userProfileData.setImage(settingModel.getData().getProfilePicture());
+                                    loadProfile_Pic(false);
+                                }
                             }
                         });
 
@@ -420,7 +429,7 @@ public class AccountFragment extends Fragment {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                try {
+            /*    try {
                     if (snapshot.getValue() == null) {
 //                        create_user_inside_firebase(new SessionManager(getContext()).get_User());
                     } else {
@@ -435,7 +444,73 @@ public class AccountFragment extends Fragment {
                     }
                 } catch (Exception exception) {
                     Log.d("TAG_check_User_exist", "onDataChange: " + exception.getMessage());
+                }*/
+
+                if (snapshot == null || snapshot.getValue() == null) {
+//                        create_user_inside_firebase(new SessionManager(getContext()).get_User());
+                } else {
+                    try {
+                        Map<String, Object> objectMap = (Map<String, Object>) snapshot.getValue();
+                        if (objectMap != null && !TextUtils.isEmpty(objectMap.get(Constant.EMAIL_ID)
+                                .toString())) {
+                            try {
+                                String userid = new SessionManager(getContext()).get_user_register_Id();
+                                FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
+                                        .child(userid).child("profile_path")
+                                        .setValue(image);
+                            } catch (Exception e) {
+                                Log.d("TAG", "update_user_status: " + e.getMessage());
+                            }
+
+                        }
+                    } catch (Exception exception) {
+                        try {
+                            HashMap<String, Object> user_hashMap = get_User_Hash();
+                            String userid = new SessionManager(getContext()).get_user_register_Id();
+                            FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
+                                    .child(userid).updateChildren(user_hashMap);
+                        } catch (Exception e) {
+                            Log.d("TAG", "update_user_status: " + e.getMessage());
+                        }
+                    }
+
                 }
+
+            }
+
+            private HashMap<String, Object> get_User_Hash() {
+                SessionManager sessionManager = new SessionManager(getContext());
+                String userData = sessionManager.get_TYPE();
+                String email, full_name, id, profile, specialty, status, type;
+                if (userData.equals(Constant.CONST_FACULTY_TYPE)) {
+                    email = sessionManager.get_facilityProfile().getFacilityEmail();
+                    profile = sessionManager.get_facilityProfile().getFacilityLogo();
+                    full_name = sessionManager.get_facilityProfile().getFacilityName();
+                    id = sessionManager.get_facilityProfile().getUserId();
+                    specialty = " ";
+                    status = "true";
+                    type = "2";
+                } else {
+                    email = sessionManager.get_User().getEmail();
+                    profile = sessionManager.get_User().getImage();
+                    full_name = sessionManager.get_User().getFullName();
+                    id = sessionManager.get_User().getId();
+                    specialty = sessionManager.get_User().getSpecialty().get(0).getName();
+                    status = "true";
+                    type = "1";
+                }
+                if (TextUtils.isEmpty(specialty))
+                    specialty = " ";
+                HashMap<String, Object> user_hashMap = new HashMap<>();
+                user_hashMap.put(Constant.EMAIL_ID, email);
+                user_hashMap.put(Constant.ID, id);
+                user_hashMap.put(Constant.FULL_NAME, full_name);
+                user_hashMap.put(Constant.PROFILE_PATH, profile);
+                user_hashMap.put(Constant.ONLINE_STATUS, true);
+                user_hashMap.put(Constant.SPECIALITY, specialty);
+                user_hashMap.put(Constant.TYPE, type);
+                return user_hashMap;
+
             }
 
             @Override

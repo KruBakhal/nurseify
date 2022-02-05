@@ -11,7 +11,9 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.nurseify.app.AppController;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.ActivityHomeBinding;
+import com.nurseify.app.screen.facility.HomeFActivity;
 import com.nurseify.app.screen.nurse.model.UserProfileData;
 import com.nurseify.app.screen.nurse.ui.AccountFragment;
 import com.nurseify.app.screen.nurse.ui.BrowseFragment;
@@ -57,9 +60,27 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(HomeActivity.this, R.layout.activity_home);
+
+        Clear_GlideCaches();
         setData();
         resetBottomBar(1);
         click();
+    }
+
+    public void Clear_GlideCaches() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(HomeActivity.this).clearMemory();
+            }
+        }, 0);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(HomeActivity.this).clearDiskCache();
+            }
+        });
     }
 
     private void setData() {

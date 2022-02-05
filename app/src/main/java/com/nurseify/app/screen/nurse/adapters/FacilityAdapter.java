@@ -65,7 +65,8 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
         try {
 
             Glide.with(activity).load(list.get(position).getFacilityLogo())
-                    .placeholder(R.drawable.person).error(R.drawable.person).into(holder.imageView);
+                    .placeholder(R.drawable.person).error(R.drawable.person)
+                    .into(holder.imageView);
 
             holder.tv_name.setText(list.get(position).getName());
             holder.tv_description.setText(Html.fromHtml(list.get(position).getAboutFacility()));
@@ -102,7 +103,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                     String shareBody = "Facility Name: " + list.get(position).getName()
                             + "\nAbout: " + Html.fromHtml(list.get(position).getAboutFacility())
                             + "\nAddress: " + list.get(position).getAddress() + " " + list.get(position).getPostcode()
-                            + "\nTotal Jobs: " + Html.fromHtml(list.get(position).getTotalJobs())
+                            + "\nTotal Jobs: " + list.get(position).getTotalJobs()
                             + "\nhttps://play.google.com/store/apps/details?id=" + activity.getPackageName();
 
                     intent.setType("text/plain");
@@ -195,7 +196,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                             Log.e("follow", "Success");
                             ResponseModel responseModel = response.body();
 //                        Utils.displayToast(itemView.getContext(), "" + responseModel.getMessage());
-                            facility.setIsLike(like);
+                            facility.setIsLike(Integer.valueOf(like));
                             list.set(pos, facility);
                             notifyItemChanged(pos);
                         } else {
@@ -266,7 +267,7 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
                     try {
                         if (response.isSuccessful()) {
                             ResponseModel responseModel = response.body();
-                            facility.setIsFollow(type);
+                            facility.setIsFollow(Integer.valueOf(type));
                             list.set(pos, facility);
                             notifyItemChanged(pos);
                         } else {
