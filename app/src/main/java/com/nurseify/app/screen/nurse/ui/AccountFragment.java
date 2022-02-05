@@ -173,6 +173,7 @@ public class AccountFragment extends Fragment {
                         binding.tvExperience.setText("" + (s1 + s2));
                     }
                     loadProfile_Pic(true);
+                    getSetting();
                 } else
                     Utils.displayToast(getContext(), "Empty Data on Result");
             } else {
@@ -341,6 +342,10 @@ public class AccountFragment extends Fragment {
                                 binding.tvBill.setText("$ " + settingModel.getData().getBilRate());
                                 binding.tvExperience.setText(settingModel.getData().getExperience());
                                 binding.tvShift.setText(settingModel.getData().getShift());
+                                binding.tvName.setText(settingModel.getData().getFullName());
+                                binding.tvAddress.setText(settingModel.getData().getAddress() +
+                                        ", " + settingModel.getData().getCity() + ", " + settingModel.getData().getCountry());
+                                binding.tvLicenceNo.setText(settingModel.getData().getNursingLicenseNumber());
                                 if (userProfileData != null) {
                                     userProfileData.setImage(settingModel.getData().getProfilePicture());
                                     loadProfile_Pic(false);
