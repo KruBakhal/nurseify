@@ -339,16 +339,20 @@ public class AccountFragment extends Fragment {
                             @Override
                             public void run() {
 
-                                binding.tvBill.setText("$ " + settingModel.getData().getBilRate());
-                                binding.tvExperience.setText(settingModel.getData().getExperience());
-                                binding.tvShift.setText(settingModel.getData().getShift());
-                                binding.tvName.setText(settingModel.getData().getFullName());
-                                binding.tvAddress.setText(settingModel.getData().getAddress() +
-                                        ", " + settingModel.getData().getCity() + ", " + settingModel.getData().getCountry());
-                                binding.tvLicenceNo.setText(settingModel.getData().getNursingLicenseNumber());
-                                if (userProfileData != null) {
-                                    userProfileData.setImage(settingModel.getData().getProfilePicture());
-                                    loadProfile_Pic(false);
+                                try {
+                                    binding.tvBill.setText("$ " + settingModel.getData().getBilRate());
+                                    binding.tvExperience.setText(settingModel.getData().getExperience());
+                                    binding.tvShift.setText(settingModel.getData().getShift());
+                                    binding.tvName.setText(settingModel.getData().getFullName());
+                                    binding.tvAddress.setText(settingModel.getData().getAddress() +
+                                            ", " + settingModel.getData().getCity() + ", " + settingModel.getData().getCountry());
+                                    binding.tvLicenceNo.setText(settingModel.getData().getNursingLicenseNumber());
+                                    if (userProfileData != null) {
+                                        userProfileData.setImage(settingModel.getData().getProfilePicture());
+                                        loadProfile_Pic(false);
+                                    }
+                                } catch (Exception exception) {
+
                                 }
                             }
                         });
