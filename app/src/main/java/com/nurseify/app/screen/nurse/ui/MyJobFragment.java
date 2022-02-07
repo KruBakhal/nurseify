@@ -237,7 +237,7 @@ public class MyJobFragment extends Fragment {
                         binding.progress.setVisibility(View.GONE);
                     } else if (list_Offered_Job != null && list_Offered_Job.size() == 0) {
                         errorProgress(true);
-                        binding.tvMsg.setText("Yet,No Job Found !");
+                        binding.tvMsg.setText("Yet,No Job Offer Found !");
                     }
                     return;
                 }

@@ -47,7 +47,6 @@ public class JobModel {
 
 
 
-
         @SerializedName("job_id")
         @Expose
         private String jobId;
@@ -119,13 +118,13 @@ public class JobModel {
         private String jobVideo;
         @SerializedName("seniority_level")
         @Expose
-        private Integer seniorityLevel;
+        private String  seniorityLevel;
         @SerializedName("seniority_level_definition")
         @Expose
         private String seniorityLevelDefinition;
         @SerializedName("job_function")
         @Expose
-        private Integer jobFunction;
+        private String jobFunction;
         @SerializedName("job_function_definition")
         @Expose
         private String jobFunctionDefinition;
@@ -137,19 +136,19 @@ public class JobModel {
         private String qualifications;
         @SerializedName("job_cerner_exp")
         @Expose
-        private Integer jobCernerExp;
+        private String jobCernerExp;
         @SerializedName("job_cerner_exp_definition")
         @Expose
         private String jobCernerExpDefinition;
         @SerializedName("job_meditech_exp")
         @Expose
-        private Integer jobMeditechExp;
+        private String jobMeditechExp;
         @SerializedName("job_meditech_exp_definition")
         @Expose
         private String jobMeditechExpDefinition;
         @SerializedName("job_epic_exp")
         @Expose
-        private Integer jobEpicExp;
+        private String jobEpicExp;
         @SerializedName("job_epic_exp_definition")
         @Expose
         private String jobEpicExpDefinition;
@@ -476,11 +475,11 @@ public class JobModel {
             this.jobVideo = jobVideo;
         }
 
-        public Integer getSeniorityLevel() {
+        public String getSeniorityLevel() {
             return seniorityLevel;
         }
 
-        public void setSeniorityLevel(Integer seniorityLevel) {
+        public void setSeniorityLevel(String seniorityLevel) {
             this.seniorityLevel = seniorityLevel;
         }
 
@@ -492,11 +491,11 @@ public class JobModel {
             this.seniorityLevelDefinition = seniorityLevelDefinition;
         }
 
-        public Integer getJobFunction() {
+        public String getJobFunction() {
             return jobFunction;
         }
 
-        public void setJobFunction(Integer jobFunction) {
+        public void setJobFunction(String jobFunction) {
             this.jobFunction = jobFunction;
         }
 
@@ -524,11 +523,11 @@ public class JobModel {
             this.qualifications = qualifications;
         }
 
-        public Integer getJobCernerExp() {
+        public String getJobCernerExp() {
             return jobCernerExp;
         }
 
-        public void setJobCernerExp(Integer jobCernerExp) {
+        public void setJobCernerExp(String jobCernerExp) {
             this.jobCernerExp = jobCernerExp;
         }
 
@@ -540,11 +539,11 @@ public class JobModel {
             this.jobCernerExpDefinition = jobCernerExpDefinition;
         }
 
-        public Integer getJobMeditechExp() {
+        public String getJobMeditechExp() {
             return jobMeditechExp;
         }
 
-        public void setJobMeditechExp(Integer jobMeditechExp) {
+        public void setJobMeditechExp(String jobMeditechExp) {
             this.jobMeditechExp = jobMeditechExp;
         }
 
@@ -556,11 +555,11 @@ public class JobModel {
             this.jobMeditechExpDefinition = jobMeditechExpDefinition;
         }
 
-        public Integer getJobEpicExp() {
+        public String getJobEpicExp() {
             return jobEpicExp;
         }
 
-        public void setJobEpicExp(Integer jobEpicExp) {
+        public void setJobEpicExp(String jobEpicExp) {
             this.jobEpicExp = jobEpicExp;
         }
 
