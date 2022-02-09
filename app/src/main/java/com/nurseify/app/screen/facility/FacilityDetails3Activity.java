@@ -264,7 +264,7 @@ public class FacilityDetails3Activity extends AppCompatActivity {
                 Intent i = new Intent(context, RegistrationFActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, 3);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
 
                 Utils.onClickEvent(v);
@@ -285,7 +285,7 @@ public class FacilityDetails3Activity extends AppCompatActivity {
         if (requestCode == Constant.REQUEST_EDIT) {
             if (resultCode == RESULT_OK) {
 
-                String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
+                /*String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
                 Type type = new TypeToken<FacilityProfile>() {
                 }.getType();
                 model = new Gson().fromJson(data1, type);
@@ -293,7 +293,10 @@ public class FacilityDetails3Activity extends AppCompatActivity {
                     setData();
                     setResult(RESULT_OK);
                 } else
-                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");
+                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");*/
+                setData();
+                getProfileData();
+                setResult(RESULT_OK);
             } else {
 
 

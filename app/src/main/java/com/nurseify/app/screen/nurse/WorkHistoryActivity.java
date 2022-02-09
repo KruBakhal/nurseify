@@ -71,7 +71,7 @@ public class WorkHistoryActivity extends AppCompatActivity {
                 Intent i = new Intent(WorkHistoryActivity.this, RegisterActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, Constant.Work_History_Experience);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
             }
         });
@@ -81,7 +81,7 @@ public class WorkHistoryActivity extends AppCompatActivity {
                 Intent i = new Intent(WorkHistoryActivity.this, RegisterActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, Constant.Work_History_Resume);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
             }
         });
@@ -92,7 +92,7 @@ public class WorkHistoryActivity extends AppCompatActivity {
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, Constant.Work_History_Certifications);
                 i.putExtra(Constant.ADD, true);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
             }
         });
@@ -185,7 +185,7 @@ public class WorkHistoryActivity extends AppCompatActivity {
                 Intent i = new Intent(WorkHistoryActivity.this, RegisterActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, Constant.Work_History_Certifications);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
                 i.putExtra(Constant.POSITION, position);
                 startActivityForResult(i, Constant.REQUEST_EDIT);
 
@@ -270,11 +270,12 @@ public class WorkHistoryActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
                 SCROLL_TO = data.getIntExtra(Constant.SCROLL_TO, 0);
+                getNurseProfile();
+                setResult(RESULT_OK);/*
                 if (!TextUtils.isEmpty(data1)) {
-                    getNurseProfile();
-                    setResult(RESULT_OK);
+
                 } else
-                    Utils.displayToast(context, "Empty Data on Result");
+                    Utils.displayToast(context, "Empty Data on Result");*/
             }
         }
     }

@@ -7,9 +7,12 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,7 +96,7 @@ public class AccountFragment extends Fragment {
         binding.tvName.setText(userProfileData.getFullName());
         binding.tvLicenceNo.setText(userProfileData.getNursingLicenseNumber());
         binding.tvAddress.setText(userProfileData.getAddress() + ", " + userProfileData.getCity() + ", " + userProfileData.getCountry());
-        loadProfile_Pic(false);
+//        loadProfile_Pic(false);
         getSetting();
         binding.profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,9 +186,11 @@ public class AccountFragment extends Fragment {
     }
 
     private void loadProfile_Pic(boolean b) {
-        if (!TextUtils.isEmpty(userProfileData.getImage())) {
+        if (!TextUtils.isEmpty(userProfileData.getImage_base())) {
+            byte[] decodedString = Utils.get_base_images(userProfileData.getImage_base());
+
             Glide.with((HomeActivity) getActivity())
-                    .load(userProfileData.getImage()).placeholder(R.drawable.person)
+                    .load(decodedString).placeholder(R.drawable.person)
                     .error(R.drawable.person)
                     .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
                 @Override
@@ -200,7 +205,7 @@ public class AccountFragment extends Fragment {
                 }
             }).into(binding.circleImageView2);
             if (((HomeActivity) getActivity()).binding != null & b)
-                Glide.with(getContext()).load(userProfileData.getImage()).placeholder(R.drawable.person)
+                Glide.with(getContext()).load(decodedString).placeholder(R.drawable.person)
                         .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -215,6 +220,7 @@ public class AccountFragment extends Fragment {
                 }).into(((HomeActivity) getActivity()).binding.accountIcon);
 
         }
+
 
     }
 
@@ -349,7 +355,15 @@ public class AccountFragment extends Fragment {
                                     binding.tvLicenceNo.setText(settingModel.getData().getNursingLicenseNumber());
                                     if (userProfileData != null) {
                                         userProfileData.setImage(settingModel.getData().getProfilePicture());
+                                        userProfileData.setImage_base(settingModel.getData().getProfile_picture_base());
                                         loadProfile_Pic(false);
+
+                                        /*byte[] arry = Base64.decode(settingModel.getData().getProfile_picture_base(), Base64.DEFAULT);
+                                        Bitmap decodedByte = BitmapFactory.decodeByteArray(arry, 0,
+                                                arry.length);
+                                        */
+
+                                        //                                        binding.circleImageView2.setImageBitmap(decodedByte);
                                     }
                                 } catch (Exception exception) {
 
@@ -376,6 +390,7 @@ public class AccountFragment extends Fragment {
         });
 
     }
+
 
     private void getNurseProfile() {
         if (!Utils.isNetworkAvailable(getContext())) {

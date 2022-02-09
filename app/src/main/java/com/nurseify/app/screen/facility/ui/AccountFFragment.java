@@ -81,7 +81,7 @@ public class AccountFFragment extends Fragment {
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
         facilityProfile = new SessionManager(getContext()).get_facilityProfile();
-        str_facility_logo = facilityProfile.getFacilityLogo();
+        str_facility_logo = facilityProfile.getFacilityLogo_base();
         binding.facilityName.setText(facilityProfile.getFacilityName());
         binding.layFacilityType.setText(facilityProfile.getFacilityTypeDefinition());
         binding.facilityAddress.setText(facilityProfile.getFacilityAddress() + ", " + facilityProfile.getFacilityCity()
@@ -129,8 +129,9 @@ public class AccountFFragment extends Fragment {
 
     private void loadProfile_Pic(boolean b) {
         if (!TextUtils.isEmpty(str_facility_logo)) {
+            byte[] decodeString = Utils.get_base_images(str_facility_logo);
             Glide.with((HomeFActivity) getActivity())
-                    .load(str_facility_logo).placeholder(R.drawable.person)
+                    .load(decodeString).placeholder(R.drawable.person)
                     .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.circleImageView2);
         }
 
@@ -317,7 +318,7 @@ public class AccountFFragment extends Fragment {
                 if (response.body().getApiStatus().equals("1")) {
                     progressDialog.dismiss();
                     FacilityJobModel.Facility model = response.body().getData().get(0);
-                    str_facility_logo = model.getFacilityLogo();
+                    str_facility_logo = model.getFacilityLogo_base();
                     send_profile_path_to_firebase(model.getId(), str_facility_logo);
                     loadProfile_Pic(true);
                 } else {
@@ -434,7 +435,7 @@ public class AccountFFragment extends Fragment {
 //                userProfileData = new Gson().fromJson(data1, type);
                 facilityProfile = new SessionManager(getContext()).get_facilityProfile();
                 if (facilityProfile != null) {
-                    str_facility_logo = facilityProfile.getFacilityLogo();
+                    str_facility_logo = facilityProfile.getFacilityLogo_base();
                     binding.facilityName.setText(facilityProfile.getFacilityName());
                     binding.layFacilityType.setText(facilityProfile.getFacilityTypeDefinition());
                     binding.facilityAddress.setText(facilityProfile.getFacilityAddress() + ", " + facilityProfile.getFacilityCity()

@@ -103,6 +103,9 @@ public class OfferedJobModel {
         @SerializedName("facility_logo")
         @Expose
         private String facilityLogo;
+        @SerializedName("facility_logo_base")
+        @Expose
+        private String facilityLogo_base;
         @SerializedName("facility_name")
         @Expose
         private String facilityName;
@@ -130,6 +133,14 @@ public class OfferedJobModel {
         @SerializedName("status")
         @Expose
         private String status;
+
+        public String getFacilityLogo_base() {
+            return facilityLogo_base;
+        }
+
+        public void setFacilityLogo_base(String facilityLogo_base) {
+            this.facilityLogo_base = facilityLogo_base;
+        }
 
         public String getOfferExpiration() {
             return offerExpiration;

@@ -63,8 +63,8 @@ public class FacilityAdapter extends RecyclerView.Adapter<FacilityAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
-
-            Glide.with(activity).load(list.get(position).getFacilityLogo())
+            byte[] decodeString = Utils.get_base_images(list.get(position).getFacilityLogo_base());
+            Glide.with(activity).load(decodeString)
                     .placeholder(R.drawable.person).error(R.drawable.person)
                     .into(holder.imageView);
 

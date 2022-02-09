@@ -152,10 +152,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 int unread = 0;
                 if (dataSnapshot.getChildren() != null) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Chatlist chat = snapshot.getValue(Chatlist.class);
-                        if (chat.getReceiver().equals(account_id) &&
-                                chat.getIs_seen() == 0) {
-                            unread++;
+                        try {
+                            Chatlist chat = snapshot.getValue(Chatlist.class);
+                            if (chat.getReceiver().equals(account_id) &&
+                                    chat.getIs_seen() == 0) {
+                                unread++;
+                            }
+                        } catch (Exception exception) {
+
                         }
                     }
                 }

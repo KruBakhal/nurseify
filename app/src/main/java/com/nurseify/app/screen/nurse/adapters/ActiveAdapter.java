@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.nurseify.app.R;
 import com.nurseify.app.intermediate.OfferedJobCallback;
 import com.nurseify.app.screen.nurse.model.ActiveModel;
+import com.nurseify.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,8 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
         try {
             ActiveModel.ActiveDatum datum = list.get(position);
             try {
-                Glide.with(holder.itemView.getContext()).load(datum.getFacilityLogo())
+                byte[] decodeString = Utils.get_base_images(datum.getFacilityLogo_base());
+                Glide.with(holder.itemView.getContext()).load(decodeString)
                         .placeholder(R.drawable.person)
                         .error(R.drawable.person).into(holder.imageView);
             } catch (Exception e) {

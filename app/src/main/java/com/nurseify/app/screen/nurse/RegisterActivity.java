@@ -21,6 +21,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -241,7 +242,11 @@ public class RegisterActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(RegisterActivity.this, R.layout.activity_register);
         context = this;
 //        binding.recyclerViewJobs.setAdapter(new JobAdapter(RegisterActivity.this,1));
-        crashlytics = FirebaseCrashlytics.getInstance();
+        try {
+            crashlytics = FirebaseCrashlytics.getInstance();
+        } catch (Exception exception) {
+            Log.d("TAG", "onCreate: " + exception.getMessage());
+        }
 
         edit_mode = getIntent().getBooleanExtra(Constant.EDIT_MODE, false);
         option_call = getIntent().getStringExtra(Constant.SECTION);
@@ -250,9 +255,11 @@ public class RegisterActivity extends AppCompatActivity {
         String data = getIntent().getStringExtra(Constant.STR_RESPONSE_DATA);
         Type type = new TypeToken<UserProfileData>() {
         }.getType();
+//        model = new Gson().fromJson(data, type);
+        getNurseProfile();
+    }
 
-        model = new Gson().fromJson(data, type);
-
+    private void setData() {
         if (!edit_mode) {
             chooseOption();
         } else {
@@ -282,6 +289,62 @@ public class RegisterActivity extends AppCompatActivity {
 
         }
     }
+
+    private void getNurseProfile() {
+        if (!Utils.isNetworkAvailable(context)) {
+            Utils.displayToast(context, getResources().getString(R.string.no_internet));
+            return;
+        }
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Please Wait");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        String user_id = new SessionManager(context).get_user_register_Id();
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+
+        Call<UserProfile> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+                .call_nurse_profile(user_id1);
+
+        call.enqueue(new Callback<UserProfile>() {
+            @Override
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+//                Log.d("TAG", response.code() + "");
+
+                if (response.body() == null) {
+                    try {
+                        progressDialog.dismiss();
+                        Log.d("TAG", "onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+                if (response.body().getApiStatus().equals("1")) {
+                    progressDialog.dismiss();
+                    model = response.body().getData();
+                    new SessionManager(context).save_user(model);
+                    setData();
+                } else {
+                    progressDialog.dismiss();
+                }
+
+
+                progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(Call<UserProfile> call, Throwable t) {
+                progressDialog.dismiss();
+
+                Utils.displayToast(context, "Failed to get updated data !");
+                Log.e("TAG" + "getNurseProfile", t.toString());
+            }
+        });
+
+    }
+
 
     private void setupSelectedOption() {
         if (model != null) {
@@ -1367,7 +1430,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (edit_mode) {
                                 dialog.dismiss();
                                 setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                        new Gson().toJson(model)));
+                                        new Gson().toJson("model")));
                                 finish();
                             } else {
                                 mRegistrationStep++;
@@ -1811,7 +1874,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         if (edit_mode) {
                                             dialog.dismiss();
                                             setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                                    new Gson().toJson(model)));
+                                                    new Gson().toJson("model")));
                                             finish();
                                         } else {
                                             hourlyRate = true;
@@ -2437,7 +2500,8 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             };
             fetch_WorkHistory_Field_Data(apiResponseCallback);
-        } else {
+        }
+        else {
             if (!TextUtils.isEmpty(model.getExperience().getHighestNursingDegreeDefinition())) {
                 if (checkItemInList_Work(model.getExperience().getHighestNursingDegree().toString()
                         , list_nurse_degrees, false)) {
@@ -3491,7 +3555,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     Utils.displayToast(context, "Certificate has been added !");
                                     dialog.dismiss();
                                     setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                            new Gson().toJson(model)));
+                                            new Gson().toJson("model")));
                                     finish();
 
                                 } else {
@@ -3563,7 +3627,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (edit_mode) {
                                 dialog.dismiss();
                                 setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                        new Gson().toJson(model))
+                                        new Gson().toJson("model"))
                                         .putExtra(Constant.SCROLL_TO,
                                                 select_certificate_pos));
                                 finish();
@@ -3990,7 +4054,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (edit_mode) {
                                         dialog.dismiss();
                                         setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                                new Gson().toJson(model)));
+                                                new Gson().toJson("model")));
                                         finish();
                                     } else {
                                         history3Binding.layProgress.setVisibility(View.GONE);
@@ -4137,7 +4201,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (edit_mode) {
                                         dialog.dismiss();
                                         setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                                new Gson().toJson(model)));
+                                                new Gson().toJson("model")));
                                         finish();
                                     } else {
                                         if (list_Certificate == null)
@@ -4768,7 +4832,7 @@ public class RegisterActivity extends AppCompatActivity {
                             roleInterest2Binding.layProgress.setVisibility(View.GONE);
                             dialog.dismiss();
                             setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                    new Gson().toJson(model)));
+                                    new Gson().toJson("model")));
                             finish();
 
                         } else {
@@ -4839,7 +4903,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (edit_mode) {
                                         dialog.dismiss();
                                         setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                                new Gson().toJson(model)));
+                                                new Gson().toJson("model")));
                                         finish();
                                     } else {
                                         roleInterest = true;
@@ -5984,7 +6048,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Utils.displayToast(context, "" + response.body().getMessage());
                             if (edit_mode) {
                                 setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                        new Gson().toJson(model)));
+                                        new Gson().toJson("model")));
                                 finish();
                             } else {
                                 if (history2Binding != null) {
@@ -6236,7 +6300,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (edit_mode) {
                         dialog.dismiss();
                         setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                new Gson().toJson(model)));
+                                new Gson().toJson("model")));
                         finish();
                     } else {
                         layProgressBar.setVisibility(View.GONE);
@@ -6252,7 +6316,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (edit_mode) {
                         dialog.dismiss();
                         setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                new Gson().toJson(model)));
+                                new Gson().toJson("model")));
                         finish();
                     } else {
                         dialog.dismiss();

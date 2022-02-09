@@ -45,7 +45,6 @@ public class Active_My_job_FAdapter extends RecyclerView.Adapter<BaseViewHolder>
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
-
                 return new ViewHolder(ItemActiveFBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
             case VIEW_TYPE_LOADING:
                 return new ProgressHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false));

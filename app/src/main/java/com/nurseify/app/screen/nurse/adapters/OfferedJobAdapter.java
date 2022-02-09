@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.nurseify.app.R;
 import com.nurseify.app.intermediate.OfferedJobCallback;
 import com.nurseify.app.screen.nurse.model.OfferedJobModel;
+import com.nurseify.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +90,8 @@ public class OfferedJobAdapter extends RecyclerView.Adapter<OfferedJobAdapter.Vi
                     callback.onClick(position);
                 }
             });
-
-            Glide.with(holder.imageView.getContext()).load(list.get(pp).getFacilityLogo())
+            byte[] decodeString = Utils.get_base_images(list.get(pp).getFacilityLogo_base());
+            Glide.with(holder.imageView.getContext()).load(decodeString)
                     .placeholder(R.drawable.person).error(R.drawable.person).into(holder.imageView);
 
         } catch (Exception e) {

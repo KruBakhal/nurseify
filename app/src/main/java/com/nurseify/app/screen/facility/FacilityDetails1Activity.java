@@ -173,7 +173,8 @@ public class FacilityDetails1Activity extends AppCompatActivity {
 
     private void setData() {
         if (!TextUtils.isEmpty(model.getFacilityLogo())) {
-            Glide.with(context).load(model.getFacilityLogo()).into(binding.imgProfile);
+            byte[] decodeString = Utils.get_base_images(model.getFacilityLogo_base());
+            Glide.with(context).load(decodeString).into(binding.imgProfile);
             binding.imgProfile.setVisibility(View.VISIBLE);
         }
         binding.facilityName.setText(model.getFacilityName());
@@ -225,15 +226,17 @@ public class FacilityDetails1Activity extends AppCompatActivity {
         if (requestCode == Constant.REQUEST_EDIT) {
             if (resultCode == RESULT_OK) {
 
-                String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
+               /* String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
                 Type type = new TypeToken<FacilityProfile>() {
                 }.getType();
                 model = new Gson().fromJson(data1, type);
                 if (model != null) {
-                    setData();
-                    setResult(RESULT_OK);
+
                 } else
-                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");
+                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");*/
+                setData();
+                getProfileData();
+                setResult(RESULT_OK);
             } else {
 
 

@@ -119,7 +119,7 @@ public class RegistrationFActivity extends AppCompatActivity {
                                 || dialogStatus.getDialogStatus() == DialogStatus.Dismiss) {
                             if (viewModel.isEditMode) {
                                 setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                        new Gson().toJson(viewModel.main_model)));
+                                        new Gson().toJson("viewModel.main_model")));
                                 finish();
                             } else {
                                 profileSetup3();
@@ -146,7 +146,7 @@ public class RegistrationFActivity extends AppCompatActivity {
                                 || dialogStatus.getDialogStatus() == DialogStatus.Dismiss)
                             if (viewModel.isEditMode) {
                                 setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                        new Gson().toJson(viewModel.main_model)));
+                                        new Gson().toJson("viewModel.main_model")));
                                 finish();
                             } else {
                                 profileSetup5();
@@ -162,7 +162,7 @@ public class RegistrationFActivity extends AppCompatActivity {
                                 || dialogStatus.getDialogStatus() == DialogStatus.Dismiss) {
                             if (viewModel.isEditMode) {
                                 setResult(RESULT_OK, new Intent().putExtra(Constant.STR_RESPONSE_DATA,
-                                        new Gson().toJson(viewModel.main_model)));
+                                        new Gson().toJson("viewModel.main_model")));
                             } else {
                                 startActivity(new Intent(context, HomeFActivity.class)
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -186,6 +186,7 @@ public class RegistrationFActivity extends AppCompatActivity {
     }
 
     private void profileSetup1() {
+        dialog_1 = ProfileSetupDialog_1.newInstance(1, "");
         dialog_1 = ProfileSetupDialog_1.newInstance(1, "");
         dialog_1.show(getSupportFragmentManager(), "setup_1");
 

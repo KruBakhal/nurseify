@@ -54,6 +54,9 @@ public class SettingModel {
         @SerializedName("profile_picture")
         @Expose
         private String profilePicture;
+        @SerializedName("profile_picture_base")
+        @Expose
+        private String profile_picture_base;
         @SerializedName("address")
         @Expose
         private String address;
@@ -84,6 +87,14 @@ public class SettingModel {
         @SerializedName("shift")
         @Expose
         private String shift;
+
+        public String getProfile_picture_base() {
+            return profile_picture_base;
+        }
+
+        public void setProfile_picture_base(String profile_picture_base) {
+            this.profile_picture_base = profile_picture_base;
+        }
 
         public String getFirstName() {
             return firstName;

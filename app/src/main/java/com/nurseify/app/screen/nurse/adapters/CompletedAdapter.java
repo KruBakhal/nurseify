@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.nurseify.app.R;
 import com.nurseify.app.intermediate.OfferedJobCallback;
 import com.nurseify.app.screen.nurse.model.CompletedJobModel;
+import com.nurseify.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,8 @@ public class CompletedAdapter extends RecyclerView.Adapter<CompletedAdapter.View
         try {
             CompletedJobModel.CompletedDatum datum = list.get(position);
             try {
-                Glide.with(holder.itemView.getContext()).load(datum.getFacilityLogo()).placeholder(R.drawable.person)
+                byte[] decodeString = Utils.get_base_images(datum.getFacilityLogo_base());
+                Glide.with(holder.itemView.getContext()).load(decodeString).placeholder(R.drawable.person)
                         .error(R.drawable.person).into(holder.imageView);
             } catch (Exception e) {
 

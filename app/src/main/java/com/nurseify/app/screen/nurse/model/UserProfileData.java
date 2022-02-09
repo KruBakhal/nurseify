@@ -43,6 +43,10 @@ public class UserProfileData {
     @SerializedName("image")
     @Expose
     private String image;
+    @SerializedName("image_base")
+    @Expose
+    private String image_base;
+
     @SerializedName("mobile")
     @Expose
     private String mobile;
@@ -98,6 +102,13 @@ public class UserProfileData {
     @Expose
     private String preferred_shift_definition;
 
+    public String getImage_base() {
+        return image_base;
+    }
+
+    public void setImage_base(String image_base) {
+        this.image_base = image_base;
+    }
 
     @SerializedName("days_of_the_week")
     @Expose

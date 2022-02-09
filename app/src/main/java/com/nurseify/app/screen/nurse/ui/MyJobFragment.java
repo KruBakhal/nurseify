@@ -58,10 +58,10 @@ public class MyJobFragment extends Fragment {
 
     String user_id;
     String TAG = "MyJobFragment ";
-    OfferedJobAdapter offeredJobAdapter;
     List<OfferedJobModel.OfferedJob> list_Offered_Job = new ArrayList<>();
     List<ActiveModel.ActiveDatum> list_Active_Job = new ArrayList<>();
     List<CompletedJobModel.CompletedDatum> list_Completed_Job = new ArrayList<>();
+    OfferedJobAdapter offeredJobAdapter;
     private ActiveAdapter activeAdapter;
     private CompletedAdapter completedAdapter;
     private ProgressDialog progressDialog;
@@ -237,7 +237,7 @@ public class MyJobFragment extends Fragment {
                         binding.progress.setVisibility(View.GONE);
                     } else if (list_Offered_Job != null && list_Offered_Job.size() == 0) {
                         errorProgress(true);
-                        binding.tvMsg.setText("Yet,No Job Offer Found !");
+                        binding.tvMsg.setText("Yet, No Job Offer Found !");
                     }
                     return;
                 }

@@ -75,6 +75,9 @@ public class CompletedJobModel {
         @SerializedName("facility_logo")
         @Expose
         private String facilityLogo;
+        @SerializedName("facility_logo_base")
+        @Expose
+        private String facilityLogo_base;
         @SerializedName("facility_id")
         @Expose
         private String facilityId;
@@ -111,6 +114,14 @@ public class CompletedJobModel {
         @SerializedName("end_date")
         @Expose
         private String endDate;
+
+        public String getFacilityLogo_base() {
+            return facilityLogo_base;
+        }
+
+        public void setFacilityLogo_base(String facilityLogo_base) {
+            this.facilityLogo_base = facilityLogo_base;
+        }
 
         public String getOfferId() {
             return offerId;

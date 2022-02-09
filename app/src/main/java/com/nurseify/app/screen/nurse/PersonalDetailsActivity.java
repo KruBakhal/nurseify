@@ -52,11 +52,15 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         binding.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(PersonalDetailsActivity.this, RegisterActivity.class);
-                i.putExtra(Constant.EDIT_MODE, true);
-                i.putExtra(Constant.SECTION, Constant.PERSON_DETAIL);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(userProfileData));
-                startActivityForResult(i, Constant.REQUEST_EDIT);
+               try {
+                   Intent i = new Intent(PersonalDetailsActivity.this, RegisterActivity.class);
+                   i.putExtra(Constant.EDIT_MODE, true);
+                   i.putExtra(Constant.SECTION, Constant.PERSON_DETAIL);
+//                   i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(userProfileData));
+                   startActivityForResult(i, Constant.REQUEST_EDIT);
+               }catch (Exception exception){
+                   Log.d("TAG", "onClick: "+exception.getMessage());
+               }
             }
         });
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
@@ -154,12 +158,14 @@ public class PersonalDetailsActivity extends AppCompatActivity {
                 String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
                 Type type = new TypeToken<UserProfileData>() {
                 }.getType();
-                userProfileData = new Gson().fromJson(data1, type);
+                /*userProfileData = new Gson().fromJson(data1, type);
                 if (userProfileData != null) {
-                    setData();
-                    setResult(RESULT_OK);
+
                 } else
-                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");
+                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");*/
+                setData();
+                getNurseProfile();
+                setResult(RESULT_OK);
             } else {
 
 

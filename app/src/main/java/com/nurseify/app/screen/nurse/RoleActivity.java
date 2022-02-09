@@ -65,7 +65,7 @@ public class RoleActivity extends AppCompatActivity {
                 Intent i = new Intent(RoleActivity.this, RegisterActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, Constant.Role_Interest1);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(nurseProfileModel.getData()));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
             }
         });
@@ -259,11 +259,8 @@ public class RoleActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
 //                SCROLL_TO = data.getIntExtra(Constant.SCROLL_TO, 0);
-                if (!TextUtils.isEmpty(data1)) {
-                    getNurseProfile();
-                    setResult(RESULT_OK);
-                } else
-                    Utils.displayToast(context, "Empty Data on Result");
+                getNurseProfile();
+                setResult(RESULT_OK);
             }
         }
     }

@@ -189,9 +189,10 @@ public class FacilityDetails2Activity extends AppCompatActivity {
     }
 
     private void setData() {
-        String img = "", web = "", you = "", senior, about;
+        String img = "", img_b = "", web = "", you = "", senior, about;
 
         img = model.getCnoImage();
+        img_b = model.getCnoImage_base();
         web = model.getFacilityWebsite();
         you = model.getVideoEmbedUrl();
         senior = model.getCnoMessage();
@@ -211,10 +212,11 @@ public class FacilityDetails2Activity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(img)) {
             img = "";
-        } else if (!TextUtils.isEmpty(img))
-            Glide.with(context).load(img).placeholder(R.drawable.place_holder_img)
+        } else if (!TextUtils.isEmpty(img) && !TextUtils.isEmpty(img_b)) {
+            byte[] decodeString = Utils.get_base_images(img_b);
+            Glide.with(context).load(decodeString).placeholder(R.drawable.place_holder_img)
                     .error(R.drawable.place_holder_img).into(binding.imgHeadCNo);
-        else
+        } else
             binding.layHeadCno.setVisibility(View.GONE);
 
         binding.edSeniorLead.setText(Html.fromHtml(senior));
@@ -258,7 +260,7 @@ public class FacilityDetails2Activity extends AppCompatActivity {
         if (requestCode == Constant.REQUEST_EDIT) {
             if (resultCode == RESULT_OK) {
 
-                String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
+                /*String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
                 Type type = new TypeToken<FacilityProfile>() {
                 }.getType();
                 model = new Gson().fromJson(data1, type);
@@ -266,7 +268,10 @@ public class FacilityDetails2Activity extends AppCompatActivity {
                     setData();
                     setResult(RESULT_OK);
                 } else
-                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");
+                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");*/
+                setData();
+                getProfileData();
+                setResult(RESULT_OK);
             } else {
 
 

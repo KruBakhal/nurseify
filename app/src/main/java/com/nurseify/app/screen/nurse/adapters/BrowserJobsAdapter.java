@@ -141,7 +141,8 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
 
         public void bind(JobModel.JobDatum datum, int position) {
             try {
-                Glide.with(itemView.getContext()).load(datum.getFacilityLogo())
+                byte[] decodeString = Utils.get_base_images(datum.getFacilityLogo_base());
+                Glide.with(itemView.getContext()).load(decodeString)
                         .placeholder(R.drawable.person).error(R.drawable.person).into(img);
             } catch (Exception e) {
 
@@ -270,7 +271,7 @@ public class BrowserJobsAdapter extends RecyclerView.Adapter<BrowserJobsAdapter.
                             + "\nShift: " + datum.getPreferredShiftDurationDefinition()
                             + "\nAssignment: " + datum.getPreferredAssignmentDurationDefinition()
                             + "\nWork Days: " + finalDays
-                            + "\nHourly Rate: " + datum.getPreferredHourlyPayRate()+" /Hr"
+                            + "\nHourly Rate: " + datum.getPreferredHourlyPayRate() + " /Hr"
                             + "\nhttps://play.google.com/store/apps/details?id=" + activity.getPackageName();
                     intent.setType("text/plain");
                     intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);

@@ -81,47 +81,7 @@ public class FacilityDetails4Activity extends AppCompatActivity {
                     create_facility_profile(model);
                     if (model == null)
                         return;
-                    if (TextUtils.isEmpty(model.getFacebook())) {
-                        binding.edFb.setText("-");
-                    } else {
-                        binding.edFb.setText("" + model.getFacebook());
-                    }
-                    if (TextUtils.isEmpty(model.getTwitter())) {
-                        binding.edTweet.setText("-");
-                    } else {
-                        binding.edTweet.setText("" + model.getTwitter());
-                    }
-                    if (TextUtils.isEmpty(model.getYoutube())) {
-                        binding.edYoutube.setText("-");
-                    } else {
-                        binding.edYoutube.setText("" + model.getYoutube());
-                    }
-                    if (TextUtils.isEmpty(model.getTiktok())) {
-                        binding.edTiktok.setText("-");
-                    } else {
-                        binding.edTiktok.setText("" + model.getTiktok());
-                    }
-                    if (TextUtils.isEmpty(model.getSanpchat())) {
-                        binding.edSnap.setText("-");
-                    } else {
-                        binding.edSnap.setText("" + model.getSanpchat());
-                    }
-                    if (TextUtils.isEmpty(model.getLinkedin())) {
-                        binding.edLinkin.setText("-");
-                    } else {
-                        binding.edLinkin.setText("" + model.getLinkedin());
-                    }
-                    if (TextUtils.isEmpty(model.getPinterest())) {
-                        binding.edPinterest.setText("-");
-                    } else {
-                        binding.edPinterest.setText("" + model.getPinterest());
-                    }
-                    if (TextUtils.isEmpty(model.getInstagram())) {
-                        binding.edInsta.setText("-");
-                    } else {
-                        binding.edInsta.setText("" + model.getInstagram());
-                    }
-
+                    setData();
                 } else {
                     Utils.displayToast(FacilityDetails4Activity.this, "Data has not been updated");
 
@@ -254,7 +214,7 @@ public class FacilityDetails4Activity extends AppCompatActivity {
                 Intent i = new Intent(context, RegistrationFActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, 4);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
 
                 Utils.onClickEvent(v);
@@ -268,7 +228,7 @@ public class FacilityDetails4Activity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.REQUEST_EDIT) {
             if (resultCode == RESULT_OK) {
-
+/*
                 String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
                 Type type = new TypeToken<FacilityProfile>() {
                 }.getType();
@@ -277,7 +237,10 @@ public class FacilityDetails4Activity extends AppCompatActivity {
                     setData();
                     setResult(RESULT_OK);
                 } else
-                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");
+                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");*/
+                setData();
+                getProfileData();
+                setResult(RESULT_OK);
             } else {
 
 

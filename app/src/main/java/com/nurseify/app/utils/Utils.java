@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.service.autofill.UserData;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -247,5 +248,14 @@ public class Utils {
         } else
             return facility + "==" + nurse_id;
 
+    }
+
+    public static byte[] get_base_images(String image_base) {
+        if (TextUtils.isEmpty(image_base)) {
+            return null;
+        }
+        String base64Image = image_base.split(",")[1];
+        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+        return decodedString;
     }
 }

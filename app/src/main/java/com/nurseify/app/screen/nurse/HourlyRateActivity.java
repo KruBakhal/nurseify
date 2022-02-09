@@ -61,7 +61,7 @@ public class HourlyRateActivity extends AppCompatActivity {
                 Intent i = new Intent(HourlyRateActivity.this, RegisterActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, Constant.HOURLY_RATE_AVAILABILITY);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(userProfileData));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(userProfileData));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
             }
         });
@@ -71,7 +71,7 @@ public class HourlyRateActivity extends AppCompatActivity {
                 Intent i = new Intent(HourlyRateActivity.this, RegisterActivity.class);
                 i.putExtra(Constant.EDIT_MODE, true);
                 i.putExtra(Constant.SECTION, Constant.HOURLY_RATE_AVAILABILITY);
-                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(userProfileData));
+//                i.putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(userProfileData));
                 startActivityForResult(i, Constant.REQUEST_EDIT);
             }
         });
@@ -99,15 +99,17 @@ public class HourlyRateActivity extends AppCompatActivity {
         if (requestCode == Constant.REQUEST_EDIT) {
             if (resultCode == RESULT_OK) {
 
-                String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
+                /*String data1 = data.getStringExtra(Constant.STR_RESPONSE_DATA);
                 Type type = new TypeToken<UserProfileData>() {
                 }.getType();
                 userProfileData = new Gson().fromJson(data1, type);
                 if (userProfileData != null) {
-                    setData();
-                    setResult(RESULT_OK);
+
                 } else
-                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");
+                    Utils.displayToast(getApplicationContext(), "Empty Data on Result");*/
+                setData();
+                getNurseProfile();
+                setResult(RESULT_OK);
             } else {
 
 
