@@ -16,6 +16,9 @@ public class OfferedNurse_Datum {
     @SerializedName("nurse_image")
     @Expose
     private String nurseImage;
+    @SerializedName("nurse_image_base")
+    @Expose
+    private String nurseImage_base;
     @SerializedName("preferred_specialty")
     @Expose
     private String preferredSpecialty;
@@ -59,6 +62,14 @@ public class OfferedNurse_Datum {
     @SerializedName("preferred_shift_definition")
     @Expose
     private String preferredShift_definition;
+
+    public String getNurseImage_base() {
+        return nurseImage_base;
+    }
+
+    public void setNurseImage_base(String nurseImage_base) {
+        this.nurseImage_base = nurseImage_base;
+    }
 
     public String getPreferredShift_definition() {
         return preferredShift_definition;

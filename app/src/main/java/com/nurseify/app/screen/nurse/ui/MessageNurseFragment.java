@@ -56,6 +56,7 @@ public class MessageNurseFragment extends Fragment {
         usersList = new ArrayList<User>();
         String userId = new SessionManager(getContext()).get_user_register_Id();
         ArrayList<Chatlist> chat_user = new ArrayList<Chatlist>();
+        showProgress();
         FirebaseDatabase.getInstance().getReference(Constant.USER_NODE)
                 .child(userId).child(Constant.CHAT_USERS_CHILD)
                 .addValueEventListener(new ValueEventListener() {

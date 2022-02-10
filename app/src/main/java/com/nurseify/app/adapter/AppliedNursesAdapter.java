@@ -3,6 +3,7 @@ package com.nurseify.app.adapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.nurseify.app.AppController;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.ItemAppliedNursesBinding;
 import com.nurseify.app.intermediate.ItemCallback;
+import com.nurseify.app.screen.facility.HomeFActivity;
 import com.nurseify.app.screen.facility.MessageFacilityActivity;
 import com.nurseify.app.screen.facility.NurseDetailsActivity;
 import com.nurseify.app.screen.facility.model.AppliedNurseModel;
@@ -60,10 +65,22 @@ public class AppliedNursesAdapter extends RecyclerView.Adapter<AppliedNursesAdap
         try {
             AppliedNurseModel.AppliedNurseDatum appliedNurseDatum = list.get(position);
             try {
-                Glide.with(activity).load(appliedNurseDatum.getProfile())
-                        .placeholder(R.drawable.person).error(R.drawable.person).into(holder.mainLayout.circleImageView);
-            } catch (Exception e) {
 
+           /*     Glide.with(activity).load(appliedNurseDatum.getProfile())
+                        .placeholder(R.drawable.person).error(R.drawable.person).into(holder.mainLayout.circleImageView);
+           */
+
+                if (!TextUtils.isEmpty(appliedNurseDatum.getProfile())) {
+                    byte[] decodeString = Utils.get_base_images(appliedNurseDatum.getProfile_base());
+                    RequestOptions myOptions = new RequestOptions()
+                            .override(100, 100);
+                    Glide.with(activity)
+                            .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                            .error(R.drawable.person)
+                            .into(holder.mainLayout.circleImageView);
+                }
+            } catch (Exception e) {
+                Log.d("TAG", "applied nurse onBindViewHolder: " + e.getMessage());
             }
             holder.mainLayout.tvName.setText(appliedNurseDatum.getName());
             holder.mainLayout.tvRating.setText(appliedNurseDatum.getRating());
@@ -93,6 +110,7 @@ public class AppliedNursesAdapter extends RecyclerView.Adapter<AppliedNursesAdap
                         nurse_model.setFirstName(holder.profileData.getFullName());
                         nurse_model.setNurseLogo(holder.profileData.getImage());
                         nurse_model.setSpecialty("");
+//                        AppController.user_profile_base = holder.profileData.getImage_base();
                         activity.startActivity(new Intent(activity, MessageFacilityActivity.class)
                                 .putExtra("receiver_id", appliedNurseDatum.getUserId())
                                 /* .putExtra("email", holder.nurseDatum.getEmail())
@@ -140,6 +158,7 @@ public class AppliedNursesAdapter extends RecyclerView.Adapter<AppliedNursesAdap
                                 nurse_model.setFirstName(profileData.getFullName());
                                 nurse_model.setNurseLogo(profileData.getImage());
                                 nurse_model.setSpecialty("");
+//                                AppController.user_profile_base = profileData.getImage_base();
                                 activity.startActivity(new Intent(activity, MessageFacilityActivity.class)
                                         .putExtra("receiver_id", appliedNurseDatum.getUserId())
                                         /* .putExtra("email", holder.nurseDatum.getEmail())

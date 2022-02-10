@@ -80,7 +80,7 @@ public class FacilityDetails2Activity extends AppCompatActivity {
                     binding.progressBar.setVisibility(View.GONE);
                     FacilityJobModel.Facility model = response.body().getData().get(0);
                     create_facility_profile(model);
-                    String img = "", web = "", you = "", senior, about;
+                    /*String img = "", web = "", you = "", senior, about;
 
                     img = model.getCnoImage();
                     web = model.getFacilityWebsite();
@@ -111,7 +111,8 @@ public class FacilityDetails2Activity extends AppCompatActivity {
                     binding.edSeniorLead.setText(Html.fromHtml(senior));
                     binding.tvAbout.setText(Html.fromHtml(about));
                     binding.edWebsite.setText(web);
-                    binding.edYoutube.setText(you);
+                    binding.edYoutube.setText(you);*/
+                    setData();
 
 
                 } else {
@@ -148,6 +149,7 @@ public class FacilityDetails2Activity extends AppCompatActivity {
         facilityProfile.setFacilityLogo(facility.getFacilityLogo());
 
         facilityProfile.setCnoImage(facility.getCnoImage());
+        facilityProfile.setCnoImage_base(facility.getCnoImage_base());
         facilityProfile.setFacilityWebsite(facility.getFacilityWebsite());
         facilityProfile.setVideoEmbedUrl(facility.getVideoEmbedUrl());
         facilityProfile.setCnoMessage(facility.getCnoMessage());

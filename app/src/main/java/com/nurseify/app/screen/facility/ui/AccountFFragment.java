@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -130,8 +131,10 @@ public class AccountFFragment extends Fragment {
     private void loadProfile_Pic(boolean b) {
         if (!TextUtils.isEmpty(str_facility_logo)) {
             byte[] decodeString = Utils.get_base_images(str_facility_logo);
+            RequestOptions myOptions = new RequestOptions()
+                    .override(100, 100);
             Glide.with((HomeFActivity) getActivity())
-                    .load(decodeString).placeholder(R.drawable.person)
+                    .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
                     .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.circleImageView2);
         }
 

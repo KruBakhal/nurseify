@@ -52,6 +52,9 @@ public class MyJobModel {
         @SerializedName("facility_logo")
         @Expose
         private String facilityLogo;
+        @SerializedName("facility_logo_base")
+        @Expose
+        private String facilityLogo_base;
         @SerializedName("facility_name")
         @Expose
         private String facilityName;
@@ -112,6 +115,14 @@ public class MyJobModel {
 
         public void setRatingComment(RatingComment ratingComment) {
             this.ratingComment = ratingComment;
+        }
+
+        public String getFacilityLogo_base() {
+            return facilityLogo_base;
+        }
+
+        public void setFacilityLogo_base(String facilityLogo_base) {
+            this.facilityLogo_base = facilityLogo_base;
         }
 
         public class RatingComment {

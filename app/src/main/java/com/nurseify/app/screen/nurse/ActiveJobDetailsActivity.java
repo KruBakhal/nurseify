@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -114,7 +115,11 @@ public class ActiveJobDetailsActivity extends AppCompatActivity {
         binding.tvHourlyRate.setText("$ " + jobModel.getHourlyPayRate() + "/Hr");
 
         try {
-            Glide.with(context).load(jobModel.getFacilityLogo()).into(binding.circleImageView);
+            if (!TextUtils.isEmpty(jobModel.getFacilityLogo())) {
+                byte[] decodeString = Utils.get_base_images(jobModel.getFacilityLogo_base());
+                Glide.with(context).load(decodeString).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(binding.circleImageView);
+            }
         } catch (Exception e) {
 
         }

@@ -2,6 +2,7 @@ package com.nurseify.app.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.nurseify.app.R;
 import com.nurseify.app.screen.nurse.model.UserProfileData;
+import com.nurseify.app.utils.Utils;
 
 import java.util.List;
 
@@ -47,8 +49,13 @@ public class Nurse_CertificationsAdapter extends RecyclerView.Adapter<Nurse_Cert
             holder.tv_eDate.setText(list.get(pp).getExpirationDate());
 
 
-            Glide.with(holder.imageView.getContext()).load(list.get(pp).getCertificateImage())
-                    .placeholder(R.drawable.place_holder_img).into(holder.imageView);
+            if (!TextUtils.isEmpty(list.get(pp).getCertificateImage())
+                    && !TextUtils.isEmpty(list.get(pp).getCertificateImage_base())) {
+                byte[] decodeString = Utils.get_base_images(list.get(pp).getCertificateImage_base());
+                Glide.with(holder.imageView.getContext()).load(decodeString)
+                        .placeholder(R.drawable.place_holder_img)
+                        .error(R.drawable.place_holder_img).into(holder.imageView);
+            }
 
 
         } catch (Exception e) {

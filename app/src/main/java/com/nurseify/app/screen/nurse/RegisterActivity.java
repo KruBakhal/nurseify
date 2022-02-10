@@ -524,15 +524,16 @@ public class RegisterActivity extends AppCompatActivity {
             personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
         }
         if (model != null) {
-
             personalDetailsBinding.edFirstName.setText(model.getFirstName());
             personalDetailsBinding.edLastName.setText(model.getLastName());
             personalDetailsBinding.edEmail.setText(model.getEmail());
             personalDetailsBinding.edLicenseState.setText(model.getNursingLicenseState());
             personalDetailsBinding.edLicenseNos.setText(model.getNursingLicenseNumber());
             personalDetailsBinding.edPhone.setText(model.getMobile());
-            if (!TextUtils.isEmpty(model.getImage()))
-                Glide.with(context).load(model.getImage())
+
+            if (!TextUtils.isEmpty(model.getImage())) {
+                byte[] decodeString = Utils.get_base_images(model.getImage_base());
+                Glide.with(context).load(decodeString)
                         .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -545,7 +546,8 @@ public class RegisterActivity extends AppCompatActivity {
                         return false;
                     }
                 }).into(personalDetailsBinding.imgProfile);
-            personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
+                personalDetailsBinding.imgProfile.setVisibility(View.VISIBLE);
+            }
         }
 
         personalDetailsBinding.edFirstName.addTextChangedListener(new TextWatcher() {
@@ -2500,8 +2502,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             };
             fetch_WorkHistory_Field_Data(apiResponseCallback);
-        }
-        else {
+        } else {
             if (!TextUtils.isEmpty(model.getExperience().getHighestNursingDegreeDefinition())) {
                 if (checkItemInList_Work(model.getExperience().getHighestNursingDegree().toString()
                         , list_nurse_degrees, false)) {
@@ -3192,8 +3193,17 @@ public class RegisterActivity extends AppCompatActivity {
                 UserProfileData.Certitficate certificateModel = model.getCertitficate().get(select_certificate_pos);
                 history2Binding.layCer.setVisibility(View.VISIBLE);
                 history2Binding.imgCertificate.setVisibility(View.VISIBLE);
-                Glide.with(context).load(certificateModel.getCertificateImage()).into(history2Binding.imgCertificate);
+
+//                Glide.with(context).load(certificateModel.getCertificateImage()).into(history2Binding.imgCertificate);
                 history2Binding.layUploadResume.setVisibility(View.GONE);
+                if (!TextUtils.isEmpty(certificateModel.getCertificateImage())
+                        && !TextUtils.isEmpty(certificateModel.getCertificateImage_base())) {
+                    byte[] decodeString = Utils.get_base_images(certificateModel.getCertificateImage_base());
+                    Glide.with(context).load(decodeString)
+                            .placeholder(R.drawable.place_holder_img)
+                            .error(R.drawable.place_holder_img).into(history2Binding.imgCertificate);
+                }
+
             }
         } else {
             history2Binding.layCer.setVisibility(View.GONE);

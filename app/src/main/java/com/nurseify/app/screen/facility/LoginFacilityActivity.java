@@ -117,7 +117,11 @@ public class LoginFacilityActivity extends AppCompatActivity {
                 } else if (password.equals("")) {
                     binding.editTextPassword.setText("Enter Password");
                 } else {
-                    logIn();
+                    if (Utils.isNetworkAvailable(context)) {
+                        logIn();
+                    } else {
+                        Utils.displayToast(context, context.getResources().getString(R.string.no_internet));
+                    }
                 }
 
             }

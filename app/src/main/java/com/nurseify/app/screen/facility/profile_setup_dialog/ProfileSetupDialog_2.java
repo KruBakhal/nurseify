@@ -47,6 +47,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nurseify.app.R;
 import com.nurseify.app.adapter.PersonalDetailWindowAdapter;
 import com.nurseify.app.databinding.DialogProfileSetup2Binding;
@@ -448,7 +449,7 @@ public class ProfileSetupDialog_2 extends DialogFragment {
     }
 
     private void data_setup() {
-        String address, city, postal_code, state = "", img = "", web = "", you = "", senior, about;
+        String address, city, postal_code, state = "", img = "", img_b = "", web = "", you = "", senior, about;
 
         if (viewModel.isEditMode) {
             if (model == null)
@@ -465,6 +466,7 @@ public class ProfileSetupDialog_2 extends DialogFragment {
             state = model.getFacilityState();
             city = model.getFacilityCity();
             img = model.getCnoImage();
+            img_b = model.getCnoImage_base();
             web = model.getFacilityWebsite();
             you = model.getVideoEmbedUrl();
             senior = model.getCnoMessage();
@@ -501,8 +503,23 @@ public class ProfileSetupDialog_2 extends DialogFragment {
         if (TextUtils.isEmpty(img)) {
             img = "";
         } else {
-            Glide.with(getContext()).load(img).placeholder(R.drawable.place_holder_img)
-                    .error(R.drawable.place_holder_img).into(imgHead);
+            if (viewModel.isEditMode) {
+                try {
+                    if (!TextUtils.isEmpty(img) && !TextUtils.isEmpty(img_b)) {
+                        byte[] decodeString = Utils.get_base_images(img_b);
+                        RequestOptions myOptions = new RequestOptions()
+                                .override(100, 100);
+                        Glide.with(getContext())
+                                .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                                .error(R.drawable.person)
+                                .into(imgHead);
+                    }
+                } catch (Exception e) {
+                    Log.d("TAG", "applied nurse onBindViewHolder: " + e.getMessage());
+                }
+            } else
+                Glide.with(getContext()).load(img).placeholder(R.drawable.place_holder_img)
+                        .error(R.drawable.place_holder_img).into(imgHead);
             imgHead.setVisibility(View.VISIBLE);
         }
         setup1Binding.edAddress.setText(address);

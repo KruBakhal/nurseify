@@ -72,9 +72,20 @@ public class AppliedNurseModel {
         @SerializedName("profile")
         @Expose
         private String profile;
+        @SerializedName("profile_base")
+        @Expose
+        private String profile_base;
         @SerializedName("rating")
         @Expose
         private String rating;
+
+        public String getProfile_base() {
+            return profile_base;
+        }
+
+        public void setProfile_base(String profile_base) {
+            this.profile_base = profile_base;
+        }
 
         public String getName() {
             return name;

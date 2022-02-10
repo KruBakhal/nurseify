@@ -13,10 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.ItemActiveFBinding;
 import com.nurseify.app.intermediate.ItemCallback;
 import com.nurseify.app.screen.facility.model.Facility_JobDatum;
+import com.nurseify.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,9 +127,22 @@ public class Active_My_job_FAdapter extends RecyclerView.Adapter<BaseViewHolder>
         public void onBind(int position) {
             Facility_JobDatum model = listPostedJob.get(position);
 
-            Glide.with(itemView.imgProfile.getContext()).load(model.getFacilityImage())
-                    .placeholder(R.drawable.person)
-                    .error(R.drawable.person).into(itemView.imgProfile);
+            try {
+                /*Glide.with(itemView.imgProfile.getContext()).load(model.getFacilityImage())
+                        .placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(itemView.imgProfile);*/
+                if (!TextUtils.isEmpty(model.getFacilityImage())) {
+                    byte[] decodeString = Utils.get_base_images(model.getFacilityImage_base());
+                    RequestOptions myOptions = new RequestOptions()
+                            .override(100, 100);
+                    Glide.with(activity)
+                            .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                            .error(R.drawable.person)
+                            .into(itemView.imgProfile);
+                }
+            } catch (Exception e) {
+                Log.d("TAG", "applied nurse onBindViewHolder: " + e.getMessage());
+            }
             itemView.tvName.setText(model.getFacilityFirstName() + " " + model.getFacilityLastName());
             itemView.layRating.setVisibility(View.GONE);
             itemView.tvTime.setVisibility(View.GONE);

@@ -926,6 +926,17 @@ public class UserProfileData {
         @SerializedName("certificate_image")
         @Expose
         private String certificateImage;
+        @SerializedName("certificate_image_base")
+        @Expose
+        private String certificateImage_base;
+
+        public String getCertificateImage_base() {
+            return certificateImage_base;
+        }
+
+        public void setCertificateImage_base(String certificateImage_base) {
+            this.certificateImage_base = certificateImage_base;
+        }
 
         public String getCertificateId() {
             return certificateId;

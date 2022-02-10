@@ -15,12 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.ItemPostedFBinding;
 import com.nurseify.app.intermediate.ItemCallback;
 import com.nurseify.app.screen.facility.AppliedNursesActivity;
 import com.nurseify.app.screen.facility.model.Facility_JobDatum;
 import com.nurseify.app.utils.Constant;
+import com.nurseify.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,11 +130,21 @@ public class PostedAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
         @Override
         public void onBind(int position) {
             Facility_JobDatum datum = listPostedJob.get(position);
-            try {
-                Glide.with(activity).load(datum.getFacilityImage()).placeholder(R.drawable.person)
-                        .error(R.drawable.person).into(itemView.img);
-            } catch (Exception e) {
 
+            try {
+                /*Glide.with(activity).load(datum.getFacilityImage()).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(itemView.img);*/
+                if (!TextUtils.isEmpty(datum.getFacilityImage())) {
+                    byte[] decodeString = Utils.get_base_images(datum.getFacilityImage_base());
+                    RequestOptions myOptions = new RequestOptions()
+                            .override(100, 100);
+                    Glide.with(activity)
+                            .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                            .error(R.drawable.person)
+                            .into(itemView.img);
+                }
+            } catch (Exception e) {
+                Log.d("TAG", "applied nurse onBindViewHolder: " + e.getMessage());
             }
             itemView.tvName.setText("" + datum.getFacilityFirstName() + " " + datum.getFacilityLastName());
             itemView.tvSpecialty.setText("" + datum.getPreferredSpecialtyDefinition());

@@ -283,6 +283,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="15dp"
                         android:scaleType="fitXY"
+
                         android:visibility="visible" />
                 </LinearLayout>
 

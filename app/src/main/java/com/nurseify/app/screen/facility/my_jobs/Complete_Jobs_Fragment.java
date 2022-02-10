@@ -189,12 +189,17 @@ public class Complete_Jobs_Fragment extends Fragment {
         dialog.setCancelable(true);
         dialog.show();
         try {
-            Glide.with(getActivity()).load(ratingComment.getNurseImage())
+           /* Glide.with(getActivity()).load(ratingComment.getNurseImage())
                     .placeholder(R.drawable.person).error(R.drawable.person)
                     .into(dialogRatingBinding.imgProfile);
+           */ if (!TextUtils.isEmpty(ratingComment.getNurseImage())) {
+                byte[] decodeString = Utils.get_base_images(ratingComment.getNurseImage_base());
+                Glide.with(getActivity()).load(decodeString).placeholder(R.drawable.person).into(dialogRatingBinding.imgProfile);
+            }
         } catch (Exception e) {
 
         }
+
         dialogRatingBinding.tvFacilityName.setText(ratingComment.getNurseName());
         dialogRatingBinding.tvRating.setText(ratingComment.getRating());
         if (!TextUtils.isEmpty(ratingComment.getRating()))

@@ -17,27 +17,39 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.nurseify.app.AppController;
 import com.nurseify.app.R;
+import com.nurseify.app.common.MessageImageModel;
 import com.nurseify.app.intermediate.OnItemClick;
 import com.nurseify.app.screen.facility.MessageFacilityActivity;
 import com.nurseify.app.screen.facility.model.NurseDatum;
 import com.nurseify.app.screen.nurse.MessageActivity;
 import com.nurseify.app.screen.nurse.model.Chatlist;
 import com.nurseify.app.screen.nurse.model.User;
+import com.nurseify.app.screen.nurse.model.UserProfile;
+import com.nurseify.app.screen.nurse.model.UserProfileData;
 import com.nurseify.app.utils.Constant;
 import com.nurseify.app.utils.SessionManager;
 import com.nurseify.app.utils.Utils;
+import com.nurseify.app.webService.RetrofitClient;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     boolean isNurse;
@@ -88,14 +100,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (TextUtils.isEmpty(user.getProfile_path())) {
+            holder.getUserProfileImage(holder, user.getId());
+            /*if (TextUtils.isEmpty(user.getProfile_path())) {
                 holder.circleImageView.setImageResource(R.drawable.person);
             } else {
                 Glide.with(mContext).load(user.getProfile_path())
                         .placeholder(R.drawable.person).error(R.drawable.person)
                         .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
                         .into(holder.circleImageView);
-            }
+                holder.getUserProfileImage(holder, user.getId());
+            }*/
             if (user.getStatus()) {
                 holder.img_status.setImageResource(R.color.drak_green);
             } else {
@@ -108,6 +122,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    AppController.user_profile_base = user.getProfile_path();
+                    user.setProfile_path(null);
                     if (isNurse) {
                         mContext.startActivity(new Intent(mContext, MessageActivity.class)
                                 .putExtra("receiver_id", user.getId())
@@ -263,6 +279,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         TextView tv_name, tv_title, tv_last_msg, tv_last_msg_time, tv_count;
         ImageView img_status, circleImageView;
         View lay_count;
+        private String reciever_base;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -276,5 +293,60 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             lay_count = itemView.findViewById(R.id.lay_count);
             tv_count = itemView.findViewById(R.id.tv_count);
         }
+
+        private void getUserProfileImage(ViewHolder viewHolder, String user_id) {
+            if (!Utils.isNetworkAvailable(viewHolder.circleImageView.getContext())) {
+//            Utils.displayToast(this, getResources().getString(R.string.no_internet));
+                return;
+            }
+
+            RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+
+            Call<MessageImageModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+                    .call_user_profile_image(user_id1);
+
+            call.enqueue(new Callback<MessageImageModel>() {
+                @Override
+                public void onResponse(Call<MessageImageModel> call, Response<MessageImageModel> response) {
+
+                    try {
+                        if (response == null || response.body() == null) {
+                            Log.d("TAG", "onResponse: " + response.errorBody().toString());
+                            return;
+                        }
+                        if (response.isSuccessful()) {
+                            if (response.body().getApiStatus().equals("1")) {
+                                List<MessageImageModel.Datum> datumList = response.body().getData();
+                                if (datumList != null || datumList.size() != 0) {
+                                    reciever_base = datumList.get(0).getImage();
+                                    load_image();
+                                }
+
+                            }
+                        }
+                    } catch (Exception exception) {
+                        Log.d("TAG", "onResponse: " + exception.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MessageImageModel> call, Throwable t) {
+                    Log.e("TAG" + "getNurseProfile", t.toString());
+                }
+            });
+        }
+
+        private void load_image() {
+            byte[] decodeString = Utils.get_base_images(reciever_base);
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.override(100, 100);
+            Glide.with(this.circleImageView.getContext()).load(decodeString)
+                    .apply(requestOptions)
+                    .placeholder(R.drawable.person).error(R.drawable.person)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(circleImageView);
+        }
+
     }
 }

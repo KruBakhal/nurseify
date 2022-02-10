@@ -42,6 +42,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.nurseify.app.R;
 import com.nurseify.app.adapter.HourlyRateWindowAdapter;
@@ -219,8 +220,22 @@ public class ProfileSetupDialog_1 extends DialogFragment {
     private void setData() {
         if (model != null) {
             if (!TextUtils.isEmpty(model.getFacilityLogo())) {
-                Glide.with(getContext()).load(model.getFacilityLogo()).into(setup1Binding.imgProfile);
-                setup1Binding.imgProfile.setVisibility(View.VISIBLE);
+                try {
+//                    Glide.with(getContext()).load(model.getFacilityLogo()).into(setup1Binding.imgProfile);
+
+                    if (!TextUtils.isEmpty(model.getFacilityLogo())) {
+                        byte[] decodeString = Utils.get_base_images(model.getFacilityLogo_base());
+                        RequestOptions myOptions = new RequestOptions()
+                                .override(100, 100);
+                        Glide.with(getContext())
+                                .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                                .error(R.drawable.person)
+                                .into(setup1Binding.imgProfile);
+                        setup1Binding.imgProfile.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    Log.d("TAG", " onBindViewHolder: " + e.getMessage());
+                }
 
             }
             setup1Binding.facilityName.setText(model.getFacilityName());

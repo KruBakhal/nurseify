@@ -443,6 +443,10 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
             Utils.displayToast(context, "Empty Data");
             return;
         }
+        if (!TextUtils.isEmpty(AppController.user_profile_base)) {
+            model.setFacilityLogo_base(AppController.user_profile_base);
+            AppController.user_profile_base = "";
+        }
         binding.tvTitle.setText("" + model.getPreferredSpecialtyDefinition());
         binding.tvName.setText("" + model.getName());
         binding.tvSpecialty.setText("" + model.getPreferredSpecialtyDefinition());
@@ -475,7 +479,11 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
             binding.tvApplied.setText("Applied");
         }
         try {
-            Glide.with(context).load(model.getFacilityLogo()).into(binding.circleImageView);
+            if (!TextUtils.isEmpty(model.getFacilityLogo())) {
+                byte[] decodeString = Utils.get_base_images(model.getFacilityLogo_base());
+                Glide.with(context).load(decodeString)
+                        .placeholder(R.drawable.person).error(R.drawable.person).into(binding.circleImageView);
+            }
         } catch (Exception e) {
 
         }
@@ -522,8 +530,17 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
                         context, R.color.secondary_till));
             }
         }
-        try {
+       /* try {
             Glide.with(context).load(facility.getFacilityLogo()).into(binding.circleImageView);
+        } catch (Exception e) {
+
+        }*/
+        try {
+            if (!TextUtils.isEmpty(facility.getFacilityLogo())) {
+                byte[] decodeString = Utils.get_base_images(facility.getFacilityLogo_base());
+                Glide.with(context).load(decodeString)
+                        .placeholder(R.drawable.person).error(R.drawable.person).into(binding.circleImageView);
+            }
         } catch (Exception e) {
 
         }
@@ -550,7 +567,11 @@ public class Browse_Facility_Offered_JobDetailsActivity extends AppCompatActivit
         binding.tvHourlyRate.setText("$ " + jobModel.getHourlyPayRate() + "/Hr");
 
         try {
-            Glide.with(context).load(jobModel.getFacilityLogo()).into(binding.circleImageView);
+            if (!TextUtils.isEmpty(jobModel.getFacilityLogo())) {
+                byte[] decodeString = Utils.get_base_images(jobModel.getFacilityLogo_base());
+                Glide.with(context).load(decodeString)
+                        .placeholder(R.drawable.person).error(R.drawable.person).into(binding.circleImageView);
+            }
         } catch (Exception e) {
 
         }

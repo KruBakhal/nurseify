@@ -167,9 +167,12 @@ public class Posted_Jobs_Fragment extends Fragment {
 
             @Override
             public void onClick(int position) {
+                Facility_JobDatum model = listPostedJob.get(position);
+                model.setFacilityImage_base(null);
                 startActivityForResult(new Intent(getContext(), Add_Jobs_Activity.class)
                                 .putExtra(Constant.EDIT_MODE, true)
-                                .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(listPostedJob.get(position)))
+                                .putExtra(Constant.STR_RESPONSE_DATA,
+                                        new Gson().toJson(model))
                         , REQUEST_CODE_ADD_JOB);
             }
         });
@@ -272,7 +275,7 @@ public class Posted_Jobs_Fragment extends Fragment {
             } else {
                 errorProgress(true);
                 binding.tvMsg.setText("Yet, No Job Found !");
-                isFirstTime=true;
+                isFirstTime = true;
             }
         } else {
             dismissProgress();

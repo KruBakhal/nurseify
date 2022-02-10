@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -40,9 +41,12 @@ import com.nurseify.app.screen.nurse.ui.MyJobFragment;
 import com.nurseify.app.screen.nurse.ui.NotificationFragment;
 import com.nurseify.app.utils.Constant;
 import com.nurseify.app.utils.SessionManager;
+import com.nurseify.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.internal.Util;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -84,22 +88,30 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        UserProfileData userProfileData = new SessionManager(HomeActivity.this).get_User();
-        Glide.with(HomeActivity.this).load(userProfileData.getImage())
-                .placeholder(R.drawable.person)
-                .error(R.drawable.person)
-                .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                Log.d("TAG", "onLoadFailed: 1 " + e.getMessage());
-                return false;
-            }
+        try {
 
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                return false;
-            }
-        }).into(binding.accountIcon);
+            UserProfileData userProfileData = new SessionManager(HomeActivity.this).get_User();
+            if (TextUtils.isEmpty(userProfileData.getImage()) || TextUtils.isEmpty(userProfileData.getImage_base()))
+                return;
+            byte[] decodeString = Utils.get_base_images(userProfileData.getImage_base());
+            Glide.with(HomeActivity.this).load(decodeString)
+                    .placeholder(R.drawable.person)
+                    .error(R.drawable.person)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    Log.d("TAG", "onLoadFailed: 1 " + e.getMessage());
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    return false;
+                }
+            }).into(binding.accountIcon);
+        } catch (Exception exception) {
+            Log.d("TAG", "setData: " + exception.getMessage());
+        }
     }
 
     private void click() {

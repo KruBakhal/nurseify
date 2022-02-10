@@ -12,23 +12,36 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nurseify.app.AppController;
 import com.nurseify.app.R;
 import com.nurseify.app.adapter.ChatAdapter;
+import com.nurseify.app.common.MessageImageModel;
 import com.nurseify.app.databinding.ActivityMessageBinding;
+import com.nurseify.app.screen.facility.MessageFacilityActivity;
 import com.nurseify.app.screen.nurse.model.Chatlist;
+import com.nurseify.app.screen.nurse.model.UserProfile;
+import com.nurseify.app.screen.nurse.model.UserProfileData;
 import com.nurseify.app.utils.Constant;
 import com.nurseify.app.utils.SessionManager;
 import com.nurseify.app.utils.Utils;
+import com.nurseify.app.webService.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -41,11 +54,11 @@ public class MessageActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private String both_user_key;
     private ValueEventListener messeageRefrence;
-    private ValueEventListener lastStatusReference;
     private SessionManager sessionManager;
     private String receiver_profile_path;
     private String receiver_full_name;
     private String receiver_email;
+    private String reciever_base;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +75,20 @@ public class MessageActivity extends AppCompatActivity {
         sender_id = new SessionManager(MessageActivity.this).get_user_register_Id();
         receiver_id = getIntent().getStringExtra("receiver_id");
         receiver_profile_path = getIntent().getStringExtra(Constant.PROFILE_PATH);
+
+       /* if (TextUtils.isEmpty(receiver_profile_path) && !TextUtils.isEmpty(AppController.user_profile_base)) {
+            receiver_profile_path = AppController.user_profile_base;
+            AppController.user_profile_base = "";
+        }*/
+
         receiver_full_name = getIntent().getStringExtra(Constant.FULL_NAME);
         receiver_email = getIntent().getStringExtra(Constant.EMAIL_ID);
         binding.tvTitle.setText("" + receiver_full_name);
-        Glide.with(this).load(receiver_profile_path)
+
+        /*Glide.with(this).load(receiver_profile_path)
                 .placeholder(R.drawable.person).error(R.drawable.person).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.imgProfile);
+*/
+        getUserProfileImage(receiver_id);
 
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,11 +116,15 @@ public class MessageActivity extends AppCompatActivity {
                         mchat.clear();
                         if (dataSnapshot.getChildren() != null && dataSnapshot.hasChildren())
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Chatlist chat = snapshot.getValue(Chatlist.class);
-                                mchat.add(chat);
-                                chatAdapter = new ChatAdapter(MessageActivity.this, mchat,
-                                        null);
-                                binding.recyclerViewJobs.setAdapter(chatAdapter);
+                                try {
+                                    Chatlist chat = snapshot.getValue(Chatlist.class);
+                                    mchat.add(chat);
+                                    chatAdapter = new ChatAdapter(MessageActivity.this, mchat,
+                                            null);
+                                    binding.recyclerViewJobs.setAdapter(chatAdapter);
+                                } catch (Exception exception) {
+                                    Log.d("TAG", "onDataChange: " + exception.getMessage());
+                                }
                             }
                     }
 
@@ -107,6 +133,7 @@ public class MessageActivity extends AppCompatActivity {
 
                     }
                 });
+
         seenMessage();
 
     }
@@ -332,4 +359,63 @@ public class MessageActivity extends AppCompatActivity {
         super.onPause();
         update_user_status(false);
     }
+
+
+    private void getUserProfileImage(String user_id) {
+        if (!Utils.isNetworkAvailable(this)) {
+//            Utils.displayToast(this, getResources().getString(R.string.no_internet));
+            return;
+        }
+
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+
+        Call<MessageImageModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+                .call_user_profile_image(user_id1);
+
+        call.enqueue(new Callback<MessageImageModel>() {
+            @Override
+            public void onResponse(Call<MessageImageModel> call, Response<MessageImageModel> response) {
+
+                try {
+                    if (response == null || response.body() == null) {
+                        Log.d("TAG", "onResponse: " + response.errorBody().toString());
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        if (response.body().getApiStatus().equals("1")) {
+                            List<MessageImageModel.Datum> datumList = response.body().getData();
+                            if (datumList != null || datumList.size() != 0) {
+
+                                reciever_base = datumList.get(0).getImage();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        byte[] decodeString = Utils.get_base_images(reciever_base);
+                                        RequestOptions requestOptions = new RequestOptions();
+                                        requestOptions.override(100, 100);
+                                        Glide.with(MessageActivity.this).load(decodeString)
+                                                .apply(requestOptions)
+                                                .placeholder(R.drawable.person).error(R.drawable.person)
+                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                .skipMemoryCache(true)
+                                                .into(binding.imgProfile);
+                                    }
+                                });
+                            }
+
+                        }
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG", "onResponse: " + exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MessageImageModel> call, Throwable t) {
+                Log.e("TAG" + "getNurseProfile", t.toString());
+            }
+        });
+
+    }
+
 }

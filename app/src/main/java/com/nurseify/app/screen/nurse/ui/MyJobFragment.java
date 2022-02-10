@@ -469,7 +469,8 @@ public class MyJobFragment extends Fragment {
             public void onClick(int pos) {
                 String job_id = list_Offered_Job.get(pos).getOfferId();
                 if (list_Offered_Job.get(pos).getStatus().equals("pending")) {
-                    getActivity().startActivityForResult(new Intent(getActivity(), Browse_Facility_Offered_JobDetailsActivity.class)
+                    getActivity().startActivityForResult(new Intent(getActivity(),
+                            Browse_Facility_Offered_JobDetailsActivity.class)
                             .putExtra("data", job_id)
                             .putExtra(Constant.FLAG, 3), REQUEST_EDIT);
                 } else if (list_Offered_Job.get(pos).getStatus().equals("active")) {

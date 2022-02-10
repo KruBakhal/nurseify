@@ -20,6 +20,9 @@ public class Facility_JobDatum {
     @SerializedName("facility_image")
     @Expose
     private String facilityImage;
+    @SerializedName("facility_image_base")
+    @Expose
+    private String facilityImage_base;
     @SerializedName("preferred_shift")
     @Expose
     private String preferredShift;
@@ -134,6 +137,14 @@ public class Facility_JobDatum {
     @SerializedName("offered_nurse_id")
     @Expose
     private String offered_nurse_id;
+
+    public String getFacilityImage_base() {
+        return facilityImage_base;
+    }
+
+    public void setFacilityImage_base(String facilityImage_base) {
+        this.facilityImage_base = facilityImage_base;
+    }
 
     public String getOffered_nurse_id() {
         return offered_nurse_id;
@@ -524,6 +535,17 @@ public class Facility_JobDatum {
         @SerializedName("nurse_image")
         @Expose
         private String nurseImage;
+        @SerializedName("nurse_image_base")
+        @Expose
+        private String nurseImage_base;
+
+        public String getNurseImage_base() {
+            return nurseImage_base;
+        }
+
+        public void setNurseImage_base(String nurseImage_base) {
+            this.nurseImage_base = nurseImage_base;
+        }
 
         public String getRating() {
             return rating;

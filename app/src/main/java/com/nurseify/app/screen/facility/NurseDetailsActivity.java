@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.nurseify.app.AppController;
 import com.nurseify.app.R;
 import com.nurseify.app.adapter.JobsAdapter;
 import com.nurseify.app.adapter.Nurse_CertificationsAdapter;
@@ -145,14 +146,20 @@ public class NurseDetailsActivity extends AppCompatActivity {
         }
         nurse_ID = model.getUserId();
         getNurseProfile(nurse_ID);
-
         setup();
 
     }
 
     private void setup() {
-        Glide.with(context).load(model.getNurseLogo()).placeholder(R.drawable.person)
-                .error(R.drawable.person).into(binding.circleImageView);
+        try {
+            if (!TextUtils.isEmpty(model.getNurseLogo())) {
+                byte[] decodeString = Utils.get_base_images(model.getNurseLogo_base());
+                Glide.with(context).load(decodeString).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(binding.circleImageView);
+            }
+        } catch (Exception exception) {
+            Log.d(TAG, "setup: image load " + exception.getMessage());
+        }
         binding.tvName.setText(model.getFirstName() + " " + model.getLastName());
         binding.tvDescription.setText(model.getSummary());
         if (TextUtils.isEmpty(model.getRating().getOverAll())) {
@@ -174,8 +181,15 @@ public class NurseDetailsActivity extends AppCompatActivity {
     }
 
     private void setup2(UserProfileData model) {
-        Glide.with(context).load(model.getImage()).placeholder(R.drawable.person)
-                .error(R.drawable.person).into(binding.circleImageView);
+        try {
+            if (!TextUtils.isEmpty(model.getImage())) {
+                byte[] decodeString = Utils.get_base_images(model.getImage_base());
+                Glide.with(context).load(decodeString).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(binding.circleImageView);
+            }
+        } catch (Exception exception) {
+            Log.d(TAG, "setup: image load " + exception.getMessage());
+        }
         binding.tvName.setText(model.getFirstName() + " " + model.getLastName());
         binding.tvDescription.setText(model.getRoleInterest().getSummary());
         binding.tvRating.setText(rating);
@@ -215,6 +229,8 @@ public class NurseDetailsActivity extends AppCompatActivity {
         binding.layMesg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                AppController.user_profile_base = model.getNurseLogo_base();
+                model.setNurseLogo_base(null);
                 startActivity(new Intent(context, MessageFacilityActivity.class)
                         .putExtra("receiver_id", nurse_ID)
                         .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));

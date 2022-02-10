@@ -1,5 +1,6 @@
 package com.nurseify.app.screen.facility;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,21 +21,33 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nurseify.app.AppController;
 import com.nurseify.app.R;
 import com.nurseify.app.adapter.ChatAdapter;
+import com.nurseify.app.common.MessageImageModel;
 import com.nurseify.app.databinding.ActivityMessageBinding;
 import com.nurseify.app.screen.facility.model.FacilityProfile;
 import com.nurseify.app.screen.facility.model.NurseDatum;
 import com.nurseify.app.screen.nurse.model.Chatlist;
+import com.nurseify.app.screen.nurse.model.UserProfile;
+import com.nurseify.app.screen.nurse.model.UserProfileData;
 import com.nurseify.app.utils.Constant;
 import com.nurseify.app.utils.SessionManager;
 import com.nurseify.app.utils.Utils;
+import com.nurseify.app.webService.RetrofitClient;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageFacilityActivity extends AppCompatActivity {
 
@@ -50,6 +64,8 @@ public class MessageFacilityActivity extends AppCompatActivity {
     private String both_user_key;
     private SessionManager sessionManager;
     private ValueEventListener messeageRefrence;
+    private ProgressDialog progressDialog;
+    private String reciever_base;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +86,25 @@ public class MessageFacilityActivity extends AppCompatActivity {
             Type type = new TypeToken<NurseDatum>() {
             }.getType();
             nurse_model = new Gson().fromJson(str, type);
+
+            /*if (nurse_model != null && TextUtils.isEmpty(nurse_model.getNurseLogo())
+                    && !TextUtils.isEmpty(AppController.user_profile_base)) {
+                nurse_model.setNurseLogo_base(AppController.user_profile_base);
+                AppController.user_profile_base = "";
+            }*/
         }
         facility_model = sessionManager.get_facilityProfile();
         reciever_profile_path = nurse_model.getNurseLogo();
         reciever_name = nurse_model.getFirstName() + " " + nurse_model.getLastName();
         binding.tvTitle.setText(reciever_name);
-        Glide.with(this).load(nurse_model.getNurseLogo())
-                .placeholder(R.drawable.person).error(R.drawable.person).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.imgProfile);
+
+        getUserProfileImage(reciever_id);
+
+        /*Glide.with(this).load(nurse_model.getNurseLogo())
+                .placeholder(R.drawable.person).error(R.drawable.person)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true).into(binding.imgProfile);
+*/
 
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,11 +133,15 @@ public class MessageFacilityActivity extends AppCompatActivity {
                         mchat.clear();
                         if (dataSnapshot.getChildren() != null && dataSnapshot.hasChildren())
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Chatlist chat = snapshot.getValue(Chatlist.class);
-                                mchat.add(chat);
-                                chatAdapter = new ChatAdapter(MessageFacilityActivity.this, mchat,
-                                        null);
-                                binding.recyclerViewJobs.setAdapter(chatAdapter);
+                                try {
+                                    Chatlist chat = snapshot.getValue(Chatlist.class);
+                                    mchat.add(chat);
+                                    chatAdapter = new ChatAdapter(MessageFacilityActivity.this, mchat,
+                                            null);
+                                    binding.recyclerViewJobs.setAdapter(chatAdapter);
+                                } catch (Exception exception) {
+                                    Log.d("TAG", "onDataChange: " + exception.getMessage());
+                                }
                             }
                     }
 
@@ -129,9 +161,15 @@ public class MessageFacilityActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chatlist chat = snapshot.getValue(Chatlist.class);
-                    if (chat.getReceiver().equals(sender_id)) {
-                        snapshot.getRef().child(Constant.IS_SEEN).setValue(1);
+                    try {
+                        if (snapshot == null)
+                            return;
+                        Chatlist chat = snapshot.getValue(Chatlist.class);
+                        if (chat.getReceiver().equals(sender_id)) {
+                            snapshot.getRef().child(Constant.IS_SEEN).setValue(1);
+                        }
+                    } catch (Exception exception) {
+                        Log.d("TAG", "onDataChange: " + exception.getMessage());
                     }
                 }
             }
@@ -356,5 +394,61 @@ public class MessageFacilityActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         update_user_status(false);
+    }
+
+    private void getUserProfileImage(String user_id) {
+        if (!Utils.isNetworkAvailable(this)) {
+//            Utils.displayToast(this, getResources().getString(R.string.no_internet));
+            return;
+        }
+
+        RequestBody user_id1 = RequestBody.create(MediaType.parse("multipart/form-data"), user_id);
+
+        Call<MessageImageModel> call = RetrofitClient.getInstance().getNurseRetrofitApi()
+                .call_user_profile_image(user_id1);
+
+        call.enqueue(new Callback<MessageImageModel>() {
+            @Override
+            public void onResponse(Call<MessageImageModel> call, Response<MessageImageModel> response) {
+
+                try {
+                    if (response == null || response.body() == null) {
+                        Log.d("TAG", "onResponse: " + response.errorBody().toString());
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        if (response.body().getApiStatus().equals("1")) {
+                            List<MessageImageModel.Datum> datumList = response.body().getData();
+                            if (datumList != null || datumList.size() != 0) {
+                                reciever_base = datumList.get(0).getImage();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        byte[] decodeString = Utils.get_base_images(reciever_base);
+                                        RequestOptions requestOptions = new RequestOptions();
+                                        requestOptions.override(100, 100);
+                                        Glide.with(MessageFacilityActivity.this).load(decodeString)
+                                                .apply(requestOptions)
+                                                .placeholder(R.drawable.person).error(R.drawable.person)
+                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                .skipMemoryCache(true)
+                                                .into(binding.imgProfile);
+                                    }
+                                });
+                            }
+
+                        }
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG", "onResponse: " + exception.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MessageImageModel> call, Throwable t) {
+                Log.e("TAG" + "getNurseProfile", t.toString());
+            }
+        });
+
     }
 }

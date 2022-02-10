@@ -177,6 +177,11 @@ public class WorkHistoryActivity extends AppCompatActivity {
         binding.tvEpic.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyEpicDefinition());
         binding.tvOther.setText(nurseProfileModel.getData().getExperience().getEhrProficiencyOther());
 //        binding.tvSearchForCredential.setText(nurseProfileModel.getData().get);
+        if (TextUtils.isEmpty(nurseProfileModel.getData().getResume())) {
+            binding.tvResume.setVisibility(View.VISIBLE);
+            binding.edit3.setVisibility(View.GONE);
+            binding.layResume.setVisibility(View.GONE);
+        }
 
         binding.recyclerView.setAdapter(new CertificationsAdapter(WorkHistoryActivity.this,
                 nurseProfileModel.getData().getCertitficate(), new CertificationCallback() {

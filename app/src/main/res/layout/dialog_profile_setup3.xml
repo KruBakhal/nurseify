@@ -307,7 +307,7 @@
                     android:layout_marginTop="8dp"
                     android:background="#8A4999" />
 
-                <LinearLayout
+                w<LinearLayout
                     android:id="@+id/view_bg"
                     android:visibility="gone"
                     android:layout_width="match_parent"

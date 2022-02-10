@@ -24,7 +24,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.nurseify.app.AppController;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.DialogInviteNurseBinding;
 import com.nurseify.app.databinding.ItemNursesBinding;
@@ -163,8 +165,21 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
         public void onBind(int position) {
             System.gc();
             NurseDatum model = listPostedJob.get(position);
-            Glide.with(itemView.imgProfile.getContext()).load(model.getNurseLogo()).placeholder(R.drawable.person)
-                    .error(R.drawable.person).into(itemView.imgProfile);
+            try {
+                /*Glide.with(itemView.imgProfile.getContext()).load(model.getNurseLogo()).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(itemView.imgProfile);*/
+                if (!TextUtils.isEmpty(model.getNurseLogo())) {
+                    byte[] decodeString = Utils.get_base_images(model.getNurseLogo_base());
+                    RequestOptions myOptions = new RequestOptions()
+                            .override(100, 100);
+                    Glide.with(activity)
+                            .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                            .error(R.drawable.person)
+                            .into(itemView.imgProfile);
+                }
+            } catch (Exception e) {
+                Log.d("TAG", "applied nurse onBindViewHolder: " + e.getMessage());
+            }
             itemView.tvName.setText(model.getFirstName() + " " + model.getLastName());
             if (TextUtils.isEmpty(model.getSummary())) {
                 itemView.tvDescription.setText("");
@@ -204,6 +219,8 @@ public class NursesAdapter extends RecyclerView.Adapter<BaseViewHolder> implemen
                         return;
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
+//                    AppController.user_profile_base = model.getNurseLogo_base();
+                    model.setNurseLogo_base(null);
                     activity.startActivity(new Intent(activity, MessageFacilityActivity.class)
                             .putExtra("receiver_id", model.getUserId())
                             .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model)));

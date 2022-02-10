@@ -28,6 +28,9 @@ public class NurseDatum {
     @SerializedName("nurse_logo")
     @Expose
     private String nurseLogo;
+    @SerializedName("nurse_logo_base")
+    @Expose
+    private String nurseLogo_base;
     @SerializedName("nurse_email")
     @Expose
     private String nurseEmail;
@@ -238,6 +241,14 @@ public class NurseDatum {
     @SerializedName("work_experience")
     @Expose
     private String workExperience;
+
+    public String getNurseLogo_base() {
+        return nurseLogo_base;
+    }
+
+    public void setNurseLogo_base(String nurseLogo_base) {
+        this.nurseLogo_base = nurseLogo_base;
+    }
 
     public String getNurseId() {
         return nurseId;

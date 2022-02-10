@@ -112,8 +112,11 @@ public class FacilityDetails4Activity extends AppCompatActivity {
         facilityProfile.setFacilityCity(facility.getCity());
         facilityProfile.setFacilityState(facility.getState());
         facilityProfile.setFacilityPostcode(facility.getPostcode());
+        facilityProfile.setFacilityLogo(facility.getFacilityLogo());
+        facilityProfile.setFacilityLogo_base(facility.getFacilityLogo_base());
 
         facilityProfile.setCnoImage(facility.getCnoImage());
+        facilityProfile.setCnoImage_base(facility.getCnoImage_base());
         facilityProfile.setFacilityWebsite(facility.getFacilityWebsite());
         facilityProfile.setVideoEmbedUrl(facility.getVideoEmbedUrl());
         facilityProfile.setCnoMessage(facility.getCnoMessage());

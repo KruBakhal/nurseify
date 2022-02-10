@@ -12,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.ItemActiveFBinding;
 import com.nurseify.app.intermediate.ItemCallback;
 import com.nurseify.app.screen.facility.model.OfferedNurse_Datum;
+import com.nurseify.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,8 +128,23 @@ public class ActiveFAdapter extends RecyclerView.Adapter<BaseViewHolder> impleme
         public void onBind(int position) {
             System.gc();
             OfferedNurse_Datum model = listPostedJob.get(position);
-            Glide.with(itemView.imgProfile.getContext()).load(model.getNurseImage()).placeholder(R.drawable.person)
-                    .error(R.drawable.person).into(itemView.imgProfile);
+            try {
+/*
+                Glide.with(itemView.imgProfile.getContext()).load(model.getNurseImage()).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(itemView.imgProfile);
+*/
+                if (!TextUtils.isEmpty(model.getNurseImage())) {
+                    byte[] decodeString = Utils.get_base_images(model.getNurseImage_base());
+                    RequestOptions myOptions = new RequestOptions()
+                            .override(100, 100);
+                    Glide.with(activity)
+                            .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                            .error(R.drawable.person)
+                            .into(itemView.imgProfile);
+                }
+            } catch (Exception e) {
+                Log.d("TAG", "applied nurse onBindViewHolder: " + e.getMessage());
+            }
             itemView.tvName.setText(model.getNurseFirstName() + " " + model.getNurseLastName());
             if (model.getRating() != null && !TextUtils.isEmpty(model.getRating()))
                 itemView.tvRating.setText(model.getRating());

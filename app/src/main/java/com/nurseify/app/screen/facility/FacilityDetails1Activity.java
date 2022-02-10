@@ -80,18 +80,7 @@ public class FacilityDetails1Activity extends AppCompatActivity {
                     binding.progressBar.setVisibility(View.GONE);
                     FacilityJobModel.Facility model = response.body().getData().get(0);
                     create_facility_profile(model);
-                    if (!TextUtils.isEmpty(model.getFacilityLogo())) {
-                        Glide.with(context).load(model.getFacilityLogo()).into(binding.imgProfile);
-                        binding.imgProfile.setVisibility(View.VISIBLE);
-                    }
-                    binding.facilityName.setText(model.getName());
-                    binding.tvFacilityType.setText("" + model.getFacilityTypeDefinition());
-                    binding.tvEmail.setText(model.getFacilityEmail());
-                    binding.tvPhone.setText(model.getFacilityPhone());
-                    binding.tvAddress.setText(model.getAddress());
-                    binding.tvCity.setText(model.getCity());
-                    binding.tvState.setText(model.getState());
-                    binding.tvPostCode.setText(model.getPostcode());
+                    setData();
 
 
                 } else {
@@ -127,8 +116,10 @@ public class FacilityDetails1Activity extends AppCompatActivity {
         facilityProfile.setFacilityState(facility.getState());
         facilityProfile.setFacilityPostcode(facility.getPostcode());
         facilityProfile.setFacilityLogo(facility.getFacilityLogo());
+        facilityProfile.setFacilityLogo_base(facility.getFacilityLogo_base());
 
         facilityProfile.setCnoImage(facility.getCnoImage());
+        facilityProfile.setCnoImage_base(facility.getCnoImage_base());
         facilityProfile.setFacilityWebsite(facility.getFacilityWebsite());
         facilityProfile.setVideoEmbedUrl(facility.getVideoEmbedUrl());
         facilityProfile.setCnoMessage(facility.getCnoMessage());
@@ -174,7 +165,7 @@ public class FacilityDetails1Activity extends AppCompatActivity {
     private void setData() {
         if (!TextUtils.isEmpty(model.getFacilityLogo())) {
             byte[] decodeString = Utils.get_base_images(model.getFacilityLogo_base());
-            Glide.with(context).load(decodeString).into(binding.imgProfile);
+            Glide.with(context).load(decodeString).placeholder(R.drawable.person).into(binding.imgProfile);
             binding.imgProfile.setVisibility(View.VISIBLE);
         }
         binding.facilityName.setText(model.getFacilityName());

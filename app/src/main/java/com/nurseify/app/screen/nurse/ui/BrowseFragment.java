@@ -34,6 +34,7 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.android.material.slider.RangeSlider;
 import com.google.gson.Gson;
+import com.nurseify.app.AppController;
 import com.nurseify.app.R;
 import com.nurseify.app.screen.nurse.adapters.FacilityAdapter;
 import com.nurseify.app.adapter.HourlyRateWindowAdapter;
@@ -1115,6 +1116,9 @@ public class BrowseFragment extends Fragment {
 
                     @Override
                     public void onClick_Job(JobModel.JobDatum datum, int position) {
+                        AppController.user_profile_base = datum.getFacilityLogo_base();
+                        datum.setFacilityLogo_base(null);
+//                        AppController.cno_base=datum.getCn();
                         startActivityForResult(new Intent(getContext(), Browse_Facility_Offered_JobDetailsActivity.class)
                                 .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(datum))
                                 .putExtra(Constant.POSITION, position), Constant.REQUEST_Browse_Job_FUNS);

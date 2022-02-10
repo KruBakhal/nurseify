@@ -1,6 +1,7 @@
 package com.nurseify.app.webService;
 
 
+import com.nurseify.app.common.MessageImageModel;
 import com.nurseify.app.screen.nurse.model.ActiveModel;
 import com.nurseify.app.screen.nurse.model.AddCredentialModel;
 import com.nurseify.app.screen.nurse.model.CityModel;
@@ -378,7 +379,13 @@ public interface RetrofitApi {
     @POST("get-nurse-profile")
     Call<UserProfile> call_nurse_profile(
             @Part("user_id") RequestBody user_id
-   );
+    );
+
+    @Multipart
+    @POST("get-user-images")
+    Call<MessageImageModel> call_user_profile_image(
+            @Part("user_ids") RequestBody user_id
+    );
 
     @Multipart
     @POST("remove-credentials-image")

@@ -42,7 +42,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.startActivity(new Intent(activity, Browse_Facility_Offered_JobDetailsActivity.class));
+
+                    activity.startActivity(new Intent(activity,
+                            Browse_Facility_Offered_JobDetailsActivity.class));
                 }
             });
 

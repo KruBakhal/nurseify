@@ -107,6 +107,9 @@ public class FacilityJobModel {
         @SerializedName("cno_image")
         @Expose
         private String cnoImage;
+        @SerializedName("cno_image_base")
+        @Expose
+        private String cnoImage_base;
         @SerializedName("gallery_images")
         @Expose
         private String galleryImages;
@@ -227,6 +230,14 @@ public class FacilityJobModel {
         @SerializedName("is_like")
         @Expose
         private Integer isLike;
+
+        public String getCnoImage_base() {
+            return cnoImage_base;
+        }
+
+        public void setCnoImage_base(String cnoImage_base) {
+            this.cnoImage_base = cnoImage_base;
+        }
 
         public String getFacilityLogo_base() {
             return facilityLogo_base;

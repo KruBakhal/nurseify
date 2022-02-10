@@ -832,6 +832,7 @@ public class Nurse_Browse_Fragment extends Fragment {
 
             @Override
             public void onClick_Hire(NurseDatum model, int position) {
+                model.setNurseLogo_base(null);
                 startActivity(new Intent(getContext(), NurseDetailsActivity.class)
                         .putExtra(Constant.STR_RESPONSE_DATA, new Gson().toJson(model))
                         .putExtra(Constant.ID, model.getUserId())
