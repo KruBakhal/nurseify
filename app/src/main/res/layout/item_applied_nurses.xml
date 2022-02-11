@@ -28,7 +28,7 @@
                     android:id="@+id/circleImageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/test2" />
+                    android:src="@drawable/person" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout

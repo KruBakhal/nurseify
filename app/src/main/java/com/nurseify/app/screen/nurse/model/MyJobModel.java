@@ -108,6 +108,13 @@ public class MyJobModel {
         @SerializedName("rating_comment")
         @Expose
         private RatingComment ratingComment;
+        @SerializedName("rating")
+        @Expose
+        private Rating rating_obj;
+
+        public void setRating_obj(Rating rating_obj) {
+            this.rating_obj = rating_obj;
+        }
 
         public RatingComment getRatingComment() {
             return ratingComment;
@@ -125,6 +132,77 @@ public class MyJobModel {
             this.facilityLogo_base = facilityLogo_base;
         }
 
+        public class Rating {
+
+            @SerializedName("overall")
+            @Expose
+            private String overall;
+            @SerializedName("clinical_skills")
+            @Expose
+            private String clinicalSkills;
+            @SerializedName("nurse_teamwork")
+            @Expose
+            private String nurseTeamwork;
+            @SerializedName("interpersonal_skills")
+            @Expose
+            private String interpersonalSkills;
+            @SerializedName("work_ethic")
+            @Expose
+            private String workEthic;
+            @SerializedName("experience")
+            @Expose
+            private String experience;
+
+            public String getOverall() {
+                return overall;
+            }
+
+            public void setOverall(String overall) {
+                this.overall = overall;
+            }
+
+            public String getClinicalSkills() {
+                return clinicalSkills;
+            }
+
+            public void setClinicalSkills(String clinicalSkills) {
+                this.clinicalSkills = clinicalSkills;
+            }
+
+            public String getNurseTeamwork() {
+                return nurseTeamwork;
+            }
+
+            public void setNurseTeamwork(String nurseTeamwork) {
+                this.nurseTeamwork = nurseTeamwork;
+            }
+
+            public String getInterpersonalSkills() {
+                return interpersonalSkills;
+            }
+
+            public void setInterpersonalSkills(String interpersonalSkills) {
+                this.interpersonalSkills = interpersonalSkills;
+            }
+
+            public String getWorkEthic() {
+                return workEthic;
+            }
+
+            public void setWorkEthic(String workEthic) {
+                this.workEthic = workEthic;
+            }
+
+            public String getExperience() {
+                return experience;
+            }
+
+            public void setExperience(String experience) {
+                this.experience = experience;
+            }
+
+        }
+
         public class RatingComment {
 
 
@@ -140,6 +218,17 @@ public class MyJobModel {
             @SerializedName("nurse_image")
             @Expose
             private String nurseImage;
+            @SerializedName("nurse_image_base")
+            @Expose
+            private String nurseImage_base;
+
+            public String getNurseImage_base() {
+                return nurseImage_base;
+            }
+
+            public void setNurseImage_base(String nurseImage_base) {
+                this.nurseImage_base = nurseImage_base;
+            }
 
             public String getRating() {
                 return rating;
@@ -327,13 +416,10 @@ public class MyJobModel {
             this.endDate = endDate;
         }
 
-        public RatingComment getRating() {
-            return ratingComment;
+        public Rating getRating_obj() {
+            return rating_obj;
         }
 
-        public void setRating(RatingComment rating) {
-            this.ratingComment = rating;
-        }
 
     }
 

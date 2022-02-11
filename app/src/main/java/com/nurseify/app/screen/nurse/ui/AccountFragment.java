@@ -348,7 +348,7 @@ public class AccountFragment extends Fragment {
                                 try {
                                     binding.tvBill.setText("$ " + settingModel.getData().getBilRate());
                                     binding.tvExperience.setText(settingModel.getData().getExperience());
-                                    binding.tvShift.setText(settingModel.getData().getShift());
+                                    binding.tvShift.setText(settingModel.getData().getShiftDefinition());
                                     binding.tvName.setText(settingModel.getData().getFullName());
                                     binding.tvAddress.setText(settingModel.getData().getAddress() +
                                             ", " + settingModel.getData().getCity() + ", " + settingModel.getData().getCountry());
@@ -358,13 +358,15 @@ public class AccountFragment extends Fragment {
                                         userProfileData.setImage_base(settingModel.getData().getProfile_picture_base());
                                         loadProfile_Pic(false);
 
-                                        /*byte[] arry = Base64.decode(settingModel.getData().getProfile_picture_base(), Base64.DEFAULT);
+                                        /*
+                                        byte[] arry = Base64.decode(settingModel.getData().getProfile_picture_base(), Base64.DEFAULT);
                                         Bitmap decodedByte = BitmapFactory.decodeByteArray(arry, 0,
                                                 arry.length);
                                         */
 
                                         //                                        binding.circleImageView2.setImageBitmap(decodedByte);
                                     }
+
                                 } catch (Exception exception) {
 
                                 }

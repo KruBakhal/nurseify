@@ -9,17 +9,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nurseify.app.R;
 import com.nurseify.app.databinding.ActivityCompletedJobDetailsBinding;
 import com.nurseify.app.databinding.DialogRatingBinding;
 import com.nurseify.app.screen.nurse.adapters.RatingAdapter;
 import com.nurseify.app.screen.nurse.model.MyJobModel;
 import com.nurseify.app.screen.nurse.model.ResponseModel;
+import com.nurseify.app.screen.nurse.model.UserProfileData;
 import com.nurseify.app.utils.SessionManager;
 import com.nurseify.app.utils.Utils;
 import com.nurseify.app.webService.RetrofitClient;
@@ -111,53 +114,71 @@ public class CompletedJobDetailsActivity extends AppCompatActivity {
             Utils.displayToast(context, "Empty Data");
             return;
         }
-        binding.tvTitle.setText("" + jobModel.getJobTitle());
-        binding.tvName.setText("" + jobModel.getFacilityName());
-        binding.tvSpecialty.setText("" + jobModel.getJobTitle());
-        binding.tvDate.setText("" + jobModel.getStartDate());
-        binding.tvEndDate.setText("" + jobModel.getEndDate());
-        binding.tvAssignmentDurationDefinition.setText("" + jobModel.getAssignmentDurationDefinition());
-        binding.tvShiftDuration.setText("" + jobModel.getShiftDefinition());
-        binding.tvHourlyRate.setText("$ " + jobModel.getHourlyPayRate() + "/Hr");
-
         try {
+            binding.tvTitle.setText("" + jobModel.getJobTitle());
+            binding.tvName.setText("" + jobModel.getFacilityName());
+            binding.tvSpecialty.setText("" + jobModel.getJobTitle());
+            binding.tvDate.setText("" + jobModel.getStartDate());
+            binding.tvEndDate.setText("" + jobModel.getEndDate());
+            binding.tvAssignmentDurationDefinition.setText("" + jobModel.getAssignmentDurationDefinition());
+            binding.tvShiftDuration.setText("" + jobModel.getShiftDefinition());
+            binding.tvHourlyRate.setText("$ " + jobModel.getHourlyPayRate() + "/Hr");
+
+
             if (!TextUtils.isEmpty(jobModel.getFacilityLogo())) {
                 byte[] decodeString = Utils.get_base_images(jobModel.getFacilityLogo_base());
                 Glide.with(context).load(decodeString).placeholder(R.drawable.person)
                         .error(R.drawable.person).into(binding.circleImageView);
+                Glide.with(context).load(decodeString).placeholder(R.drawable.person)
+                        .error(R.drawable.person).into(binding.imgProfile);
+            }
+
+            binding.tvDescriptions.setText(Html.fromHtml("" + jobModel.getJobDescription()));
+            binding.tvSeniority.setText("" + jobModel.getAboutJob().getSeniorityLevelDefinition());
+            binding.tvShiftDuration.setText("" + jobModel.getAboutJob().getPreferredShiftDurationDefinition());
+            binding.tvPrefferedExp.setText("" + jobModel.getAboutJob().getPreferredExperience());
+            binding.tvCerner.setText("" + jobModel.getAboutJob().getCernerDefinition());
+            binding.tvMeditech.setText("" + jobModel.getAboutJob().getMeditechDefinition());
+            binding.tvEpic.setText("" + jobModel.getAboutJob().getEpicDefinition());
+            binding.tvAddress.setText("" + jobModel.getPreferredWorkLocationDefinition());
+            if (jobModel.getRating_flag().equals("0")) {
+                ratingDailog();
+            } else {
+                if (jobModel.getRating_obj() != null) {
+                    binding.layReview.setVisibility(View.VISIBLE);
+                    MyJobModel.MyJobDatum.Rating ratingComment = jobModel.getRating_obj();
+                    /*try {
+                        if (!TextUtils.isEmpty(ratingComment.getNurseImage())
+                                && !TextUtils.isEmpty(ratingComment.getNurseImage_base())) {
+                            byte[] decodeString = Utils.get_base_images(ratingComment.getNurseImage_base());
+                            RequestOptions myOptions = new RequestOptions()
+                                    .override(100, 100);
+                            Glide.with(this)
+                                    .load(decodeString).apply(myOptions).placeholder(R.drawable.person)
+                                    .error(R.drawable.person)
+                                    .into(binding.imgProfile);
+                        } else
+                            Glide.with(this).load(ratingComment.getNurseImage())
+                                    .placeholder(R.drawable.person).error(R.drawable.person)
+                                    .into(binding.imgProfile);
+
+                    } catch (Exception e) {
+
+                    }*/
+                    SessionManager sessionManager = new SessionManager(this);
+                    UserProfileData user = sessionManager.get_User();
+                    if (user != null)
+                        binding.tvFacilityName.setText(user.getFullName());
+                    binding.tvRating.setText(ratingComment.getOverall());
+                    if (!TextUtils.isEmpty(ratingComment.getOverall()))
+                        binding.reatingBar.setRating(Float.parseFloat(ratingComment.getOverall()));
+                    binding.tvReview.setText(ratingComment.getExperience());
+                } else {
+                    binding.layReview.setVisibility(View.GONE);
+                }
             }
         } catch (Exception e) {
-
-        }
-        binding.tvDescriptions.setText(Html.fromHtml("" + jobModel.getJobDescription()));
-        binding.tvSeniority.setText("" + jobModel.getAboutJob().getSeniorityLevelDefinition());
-        binding.tvShiftDuration.setText("" + jobModel.getAboutJob().getPreferredShiftDurationDefinition());
-        binding.tvPrefferedExp.setText("" + jobModel.getAboutJob().getPreferredExperience());
-        binding.tvCerner.setText("" + jobModel.getAboutJob().getCernerDefinition());
-        binding.tvMeditech.setText("" + jobModel.getAboutJob().getMeditechDefinition());
-        binding.tvEpic.setText("" + jobModel.getAboutJob().getEpicDefinition());
-        binding.tvAddress.setText("" + jobModel.getPreferredWorkLocationDefinition());
-        if (jobModel.getRating_flag().equals("0")) {
-            ratingDailog();
-        } else {
-            if (jobModel.getRating() != null) {
-                binding.layReview.setVisibility(View.VISIBLE);
-                MyJobModel.MyJobDatum.RatingComment ratingComment = jobModel.getRatingComment();
-                try {
-                    Glide.with(this).load(ratingComment.getNurseImage())
-                            .placeholder(R.drawable.person).error(R.drawable.person)
-                            .into(binding.imgProfile);
-                } catch (Exception e) {
-
-                }
-                binding.tvFacilityName.setText(ratingComment.getNurseName());
-                binding.tvRating.setText(ratingComment.getRating());
-                if (!TextUtils.isEmpty(ratingComment.getRating()))
-                    binding.reatingBar.setRating(Float.parseFloat(ratingComment.getRating()));
-                binding.tvReview.setText(ratingComment.getExperience());
-            } else {
-                binding.layReview.setVisibility(View.GONE);
-            }
+            Log.d("TAG", "setupOfferedJobData: " + e.getMessage());
         }
     }
 

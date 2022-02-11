@@ -89,17 +89,37 @@
                                     android:id="@+id/tv_name"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:ellipsize="end"
                                     android:fontFamily="@font/sf_500"
-                                    android:text="Nurseify Facility"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    android:text="Nurseify Facility "
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
                                     android:textColor="@color/black"
-                                    android:textSize="19dp" />
+                                    android:textSize="16dp"
+                                    android:visibility="visible"
+                                    app:layout_constrainedWidth="true"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toStartOf="@+id/sds"
+                                    app:layout_constraintHorizontal_bias="0"
+                                    app:layout_constraintHorizontal_chainStyle="packed"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.0" />
+
 
                                 <ImageView
+                                    android:id="@+id/sds"
                                     android:layout_width="17dp"
                                     android:layout_height="17dp"
                                     android:layout_gravity="center"
                                     android:layout_marginLeft="5dp"
-                                    android:src="@drawable/verified" />
+                                    android:src="@drawable/verified"
+                                    app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0"
+                                    app:layout_constraintStart_toEndOf="@+id/tv_name"
+                                    app:layout_constraintTop_toTopOf="@+id/tv_name" />
                             </LinearLayout>
 
                             <TextView

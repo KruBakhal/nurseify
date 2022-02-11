@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private Context context;
     private ProgressDialog progressDialog;
     private SessionManager sessionManger;
+    private boolean isPassVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,25 @@ public class LoginActivity extends AppCompatActivity {
                 Utils.onClickEvent(v);
             }
         });
+        binding.imgPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (!TextUtils.isEmpty(binding.editTextPassword.getText().toString())) {
+                if (isPassVisible) {
+                    binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                        binding.imgPass.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.imgPass.setImageResource(R.drawable.eye_off_outline);
+                    isPassVisible = false;
+                } else {
+                    binding.editTextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    binding.imgPass.setImageResource(R.drawable.ey_outline);
+                    isPassVisible = true;
+                }
+                if (!TextUtils.isEmpty(binding.editTextPassword.getText().toString()))
+                    binding.editTextPassword.setSelection(binding.editTextPassword.getText().length());
+                Utils.onClickEvent(v);
+            }
+        });
         binding.editTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -113,11 +134,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s == null || s.length() == 0)
+                /*if (s == null || s.length() == 0)
                     binding.editTextEmail.setError(null);
                 else if (!Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches()) {
                     binding.editTextEmail.setError("Enter Email Id In Proper Format !");
-                }
+                }*/
             }
         });
 
@@ -298,6 +319,7 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Utils.displayToast(context, "Enter Email Id In Proper Format");
             return false;
         }
         if (TextUtils.isEmpty(pasas)) {

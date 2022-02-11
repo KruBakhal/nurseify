@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     private Retrofit retrofit;
     public static final String BASE_URL = "https://stage.nurseify.io/api/";
+    public static final String BASE_URL1 = "https://stage.nurseify.io/";
     private static RetrofitClient mInstance;
     private OkHttpClient client;
     private OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();

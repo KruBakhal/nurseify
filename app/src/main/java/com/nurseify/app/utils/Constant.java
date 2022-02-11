@@ -4,6 +4,8 @@ import static android.os.Build.VERSION.SDK_INT;
 
 import android.os.Build;
 
+import com.nurseify.app.webService.RetrofitClient;
+
 public class Constant {
 
     public static final int REQUEST_CODE_ADD_JOB = 656;
@@ -18,7 +20,7 @@ public class Constant {
     public static final String ONLINE_STATUS = "status";
     public static final String JOB_ID = "job_id";
     public static final String ID = "id";
-    public static final String URL_TERMS_CONDITION = "http://35.200.185.126/terms-conditions";
+    public static final String URL_TERMS_CONDITION = RetrofitClient.BASE_URL1 + "terms-conditions";
     public static final String CHAT_NODE = "Chat_db";
     public static final String TIME_STAMP = "timestamp";
     public static final String IS_SEEN = "is_seen";

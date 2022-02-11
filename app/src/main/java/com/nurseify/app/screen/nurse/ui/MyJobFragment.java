@@ -231,8 +231,8 @@ public class MyJobFragment extends Fragment {
         call.enqueue(new Callback<OfferedJobModel>() {
             @Override
             public void onResponse(Call<OfferedJobModel> call, Response<OfferedJobModel> response) {
-                assert response.body() != null;
-                if (!response.body().getApiStatus().equals("1")) {
+//                assert response.body() != null;
+                if (response != null &&!response.body().getApiStatus().equals("1")) {
                     if (list_Offered_Job != null && list_Offered_Job.size() != 0) {
                         binding.progress.setVisibility(View.GONE);
                     } else if (list_Offered_Job != null && list_Offered_Job.size() == 0) {
@@ -311,8 +311,8 @@ public class MyJobFragment extends Fragment {
         call.enqueue(new Callback<ActiveModel>() {
             @Override
             public void onResponse(Call<ActiveModel> call, Response<ActiveModel> response) {
-                assert response.body() != null;
-                if (!response.body().getApiStatus().equals("1")) {
+
+                if (response != null && !response.body().getApiStatus().equals("1")) {
 
                     if (list_Active_Job != null && list_Active_Job.size() != 0) {
                         binding.progress.setVisibility(View.GONE);
@@ -392,8 +392,8 @@ public class MyJobFragment extends Fragment {
             @Override
             public void onResponse(Call<CompletedJobModel> call, Response<CompletedJobModel> response) {
 //                Log.d(TAG + "getOfferedJob ResCode", response.code() + "");
-                assert response.body() != null;
-                if (!response.body().getApiStatus().equals("1")) {
+//                assert response.body() != null;
+                if (response != null && !response.body().getApiStatus().equals("1")) {
                     if (list_Completed_Job != null && list_Completed_Job.size() != 0) {
                         binding.progress.setVisibility(View.GONE);
                         dismissProgress();
@@ -557,8 +557,8 @@ public class MyJobFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 try {
-                    assert response.body() != null;
-                    if (!response.body().getApiStatus().equals("1")) {
+//                    assert response.body() != null;
+                    if (response != null &&!response.body().getApiStatus().equals("1")) {
                         progressDialog.dismiss();
                         return;
                     }
@@ -607,8 +607,8 @@ public class MyJobFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 try {
-                    assert response.body() != null;
-                    if (!response.body().getApiStatus().equals("1")) {
+//                    assert response.body() != null;
+                    if (response != null &&!response.body().getApiStatus().equals("1")) {
                         progressDialog.dismiss();
                         return;
                     }
@@ -815,4 +815,5 @@ public class MyJobFragment extends Fragment {
             get_Active_Job();
         }
     }
+
 }
