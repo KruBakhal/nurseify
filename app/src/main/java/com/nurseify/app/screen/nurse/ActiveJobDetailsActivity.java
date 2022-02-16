@@ -54,7 +54,6 @@ public class ActiveJobDetailsActivity extends AppCompatActivity {
     }
 
     private void fetch_Job_Detail(String jobId) {
-
         if (!Utils.isNetworkAvailable(context)) {
 //            Utils.displayToast(context, getResources().getString(R.string.no_internet));
             return;
