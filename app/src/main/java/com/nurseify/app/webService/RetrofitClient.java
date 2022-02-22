@@ -15,6 +15,7 @@ public class RetrofitClient {
     public static final String BASE_URL = "https://app.nurseify.io/api/";
     public static final String BASE_URL1 = "https://app.nurseify.io/";
     private static RetrofitClient mInstance;
+
     private OkHttpClient client;
     private OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
 
