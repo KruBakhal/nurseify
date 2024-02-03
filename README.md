@@ -22,7 +22,10 @@ Welcome to Nurseify, the on-demand gig app designed for nurses! This Android app
   - Firebase Realtime Database: Utilizes Firebase for real-time data synchronization, especially in the chatting module.
 
 ## ScreenShot:
-![Screenshot_20220607-113544_nurseify](https://github.com/KruBakhal/nurseify/assets/43085695/5b22eccf-368a-4346-b52f-a7fe033e61be)
+<p align="center">
+  <img src="https://github.com/KruBakhal/nurseify/assets/43085695/5b22eccf-368a-4346-b52f-a7fe033e61be" width=45% height=45% /> <img src="https://github.com/KruBakhal/nurseify/assets/43085695/4d28923c-3b86-4411-96e5-91e92a43a2b8" width=45% height=45% /> <img src="https://github.com/KruBakhal/nurseify/assets/43085695/35e8ded8-112d-42c6-86d7-9cd9e1ca6b4f" width=45% height=45% /> <img src="https://github.com/KruBakhal/nurseify/assets/43085695/b79d3476-1865-46a1-a196-0e7d39685ae2" width=45% height=45% /><br> <img src="https://github.com/KruBakhal/nurseify/assets/43085695/a4a413bc-6821-4cba-acae-ec2e713fc906" width=45% height=45% /> <img src="https://github.com/KruBakhal/nurseify/assets/43085695/2a681a4c-71bf-4e8c-8fb3-a3e3b6ffbb916" width=45% height=45% /> <img src="https://github.com/KruBakhal/nurseify/assets/43085695/2a681a4c-71bf-4e8c-8fb3-a3e3b6ffbb91" width=45% height=45% /><br> <img src="https://github.com/KruBakhal/nurseify/assets/43085695/22f926e6-8023-4d1c-bd82-385b25789813" width=45% height=45% /><img src="https://github.com/KruBakhal/nurseify/assets/43085695/a476dade-54a2-4646-844c-119c8dd78d04" width=45% height=45% />
+  
+</p>
 
 ## Link:
 https://play.google.com/store/apps/details?id=com.nurseify.app
