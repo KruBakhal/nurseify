@@ -21,6 +21,13 @@ Welcome to Nurseify, the on-demand gig app designed for nurses! This Android app
   - Search Filter: Implements a search filter for easy navigation and quick access to information.
   - Firebase Realtime Database: Utilizes Firebase for real-time data synchronization, especially in the chatting module.
 
+## ScreenShot:
+![Screenshot_20220607-113544_nurseify](https://github.com/KruBakhal/nurseify/assets/43085695/5b22eccf-368a-4346-b52f-a7fe033e61be)
+
+## Link:
+https://play.google.com/store/apps/details?id=com.nurseify.app
+ ![IMAGE_DESCRIPTION]()
+
 ## Usage
 Whether you're a developer looking to learn or a healthcare professional seeking a seamless gig experience, Nurseify has you covered. Feel free to contribute, report issues, or adapt the codebase to meet your specific requirements.
 
